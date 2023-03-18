@@ -19,9 +19,11 @@ SECTIONS
     .text :
     {
         asm/text08000000.o(.text);
+        asm/heap.o(.text);
+        asm/text08018E24.o(.text);
+        asm/process.o(.text);
+        asm/text08019CA4.o(.text);
         asm/rodata081DD790.o(.text);
-
-        . = 0x8F50000;
         asm/mariobros.o(.text);
     }
 
