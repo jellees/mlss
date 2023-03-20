@@ -1,0 +1,4 @@
+
+gGameState = 0x0300034C;
+
+stru_8CDBD68 = 0x08CDBD68;

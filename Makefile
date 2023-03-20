@@ -18,9 +18,15 @@ SHELL			:= /bin/bash -o pipefail
 FIX				:= tools/gbafix/./gbafix
 CC1				:= tools/agbcc/bin/agbcc
 
+# Libaries
+LIBC   := tools/agbcc/lib/libc.a
+LIBGCC := tools/agbcc/lib/libgcc.a
+
 # Flags
 ASFLAGS			:= -mcpu=arm7tdmi -I include
 LDFLAGS			:= -L../tools/agbcc/lib -lgcc -lc --just-symbols=../symbols.txt
+CFLAGS			:= -O2 -mthumb-interwork -fno-common -Wimplicit -Wparentheses -Werror -g
+CPPFLAGS 		:= -I tools/agbcc/include -nostdinc -undef -iquote include -Wno-trigraphs
 
 # Files
 ELF = $(ROM:.gba=.elf)
