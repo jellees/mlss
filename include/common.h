@@ -5,10 +5,10 @@ struct Process;
 
 struct ProcessDefinition {
     u32 field_0;
-    void (*field_4)(struct Process* process);
+    void (*field_4)(void*);
     s16 offset;
     u16 field_A;
-    void (*update)(struct Process* process);
+    void (*update)(void*);
 };
 
 struct Process {

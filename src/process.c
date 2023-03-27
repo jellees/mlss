@@ -8,7 +8,7 @@
 struct Process* process_add(struct Process* process, u8 priority, char* label) {
     u32 processCount;
     struct Process* latestProcess;
-    char* procLabel;
+    char* destLabel;
 
     process->definition = &stru_8CDBD68;
     processCount = 0;
@@ -18,7 +18,7 @@ struct Process* process_add(struct Process* process, u8 priority, char* label) {
         gGameState.startProcessLink = process;
         process->previousProcess = NULL;
         process->nextProcess = NULL;
-        procLabel = process->label;
+        destLabel = process->label;
     } else {
         if (latestProcess == NULL) {
         out:
@@ -27,7 +27,7 @@ struct Process* process_add(struct Process* process, u8 priority, char* label) {
             process->nextProcess = NULL;
             processCount++;
         } else {
-            procLabel = process->label;
+            destLabel = process->label;
 
             while (latestProcess->priority <= priority) {
                 if (latestProcess->nextProcess == NULL) {
@@ -62,7 +62,7 @@ struct Process* process_add(struct Process* process, u8 priority, char* label) {
     process->executeMax = 1;
     process->executeCounter = 0;
     process->frames = 0;
-    COPY_LABEL(procLabel, label);
+    COPY_LABEL(destLabel, label);
     gGameState.processCount++;
 
     return process;
@@ -87,8 +87,8 @@ void process_execute_all(void) {
 
                     if (executeMax & 8) {
                         if (++exeProcess->executeCounter >= -executeMax) {
-                            exeProcess->definition->update(
-                                (struct Process*)(((u8*)exeProcess) + exeProcess->definition->offset));
+                            exeProcess->definition->update((u8*)exeProcess
+                                                           + exeProcess->definition->offset);
                             exeProcess->executeCounter = 0;
                         }
 
@@ -97,8 +97,8 @@ void process_execute_all(void) {
                             exeProcess->wait = TRUE;
                         }
                     } else {
-                        exeProcess->definition->update(
-                            (struct Process*)(((u8*)exeProcess) + exeProcess->definition->offset));
+                        exeProcess->definition->update((u8*)exeProcess
+                                                       + exeProcess->definition->offset);
 
                         if (gGameState.currentProcess != NULL) {
                             exeProcess->frames++;
