@@ -6509,7 +6509,7 @@ _08017E04:
 	ldr r3, _08017E30 @ =0x0801B035
 	movs r1, #0x01
 	adds r2, r4, #0x0
-	bl sub_801A354
+	bl gbs_init
 _08017E1C:
 	bl process_execute_all
 	bl sub_81DD774
