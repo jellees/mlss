@@ -23,6 +23,8 @@ SECTIONS
         asm/text08018E24.o(.text);
         src/process.o(.text);
         asm/text08019CA4.o(.text);
+        src/game_boy_player_logo.o(.text);
+        asm/text0801A548.o(.text);
         asm/rodata081DD790.o(.text);
         asm/mariobros.o(.text);
     }

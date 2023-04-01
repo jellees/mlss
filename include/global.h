@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #include "gba/gba.h"
+#include "buffer_io_reg.h"
 
 // Figure out if we need these defines later.
 // #define OFFSET_OF(type, element) ((int)&(((type *)0)->element))

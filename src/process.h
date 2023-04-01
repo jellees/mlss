@@ -3,6 +3,7 @@
 
 #define PROCESS_REMOVE_FLAGS_NOTHING 0
 #define PROCESS_REMOVE_FLAGS_FREE    1
+#define PROCESS_REMOVE_FLAGS_UNKNOWN 2
 
 struct Process* process_add(struct Process* process, u8 priority, char* label);
 void process_execute_all(void);
