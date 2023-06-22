@@ -11,9 +11,9 @@ struct COMPProcess* comp_init(struct COMPProcess* comp, u8 priority, char* label
     process_add(&comp->process, priority, label);
     comp->process.definition = &stru_8CDC258;
 
-    (*(vu16*)(0x2000000 + 0x80)) = 0x7FFF;
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 = 1;
-    (*(vu16*)(0x2000000 + 0x0)) = 0;
+    BUFFER_REG_DISPCNT = 0;
     sub_8017E34();
 
     opdr = (struct Process*)alloc_Zero(sizeof(struct Process), 0, "OPDR", 0);
@@ -23,7 +23,7 @@ struct COMPProcess* comp_init(struct COMPProcess* comp, u8 priority, char* label
     opdr->parentProcess = &comp->process;
 
     dword_3000C78 = 0;
-    sub_8020994(0, 0, 0, 0x80u);
+    sub_8020994(0, 0, 0, 0x80);
     stru_203FFB8.field_0_2 = 1;
 
     comp->mario = sub_8020DD0(2, 4097, 1, -1, -1, -1, -1);
@@ -51,13 +51,13 @@ struct COMPProcess* comp_init(struct COMPProcess* comp, u8 priority, char* label
 
     cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
     dword_3000C84(dword_83A2B48, cgdw);
-    sub_81DA698(cgdw, (void*)0x6008000, (sub_80198B0(dword_83A2B48) >> 2) & 0x1FFFFF);
-    sub_81DA698(dword_83A2F98, (void*)0x600E000, 320);
+    sub_81DA698(cgdw, (void*)BG_CHAR_ADDR(2), (sub_80198B0(dword_83A2B48) >> 2) & 0x1FFFFF);
+    sub_81DA698(dword_83A2F98, (void*)BG_SCREEN_ADDR(28), 320);
     zero = 0;
     sub_81DA698((int*)&zero, (void*)0x600E500, 0x10000C0);
     dword_3000C84(dword_83A34B8, cgdw);
-    sub_81DA698(cgdw, (void*)0x600C000, (sub_80198B0(dword_83A34B8) >> 2) & 0x1FFFFF);
-    sub_81DA698(dword_83A3860, (void*)0x600E800, 320);
+    sub_81DA698(cgdw, (void*)BG_CHAR_ADDR(3), (sub_80198B0(dword_83A34B8) >> 2) & 0x1FFFFF);
+    sub_81DA698(dword_83A3860, (void*)BG_SCREEN_ADDR(29), 320);
     free_heap_8018DA8(cgdw);
 
     dword_3000C78 = sub_800063C;
@@ -70,24 +70,24 @@ struct COMPProcess* comp_init(struct COMPProcess* comp, u8 priority, char* label
     stru_203FFF8.field_7_4 = dword_3000FFC->field_8_0;
     stru_203FFF8.field_7_7 = gGameState.field_888_1;
 
-    (*(vu16*)(0x2000000 + 0x8)) = 0x1C08;
-    (*(vu16*)(0x2000000 + 0x10)) = 0;
-    (*(vu16*)(0x2000000 + 0x12)) = 99;
+    BUFFER_REG_BG0CNT = BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(28);
+    BUFFER_REG_BG0HOFS = 0;
+    BUFFER_REG_BG0VOFS = 99;
 
     comp->verticalOffset = 25344;
     sub_81DA698(&dword_83A3498, (void*)0x2000000 + 0x80, 8);
-    (*(vu16*)(0x2000000 + 0x80)) = 0x7FFF;
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 = -1;
 
     sprite_show_8020CBC(comp->mario);
     sprite_show_8020CBC(comp->luigi);
 
     comp->velocity = 0;
-    comp->acceleration = 0x75;
+    comp->acceleration = 117;
     comp->flags = 1;
     comp->process.state = 0;
 
-    (*(vu16*)(0x2000000 + 0x0)) = 0x1140;
+    BUFFER_REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON | DISPCNT_OBJ_ON;
 
     return comp;
 }
@@ -117,7 +117,7 @@ void comp_update(struct COMPProcess* comp) {
             comp->brightness--;
             if (comp->brightness == 0) {
                 comp->brightness = 100;
-                (*(vu16*)(0x2000000 + 0x12)) = 0;
+                BUFFER_REG_BG0VOFS = 0;
                 comp->process.state = 2;
             }
             break;
@@ -129,21 +129,21 @@ void comp_update(struct COMPProcess* comp) {
             comp->brightness--;
             if (comp->brightness == 0) {
                 comp->brightness = 16;
-                (*(vu16*)(0x2000000 + 0x50)) = 191;
-                (*(vu16*)(0x2000000 + 0x54)) = 0;
+                BUFFER_REG_BLDCNT = 191;
+                BUFFER_REG_BLDY = 0;
                 comp->process.state = 3;
             }
             break;
 
         case 3:
             comp->brightness--;
-            (*(vu16*)(0x2000000 + 0x54)) = 16 - comp->brightness;
+            BUFFER_REG_BLDY = 16 - comp->brightness;
             if (comp->brightness == 0) {
                 sprite_hide_8021F20(comp->mario);
                 sprite_hide_8021F20(comp->luigi);
                 sub_81DA698(dword_83A3D60, (void*)0x2000000 + 0x80, 8);
                 gGameState.field_2 = -1;
-                (*(vu16*)(0x2000000 + 0x8)) = 0x1D0C;
+                BUFFER_REG_BG0CNT = BGCNT_CHARBASE(3) | BGCNT_SCREENBASE(29);
                 sprite_show_8020CBC(comp->alphaDreamLogo);
                 comp->alphaDreamLogo->field_12_4 = 1;
                 comp->brightness = 16;
@@ -153,7 +153,7 @@ void comp_update(struct COMPProcess* comp) {
 
         case 4:
             comp->brightness--;
-            (*(vu16*)(0x2000000 + 0x54)) = comp->brightness;
+            BUFFER_REG_BLDY = comp->brightness;
             if ((gGameState.field_2A & 0xB) != 0) {
                 comp->brightness = 16 - comp->brightness;
                 comp->process.state = 6;
@@ -178,7 +178,7 @@ void comp_update(struct COMPProcess* comp) {
 
         case 6:
             comp->brightness--;
-            (*(vu16*)(0x2000000 + 0x54)) = 16 - comp->brightness;
+            BUFFER_REG_BLDY = 16 - comp->brightness;
             if (comp->brightness == 0) {
                 if (comp) {
                     comp->process.definition = &stru_8CDC258;
@@ -211,7 +211,6 @@ void comp_update(struct COMPProcess* comp) {
                 temp = comp->mario->field_11_6;
                 temp ^= 1;
                 comp->mario->field_11_6 = temp;
-
                 comp->mario->field_12_1 = 1;
 
                 sub_80210A8(comp->luigi, 2, 4110, 1, -1, -1, -1, -1);
@@ -221,7 +220,7 @@ void comp_update(struct COMPProcess* comp) {
                 comp->flags = 0;
             }
         }
-        (*(vu16*)(0x2000000 + 0x12)) = comp->verticalOffset / 256;
+        BUFFER_REG_BG0VOFS = comp->verticalOffset / 256;
         comp->mario->xPosition = comp->xPosMario / 256;
         comp->mario->yPosition = comp->yPosMario / 256;
         comp->luigi->xPosition = comp->xPosLuigi / 256;

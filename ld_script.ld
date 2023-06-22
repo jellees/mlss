@@ -29,9 +29,9 @@ SECTIONS
         asm/title_screen.o(.text);
         asm/text08057568.o(.text);
 
-        asm/rodata081DD790.o(.text);
+        asm/rodata081DD790.o(.rodata);
         src/title_screen.o(.rodata);
-        asm/rodata081E2764.o(.text);
+        asm/rodata081E2764.o(.rodata);
 
         asm/mariobros.o(.text);
     }
