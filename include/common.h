@@ -133,14 +133,14 @@ void play_sfx_80195B4(int, int);
 u32 sub_80198B0(int*);
 void sub_801E150(struct Sprite*, int, int, int, int);
 void sub_8020994(int, int, int, int);
-void sub_8020CBC(struct Sprite*);
+void sprite_show_8020CBC(struct Sprite*);
 struct Sprite* sub_8020DD0(int, int, int, int, int, int, int);
 void sub_80210A8(struct Sprite*, int, int, int, int, int, int, int);
 void sub_80213A0(int, int, int, int);
-void sub_8021F20(struct Sprite*);
+void sprite_hide_8021F20(struct Sprite*);
 void sub_8021F7C(void);
 void sub_8021FD4(struct ProcessDefinition*);
-void open_8055A00(void*, int, char*, int);
+void open_init_8055A00(void*, int, char*, int);
 struct struc_203FFF8* sub_81251DC();
 void sub_81DA698(void*, void*, size_t);
 

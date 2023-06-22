@@ -3,8 +3,8 @@
 	.syntax unified
 	.text
 
-	thumb_func_start open_8055A00
-open_8055A00: @ 08055A00
+	thumb_func_start open_init_8055A00
+open_init_8055A00: @ 08055A00
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9
@@ -331,7 +331,7 @@ _08055C02:
 	movs r0, #0x02
 	strh r0, [r1, #0x0E]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	b _08055D14
 	.byte 0x00, 0x00
 _08055CD4: .4byte 0x03000C78
@@ -487,7 +487,7 @@ sub_8055E2C:
 	adds r7, r0, #0x0
 	adds r0, #0xD8
 	ldr r0, [r0, #0x00]
-	bl sub_8021F20
+	bl sprite_hide_8021F20
 	adds r4, r7, #0x0
 	adds r4, #0xE0
 	ldr r0, [r4, #0x00]
@@ -531,7 +531,7 @@ sub_8055E2C:
 	mov r1, r10
 	strh r1, [r0, #0x0E]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	subs r4, #0x0C
 	ldr r0, [r4, #0x00]
 	mov r2, r8
@@ -565,7 +565,7 @@ sub_8055E2C:
 	orrs r0, r1
 	strb r0, [r2, #0x12]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	movs r0, #0xF0
 	lsls r0, r0, #0x07
 	str r0, [r7, #0x20]
@@ -645,11 +645,11 @@ sub_8055F74:
 	str r1, [sp, #0x004]
 	adds r0, #0xD8
 	ldr r0, [r0, #0x00]
-	bl sub_8021F20
+	bl sprite_hide_8021F20
 	adds r0, r7, #0x0
 	adds r0, #0xC0
 	ldr r0, [r0, #0x00]
-	bl sub_8021F20
+	bl sprite_hide_8021F20
 	movs r1, #0x00
 	movs r0, #0x64
 	mov r8, r0
@@ -668,7 +668,7 @@ sub_8055F74:
 	mov r1, r8
 	strh r1, [r0, #0x02]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	movs r2, #0x78
 	mov r8, r2
 	adds r4, #0x04
@@ -685,7 +685,7 @@ sub_8055F74:
 	mov r2, r8
 	strh r2, [r0, #0x02]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	movs r0, #0x8C
 	mov r8, r0
 	adds r4, #0x04
@@ -702,7 +702,7 @@ sub_8055F74:
 	mov r2, r8
 	strh r2, [r0, #0x02]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	movs r0, #0xA0
 	mov r8, r0
 	subs r4, #0x0C
@@ -727,7 +727,7 @@ sub_8055F74:
 	adds r0, #0x5C
 	strh r0, [r2, #0x02]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	adds r4, #0x1C
 	ldr r0, [r4, #0x00]
 	movs r2, #0x00
@@ -767,7 +767,7 @@ sub_8055F74:
 	mov r2, r9
 	strh r2, [r0, #0x0E]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	subs r4, #0x0C
 	ldr r0, [r4, #0x00]
 	movs r1, #0x00
@@ -799,7 +799,7 @@ sub_8055F74:
 	mov r1, r9
 	strh r1, [r0, #0x0E]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	adds r4, #0x08
 	ldr r0, [r4, #0x00]
 	ldr r2, [sp, #0x004]
@@ -828,7 +828,7 @@ sub_8055F74:
 	movs r0, #0x01
 	strh r0, [r1, #0x0E]
 	ldr r0, [r4, #0x00]
-	bl sub_8020CBC
+	bl sprite_show_8020CBC
 	ldrb r0, [r7, #0x1D]
 	ands r6, r0
 	orrs r6, r5

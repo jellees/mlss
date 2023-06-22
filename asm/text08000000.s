@@ -6495,7 +6495,7 @@ _08017DE4:
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	movs r3, #0x02
-	bl open_8055A00
+	bl open_init_8055A00
 	b _08017E1C
 	.byte 0x00, 0x00
 _08017E00: .4byte 0x081DD7B8
