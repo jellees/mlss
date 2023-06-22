@@ -29,7 +29,7 @@ struct Process {
 
 struct GameState {
     u16 field_0;
-    s16 field_2;
+    u16 field_2;
     u32 field_4;
     u8 gap8[4];
     struct Process* startProcessLink;
@@ -37,9 +37,13 @@ struct GameState {
     struct Process* currentProcess;
     u8 processCount;
     u32 field_1C;
+    u32 gap20;
+    u32 playTime;
+    u16 inputPressed;
+    u16 field_2A;
 
     // ...
-    u8 pad1[0x864];
+    u8 pad1[0x858];
 
     u32 field_884;
     s8 field_888_0 : 1;
@@ -55,17 +59,6 @@ struct struc_3000D18
 {
     u8 field_0_0 : 1;
     u8 field_0_1 : 3;
-    u32 field_4;
-    u32 field_8;
-    u32 field_C;
-};
-
-// Variant A on struct struc_3000D18. REMOVE THIS
-struct struc_3000D18_a
-{
-    u8 field_0_0 : 1;
-    u8 field_0_1 : 1;
-    u8 field_0_2 : 1;
     u32 field_4;
     u32 field_8;
     u32 field_C;
@@ -89,7 +82,12 @@ struct Sprite
     u8 field_10;
     u8 field_11_0 : 6;
     u8 field_11_6 : 1;
-    u8 field_12;
+    u8 field_11_7 : 1;
+    u8 field_12_0 : 1;
+    u8 field_12_1 : 2;
+    u8 field_12_3 : 1;
+    u8 field_12_4 : 1;
+    u8 field_12_5 : 3;
     u8 field_13;
     u8 field_14;
     u8 field_15;
@@ -131,12 +129,18 @@ void sub_8018218(void*, void*, size_t, int, int);
 void free_heap_8018DA8(void* ptr);
 void* alloc_zero_8018DB4(int, bool32, char*, int);
 void* alloc_Zero(int, bool32, char*, int);
+void play_sfx_80195B4(int, int);
 u32 sub_80198B0(int*);
 void sub_801E150(struct Sprite*, int, int, int, int);
 void sub_8020994(int, int, int, int);
 void sub_8020CBC(struct Sprite*);
 struct Sprite* sub_8020DD0(int, int, int, int, int, int, int);
+void sub_80210A8(struct Sprite*, int, int, int, int, int, int, int);
 void sub_80213A0(int, int, int, int);
+void sub_8021F20(struct Sprite*);
+void sub_8021F7C(void);
+void sub_8021FD4(struct ProcessDefinition*);
+void open_8055A00(void*, int, char*, int);
 struct struc_203FFF8* sub_81251DC();
 void sub_81DA698(void*, void*, size_t);
 
@@ -161,6 +165,7 @@ extern int dword_83A2F98[];
 extern int dword_83A3498[];
 extern int dword_83A34B8[];
 extern int dword_83A3860[];
+extern int dword_83A3D60[];
 extern struct ProcessDefinition stru_8CDBD68;
 extern struct ProcessDefinition stru_8CDBD78;
 extern struct ProcessDefinition stru_8CDC258;

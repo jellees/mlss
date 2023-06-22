@@ -91,3 +91,142 @@ struct COMPProcess* comp_init(struct COMPProcess* comp, u8 priority, char* label
 
     return comp;
 }
+
+void comp_update(struct COMPProcess* comp) {
+    switch (comp->process.state) {
+        case 0:
+            comp->yPosMario += comp->velocity;
+            comp->yPosLuigi += comp->velocity;
+            comp->verticalOffset -= comp->velocity;
+            comp->velocity = comp->velocity + comp->acceleration;
+            if (comp->verticalOffset <= 0) {
+                comp->brightness = 16;
+                comp->verticalOffset = 0;
+                comp->velocity = -1324;
+                play_sfx_80195B4(134, -1);
+                comp->process.state = 1;
+            }
+            break;
+
+        case 1:
+            if (comp->brightness > 10) {
+                comp->verticalOffset ^= 512;
+            } else {
+                comp->verticalOffset ^= 256;
+            }
+            comp->brightness--;
+            if (comp->brightness == 0) {
+                comp->brightness = 100;
+                (*(vu16*)(0x2000000 + 0x12)) = 0;
+                comp->process.state = 2;
+            }
+            break;
+
+        case 2:
+            if (comp->brightness == 80) {
+                play_sfx_80195B4(221, -1);
+            }
+            comp->brightness--;
+            if (comp->brightness == 0) {
+                comp->brightness = 16;
+                (*(vu16*)(0x2000000 + 0x50)) = 191;
+                (*(vu16*)(0x2000000 + 0x54)) = 0;
+                comp->process.state = 3;
+            }
+            break;
+
+        case 3:
+            comp->brightness--;
+            (*(vu16*)(0x2000000 + 0x54)) = 16 - comp->brightness;
+            if (comp->brightness == 0) {
+                sub_8021F20(comp->mario);
+                sub_8021F20(comp->luigi);
+                sub_81DA698(dword_83A3D60, (void*)0x2000000 + 0x80, 8);
+                gGameState.field_2 = -1;
+                (*(vu16*)(0x2000000 + 0x8)) = 0x1D0C;
+                sub_8020CBC(comp->alphaDreamLogo);
+                comp->alphaDreamLogo->field_12_4 = 1;
+                comp->brightness = 16;
+                comp->process.state = 4;
+            }
+            break;
+
+        case 4:
+            comp->brightness--;
+            (*(vu16*)(0x2000000 + 0x54)) = comp->brightness;
+            if ((gGameState.field_2A & 0xB) != 0) {
+                comp->brightness = 16 - comp->brightness;
+                comp->process.state = 6;
+            } else if (comp->brightness == 0) {
+                comp->brightness = 120;
+                comp->alphaDreamLogo->field_12_4 = 0;
+                comp->alphaDreamLogo->field_12_1 = 1;
+                comp->process.state = 5;
+            }
+            break;
+
+        case 5:
+            if ((gGameState.field_2A & 0xB) == 0) {
+                comp->brightness--;
+                if (comp->brightness != 0) {
+                    break;
+                }
+            }
+            comp->brightness = 16;
+            comp->process.state = 6;
+            break;
+
+        case 6:
+            comp->brightness--;
+            (*(vu16*)(0x2000000 + 0x54)) = 16 - comp->brightness;
+            if (comp->brightness == 0) {
+                if (comp) {
+                    comp->process.definition = &stru_8CDC258;
+                    sub_8021FD4(&stru_8CDC258);
+                    if (comp->opdr) {
+                        process_remove(comp->opdr, 3);
+                    }
+                    process_remove(&comp->process, 3);
+                }
+                open_8055A00(alloc_Zero(228, 0, "OPEN", 0), 8, "OPEN", 0);
+                return;
+            }
+            break;
+    }
+
+    if (comp->process.state < 3) {
+        if (comp->process.state != 0 && comp->flags) {
+            comp->xPosMario -= 384;
+            comp->xPosLuigi += 384;
+            comp->yPosMario += comp->velocity;
+            comp->yPosLuigi += comp->velocity;
+            comp->velocity += comp->acceleration;
+            if (comp->yPosMario >= 24064) {
+                bool32 temp;
+                comp->yPosMario = 24064;
+                comp->yPosLuigi = 24064;
+                sub_80210A8(comp->mario, 2, 4109, 1, -1, -1, -1, -1);
+                sub_801E150(comp->mario, 0, -1, 0, 0);
+                sub_8020CBC(comp->mario);
+                temp = comp->mario->field_11_6;
+                temp ^= 1;
+                comp->mario->field_11_6 = temp;
+
+                comp->mario->field_12_1 = 1;
+
+                sub_80210A8(comp->luigi, 2, 4110, 1, -1, -1, -1, -1);
+                sub_801E150(comp->luigi, 0, -1, 0, 0);
+                sub_8020CBC(comp->luigi);
+                comp->luigi->field_12_1 = 1;
+                comp->flags = 0;
+            }
+        }
+        (*(vu16*)(0x2000000 + 0x12)) = comp->verticalOffset / 256;
+        comp->mario->xPosition = comp->xPosMario / 256;
+        comp->mario->yPosition = comp->yPosMario / 256;
+        comp->luigi->xPosition = comp->xPosLuigi / 256;
+        comp->luigi->yPosition = comp->yPosLuigi / 256;
+    }
+
+    sub_8021F7C();
+}
