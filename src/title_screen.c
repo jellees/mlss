@@ -391,3 +391,50 @@ struct OPENProcess* open_init(struct OPENProcess* open, u8 priority, char* label
     return open;
 }
 #endif
+
+
+void open_8055E2C(struct OPENProcess *process)
+{
+    sprite_hide_8021F20(process->sprites[6]);
+
+    sub_801E150(process->sprites[8], 0, 0, 0, 0);
+    process->sprites[8]->xPosition = 121;
+    process->sprites[8]->yPosition = 80;
+    process->sprites[8]->xScale = 256;
+    process->sprites[8]->yScale = 256;
+    process->sprites[8]->field_1F_0 = 0;
+    process->sprites[8]->field_1F_2 = 0;
+    process->sprites[8]->field_E = 2;
+    sprite_show_8020CBC(process->sprites[8]);
+
+    sub_801E150(process->sprites[5], 2, 0, 0, 0);
+    process->sprites[5]->xPosition = 120;
+    process->sprites[5]->yPosition = 140;
+    process->sprites[5]->field_1F_0 = 0;
+    process->sprites[5]->field_1F_2 = 1;
+    process->sprites[5]->field_E = 2;
+    process->sprites[5]->field_12_4 = 1;
+    sprite_show_8020CBC(process->sprites[5]);
+
+    process->xPosSuitcase = 30720;
+    process->yPosSuitcase = 35840;
+    process->flags_5 = 0;
+
+    BUFFER_REG_BG2HOFS = 0;
+    BUFFER_REG_BG2VOFS = 0;
+    BUFFER_REG_BG2PA = 256;
+    BUFFER_REG_BG2PB = 0;
+    BUFFER_REG_BG2PC = 0;
+    BUFFER_REG_BG2PD = 256;
+    BUFFER_REG_BG2X = 0;
+    BUFFER_REG_BG2Y = 0;
+    BUFFER_REG_BG0CNT = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(24);
+    BUFFER_REG_BG0HOFS = 0;
+    BUFFER_REG_BG0VOFS = 0;
+    BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
+    
+    process->mlTextPosY = 0;
+    process->mlTextScaleX = 256;
+    process->mlTextScaleY = 256;
+    process->states[0] = -1;
+}

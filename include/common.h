@@ -78,8 +78,8 @@ struct Sprite
 {
     s16 xPosition;
     s16 yPosition;
-    s16 field_4;
-    s16 field_6;
+    s16 xScale;
+    s16 yScale;
     s16 field_8;
     s16 field_A;
     u8 pad[2];
