@@ -41,9 +41,13 @@ struct GameState {
     u32 playTime;
     u16 inputPressed;
     u16 field_2A;
+    u16 field_2C;
+    u16 field_2E;
+    u8 field_30;
+    u8 field_31;
 
     // ...
-    u8 pad1[0x858];
+    u8 pad1[0x852];
 
     u32 field_884;
     s8 field_888_0 : 1;
@@ -78,7 +82,8 @@ struct Sprite
     s16 field_6;
     s16 field_8;
     s16 field_A;
-    u8 pad[4];
+    u8 pad[2];
+    s16 field_E;
     u8 field_10;
     u8 field_11_0 : 6;
     u8 field_11_6 : 1;
@@ -96,7 +101,8 @@ struct Sprite
     u16 field_1A;
     u16 field_1C;
     u8 field_1E;
-    u8 field_1F;
+    u8 field_1F_0 : 2;
+    u8 field_1F_2 : 2;
     u8 field_20;
 };
 
@@ -122,6 +128,19 @@ struct EeprStruct1{
     u8 field_8_6 : 1;
 };
 
+struct OPDRProcess
+{
+    struct Process process;
+    u8 field_1C;
+    u8 field_1D;
+    u8 field_1E;
+    u8 field_1F;
+    u8 field_20;
+    u8 field_21;
+    u8 field_22;
+    u8 field_23;
+};
+
 // Function prototypes
 void sub_800063C();
 void sub_8017E34(void);
@@ -141,6 +160,7 @@ void sprite_hide_8021F20(struct Sprite*);
 void sub_8021F7C(void);
 void sub_8021FD4(struct ProcessDefinition*);
 void open_init_8055A00(void*, int, char*, int);
+void open_8056224();
 struct struc_203FFF8* sub_81251DC();
 void sub_81DA698(void*, void*, size_t);
 
@@ -150,6 +170,7 @@ extern struct struc_203FFB8 stru_203FFB8;
 extern struct struc_203FFF8 stru_203FFF8;
 
 // IWRAM
+extern int* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
 extern struct GameState gGameState;
 extern void (*dword_3000C78)();
@@ -166,7 +187,16 @@ extern int dword_83A3498[];
 extern int dword_83A34B8[];
 extern int dword_83A3860[];
 extern int dword_83A3D60[];
+extern int dword_83A3D80[];
+extern int dword_83A4874[];
+extern int dword_83A575C[];
+extern int dword_83A5C5C[];
+extern int dword_83A6C5C[];
+extern int dword_83A7140[];
+extern int dword_83A7300[];
+extern u16 word_83A74C0[];
 extern struct ProcessDefinition stru_8CDBD68;
 extern struct ProcessDefinition stru_8CDBD78;
+extern struct ProcessDefinition stru_8CDC238;
 extern struct ProcessDefinition stru_8CDC258;
 extern struct ProcessDefinition stru_8CDC268;

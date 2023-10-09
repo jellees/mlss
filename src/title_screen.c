@@ -229,3 +229,165 @@ void comp_update(struct COMPProcess* comp) {
 
     sub_8021F7C();
 }
+
+// OPEN process state
+// 0 = fade in
+// 1 = suitcase falling out of sky and opening
+// 2 = suitcase closes
+// 3 = press start (waiting for input)
+// 4 = suitcase opens for game select or options
+// 5 = game select
+// 6 = chosen (fade out)
+
+// state array indices
+// 0 = suitcase
+// 1 = MARIO & LUIGI text
+// 2 = SUPERSTAR SAGA text
+// 3 = (c) 2003 NINTENDO text
+// 4 = PRESS START text
+// 5 = bean pointer
+
+// suitcase state
+// 0 = suitcase falling out of sky
+// 1 = suitcase hitting ground and falling straight
+// 2 = suitcase falling over
+// 3 = suitcase opening
+// 4 = text coming out of suitcase
+// 5 = suitcase closes
+// 6 = go to left
+// 7 = bump open sideways
+
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/open_init_8055A00.s\"");
+#else
+struct OPENProcess* open_init(struct OPENProcess* open, u8 priority, char* label, int selection)
+{
+    struct struc_203FFF8* v5;
+    void* cgdw;
+    u32 i;
+    //int sel;
+    char* tmp1;
+    void (**tmp2)();
+    struct Sprite** sprites;
+    
+    struct OPENProcess* proc = open;
+    
+    //sel = selection;
+
+    process_add(&open->process, priority, label);
+    open->process.definition = &stru_8CDC238;
+    
+    (*(vu16 *)(0x2000000 + 0x80)) = 0x7FFF;
+    gGameState.field_2 = 1;
+    (*(vu16 *)(0x2000000 + 0x0)) = 0;
+    sub_8017E34();
+    gGameState.field_31 = 8;
+    
+    v5 = sub_81251DC();
+    stru_203FFF8.field_0 = v5->field_0;
+    stru_203FFF8.field_4 = v5->field_4;
+    stru_203FFF8.field_7_0 = 0;
+    stru_203FFF8.field_7_2 = dword_3000FFC->field_8_3;
+    stru_203FFF8.field_7_3 = dword_3000FFC->field_8_5;
+    stru_203FFF8.field_7_4 = dword_3000FFC->field_8_0;
+    stru_203FFF8.field_7_7 = gGameState.field_888_1;
+
+    dword_3000DA0 = alloc_Zero(340, 0, "ORST", 1);
+    open->opdr = sub_80572CC(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR", stru_203FFF8.field_0, stru_203FFF8.field_4);
+    open->opdr->process.parentProcess = &proc->process;
+    
+    open->selection = selection != 0 ? selection - 1 : 0;
+    open->flags_0 = 0;
+    proc->brightness = 16;
+    proc->flags_4 = 0;
+    proc->flags_5 = 1;
+    proc->states[0] = 0;
+
+    // Why.
+    tmp2 = &dword_3000C78;
+    tmp1 = "CGDW";
+    sprites = proc->sprites;
+    
+    proc->states[1] = 0xFF;
+    proc->states[2] = 0xFF;
+    proc->states[3] = 0xFF;
+    proc->states[4] = 0xFF;
+    proc->states[5] = 0xFF;
+
+    *tmp2 = 0;
+    
+    cgdw = alloc_zero_8018DB4(0x8000, 1, tmp1, 0);
+    dword_3000C84(dword_83A3D80, cgdw);
+    sub_81DA698(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A3D80) >> 2) & 0x1FFFFF);
+    dword_3000C84(dword_83A4874, cgdw);
+    sub_81DA698(cgdw, (void*)0x6004000, (sub_80198B0(dword_83A4874) >> 2) & 0x1FFFFF);
+    sub_81DA698(dword_83A575C, (void*)0x600C000, 320);
+    sub_81DA698(dword_83A5C5C, (void*)0x600D000, 1024);
+    sub_81DA698(dword_83A6C5C, (void*)0x600C800, 312);
+    free_heap_8018DA8(cgdw);
+    sub_8020994(0, 0, 0, 0);
+
+    for (i = 0; i < 9; i += 3)
+    {
+        sprites[i + 0] = sub_8020DD0(0, word_83A74C0[(i * 2) + 0], word_83A74C0[(i * 2) + 1], -1, -1, -1, -1);
+        sub_801E150(sprites[i + 0], 0, -1, 0, 0);
+
+        sprites[i + 1] = sub_8020DD0(0, word_83A74C0[(i * 2) + 2], word_83A74C0[(i * 2) + 3], -1, -1, -1, -1);
+        sub_801E150(sprites[i + 1], 0, -1, 0, 0);
+
+        sprites[i + 2] = sub_8020DD0(0, word_83A74C0[(i * 2) + 4], word_83A74C0[(i * 2) + 5], -1, -1, -1, -1);
+        sub_801E150(sprites[i + 2], 0, -1, 0, 0);
+    }
+
+    if ( selection == 0)
+    {
+        proc->xPosSuitcase = 30720;
+        proc->yPosSuitcase = 0;
+        proc->yVelocitySuitcase = 512;
+        sub_801E150(proc->sprites[5], 0, 0, 0, 0);
+        proc->sprites[5]->xPosition = 120;
+        proc->sprites[5]->yPosition = 0;
+        proc->sprites[5]->field_1F_0 = 0;
+        proc->sprites[5]->field_1F_2 = 1;
+        proc->sprites[5]->field_E = 2;
+        sprite_show_8020CBC(proc->sprites[5]);
+    }
+    else
+    {
+        open_8055F74(open, selection);
+    }
+
+    dword_3000C78 = sub_800063C;
+
+    (*(vu16 *)(0x2000000 + 0x50)) = 191;
+    (*(vu16 *)(0x2000000 + 0x54)) = 16;
+    (*(vu16 *)(0x2000000 + 0x08)) = 6146;
+    (*(vu16 *)(0x2000000 + 0x0A)) = 23043;
+    (*(vu16 *)(0x2000000 + 0x0C)) = 22916;
+    (*(vu16 *)(0x2000000 + 0x10)) = 0;
+    (*(vu16 *)(0x2000000 + 0x12)) = 0;
+    (*(vu16 *)(0x2000000 + 0x14)) = 0;
+    (*(vu16 *)(0x2000000 + 0x16)) = 0;
+
+    sub_81DA698(gGameState.field_888_1 == 0 ? dword_83A7300 : dword_83A7140, (void*)0x2000080, 112);
+
+    (*(vu16 *)(0x2000000 + 0x80)) = 0x7FFF;
+    gGameState.field_2 = -1;
+    gGameState.field_0 = -1;
+    sub_8018B78(2, open_8056224);
+    sub_8019308(0, 41, -1);
+
+    if ( selection == 0 )
+    {
+        open->flags_2 = 0;
+        (*(vu16 *)(0x2000000 + 0x00)) |= 4673;
+    }
+    else
+    {
+        open->flags_2 = 2;
+        (*(vu16 *)(0x2000000 + 0x00)) |= 5953;
+    }
+
+    return open;
+}
+#endif
