@@ -257,32 +257,33 @@ void comp_update(struct COMPProcess* comp) {
 // 6 = go to left
 // 7 = bump open sideways
 
+// https://decomp.me/scratch/WOp2S
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/open_init_8055A00.s\"");
+asm_unified(".include \"asm/nonmatching/text08055A00.s\"");
 #else
-struct OPENProcess* open_init(struct OPENProcess* open, u8 priority, char* label, int selection)
-{
+struct OPENProcess* open_init_8055A00(struct OPENProcess* open, u8 priority, char* label,
+                                      int selection) {
     struct struc_203FFF8* v5;
     void* cgdw;
     u32 i;
-    //int sel;
+    // int sel;
     char* tmp1;
     void (**tmp2)();
     struct Sprite** sprites;
-    
+
     struct OPENProcess* proc = open;
-    
-    //sel = selection;
+
+    // sel = selection;
 
     process_add(&open->process, priority, label);
     open->process.definition = &stru_8CDC238;
-    
-    (*(vu16 *)(0x2000000 + 0x80)) = 0x7FFF;
+
+    (*(vu16*)(0x2000000 + 0x80)) = 0x7FFF;
     gGameState.field_2 = 1;
-    (*(vu16 *)(0x2000000 + 0x0)) = 0;
+    (*(vu16*)(0x2000000 + 0x0)) = 0;
     sub_8017E34();
     gGameState.field_31 = 8;
-    
+
     v5 = sub_81251DC();
     stru_203FFF8.field_0 = v5->field_0;
     stru_203FFF8.field_4 = v5->field_4;
@@ -293,9 +294,10 @@ struct OPENProcess* open_init(struct OPENProcess* open, u8 priority, char* label
     stru_203FFF8.field_7_7 = gGameState.field_888_1;
 
     dword_3000DA0 = alloc_Zero(340, 0, "ORST", 1);
-    open->opdr = sub_80572CC(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR", stru_203FFF8.field_0, stru_203FFF8.field_4);
+    open->opdr = sub_80572CC(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR", stru_203FFF8.field_0,
+                             stru_203FFF8.field_4);
     open->opdr->process.parentProcess = &proc->process;
-    
+
     open->selection = selection != 0 ? selection - 1 : 0;
     open->flags_0 = 0;
     proc->brightness = 16;
@@ -307,7 +309,7 @@ struct OPENProcess* open_init(struct OPENProcess* open, u8 priority, char* label
     tmp2 = &dword_3000C78;
     tmp1 = "CGDW";
     sprites = proc->sprites;
-    
+
     proc->states[1] = 0xFF;
     proc->states[2] = 0xFF;
     proc->states[3] = 0xFF;
@@ -315,7 +317,7 @@ struct OPENProcess* open_init(struct OPENProcess* open, u8 priority, char* label
     proc->states[5] = 0xFF;
 
     *tmp2 = 0;
-    
+
     cgdw = alloc_zero_8018DB4(0x8000, 1, tmp1, 0);
     dword_3000C84(dword_83A3D80, cgdw);
     sub_81DA698(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A3D80) >> 2) & 0x1FFFFF);
@@ -327,20 +329,21 @@ struct OPENProcess* open_init(struct OPENProcess* open, u8 priority, char* label
     free_heap_8018DA8(cgdw);
     sub_8020994(0, 0, 0, 0);
 
-    for (i = 0; i < 9; i += 3)
-    {
-        sprites[i + 0] = sub_8020DD0(0, word_83A74C0[(i * 2) + 0], word_83A74C0[(i * 2) + 1], -1, -1, -1, -1);
+    for (i = 0; i < 9; i += 3) {
+        sprites[i + 0] =
+            sub_8020DD0(0, word_83A74C0[(i * 2) + 0], word_83A74C0[(i * 2) + 1], -1, -1, -1, -1);
         sub_801E150(sprites[i + 0], 0, -1, 0, 0);
 
-        sprites[i + 1] = sub_8020DD0(0, word_83A74C0[(i * 2) + 2], word_83A74C0[(i * 2) + 3], -1, -1, -1, -1);
+        sprites[i + 1] =
+            sub_8020DD0(0, word_83A74C0[(i * 2) + 2], word_83A74C0[(i * 2) + 3], -1, -1, -1, -1);
         sub_801E150(sprites[i + 1], 0, -1, 0, 0);
 
-        sprites[i + 2] = sub_8020DD0(0, word_83A74C0[(i * 2) + 4], word_83A74C0[(i * 2) + 5], -1, -1, -1, -1);
+        sprites[i + 2] =
+            sub_8020DD0(0, word_83A74C0[(i * 2) + 4], word_83A74C0[(i * 2) + 5], -1, -1, -1, -1);
         sub_801E150(sprites[i + 2], 0, -1, 0, 0);
     }
 
-    if ( selection == 0)
-    {
+    if (selection == 0) {
         proc->xPosSuitcase = 30720;
         proc->yPosSuitcase = 0;
         proc->yVelocitySuitcase = 512;
@@ -351,50 +354,43 @@ struct OPENProcess* open_init(struct OPENProcess* open, u8 priority, char* label
         proc->sprites[5]->field_1F_2 = 1;
         proc->sprites[5]->field_E = 2;
         sprite_show_8020CBC(proc->sprites[5]);
-    }
-    else
-    {
+    } else {
         open_8055F74(open, selection);
     }
 
     dword_3000C78 = sub_800063C;
 
-    (*(vu16 *)(0x2000000 + 0x50)) = 191;
-    (*(vu16 *)(0x2000000 + 0x54)) = 16;
-    (*(vu16 *)(0x2000000 + 0x08)) = 6146;
-    (*(vu16 *)(0x2000000 + 0x0A)) = 23043;
-    (*(vu16 *)(0x2000000 + 0x0C)) = 22916;
-    (*(vu16 *)(0x2000000 + 0x10)) = 0;
-    (*(vu16 *)(0x2000000 + 0x12)) = 0;
-    (*(vu16 *)(0x2000000 + 0x14)) = 0;
-    (*(vu16 *)(0x2000000 + 0x16)) = 0;
+    (*(vu16*)(0x2000000 + 0x50)) = 191;
+    (*(vu16*)(0x2000000 + 0x54)) = 16;
+    (*(vu16*)(0x2000000 + 0x08)) = 6146;
+    (*(vu16*)(0x2000000 + 0x0A)) = 23043;
+    (*(vu16*)(0x2000000 + 0x0C)) = 22916;
+    (*(vu16*)(0x2000000 + 0x10)) = 0;
+    (*(vu16*)(0x2000000 + 0x12)) = 0;
+    (*(vu16*)(0x2000000 + 0x14)) = 0;
+    (*(vu16*)(0x2000000 + 0x16)) = 0;
 
     sub_81DA698(gGameState.field_888_1 == 0 ? dword_83A7300 : dword_83A7140, (void*)0x2000080, 112);
 
-    (*(vu16 *)(0x2000000 + 0x80)) = 0x7FFF;
+    (*(vu16*)(0x2000000 + 0x80)) = 0x7FFF;
     gGameState.field_2 = -1;
     gGameState.field_0 = -1;
     sub_8018B78(2, open_8056224);
     sub_8019308(0, 41, -1);
 
-    if ( selection == 0 )
-    {
+    if (selection == 0) {
         open->flags_2 = 0;
-        (*(vu16 *)(0x2000000 + 0x00)) |= 4673;
-    }
-    else
-    {
+        (*(vu16*)(0x2000000 + 0x00)) |= 4673;
+    } else {
         open->flags_2 = 2;
-        (*(vu16 *)(0x2000000 + 0x00)) |= 5953;
+        (*(vu16*)(0x2000000 + 0x00)) |= 5953;
     }
 
     return open;
 }
 #endif
 
-
-void open_8055E2C(struct OPENProcess *process)
-{
+void open_8055E2C(struct OPENProcess* process) {
     sprite_hide_8021F20(process->sprites[6]);
 
     sub_801E150(process->sprites[8], 0, 0, 0, 0);
@@ -432,9 +428,108 @@ void open_8055E2C(struct OPENProcess *process)
     BUFFER_REG_BG0HOFS = 0;
     BUFFER_REG_BG0VOFS = 0;
     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
-    
+
     process->mlTextPosY = 0;
     process->mlTextScaleX = 256;
     process->mlTextScaleY = 256;
     process->states[0] = -1;
 }
+
+// https://decomp.me/scratch/WbD37
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/text08055F74.s\"");
+#else
+void open_8055F74(struct OPENProcess* process, int selection) {
+    s16 tmp;
+
+    sprite_hide_8021F20(process->sprites[6]);
+    sprite_hide_8021F20(process->sprites[0]);
+
+    tmp = 100;
+    sub_801E150(process->sprites[2], 3, 0, 0, 0);
+    process->sprites[2]->xPosition = 180;
+    process->sprites[2]->yPosition = tmp;
+    sprite_show_8020CBC(process->sprites[2]);
+
+    tmp = 120;
+    sub_801E150(process->sprites[3], 4, 0, 0, 0);
+    process->sprites[3]->xPosition = 180;
+    process->sprites[3]->yPosition = tmp;
+    sprite_show_8020CBC(process->sprites[3]);
+
+    tmp = 140;
+    sub_801E150(process->sprites[4], 5, 0, 0, 0);
+    process->sprites[4]->xPosition = 180;
+    process->sprites[4]->yPosition = tmp;
+    sprite_show_8020CBC(process->sprites[4]);
+
+    sub_801E150(process->sprites[1], 13, 0, 0, 0);
+    process->sprites[1]->xPosition = 112;
+    process->sprites[1]->yPosition = 92 + 20 * process->selection;
+    sprite_show_8020CBC(process->sprites[1]);
+
+    sub_801E150(process->sprites[8], 0, 0, 0, 0);
+    process->sprites[8]->xPosition = 121;
+    process->sprites[8]->yPosition = 80;
+    process->sprites[8]->xScale = 256;
+    process->sprites[8]->yScale = 256;
+    process->sprites[8]->field_1F_0 = 0;
+    process->sprites[8]->field_1F_2 = 0;
+    process->sprites[8]->field_E = 2;
+    sprite_show_8020CBC(process->sprites[8]);
+
+    tmp = 140;
+    sub_801E150(process->sprites[5], 4, 0, 0, 0);
+    process->sprites[5]->xPosition = 64;
+    process->sprites[5]->yPosition = tmp;
+    process->sprites[5]->field_1F_0 = 0;
+    process->sprites[5]->field_1F_2 = 1;
+    process->sprites[5]->field_E = 2;
+    sprite_show_8020CBC(process->sprites[5]);
+
+    tmp = 140;
+    sub_801E150(process->sprites[7], 3 * (selection - 1) + 1, 0, 0, 0);
+    process->sprites[7]->xPosition = 64;
+    process->sprites[7]->yPosition = tmp;
+    process->sprites[7]->field_1F_0 = 1;
+    process->sprites[7]->field_E = 1;
+    sprite_show_8020CBC(process->sprites[7]);
+
+    process->flags_0 = 1;
+
+    off_839EC80[0x01] |= 0x20;
+    off_839EC80[0x40] = 0xF0;
+    off_839EC80[0x41] = 0x00;
+    off_839EC80[0x44] = 0xA0;
+    off_839EC80[0x45] = 0x90;
+
+    off_839EC80[0x48] |= 1;
+    off_839EC80[0x48] |= 2;
+    off_839EC80[0x48] |= 4;
+    off_839EC80[0x48] |= 8;
+    *(s8*)&off_839EC80[0x48] &= 0xEF;
+    off_839EC80[0x48] |= 0x20;
+
+    off_839EC80[0x4A] |= 1;
+    off_839EC80[0x4A] |= 2;
+    off_839EC80[0x4A] |= 4;
+    off_839EC80[0x4A] |= 8;
+    off_839EC80[0x4A] |= 0x10;
+    off_839EC80[0x4A] |= 0x20;
+
+    (*(vu16*)(0x2000000 + 0x18)) = 0;
+    (*(vu16*)(0x2000000 + 0x1A)) = 0;
+    (*(vu16*)(0x2000000 + 0x20)) = 256;
+    (*(vu16*)(0x2000000 + 0x22)) = 0;
+    (*(vu16*)(0x2000000 + 0x24)) = 0;
+    (*(vu16*)(0x2000000 + 0x26)) = 256;
+    (*(vu32*)(0x2000000 + 0x28)) = 0;
+    (*(vu32*)(0x2000000 + 0x2C)) = 0;
+
+    process->mlTextPosY = 0;
+    process->mlTextScaleX = 256;
+    process->mlTextScaleY = 256;
+
+    sub_80574FC();
+}
+#endif

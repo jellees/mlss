@@ -68,7 +68,7 @@ struct OPENProcess
     struct BgAffineSrcData mlTextAffineSrc;
     struct BgAffineDstData mlTextAffineDst;
     struct OPDRProcess* opdr;
-    u8 selection;
+    s8 selection;
     // struct Sprite* pressStartText;
     // struct Sprite* beanPointer;
     // struct Sprite* marioLuigiGameText;

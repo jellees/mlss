@@ -195,6 +195,7 @@ extern int dword_83A6C5C[];
 extern int dword_83A7140[];
 extern int dword_83A7300[];
 extern u16 word_83A74C0[];
+extern u8* off_839EC80;
 extern struct ProcessDefinition stru_8CDBD68;
 extern struct ProcessDefinition stru_8CDBD78;
 extern struct ProcessDefinition stru_8CDC238;
