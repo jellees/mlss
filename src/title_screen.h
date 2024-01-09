@@ -29,6 +29,7 @@ struct OPENProcess
     u8 flags_2 : 2;
     u8 flags_4 : 1;
     u8 flags_5 : 1;
+    u8 flags_6 : 2;
 
     int xPosSuitcase;
     int yPosSuitcase;
@@ -60,8 +61,8 @@ struct OPENProcess
 
     char pad1[16];
 
-    u8 states[6];
-    s16 timer;
+    s8 states[6];
+    u16 timer;
 
     char pad2[12];
 

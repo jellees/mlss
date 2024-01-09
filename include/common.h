@@ -145,11 +145,14 @@ struct OPDRProcess
 void sub_800063C();
 void sub_8017E34(void);
 void sub_8018218(void*, void*, size_t, int, int);
+void sub_8018B78(int, void (*)(void));
 void free_heap_8018DA8(void* ptr);
 void* alloc_zero_8018DB4(int, bool32, char*, int);
 void* alloc_Zero(int, bool32, char*, int);
+void sub_80193B4(int, int, int);
 void play_sfx_80195B4(int, int);
 u32 sub_80198B0(int*);
+void sub_801AFE4(int);
 void sub_801E150(struct Sprite*, int, int, int, int);
 void sub_8020994(int, int, int, int);
 void sprite_show_8020CBC(struct Sprite*);
@@ -158,11 +161,16 @@ void sub_80210A8(struct Sprite*, int, int, int, int, int, int, int);
 void sub_80213A0(int, int, int, int);
 void sprite_hide_8021F20(struct Sprite*);
 void sub_8021F7C(void);
-void sub_8021FD4(struct ProcessDefinition*);
+void sub_8021FD4(void);
+struct Process* optn_init(struct Process*, u8, char*, int);
 void open_init_8055A00(void*, int, char*, int);
 void open_8056224();
+void sub_80574B4(void);
+void sub_80574FC(void);
 struct struc_203FFF8* sub_81251DC();
+struct Process* sub_812538C(struct Process*, u8, char*, int);
 void sub_81DA698(void*, void*, size_t);
+void sub_81DA6C8(int);
 
 // EWRAM
 
@@ -176,8 +184,11 @@ extern struct GameState gGameState;
 extern void (*dword_3000C78)();
 extern void (*dword_3000C84)(int*, void*);
 extern struct struc_3000D18 stru_3000D18;
+extern int (*dword_3001038)();
 
 // ROM
+extern int loc_8198220();
+extern int loc_819832C(int, int);
 extern u8 dword_81DD7F4[];
 extern u8 dword_81DD9F4[16384];
 extern u8 dword_81E19F4[1280];
@@ -195,6 +206,10 @@ extern int dword_83A6C5C[];
 extern int dword_83A7140[];
 extern int dword_83A7300[];
 extern u16 word_83A74C0[];
+extern u8 byte_83A74E4[];
+extern s16 word_83A74EC[];
+extern s16 word_83A7530[];
+extern s16 word_83A7574[];
 extern u8* off_839EC80;
 extern struct ProcessDefinition stru_8CDBD68;
 extern struct ProcessDefinition stru_8CDBD78;
