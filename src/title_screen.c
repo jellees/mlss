@@ -257,8 +257,7 @@ enum TitleScreenStates {
     TS_STATE_FADE_OUT
 };
 
-enum TitleScreenElements
-{
+enum TitleScreenElements {
     TS_ELEMENT_SUITCASE = 0,
     TS_ELEMENT_ML_TEXT,
     TS_ELEMENT_SS_TEXT,
@@ -675,8 +674,7 @@ void open_update(struct TitleScreen* ts) {
                                             ts->ssTextPosY = 37376;
                                             ts->ssTextScaleX = 51;
                                             ts->ssTextScaleY = 51;
-                                            sub_801E150(ts->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0,
-                                                        0);
+                                            sub_801E150(ts->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
                                             ts->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
                                             ts->sprites[TS_SPRITE_SS_TEXT]->yPosition = 146;
                                             ts->sprites[TS_SPRITE_SS_TEXT]->xScale = 51;
@@ -693,8 +691,8 @@ void open_update(struct TitleScreen* ts) {
                                             ts->nTextPosY = 36608;
                                             ts->nTextScaleX = 51;
                                             ts->nTextScaleY = 51;
-                                            sub_801E150(ts->sprites[TS_SPRITE_NINTENDO_TEXT], 0, 0,
-                                                        0, 0);
+                                            sub_801E150(ts->sprites[TS_SPRITE_NINTENDO_TEXT], 0, 0, 0,
+                                                        0);
                                             ts->sprites[TS_SPRITE_NINTENDO_TEXT]->xPosition = 118;
                                             ts->sprites[TS_SPRITE_NINTENDO_TEXT]->yPosition = 143;
                                             ts->sprites[TS_SPRITE_NINTENDO_TEXT]->xScale = 51;
@@ -702,8 +700,7 @@ void open_update(struct TitleScreen* ts) {
                                             ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_0 = 1;
                                             ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_2 = 1;
                                             ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_E = 0;
-                                            sprite_show_8020CBC(
-                                                ts->sprites[TS_SPRITE_NINTENDO_TEXT]);
+                                            sprite_show_8020CBC(ts->sprites[TS_SPRITE_NINTENDO_TEXT]);
                                             ts->states[TS_ELEMENT_LICENSE_TEXT] = 0;
                                             break;
                                     }
@@ -751,8 +748,7 @@ void open_update(struct TitleScreen* ts) {
 
                             case 1:
                                 ts->mlTextScaleX = word_83A74EC[2 * ts->mlTextProgression];
-                                ts->mlTextScaleY =
-                                    word_83A74EC[2 * ts->mlTextProgression + 1];
+                                ts->mlTextScaleY = word_83A74EC[2 * ts->mlTextProgression + 1];
                                 ts->mlTextProgression++;
                                 // Is the cast really necessary here?
                                 if ((u16)ts->mlTextProgression == 17) {
@@ -760,10 +756,10 @@ void open_update(struct TitleScreen* ts) {
                                 }
                                 break;
                         }
-                        ts->mlTextAffineSrc.sx = (dword_3001038 + (&loc_819832C - &loc_8198220))(
-                            0x10000, ts->mlTextScaleX);
-                        ts->mlTextAffineSrc.sy = (dword_3001038 + (&loc_819832C - &loc_8198220))(
-                            0x10000, ts->mlTextScaleY);
+                        ts->mlTextAffineSrc.sx =
+                            (dword_3001038 + (&loc_819832C - &loc_8198220))(0x10000, ts->mlTextScaleX);
+                        ts->mlTextAffineSrc.sy =
+                            (dword_3001038 + (&loc_819832C - &loc_8198220))(0x10000, ts->mlTextScaleY);
                         ts->mlTextAffineSrc.scrY = ts->mlTextPosY / 256;
                         BgAffineSet(&ts->mlTextAffineSrc, &ts->mlTextAffineDst, 1);
                         BUFFER_REG_BG2PA = ts->mlTextAffineDst.pa;
@@ -790,8 +786,7 @@ void open_update(struct TitleScreen* ts) {
 
                             case 1:
                                 ts->ssTextScaleX = word_83A7530[2 * ts->ssTextProgression];
-                                ts->ssTextScaleY =
-                                    word_83A7530[2 * ts->ssTextProgression + 1];
+                                ts->ssTextScaleY = word_83A7530[2 * ts->ssTextProgression + 1];
                                 ts->ssTextProgression++;
                                 if ((u16)ts->ssTextProgression == 17) {
                                     ts->states[TS_ELEMENT_SS_TEXT] = -1;
@@ -841,7 +836,8 @@ void open_update(struct TitleScreen* ts) {
             }
 
             if (!ts->flags_4) {
-                if (ts->flags_5 && gGameState.field_2A & (A_BUTTON | B_BUTTON | SELECT_BUTTON | START_BUTTON)) {
+                if (ts->flags_5
+                    && gGameState.field_2A & (A_BUTTON | B_BUTTON | SELECT_BUTTON | START_BUTTON)) {
                     ts->flags_4 = 1;
                     ts->brightness = 16;
                 }
@@ -853,7 +849,8 @@ void open_update(struct TitleScreen* ts) {
                     ts->flags_2 = 1;
                     ts->brightness = 16;
                     open_8055E2C(ts);
-                    (*(vu16*)(0x2000000 + 0x00)) |= 0x1741;
+                    BUFFER_REG_DISPCNT |= DISPCNT_MODE_1 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON
+                                          | DISPCNT_BG1_ON | DISPCNT_BG2_ON | DISPCNT_OBJ_ON;
                 }
             }
             break;
@@ -916,8 +913,7 @@ void open_update(struct TitleScreen* ts) {
                                         ts->beanPosY = 33280;
                                         ts->beanVelocityX = 384;
                                         ts->beanVelocityY = 1536;
-                                        sub_801E150(ts->sprites[TS_SPRITE_BEAN_POINTER], 11, 0, 0,
-                                                    0);
+                                        sub_801E150(ts->sprites[TS_SPRITE_BEAN_POINTER], 11, 0, 0, 0);
                                         ts->sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 64;
                                         ts->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 130;
                                         ts->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_0 = 0;
@@ -943,8 +939,7 @@ void open_update(struct TitleScreen* ts) {
                                 ts->states[TS_ELEMENT_PRESS_START_TEXT] = -1;
                             }
                         }
-                        ts->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition =
-                            ts->psTextPosY / 256;
+                        ts->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition = ts->psTextPosY / 256;
                         break;
 
                     case TS_ELEMENT_POINTER:
@@ -962,16 +957,13 @@ void open_update(struct TitleScreen* ts) {
 
                             case 1:
                                 if (ts->beanPosY / 256 <= 20 * ts->flags_6 + 92) {
-                                    sub_801E150(ts->sprites[ts->flags_6 + 2],
-                                                ts->flags_6 + 3, 0, 0, 0);
+                                    sub_801E150(ts->sprites[ts->flags_6 + 2], ts->flags_6 + 3, 0, 0, 0);
                                     ts->sprites[ts->flags_6 + 2]->xPosition = 180;
-                                    ts->sprites[ts->flags_6 + 2]->yPosition =
-                                        20 * ts->flags_6 + 100;
+                                    ts->sprites[ts->flags_6 + 2]->yPosition = 20 * ts->flags_6 + 100;
                                     sprite_show_8020CBC(ts->sprites[ts->flags_6 + 2]);
 
                                     if (ts->flags_6 == 0) {
-                                        sub_801E150(ts->sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0,
-                                                    0);
+                                        sub_801E150(ts->sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0, 0);
                                         ts->states[TS_ELEMENT_POINTER] = 2;
                                     } else {
                                         ts->flags_6--;
@@ -986,8 +978,7 @@ void open_update(struct TitleScreen* ts) {
                             case 2:
                                 if (ts->sprites[TS_SPRITE_BEAN_POINTER]->field_12_3) {
                                     sub_801E150(ts->sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
-                                    sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 0, 0, 0,
-                                                0);
+                                    sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 0, 0, 0, 0);
                                     ts->sprites[TS_SPRITE_SELECTION_VISUAL]->xPosition = 64;
                                     ts->sprites[TS_SPRITE_SELECTION_VISUAL]->yPosition = 140;
                                     ts->sprites[TS_SPRITE_SELECTION_VISUAL]->field_1F_0 = 1;
@@ -1052,8 +1043,8 @@ void open_update(struct TitleScreen* ts) {
 
                 if (ts->selection != selection) {
                     if (ts->flags_0 != 2) {
-                        sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * selection + 2, 0,
-                                    0, 0);
+                        sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * selection + 2, 0, 0,
+                                    0);
                     }
                     ts->flags_0 = 2;
                     ts->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 20 * ts->selection + 92;
@@ -1119,16 +1110,14 @@ void open_update(struct TitleScreen* ts) {
     switch (ts->flags_0) {
         case 0:
             if (ts->sprites[TS_SPRITE_SELECTION_VISUAL]->field_12_3) {
-                sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * ts->selection + 1, 0,
-                            0, 0);
+                sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * ts->selection + 1, 0, 0, 0);
                 ts->flags_0 = 1;
             }
             break;
 
         case 2:
             if (ts->sprites[TS_SPRITE_SELECTION_VISUAL]->field_12_3) {
-                sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * ts->selection, 0, 0,
-                            0);
+                sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * ts->selection, 0, 0, 0);
                 ts->flags_0 = 0;
             }
             break;
