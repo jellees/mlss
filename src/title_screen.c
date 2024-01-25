@@ -154,7 +154,7 @@ void comp_update(struct COMPProcess* comp) {
         case 4:
             comp->brightness--;
             BUFFER_REG_BLDY = comp->brightness;
-            if ((gGameState.field_2A & 0xB) != 0) {
+            if (gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 comp->brightness = 16 - comp->brightness;
                 comp->process.state = 6;
             } else if (comp->brightness == 0) {
@@ -166,7 +166,7 @@ void comp_update(struct COMPProcess* comp) {
             break;
 
         case 5:
-            if ((gGameState.field_2A & 0xB) == 0) {
+            if ((gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) == 0) {
                 comp->brightness--;
                 if (comp->brightness != 0) {
                     break;
@@ -230,23 +230,6 @@ void comp_update(struct COMPProcess* comp) {
     sub_8021F7C();
 }
 
-// OPEN process state
-// 0 = fade in
-// 1 = suitcase falling out of sky and opening
-// 2 = suitcase closes
-// 3 = press start (waiting for input)
-// 4 = suitcase opens for game select or options
-// 5 = game select
-// 6 = chosen (fade out)
-
-// state array indices
-// 0 = suitcase
-// 1 = MARIO & LUIGI text
-// 2 = SUPERSTAR SAGA text
-// 3 = (c) 2003 NINTENDO text
-// 4 = PRESS START text
-// 5 = bean pointer
-
 // suitcase state
 // 0 = suitcase falling out of sky
 // 1 = suitcase hitting ground and falling straight
@@ -256,6 +239,47 @@ void comp_update(struct COMPProcess* comp) {
 // 5 = suitcase closes
 // 6 = go to left
 // 7 = bump open sideways
+
+enum TitleScreenStates {
+    // Fade in from white.
+    TS_STATE_FADE_IN = 0,
+    // Suitcase falls out of sky and opens, revealing logo.
+    TS_STATE_SUITCASE_FALLING,
+    // Waits a few frames and then show PRESS START.
+    TS_STATE_PRESS_START_SHOW,
+    // Wait for player input for press start.
+    TS_STATE_PRESS_START_WAIT,
+    // Suitcase opening animation.
+    TS_STATE_SUITCASE_OPENS,
+    // Wait for player to select game.
+    TS_STATE_GAME_SELECT,
+    // Player has chosen, load next process and fade out.
+    TS_STATE_FADE_OUT
+};
+
+enum TitleScreenElements
+{
+    TS_ELEMENT_SUITCASE = 0,
+    TS_ELEMENT_ML_TEXT,
+    TS_ELEMENT_SS_TEXT,
+    TS_ELEMENT_LICENSE_TEXT,
+    TS_ELEMENT_PRESS_START_TEXT,
+    TS_ELEMENT_POINTER,
+
+    TS_ELEMENT_COUNT
+};
+
+enum TitleScreenSprites {
+    TS_SPRITE_PRESS_START_TEXT = 0,
+    TS_SPRITE_BEAN_POINTER,
+    TS_SPRITE_ML_GAME_TEXT, // Mario & Luigi logo.
+    TS_SPRITE_MB_GAME_TEXT, // Mario bros logo.
+    TS_SPRITE_OPTIONS_TEXT,
+    TS_SPRITE_SUITCASE,
+    TS_SPRITE_NINTENDO_TEXT,
+    TS_SPRITE_SELECTION_VISUAL, // The contents of the suitcase.
+    TS_SPRITE_SS_TEXT,
+};
 
 // https://decomp.me/scratch/WOp2S
 #ifndef NONMATCHING
@@ -391,26 +415,26 @@ struct OPENProcess* open_init_8055A00(struct OPENProcess* open, u8 priority, cha
 #endif
 
 void open_8055E2C(struct OPENProcess* process) {
-    sprite_hide_8021F20(process->sprites[6]);
+    sprite_hide_8021F20(process->sprites[TS_SPRITE_NINTENDO_TEXT]);
 
-    sub_801E150(process->sprites[8], 0, 0, 0, 0);
-    process->sprites[8]->xPosition = 121;
-    process->sprites[8]->yPosition = 80;
-    process->sprites[8]->xScale = 256;
-    process->sprites[8]->yScale = 256;
-    process->sprites[8]->field_1F_0 = 0;
-    process->sprites[8]->field_1F_2 = 0;
-    process->sprites[8]->field_E = 2;
-    sprite_show_8020CBC(process->sprites[8]);
+    sub_801E150(process->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
+    process->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
+    process->sprites[TS_SPRITE_SS_TEXT]->yPosition = 80;
+    process->sprites[TS_SPRITE_SS_TEXT]->xScale = 256;
+    process->sprites[TS_SPRITE_SS_TEXT]->yScale = 256;
+    process->sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 0;
+    process->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 0;
+    process->sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
+    sprite_show_8020CBC(process->sprites[TS_SPRITE_SS_TEXT]);
 
-    sub_801E150(process->sprites[5], 2, 0, 0, 0);
-    process->sprites[5]->xPosition = 120;
-    process->sprites[5]->yPosition = 140;
-    process->sprites[5]->field_1F_0 = 0;
-    process->sprites[5]->field_1F_2 = 1;
-    process->sprites[5]->field_E = 2;
-    process->sprites[5]->field_12_4 = 1;
-    sprite_show_8020CBC(process->sprites[5]);
+    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+    process->sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
+    process->sprites[TS_SPRITE_SUITCASE]->yPosition = 140;
+    process->sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
+    process->sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
+    process->sprites[TS_SPRITE_SUITCASE]->field_E = 2;
+    process->sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
+    sprite_show_8020CBC(process->sprites[TS_SPRITE_SUITCASE]);
 
     process->xPosSuitcase = 30720;
     process->yPosSuitcase = 35840;
@@ -432,7 +456,7 @@ void open_8055E2C(struct OPENProcess* process) {
     process->mlTextPosY = 0;
     process->mlTextScaleX = 256;
     process->mlTextScaleY = 256;
-    process->states[0] = -1;
+    process->states[TS_ELEMENT_SUITCASE] = -1;
 }
 
 // https://decomp.me/scratch/WbD37
@@ -575,57 +599,57 @@ void open_update(struct OPENProcess* process) {
     sub_8021F7C();
 
     switch (process->process.state) {
-        case 0:
+        case TS_STATE_FADE_IN:
             process->brightness--;
-            (*(vu16*)(0x2000000 + 0x54)) = process->brightness;
+            BUFFER_REG_BLDY = process->brightness;
             if (process->brightness == 0) {
                 process->process.state = byte_83A74E9[process->flags_2];
-                if (process->process.state == 2) {
+                if (process->process.state == TS_STATE_PRESS_START_SHOW) {
                     process->brightness = 60;
                 }
             }
             break;
 
-        case 1:
-            for (i = 0; i < 6; i++) {
+        case TS_STATE_SUITCASE_FALLING:
+            for (i = 0; i < TS_ELEMENT_COUNT; i++) {
                 if (process->states[i] < 0) {
                     continue;
                 }
 
                 switch (i) {
-                    case 0:
-                        switch (process->states[0]) {
+                    case TS_ELEMENT_SUITCASE:
+                        switch (process->states[TS_ELEMENT_SUITCASE]) {
                             case 0:
                                 process->yPosSuitcase += process->yVelocitySuitcase;
                                 process->yVelocitySuitcase += 32;
                                 if (process->yPosSuitcase > 35839) {
                                     process->yPosSuitcase = 35840;
-                                    sub_801E150(process->sprites[5], 1, 0, 0, 0);
-                                    process->sprites[5]->field_12_1 = 1;
-                                    process->states[0] = 1;
+                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 1, 0, 0, 0);
+                                    process->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    process->states[TS_ELEMENT_SUITCASE] = 1;
                                 }
                                 break;
 
                             case 1:
-                                if (process->sprites[5]->field_12_3) {
-                                    sub_801E150(process->sprites[5], 2, 0, 0, 0);
-                                    process->sprites[5]->field_12_1 = 1;
-                                    process->states[0] = 2;
+                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+                                    process->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    process->states[TS_ELEMENT_SUITCASE] = 2;
                                 }
                                 break;
 
                             case 2:
-                                if (process->sprites[5]->field_12_3) {
-                                    sub_801E150(process->sprites[5], 3, 0, 0, 0);
-                                    process->sprites[5]->field_12_1 = 1;
-                                    process->states[0] = 3;
+                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 3, 0, 0, 0);
+                                    process->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    process->states[TS_ELEMENT_SUITCASE] = 3;
                                 }
                                 break;
 
                             case 3:
-                                if (process->sprites[5]->field_12_3) {
-                                    sub_801E150(process->sprites[5], 4, 0, 0, 0);
-                                    (*(vu16*)(0x2000000 + 0x00)) |= 0x400;
+                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+                                    BUFFER_REG_DISPCNT |= DISPCNT_BG2_ON;
                                     process->mlTextProgression = 2560;
                                     process->mlTextPosY = 37120;
                                     process->mlTextScaleX = 51;
@@ -637,8 +661,8 @@ void open_update(struct OPENProcess* process) {
                                     process->mlTextAffineSrc.sx = 256;
                                     process->mlTextAffineSrc.sy = 256;
                                     process->mlTextAffineSrc.alpha = 0;
-                                    process->states[0] = 4;
-                                    process->states[1] = 0;
+                                    process->states[TS_ELEMENT_SUITCASE] = 4;
+                                    process->states[TS_ELEMENT_ML_TEXT] = 0;
                                     process->timer = 0;
                                 }
                                 break;
@@ -646,21 +670,22 @@ void open_update(struct OPENProcess* process) {
                             case 4:
                                 if (process->timer < 0xFFFF) {
                                     switch (process->timer) {
-                                        case 32: // 08056528
+                                        case 32:
                                             process->ssTextProgression = 2470;
                                             process->ssTextPosY = 37376;
                                             process->ssTextScaleX = 51;
                                             process->ssTextScaleY = 51;
-                                            sub_801E150(process->sprites[8], 0, 0, 0, 0);
-                                            process->sprites[8]->xPosition = 121;
-                                            process->sprites[8]->yPosition = 146;
-                                            process->sprites[8]->xScale = 51;
-                                            process->sprites[8]->yScale = 51;
-                                            process->sprites[8]->field_1F_0 = 1;
-                                            process->sprites[8]->field_1F_2 = 1;
-                                            process->sprites[8]->field_E = 0;
-                                            sprite_show_8020CBC(process->sprites[8]);
-                                            process->states[2] = 0;
+                                            sub_801E150(process->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0,
+                                                        0);
+                                            process->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
+                                            process->sprites[TS_SPRITE_SS_TEXT]->yPosition = 146;
+                                            process->sprites[TS_SPRITE_SS_TEXT]->xScale = 51;
+                                            process->sprites[TS_SPRITE_SS_TEXT]->yScale = 51;
+                                            process->sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 1;
+                                            process->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 1;
+                                            process->sprites[TS_SPRITE_SS_TEXT]->field_E = 0;
+                                            sprite_show_8020CBC(process->sprites[TS_SPRITE_SS_TEXT]);
+                                            process->states[TS_ELEMENT_SS_TEXT] = 0;
                                             break;
 
                                         case 64:
@@ -668,16 +693,18 @@ void open_update(struct OPENProcess* process) {
                                             process->nTextPosY = 36608;
                                             process->nTextScaleX = 51;
                                             process->nTextScaleY = 51;
-                                            sub_801E150(process->sprites[6], 0, 0, 0, 0);
-                                            process->sprites[6]->xPosition = 118;
-                                            process->sprites[6]->yPosition = 143;
-                                            process->sprites[6]->xScale = 51;
-                                            process->sprites[6]->yScale = 51;
-                                            process->sprites[6]->field_1F_0 = 1;
-                                            process->sprites[6]->field_1F_2 = 1;
-                                            process->sprites[6]->field_E = 0;
-                                            sprite_show_8020CBC(process->sprites[6]);
-                                            process->states[3] = 0;
+                                            sub_801E150(process->sprites[TS_SPRITE_NINTENDO_TEXT], 0, 0,
+                                                        0, 0);
+                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->xPosition = 118;
+                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->yPosition = 143;
+                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->xScale = 51;
+                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->yScale = 51;
+                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_0 = 1;
+                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_2 = 1;
+                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_E = 0;
+                                            sprite_show_8020CBC(
+                                                process->sprites[TS_SPRITE_NINTENDO_TEXT]);
+                                            process->states[TS_ELEMENT_LICENSE_TEXT] = 0;
                                             break;
                                     }
                                     process->timer++;
@@ -685,37 +712,39 @@ void open_update(struct OPENProcess* process) {
                                 break;
 
                             case 5:
-                                if (process->sprites[5]->field_12_3) {
-                                    sub_801E150(process->sprites[5], 2, 0, 0, 0);
-                                    process->sprites[5]->field_12_4 = 1;
-                                    sprite_hide_8021F20(process->sprites[6]);
-                                    process->states[0] = -1;
-                                    (*(vu16*)(0x2000000 + 0x08)) = 0x1802;
-                                    (*(vu16*)(0x2000000 + 0x10)) = 0;
-                                    (*(vu16*)(0x2000000 + 0x12)) = 0;
-                                    (*(vu16*)(0x2000000 + 0x00)) |= 0x100;
+                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+                                    process->sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
+                                    sprite_hide_8021F20(process->sprites[TS_SPRITE_NINTENDO_TEXT]);
+                                    process->states[TS_ELEMENT_SUITCASE] = -1;
+                                    BUFFER_REG_BG0CNT = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(24);
+                                    BUFFER_REG_BG0HOFS = 0;
+                                    BUFFER_REG_BG0VOFS = 0;
+                                    BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
                                     if (process->flags_4 == 0) {
                                         process->brightness = 60;
-                                        process->process.state = 2;
+                                        process->process.state = TS_STATE_PRESS_START_SHOW;
                                     }
                                 }
                                 break;
                         }
-                        process->sprites[5]->xPosition = process->xPosSuitcase / 256;
-                        process->sprites[5]->yPosition = process->yPosSuitcase / 256;
+                        process->sprites[TS_SPRITE_SUITCASE]->xPosition = process->xPosSuitcase / 256;
+                        process->sprites[TS_SPRITE_SUITCASE]->yPosition = process->yPosSuitcase / 256;
                         break;
 
-                    case 1:
-                        switch (process->states[1]) {
+                    case TS_ELEMENT_ML_TEXT:
+                        switch (process->states[TS_ELEMENT_ML_TEXT]) {
                             case 0:
                                 process->mlTextProgression -= 98;
                                 process->mlTextPosY -= process->mlTextProgression;
                                 process->mlTextScaleX += 5;
                                 process->mlTextScaleY = process->mlTextScaleX;
                                 if (process->mlTextScaleX > 255) {
-                                    (*(vu16*)(0x2000000 + 0x0C)) = 0x5985;
+                                    BUFFER_REG_BG2CNT = BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1)
+                                                        | BGCNT_256COLOR | BGCNT_SCREENBASE(25)
+                                                        | BGCNT_AFF256x256;
                                     process->mlTextScaleX = 256;
-                                    process->states[1] = 1;
+                                    process->states[TS_ELEMENT_ML_TEXT] = 1;
                                     process->mlTextProgression = 0;
                                 }
                                 break;
@@ -727,7 +756,7 @@ void open_update(struct OPENProcess* process) {
                                 process->mlTextProgression++;
                                 // Is the cast really necessary here?
                                 if ((u16)process->mlTextProgression == 17) {
-                                    process->states[1] = -1;
+                                    process->states[TS_ELEMENT_ML_TEXT] = -1;
                                 }
                                 break;
                         }
@@ -737,16 +766,16 @@ void open_update(struct OPENProcess* process) {
                             0x10000, process->mlTextScaleY);
                         process->mlTextAffineSrc.scrY = process->mlTextPosY / 256;
                         BgAffineSet(&process->mlTextAffineSrc, &process->mlTextAffineDst, 1);
-                        (*(vu16*)(0x2000000 + 0x20)) = process->mlTextAffineDst.pa;
-                        (*(vu16*)(0x2000000 + 0x22)) = process->mlTextAffineDst.pb;
-                        (*(vu16*)(0x2000000 + 0x24)) = process->mlTextAffineDst.pc;
-                        (*(vu16*)(0x2000000 + 0x26)) = process->mlTextAffineDst.pd;
-                        (*(vu32*)(0x2000000 + 0x28)) = process->mlTextAffineDst.dx;
-                        (*(vu32*)(0x2000000 + 0x2C)) = process->mlTextAffineDst.dy;
+                        BUFFER_REG_BG2PA = process->mlTextAffineDst.pa;
+                        BUFFER_REG_BG2PB = process->mlTextAffineDst.pb;
+                        BUFFER_REG_BG2PC = process->mlTextAffineDst.pc;
+                        BUFFER_REG_BG2PD = process->mlTextAffineDst.pd;
+                        BUFFER_REG_BG2X = process->mlTextAffineDst.dx;
+                        BUFFER_REG_BG2Y = process->mlTextAffineDst.dy;
                         break;
 
-                    case 2:
-                        switch (process->states[2]) {
+                    case TS_ELEMENT_SS_TEXT:
+                        switch (process->states[TS_ELEMENT_SS_TEXT]) {
                             case 0:
                                 process->ssTextProgression -= 98;
                                 process->ssTextPosY -= process->ssTextProgression;
@@ -754,7 +783,7 @@ void open_update(struct OPENProcess* process) {
                                 process->ssTextScaleY = process->ssTextScaleX;
                                 if (process->ssTextScaleX > 255) {
                                     process->ssTextScaleX = 256;
-                                    process->states[2] = 1;
+                                    process->states[TS_ELEMENT_SS_TEXT] = 1;
                                     process->ssTextProgression = 0;
                                 }
                                 break;
@@ -765,29 +794,29 @@ void open_update(struct OPENProcess* process) {
                                     word_83A7530[2 * process->ssTextProgression + 1];
                                 process->ssTextProgression++;
                                 if ((u16)process->ssTextProgression == 17) {
-                                    process->states[2] = -1;
+                                    process->states[TS_ELEMENT_SS_TEXT] = -1;
                                 }
                                 break;
                         }
-                        process->sprites[8]->yPosition = process->ssTextPosY / 256;
-                        process->sprites[8]->xScale = process->ssTextScaleX;
-                        process->sprites[8]->yScale = process->ssTextScaleY;
+                        process->sprites[TS_SPRITE_SS_TEXT]->yPosition = process->ssTextPosY / 256;
+                        process->sprites[TS_SPRITE_SS_TEXT]->xScale = process->ssTextScaleX;
+                        process->sprites[TS_SPRITE_SS_TEXT]->yScale = process->ssTextScaleY;
                         break;
 
-                    case 3:
-                        switch (process->states[3]) {
+                    case TS_ELEMENT_LICENSE_TEXT:
+                        switch (process->states[TS_ELEMENT_LICENSE_TEXT]) {
                             case 0:
                                 process->nTextProgression -= 98;
                                 if (process->nTextProgression < 0) {
-                                    process->sprites[6]->field_1F_0 = process->sprites[6]->field_1F_2 =
-                                        0;
+                                    process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_0 =
+                                        process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_2 = 0;
                                 }
                                 process->nTextPosY -= process->nTextProgression;
                                 process->nTextScaleX += 5;
                                 process->nTextScaleY = process->nTextScaleX;
                                 if (process->nTextScaleX > 255) {
                                     process->nTextScaleX = 256;
-                                    process->states[3] = 1;
+                                    process->states[TS_ELEMENT_LICENSE_TEXT] = 1;
                                     process->nTextProgression = 0;
                                 }
                                 break;
@@ -797,30 +826,30 @@ void open_update(struct OPENProcess* process) {
                                 process->nTextScaleY = word_83A7574[2 * process->nTextProgression + 1];
                                 process->nTextProgression++;
                                 if ((u16)process->nTextProgression == 17) {
-                                    sub_801E150(process->sprites[5], 5, 0, 0, 0);
-                                    process->states[0] = 5;
+                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 5, 0, 0, 0);
+                                    process->states[TS_ELEMENT_SUITCASE] = 5;
                                     process->flags_5 = 0;
-                                    process->states[3] = -1;
+                                    process->states[TS_ELEMENT_LICENSE_TEXT] = -1;
                                 }
                                 break;
                         }
-                        process->sprites[6]->yPosition = process->nTextPosY / 256;
-                        process->sprites[6]->xScale = process->nTextScaleX;
-                        process->sprites[6]->yScale = process->nTextScaleY;
+                        process->sprites[TS_SPRITE_NINTENDO_TEXT]->yPosition = process->nTextPosY / 256;
+                        process->sprites[TS_SPRITE_NINTENDO_TEXT]->xScale = process->nTextScaleX;
+                        process->sprites[TS_SPRITE_NINTENDO_TEXT]->yScale = process->nTextScaleY;
                         break;
                 }
             }
 
             if (!process->flags_4) {
-                if (process->flags_5 && (gGameState.field_2A & 0xF) != 0) {
+                if (process->flags_5 && gGameState.field_2A & (A_BUTTON | B_BUTTON | SELECT_BUTTON | START_BUTTON)) {
                     process->flags_4 = 1;
                     process->brightness = 16;
                 }
             } else {
                 process->brightness--;
-                (*(vu16*)(0x2000000 + 0x54)) = 16 - process->brightness;
+                BUFFER_REG_BLDY = 16 - process->brightness;
                 if (process->brightness == 0) {
-                    process->process.state = 0;
+                    process->process.state = TS_STATE_FADE_IN;
                     process->flags_2 = 1;
                     process->brightness = 16;
                     open_8055E2C(process);
@@ -829,56 +858,56 @@ void open_update(struct OPENProcess* process) {
             }
             break;
 
-        case 2:
+        case TS_STATE_PRESS_START_SHOW:
             process->brightness--;
             if (process->brightness == 0) {
                 process->psTextPosY = 30720;
-                sub_801E150(process->sprites[0], 0, 0, 0, 0);
-                process->sprites[0]->xPosition = 120;
-                process->sprites[0]->yPosition = 120;
-                process->sprites[0]->field_1F_0 = 0;
-                process->sprites[0]->field_1F_2 = 0;
-                process->sprites[0]->field_E = 0;
-                sprite_show_8020CBC(process->sprites[0]);
-                process->process.state = 3;
+                sub_801E150(process->sprites[TS_SPRITE_PRESS_START_TEXT], 0, 0, 0, 0);
+                process->sprites[TS_SPRITE_PRESS_START_TEXT]->xPosition = 120;
+                process->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition = 120;
+                process->sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_0 = 0;
+                process->sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_2 = 0;
+                process->sprites[TS_SPRITE_PRESS_START_TEXT]->field_E = 0;
+                sprite_show_8020CBC(process->sprites[TS_SPRITE_PRESS_START_TEXT]);
+                process->process.state = TS_STATE_PRESS_START_WAIT;
             }
             break;
 
-        case 3:
-            if ((gGameState.field_2A & 9) != 0) {
+        case TS_STATE_PRESS_START_WAIT:
+            if (gGameState.field_2A & (A_BUTTON | START_BUTTON)) {
                 process->psTextVelocity = 0;
-                process->states[4] = 2;
+                process->states[TS_ELEMENT_PRESS_START_TEXT] = 2;
                 process->xVelocitySuitcase = 0;
-                process->states[0] = 6;
+                process->states[TS_ELEMENT_SUITCASE] = 6;
                 play_sfx_80195B4(96, -1);
-                process->process.state = 4;
+                process->process.state = TS_STATE_SUITCASE_OPENS;
             }
             break;
 
-        case 4:
-            for (j = 0; j < 6; j++) {
+        case TS_STATE_SUITCASE_OPENS:
+            for (j = 0; j < TS_ELEMENT_COUNT; j++) {
                 if (process->states[j] < 0) {
                     continue;
                 }
 
                 switch (j) {
-                    case 0:
-                        switch (process->states[0]) {
+                    case TS_ELEMENT_SUITCASE:
+                        switch (process->states[TS_ELEMENT_SUITCASE]) {
                             case 6:
                                 process->xVelocitySuitcase -= 102;
                                 process->xPosSuitcase += process->xVelocitySuitcase;
                                 if (process->xPosSuitcase <= 0x2000) {
                                     process->xPosSuitcase = 0x4000;
-                                    sub_801E150(process->sprites[5], 6, 0, 0, 0);
+                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 6, 0, 0, 0);
                                     process->timer = 0;
-                                    process->states[0] = 7;
+                                    process->states[TS_ELEMENT_SUITCASE] = 7;
                                 }
                                 break;
 
                             case 7:
-                                if (process->sprites[5]->field_12_3) {
-                                    sub_801E150(process->sprites[5], 4, 0, 0, 0);
-                                    process->states[0] = -1;
+                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+                                    process->states[TS_ELEMENT_SUITCASE] = -1;
                                 }
 
                                 if (process->timer < 0xFFFF) {
@@ -887,37 +916,39 @@ void open_update(struct OPENProcess* process) {
                                         process->beanPosY = 33280;
                                         process->beanVelocityX = 384;
                                         process->beanVelocityY = 1536;
-                                        sub_801E150(process->sprites[1], 11, 0, 0, 0);
-                                        process->sprites[1]->xPosition = 64;
-                                        process->sprites[1]->yPosition = 130;
-                                        process->sprites[1]->field_1F_0 = 0;
-                                        process->sprites[1]->field_1F_2 = 0;
-                                        process->sprites[1]->field_E = 0;
-                                        sprite_show_8020CBC(process->sprites[1]);
-                                        process->states[5] = 0;
+                                        sub_801E150(process->sprites[TS_SPRITE_BEAN_POINTER], 11, 0, 0,
+                                                    0);
+                                        process->sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 64;
+                                        process->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 130;
+                                        process->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_0 = 0;
+                                        process->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_2 = 0;
+                                        process->sprites[TS_SPRITE_BEAN_POINTER]->field_E = 0;
+                                        sprite_show_8020CBC(process->sprites[TS_SPRITE_BEAN_POINTER]);
+                                        process->states[TS_ELEMENT_POINTER] = 0;
                                     }
                                     process->timer++;
                                 }
                                 break;
                         }
-                        process->sprites[5]->xPosition = process->xPosSuitcase / 256;
-                        process->sprites[5]->yPosition = process->yPosSuitcase / 256;
+                        process->sprites[TS_SPRITE_SUITCASE]->xPosition = process->xPosSuitcase / 256;
+                        process->sprites[TS_SPRITE_SUITCASE]->yPosition = process->yPosSuitcase / 256;
                         break;
 
-                    case 4:
-                        if (process->states[4] == 2) {
+                    case TS_ELEMENT_PRESS_START_TEXT:
+                        if (process->states[TS_ELEMENT_PRESS_START_TEXT] == 2) {
                             process->psTextVelocity -= 98;
                             process->psTextPosY -= process->psTextVelocity;
                             if (process->psTextPosY > 45055) {
-                                sprite_hide_8021F20(process->sprites[0]);
-                                process->states[4] = -1;
+                                sprite_hide_8021F20(process->sprites[TS_SPRITE_PRESS_START_TEXT]);
+                                process->states[TS_ELEMENT_PRESS_START_TEXT] = -1;
                             }
                         }
-                        process->sprites[0]->yPosition = process->psTextPosY / 256;
+                        process->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition =
+                            process->psTextPosY / 256;
                         break;
 
-                    case 5:
-                        switch (process->states[5]) {
+                    case TS_ELEMENT_POINTER:
+                        switch (process->states[TS_ELEMENT_POINTER]) {
                             case 0:
                                 process->beanVelocityY -= 98;
                                 process->beanPosY -= process->beanVelocityY;
@@ -925,7 +956,7 @@ void open_update(struct OPENProcess* process) {
                                 if (process->beanVelocityY < 0 && process->beanPosY > 35839) {
                                     process->beanPosY = 35840;
                                     process->flags_6 = 2;
-                                    process->states[5] = 1;
+                                    process->states[TS_ELEMENT_POINTER] = 1;
                                 }
                                 break;
 
@@ -939,27 +970,29 @@ void open_update(struct OPENProcess* process) {
                                     sprite_show_8020CBC(process->sprites[process->flags_6 + 2]);
 
                                     if (process->flags_6 == 0) {
-                                        sub_801E150(process->sprites[1], 12, 0, 0, 0);
-                                        process->states[5] = 2;
+                                        sub_801E150(process->sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0,
+                                                    0);
+                                        process->states[TS_ELEMENT_POINTER] = 2;
                                     } else {
                                         process->flags_6--;
                                     }
                                 }
 
-                                if (process->states[5] == 1) {
+                                if (process->states[TS_ELEMENT_POINTER] == 1) {
                                     process->beanPosY -= 1536;
                                 }
                                 break;
 
                             case 2:
-                                if (process->sprites[1]->field_12_3) {
-                                    sub_801E150(process->sprites[1], 13, 0, 0, 0);
-                                    sub_801E150(process->sprites[7], 0, 0, 0, 0);
-                                    process->sprites[7]->xPosition = 64;
-                                    process->sprites[7]->yPosition = 140;
-                                    process->sprites[7]->field_1F_0 = 1;
-                                    process->sprites[7]->field_E = 1;
-                                    sprite_show_8020CBC(process->sprites[7]);
+                                if (process->sprites[TS_SPRITE_BEAN_POINTER]->field_12_3) {
+                                    sub_801E150(process->sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
+                                    sub_801E150(process->sprites[TS_SPRITE_SELECTION_VISUAL], 0, 0, 0,
+                                                0);
+                                    process->sprites[TS_SPRITE_SELECTION_VISUAL]->xPosition = 64;
+                                    process->sprites[TS_SPRITE_SELECTION_VISUAL]->yPosition = 140;
+                                    process->sprites[TS_SPRITE_SELECTION_VISUAL]->field_1F_0 = 1;
+                                    process->sprites[TS_SPRITE_SELECTION_VISUAL]->field_E = 1;
+                                    sprite_show_8020CBC(process->sprites[TS_SPRITE_SELECTION_VISUAL]);
                                     process->flags_0 = 0;
 
                                     off_839EC80[0x01] |= 0x20;
@@ -982,34 +1015,34 @@ void open_update(struct OPENProcess* process) {
                                     off_839EC80[0x4A] |= 0x10;
                                     off_839EC80[0x4A] |= 0x20;
                                     sub_80574FC();
-                                    process->process.state = 5;
+                                    process->process.state = TS_STATE_GAME_SELECT;
                                 }
                                 break;
                         }
-                        process->sprites[1]->xPosition = process->beanPosX / 256;
-                        process->sprites[1]->yPosition = process->beanPosY / 256;
+                        process->sprites[TS_SPRITE_BEAN_POINTER]->xPosition = process->beanPosX / 256;
+                        process->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = process->beanPosY / 256;
                         break;
                 }
             }
             break;
 
-        case 5:
-            if ((gGameState.field_2A & 9) != 0) {
-                (*(vu16*)(0x2000000 + 0x50)) = 191;
-                (*(vu16*)(0x2000000 + 0x54)) = 0;
+        case TS_STATE_GAME_SELECT:
+            if (gGameState.field_2A & (A_BUTTON | START_BUTTON)) {
+                BUFFER_REG_BLDCNT = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
+                BUFFER_REG_BLDY = 0;
                 process->brightness = 16;
                 play_sfx_80195B4(96, -1);
                 sub_80193B4(0, 0, 16);
-                process->process.state = 6;
+                process->process.state = TS_STATE_FADE_OUT;
             } else {
                 s8 selection = process->selection;
-                if (gGameState.field_2E & 0x40) {
+                if (gGameState.field_2E & DPAD_UP) {
                     process->selection--;
                     if (process->selection < 0) {
                         process->selection = 2;
                     }
                     play_sfx_80195B4(95, -1);
-                } else if (gGameState.field_2E & 0x80) {
+                } else if (gGameState.field_2E & DPAD_DOWN) {
                     process->selection++;
                     if (process->selection > 2) {
                         process->selection = 0;
@@ -1019,17 +1052,18 @@ void open_update(struct OPENProcess* process) {
 
                 if (process->selection != selection) {
                     if (process->flags_0 != 2) {
-                        sub_801E150(process->sprites[7], 3 * selection + 2, 0, 0, 0);
+                        sub_801E150(process->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * selection + 2, 0,
+                                    0, 0);
                     }
                     process->flags_0 = 2;
-                    process->sprites[1]->yPosition = 20 * process->selection + 92;
+                    process->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 20 * process->selection + 92;
                 }
             }
             break;
 
-        case 6:
+        case TS_STATE_FADE_OUT:
             process->brightness--;
-            (*(vu16*)(0x2000000 + 0x54)) = 16 - process->brightness;
+            BUFFER_REG_BLDY = 16 - process->brightness;
             if (process->brightness != 0) {
                 break;
             }
@@ -1044,9 +1078,10 @@ void open_update(struct OPENProcess* process) {
                 }
                 free_heap_8018DA8(dword_3000DA0);
                 sub_8021FD4();
-                (*(vu16*)(0x2000000 + 0x80)) = 0x7FFF;
+                // Turn on sound.
+                BUFFER_REG_SOUNDCNT_L = 0x7FFF;
                 gGameState.field_2 |= 1;
-                (*(vu16*)(0x2000000 + 0x00)) = 0;
+                BUFFER_REG_DISPCNT = 0;
                 gGameState.field_31 = 2;
                 sub_8017E34();
                 process_remove(&process->process, 3);
@@ -1056,19 +1091,21 @@ void open_update(struct OPENProcess* process) {
                 case 0:
                     sub_80574B4();
                     sub_801AFE4(0);
-                    (*(vu16*)(0x2000000 + 0x50)) = 0;
+                    BUFFER_REG_BLDCNT = 0;
+                    //! Change this when other function is matching too.
                     sub_812538C(alloc_Zero(356, 0, (char*)0x081E2784 /*"LOAD"*/, 0), 8,
                                 (char*)0x081E2784 /*"LOAD"*/, 0xFFFF);
                     return;
 
                 case 1:
                     stru_203FFF8.field_7_0 = 1;
-                    (*(vu16*)(0x2000000 + 0x50)) = 0;
+                    BUFFER_REG_BLDCNT = 0;
                     sub_81DA6C8(64);
                     return;
 
                 case 2:
                     sub_80574B4();
+                    //! Change this when other function is matching too.
                     optn_init(alloc_Zero(84, 0, (char*)0x081E278C /*"OPTN"*/, 0), 8,
                               (char*)0x081E278C /*"OPTN"*/, 0);
                     return;
@@ -1081,15 +1118,17 @@ void open_update(struct OPENProcess* process) {
 
     switch (process->flags_0) {
         case 0:
-            if (process->sprites[7]->field_12_3) {
-                sub_801E150(process->sprites[7], 3 * process->selection + 1, 0, 0, 0);
+            if (process->sprites[TS_SPRITE_SELECTION_VISUAL]->field_12_3) {
+                sub_801E150(process->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * process->selection + 1, 0,
+                            0, 0);
                 process->flags_0 = 1;
             }
             break;
 
         case 2:
-            if (process->sprites[7]->field_12_3) {
-                sub_801E150(process->sprites[7], 3 * process->selection, 0, 0, 0);
+            if (process->sprites[TS_SPRITE_SELECTION_VISUAL]->field_12_3) {
+                sub_801E150(process->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * process->selection, 0, 0,
+                            0);
                 process->flags_0 = 0;
             }
             break;

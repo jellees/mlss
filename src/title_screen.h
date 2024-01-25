@@ -70,15 +70,6 @@ struct OPENProcess
     struct BgAffineDstData mlTextAffineDst;
     struct OPDRProcess* opdr;
     s8 selection;
-    // struct Sprite* pressStartText;
-    // struct Sprite* beanPointer;
-    // struct Sprite* marioLuigiGameText;
-    // struct Sprite* marioBrosGameText;
-    // struct Sprite* optionsText;
-    // struct Sprite* suitcase;
-    // struct Sprite* nintendoText;
-    // struct Sprite* selectionVisual;
-    // struct Sprite* superstarSagaText;
     struct Sprite* sprites[9];
 };
 
