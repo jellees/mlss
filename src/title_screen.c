@@ -285,7 +285,7 @@ enum TitleScreenSprites {
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/text08055A00.s\"");
 #else
-struct OPENProcess* open_init_8055A00(struct OPENProcess* open, u8 priority, char* label,
+struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, char* label,
                                       int selection) {
     struct struc_203FFF8* v5;
     void* cgdw;
@@ -295,7 +295,7 @@ struct OPENProcess* open_init_8055A00(struct OPENProcess* open, u8 priority, cha
     void (**tmp2)();
     struct Sprite** sprites;
 
-    struct OPENProcess* proc = open;
+    struct TitleScreen* proc = open;
 
     // sel = selection;
 
@@ -414,31 +414,31 @@ struct OPENProcess* open_init_8055A00(struct OPENProcess* open, u8 priority, cha
 }
 #endif
 
-void open_8055E2C(struct OPENProcess* process) {
-    sprite_hide_8021F20(process->sprites[TS_SPRITE_NINTENDO_TEXT]);
+void open_8055E2C(struct TitleScreen* ts) {
+    sprite_hide_8021F20(ts->sprites[TS_SPRITE_NINTENDO_TEXT]);
 
-    sub_801E150(process->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
-    process->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
-    process->sprites[TS_SPRITE_SS_TEXT]->yPosition = 80;
-    process->sprites[TS_SPRITE_SS_TEXT]->xScale = 256;
-    process->sprites[TS_SPRITE_SS_TEXT]->yScale = 256;
-    process->sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 0;
-    process->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 0;
-    process->sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
-    sprite_show_8020CBC(process->sprites[TS_SPRITE_SS_TEXT]);
+    sub_801E150(ts->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
+    ts->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
+    ts->sprites[TS_SPRITE_SS_TEXT]->yPosition = 80;
+    ts->sprites[TS_SPRITE_SS_TEXT]->xScale = 256;
+    ts->sprites[TS_SPRITE_SS_TEXT]->yScale = 256;
+    ts->sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 0;
+    ts->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 0;
+    ts->sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
+    sprite_show_8020CBC(ts->sprites[TS_SPRITE_SS_TEXT]);
 
-    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
-    process->sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
-    process->sprites[TS_SPRITE_SUITCASE]->yPosition = 140;
-    process->sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
-    process->sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
-    process->sprites[TS_SPRITE_SUITCASE]->field_E = 2;
-    process->sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
-    sprite_show_8020CBC(process->sprites[TS_SPRITE_SUITCASE]);
+    sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+    ts->sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
+    ts->sprites[TS_SPRITE_SUITCASE]->yPosition = 140;
+    ts->sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
+    ts->sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
+    ts->sprites[TS_SPRITE_SUITCASE]->field_E = 2;
+    ts->sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
+    sprite_show_8020CBC(ts->sprites[TS_SPRITE_SUITCASE]);
 
-    process->xPosSuitcase = 30720;
-    process->yPosSuitcase = 35840;
-    process->flags_5 = 0;
+    ts->xPosSuitcase = 30720;
+    ts->yPosSuitcase = 35840;
+    ts->flags_5 = 0;
 
     BUFFER_REG_BG2HOFS = 0;
     BUFFER_REG_BG2VOFS = 0;
@@ -453,73 +453,73 @@ void open_8055E2C(struct OPENProcess* process) {
     BUFFER_REG_BG0VOFS = 0;
     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
 
-    process->mlTextPosY = 0;
-    process->mlTextScaleX = 256;
-    process->mlTextScaleY = 256;
-    process->states[TS_ELEMENT_SUITCASE] = -1;
+    ts->mlTextPosY = 0;
+    ts->mlTextScaleX = 256;
+    ts->mlTextScaleY = 256;
+    ts->states[TS_ELEMENT_SUITCASE] = -1;
 }
 
 // https://decomp.me/scratch/WbD37
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/text08055F74.s\"");
 #else
-void open_8055F74(struct OPENProcess* process, int selection) {
+void open_8055F74(struct TitleScreen* ts, int selection) {
     s16 tmp;
 
-    sprite_hide_8021F20(process->sprites[6]);
-    sprite_hide_8021F20(process->sprites[0]);
+    sprite_hide_8021F20(ts->sprites[6]);
+    sprite_hide_8021F20(ts->sprites[0]);
 
     tmp = 100;
-    sub_801E150(process->sprites[2], 3, 0, 0, 0);
-    process->sprites[2]->xPosition = 180;
-    process->sprites[2]->yPosition = tmp;
-    sprite_show_8020CBC(process->sprites[2]);
+    sub_801E150(ts->sprites[2], 3, 0, 0, 0);
+    ts->sprites[2]->xPosition = 180;
+    ts->sprites[2]->yPosition = tmp;
+    sprite_show_8020CBC(ts->sprites[2]);
 
     tmp = 120;
-    sub_801E150(process->sprites[3], 4, 0, 0, 0);
-    process->sprites[3]->xPosition = 180;
-    process->sprites[3]->yPosition = tmp;
-    sprite_show_8020CBC(process->sprites[3]);
+    sub_801E150(ts->sprites[3], 4, 0, 0, 0);
+    ts->sprites[3]->xPosition = 180;
+    ts->sprites[3]->yPosition = tmp;
+    sprite_show_8020CBC(ts->sprites[3]);
 
     tmp = 140;
-    sub_801E150(process->sprites[4], 5, 0, 0, 0);
-    process->sprites[4]->xPosition = 180;
-    process->sprites[4]->yPosition = tmp;
-    sprite_show_8020CBC(process->sprites[4]);
+    sub_801E150(ts->sprites[4], 5, 0, 0, 0);
+    ts->sprites[4]->xPosition = 180;
+    ts->sprites[4]->yPosition = tmp;
+    sprite_show_8020CBC(ts->sprites[4]);
 
-    sub_801E150(process->sprites[1], 13, 0, 0, 0);
-    process->sprites[1]->xPosition = 112;
-    process->sprites[1]->yPosition = 92 + 20 * process->selection;
-    sprite_show_8020CBC(process->sprites[1]);
+    sub_801E150(ts->sprites[1], 13, 0, 0, 0);
+    ts->sprites[1]->xPosition = 112;
+    ts->sprites[1]->yPosition = 92 + 20 * ts->selection;
+    sprite_show_8020CBC(ts->sprites[1]);
 
-    sub_801E150(process->sprites[8], 0, 0, 0, 0);
-    process->sprites[8]->xPosition = 121;
-    process->sprites[8]->yPosition = 80;
-    process->sprites[8]->xScale = 256;
-    process->sprites[8]->yScale = 256;
-    process->sprites[8]->field_1F_0 = 0;
-    process->sprites[8]->field_1F_2 = 0;
-    process->sprites[8]->field_E = 2;
-    sprite_show_8020CBC(process->sprites[8]);
-
-    tmp = 140;
-    sub_801E150(process->sprites[5], 4, 0, 0, 0);
-    process->sprites[5]->xPosition = 64;
-    process->sprites[5]->yPosition = tmp;
-    process->sprites[5]->field_1F_0 = 0;
-    process->sprites[5]->field_1F_2 = 1;
-    process->sprites[5]->field_E = 2;
-    sprite_show_8020CBC(process->sprites[5]);
+    sub_801E150(ts->sprites[8], 0, 0, 0, 0);
+    ts->sprites[8]->xPosition = 121;
+    ts->sprites[8]->yPosition = 80;
+    ts->sprites[8]->xScale = 256;
+    ts->sprites[8]->yScale = 256;
+    ts->sprites[8]->field_1F_0 = 0;
+    ts->sprites[8]->field_1F_2 = 0;
+    ts->sprites[8]->field_E = 2;
+    sprite_show_8020CBC(ts->sprites[8]);
 
     tmp = 140;
-    sub_801E150(process->sprites[7], 3 * (selection - 1) + 1, 0, 0, 0);
-    process->sprites[7]->xPosition = 64;
-    process->sprites[7]->yPosition = tmp;
-    process->sprites[7]->field_1F_0 = 1;
-    process->sprites[7]->field_E = 1;
-    sprite_show_8020CBC(process->sprites[7]);
+    sub_801E150(ts->sprites[5], 4, 0, 0, 0);
+    ts->sprites[5]->xPosition = 64;
+    ts->sprites[5]->yPosition = tmp;
+    ts->sprites[5]->field_1F_0 = 0;
+    ts->sprites[5]->field_1F_2 = 1;
+    ts->sprites[5]->field_E = 2;
+    sprite_show_8020CBC(ts->sprites[5]);
 
-    process->flags_0 = 1;
+    tmp = 140;
+    sub_801E150(ts->sprites[7], 3 * (selection - 1) + 1, 0, 0, 0);
+    ts->sprites[7]->xPosition = 64;
+    ts->sprites[7]->yPosition = tmp;
+    ts->sprites[7]->field_1F_0 = 1;
+    ts->sprites[7]->field_E = 1;
+    sprite_show_8020CBC(ts->sprites[7]);
+
+    ts->flags_0 = 1;
 
     off_839EC80[0x01] |= 0x20;
     off_839EC80[0x40] = 0xF0;
@@ -550,9 +550,9 @@ void open_8055F74(struct OPENProcess* process, int selection) {
     (*(vu32*)(0x2000000 + 0x28)) = 0;
     (*(vu32*)(0x2000000 + 0x2C)) = 0;
 
-    process->mlTextPosY = 0;
-    process->mlTextScaleX = 256;
-    process->mlTextScaleY = 256;
+    ts->mlTextPosY = 0;
+    ts->mlTextScaleX = 256;
+    ts->mlTextScaleY = 256;
 
     sub_80574FC();
 }
@@ -593,407 +593,407 @@ void open_8056224(void) {
 }
 #endif
 
-void open_update(struct OPENProcess* process) {
+void open_update(struct TitleScreen* ts) {
     int i, j;
 
     sub_8021F7C();
 
-    switch (process->process.state) {
+    switch (ts->process.state) {
         case TS_STATE_FADE_IN:
-            process->brightness--;
-            BUFFER_REG_BLDY = process->brightness;
-            if (process->brightness == 0) {
-                process->process.state = byte_83A74E9[process->flags_2];
-                if (process->process.state == TS_STATE_PRESS_START_SHOW) {
-                    process->brightness = 60;
+            ts->brightness--;
+            BUFFER_REG_BLDY = ts->brightness;
+            if (ts->brightness == 0) {
+                ts->process.state = byte_83A74E9[ts->flags_2];
+                if (ts->process.state == TS_STATE_PRESS_START_SHOW) {
+                    ts->brightness = 60;
                 }
             }
             break;
 
         case TS_STATE_SUITCASE_FALLING:
             for (i = 0; i < TS_ELEMENT_COUNT; i++) {
-                if (process->states[i] < 0) {
+                if (ts->states[i] < 0) {
                     continue;
                 }
 
                 switch (i) {
                     case TS_ELEMENT_SUITCASE:
-                        switch (process->states[TS_ELEMENT_SUITCASE]) {
+                        switch (ts->states[TS_ELEMENT_SUITCASE]) {
                             case 0:
-                                process->yPosSuitcase += process->yVelocitySuitcase;
-                                process->yVelocitySuitcase += 32;
-                                if (process->yPosSuitcase > 35839) {
-                                    process->yPosSuitcase = 35840;
-                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 1, 0, 0, 0);
-                                    process->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
-                                    process->states[TS_ELEMENT_SUITCASE] = 1;
+                                ts->yPosSuitcase += ts->yVelocitySuitcase;
+                                ts->yVelocitySuitcase += 32;
+                                if (ts->yPosSuitcase > 35839) {
+                                    ts->yPosSuitcase = 35840;
+                                    sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 1, 0, 0, 0);
+                                    ts->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    ts->states[TS_ELEMENT_SUITCASE] = 1;
                                 }
                                 break;
 
                             case 1:
-                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
-                                    process->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
-                                    process->states[TS_ELEMENT_SUITCASE] = 2;
+                                if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+                                    ts->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    ts->states[TS_ELEMENT_SUITCASE] = 2;
                                 }
                                 break;
 
                             case 2:
-                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 3, 0, 0, 0);
-                                    process->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
-                                    process->states[TS_ELEMENT_SUITCASE] = 3;
+                                if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 3, 0, 0, 0);
+                                    ts->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    ts->states[TS_ELEMENT_SUITCASE] = 3;
                                 }
                                 break;
 
                             case 3:
-                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+                                if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
                                     BUFFER_REG_DISPCNT |= DISPCNT_BG2_ON;
-                                    process->mlTextProgression = 2560;
-                                    process->mlTextPosY = 37120;
-                                    process->mlTextScaleX = 51;
-                                    process->mlTextScaleY = 51;
-                                    process->mlTextAffineSrc.texX = 30720;
-                                    process->mlTextAffineSrc.texY = 0x4000;
-                                    process->mlTextAffineSrc.scrX = 120;
-                                    process->mlTextAffineSrc.scrY = 64;
-                                    process->mlTextAffineSrc.sx = 256;
-                                    process->mlTextAffineSrc.sy = 256;
-                                    process->mlTextAffineSrc.alpha = 0;
-                                    process->states[TS_ELEMENT_SUITCASE] = 4;
-                                    process->states[TS_ELEMENT_ML_TEXT] = 0;
-                                    process->timer = 0;
+                                    ts->mlTextProgression = 2560;
+                                    ts->mlTextPosY = 37120;
+                                    ts->mlTextScaleX = 51;
+                                    ts->mlTextScaleY = 51;
+                                    ts->mlTextAffineSrc.texX = 30720;
+                                    ts->mlTextAffineSrc.texY = 0x4000;
+                                    ts->mlTextAffineSrc.scrX = 120;
+                                    ts->mlTextAffineSrc.scrY = 64;
+                                    ts->mlTextAffineSrc.sx = 256;
+                                    ts->mlTextAffineSrc.sy = 256;
+                                    ts->mlTextAffineSrc.alpha = 0;
+                                    ts->states[TS_ELEMENT_SUITCASE] = 4;
+                                    ts->states[TS_ELEMENT_ML_TEXT] = 0;
+                                    ts->timer = 0;
                                 }
                                 break;
 
                             case 4:
-                                if (process->timer < 0xFFFF) {
-                                    switch (process->timer) {
+                                if (ts->timer < 0xFFFF) {
+                                    switch (ts->timer) {
                                         case 32:
-                                            process->ssTextProgression = 2470;
-                                            process->ssTextPosY = 37376;
-                                            process->ssTextScaleX = 51;
-                                            process->ssTextScaleY = 51;
-                                            sub_801E150(process->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0,
+                                            ts->ssTextProgression = 2470;
+                                            ts->ssTextPosY = 37376;
+                                            ts->ssTextScaleX = 51;
+                                            ts->ssTextScaleY = 51;
+                                            sub_801E150(ts->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0,
                                                         0);
-                                            process->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
-                                            process->sprites[TS_SPRITE_SS_TEXT]->yPosition = 146;
-                                            process->sprites[TS_SPRITE_SS_TEXT]->xScale = 51;
-                                            process->sprites[TS_SPRITE_SS_TEXT]->yScale = 51;
-                                            process->sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 1;
-                                            process->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 1;
-                                            process->sprites[TS_SPRITE_SS_TEXT]->field_E = 0;
-                                            sprite_show_8020CBC(process->sprites[TS_SPRITE_SS_TEXT]);
-                                            process->states[TS_ELEMENT_SS_TEXT] = 0;
+                                            ts->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
+                                            ts->sprites[TS_SPRITE_SS_TEXT]->yPosition = 146;
+                                            ts->sprites[TS_SPRITE_SS_TEXT]->xScale = 51;
+                                            ts->sprites[TS_SPRITE_SS_TEXT]->yScale = 51;
+                                            ts->sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 1;
+                                            ts->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 1;
+                                            ts->sprites[TS_SPRITE_SS_TEXT]->field_E = 0;
+                                            sprite_show_8020CBC(ts->sprites[TS_SPRITE_SS_TEXT]);
+                                            ts->states[TS_ELEMENT_SS_TEXT] = 0;
                                             break;
 
                                         case 64:
-                                            process->nTextProgression = 1945;
-                                            process->nTextPosY = 36608;
-                                            process->nTextScaleX = 51;
-                                            process->nTextScaleY = 51;
-                                            sub_801E150(process->sprites[TS_SPRITE_NINTENDO_TEXT], 0, 0,
+                                            ts->nTextProgression = 1945;
+                                            ts->nTextPosY = 36608;
+                                            ts->nTextScaleX = 51;
+                                            ts->nTextScaleY = 51;
+                                            sub_801E150(ts->sprites[TS_SPRITE_NINTENDO_TEXT], 0, 0,
                                                         0, 0);
-                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->xPosition = 118;
-                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->yPosition = 143;
-                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->xScale = 51;
-                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->yScale = 51;
-                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_0 = 1;
-                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_2 = 1;
-                                            process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_E = 0;
+                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->xPosition = 118;
+                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->yPosition = 143;
+                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->xScale = 51;
+                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->yScale = 51;
+                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_0 = 1;
+                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_2 = 1;
+                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_E = 0;
                                             sprite_show_8020CBC(
-                                                process->sprites[TS_SPRITE_NINTENDO_TEXT]);
-                                            process->states[TS_ELEMENT_LICENSE_TEXT] = 0;
+                                                ts->sprites[TS_SPRITE_NINTENDO_TEXT]);
+                                            ts->states[TS_ELEMENT_LICENSE_TEXT] = 0;
                                             break;
                                     }
-                                    process->timer++;
+                                    ts->timer++;
                                 }
                                 break;
 
                             case 5:
-                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
-                                    process->sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
-                                    sprite_hide_8021F20(process->sprites[TS_SPRITE_NINTENDO_TEXT]);
-                                    process->states[TS_ELEMENT_SUITCASE] = -1;
+                                if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+                                    ts->sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
+                                    sprite_hide_8021F20(ts->sprites[TS_SPRITE_NINTENDO_TEXT]);
+                                    ts->states[TS_ELEMENT_SUITCASE] = -1;
                                     BUFFER_REG_BG0CNT = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(24);
                                     BUFFER_REG_BG0HOFS = 0;
                                     BUFFER_REG_BG0VOFS = 0;
                                     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
-                                    if (process->flags_4 == 0) {
-                                        process->brightness = 60;
-                                        process->process.state = TS_STATE_PRESS_START_SHOW;
+                                    if (ts->flags_4 == 0) {
+                                        ts->brightness = 60;
+                                        ts->process.state = TS_STATE_PRESS_START_SHOW;
                                     }
                                 }
                                 break;
                         }
-                        process->sprites[TS_SPRITE_SUITCASE]->xPosition = process->xPosSuitcase / 256;
-                        process->sprites[TS_SPRITE_SUITCASE]->yPosition = process->yPosSuitcase / 256;
+                        ts->sprites[TS_SPRITE_SUITCASE]->xPosition = ts->xPosSuitcase / 256;
+                        ts->sprites[TS_SPRITE_SUITCASE]->yPosition = ts->yPosSuitcase / 256;
                         break;
 
                     case TS_ELEMENT_ML_TEXT:
-                        switch (process->states[TS_ELEMENT_ML_TEXT]) {
+                        switch (ts->states[TS_ELEMENT_ML_TEXT]) {
                             case 0:
-                                process->mlTextProgression -= 98;
-                                process->mlTextPosY -= process->mlTextProgression;
-                                process->mlTextScaleX += 5;
-                                process->mlTextScaleY = process->mlTextScaleX;
-                                if (process->mlTextScaleX > 255) {
+                                ts->mlTextProgression -= 98;
+                                ts->mlTextPosY -= ts->mlTextProgression;
+                                ts->mlTextScaleX += 5;
+                                ts->mlTextScaleY = ts->mlTextScaleX;
+                                if (ts->mlTextScaleX > 255) {
                                     BUFFER_REG_BG2CNT = BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1)
                                                         | BGCNT_256COLOR | BGCNT_SCREENBASE(25)
                                                         | BGCNT_AFF256x256;
-                                    process->mlTextScaleX = 256;
-                                    process->states[TS_ELEMENT_ML_TEXT] = 1;
-                                    process->mlTextProgression = 0;
+                                    ts->mlTextScaleX = 256;
+                                    ts->states[TS_ELEMENT_ML_TEXT] = 1;
+                                    ts->mlTextProgression = 0;
                                 }
                                 break;
 
                             case 1:
-                                process->mlTextScaleX = word_83A74EC[2 * process->mlTextProgression];
-                                process->mlTextScaleY =
-                                    word_83A74EC[2 * process->mlTextProgression + 1];
-                                process->mlTextProgression++;
+                                ts->mlTextScaleX = word_83A74EC[2 * ts->mlTextProgression];
+                                ts->mlTextScaleY =
+                                    word_83A74EC[2 * ts->mlTextProgression + 1];
+                                ts->mlTextProgression++;
                                 // Is the cast really necessary here?
-                                if ((u16)process->mlTextProgression == 17) {
-                                    process->states[TS_ELEMENT_ML_TEXT] = -1;
+                                if ((u16)ts->mlTextProgression == 17) {
+                                    ts->states[TS_ELEMENT_ML_TEXT] = -1;
                                 }
                                 break;
                         }
-                        process->mlTextAffineSrc.sx = (dword_3001038 + (&loc_819832C - &loc_8198220))(
-                            0x10000, process->mlTextScaleX);
-                        process->mlTextAffineSrc.sy = (dword_3001038 + (&loc_819832C - &loc_8198220))(
-                            0x10000, process->mlTextScaleY);
-                        process->mlTextAffineSrc.scrY = process->mlTextPosY / 256;
-                        BgAffineSet(&process->mlTextAffineSrc, &process->mlTextAffineDst, 1);
-                        BUFFER_REG_BG2PA = process->mlTextAffineDst.pa;
-                        BUFFER_REG_BG2PB = process->mlTextAffineDst.pb;
-                        BUFFER_REG_BG2PC = process->mlTextAffineDst.pc;
-                        BUFFER_REG_BG2PD = process->mlTextAffineDst.pd;
-                        BUFFER_REG_BG2X = process->mlTextAffineDst.dx;
-                        BUFFER_REG_BG2Y = process->mlTextAffineDst.dy;
+                        ts->mlTextAffineSrc.sx = (dword_3001038 + (&loc_819832C - &loc_8198220))(
+                            0x10000, ts->mlTextScaleX);
+                        ts->mlTextAffineSrc.sy = (dword_3001038 + (&loc_819832C - &loc_8198220))(
+                            0x10000, ts->mlTextScaleY);
+                        ts->mlTextAffineSrc.scrY = ts->mlTextPosY / 256;
+                        BgAffineSet(&ts->mlTextAffineSrc, &ts->mlTextAffineDst, 1);
+                        BUFFER_REG_BG2PA = ts->mlTextAffineDst.pa;
+                        BUFFER_REG_BG2PB = ts->mlTextAffineDst.pb;
+                        BUFFER_REG_BG2PC = ts->mlTextAffineDst.pc;
+                        BUFFER_REG_BG2PD = ts->mlTextAffineDst.pd;
+                        BUFFER_REG_BG2X = ts->mlTextAffineDst.dx;
+                        BUFFER_REG_BG2Y = ts->mlTextAffineDst.dy;
                         break;
 
                     case TS_ELEMENT_SS_TEXT:
-                        switch (process->states[TS_ELEMENT_SS_TEXT]) {
+                        switch (ts->states[TS_ELEMENT_SS_TEXT]) {
                             case 0:
-                                process->ssTextProgression -= 98;
-                                process->ssTextPosY -= process->ssTextProgression;
-                                process->ssTextScaleX += 5;
-                                process->ssTextScaleY = process->ssTextScaleX;
-                                if (process->ssTextScaleX > 255) {
-                                    process->ssTextScaleX = 256;
-                                    process->states[TS_ELEMENT_SS_TEXT] = 1;
-                                    process->ssTextProgression = 0;
+                                ts->ssTextProgression -= 98;
+                                ts->ssTextPosY -= ts->ssTextProgression;
+                                ts->ssTextScaleX += 5;
+                                ts->ssTextScaleY = ts->ssTextScaleX;
+                                if (ts->ssTextScaleX > 255) {
+                                    ts->ssTextScaleX = 256;
+                                    ts->states[TS_ELEMENT_SS_TEXT] = 1;
+                                    ts->ssTextProgression = 0;
                                 }
                                 break;
 
                             case 1:
-                                process->ssTextScaleX = word_83A7530[2 * process->ssTextProgression];
-                                process->ssTextScaleY =
-                                    word_83A7530[2 * process->ssTextProgression + 1];
-                                process->ssTextProgression++;
-                                if ((u16)process->ssTextProgression == 17) {
-                                    process->states[TS_ELEMENT_SS_TEXT] = -1;
+                                ts->ssTextScaleX = word_83A7530[2 * ts->ssTextProgression];
+                                ts->ssTextScaleY =
+                                    word_83A7530[2 * ts->ssTextProgression + 1];
+                                ts->ssTextProgression++;
+                                if ((u16)ts->ssTextProgression == 17) {
+                                    ts->states[TS_ELEMENT_SS_TEXT] = -1;
                                 }
                                 break;
                         }
-                        process->sprites[TS_SPRITE_SS_TEXT]->yPosition = process->ssTextPosY / 256;
-                        process->sprites[TS_SPRITE_SS_TEXT]->xScale = process->ssTextScaleX;
-                        process->sprites[TS_SPRITE_SS_TEXT]->yScale = process->ssTextScaleY;
+                        ts->sprites[TS_SPRITE_SS_TEXT]->yPosition = ts->ssTextPosY / 256;
+                        ts->sprites[TS_SPRITE_SS_TEXT]->xScale = ts->ssTextScaleX;
+                        ts->sprites[TS_SPRITE_SS_TEXT]->yScale = ts->ssTextScaleY;
                         break;
 
                     case TS_ELEMENT_LICENSE_TEXT:
-                        switch (process->states[TS_ELEMENT_LICENSE_TEXT]) {
+                        switch (ts->states[TS_ELEMENT_LICENSE_TEXT]) {
                             case 0:
-                                process->nTextProgression -= 98;
-                                if (process->nTextProgression < 0) {
-                                    process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_0 =
-                                        process->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_2 = 0;
+                                ts->nTextProgression -= 98;
+                                if (ts->nTextProgression < 0) {
+                                    ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_0 =
+                                        ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_2 = 0;
                                 }
-                                process->nTextPosY -= process->nTextProgression;
-                                process->nTextScaleX += 5;
-                                process->nTextScaleY = process->nTextScaleX;
-                                if (process->nTextScaleX > 255) {
-                                    process->nTextScaleX = 256;
-                                    process->states[TS_ELEMENT_LICENSE_TEXT] = 1;
-                                    process->nTextProgression = 0;
+                                ts->nTextPosY -= ts->nTextProgression;
+                                ts->nTextScaleX += 5;
+                                ts->nTextScaleY = ts->nTextScaleX;
+                                if (ts->nTextScaleX > 255) {
+                                    ts->nTextScaleX = 256;
+                                    ts->states[TS_ELEMENT_LICENSE_TEXT] = 1;
+                                    ts->nTextProgression = 0;
                                 }
                                 break;
 
                             case 1:
-                                process->nTextScaleX = word_83A7574[2 * process->nTextProgression];
-                                process->nTextScaleY = word_83A7574[2 * process->nTextProgression + 1];
-                                process->nTextProgression++;
-                                if ((u16)process->nTextProgression == 17) {
-                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 5, 0, 0, 0);
-                                    process->states[TS_ELEMENT_SUITCASE] = 5;
-                                    process->flags_5 = 0;
-                                    process->states[TS_ELEMENT_LICENSE_TEXT] = -1;
+                                ts->nTextScaleX = word_83A7574[2 * ts->nTextProgression];
+                                ts->nTextScaleY = word_83A7574[2 * ts->nTextProgression + 1];
+                                ts->nTextProgression++;
+                                if ((u16)ts->nTextProgression == 17) {
+                                    sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 5, 0, 0, 0);
+                                    ts->states[TS_ELEMENT_SUITCASE] = 5;
+                                    ts->flags_5 = 0;
+                                    ts->states[TS_ELEMENT_LICENSE_TEXT] = -1;
                                 }
                                 break;
                         }
-                        process->sprites[TS_SPRITE_NINTENDO_TEXT]->yPosition = process->nTextPosY / 256;
-                        process->sprites[TS_SPRITE_NINTENDO_TEXT]->xScale = process->nTextScaleX;
-                        process->sprites[TS_SPRITE_NINTENDO_TEXT]->yScale = process->nTextScaleY;
+                        ts->sprites[TS_SPRITE_NINTENDO_TEXT]->yPosition = ts->nTextPosY / 256;
+                        ts->sprites[TS_SPRITE_NINTENDO_TEXT]->xScale = ts->nTextScaleX;
+                        ts->sprites[TS_SPRITE_NINTENDO_TEXT]->yScale = ts->nTextScaleY;
                         break;
                 }
             }
 
-            if (!process->flags_4) {
-                if (process->flags_5 && gGameState.field_2A & (A_BUTTON | B_BUTTON | SELECT_BUTTON | START_BUTTON)) {
-                    process->flags_4 = 1;
-                    process->brightness = 16;
+            if (!ts->flags_4) {
+                if (ts->flags_5 && gGameState.field_2A & (A_BUTTON | B_BUTTON | SELECT_BUTTON | START_BUTTON)) {
+                    ts->flags_4 = 1;
+                    ts->brightness = 16;
                 }
             } else {
-                process->brightness--;
-                BUFFER_REG_BLDY = 16 - process->brightness;
-                if (process->brightness == 0) {
-                    process->process.state = TS_STATE_FADE_IN;
-                    process->flags_2 = 1;
-                    process->brightness = 16;
-                    open_8055E2C(process);
+                ts->brightness--;
+                BUFFER_REG_BLDY = 16 - ts->brightness;
+                if (ts->brightness == 0) {
+                    ts->process.state = TS_STATE_FADE_IN;
+                    ts->flags_2 = 1;
+                    ts->brightness = 16;
+                    open_8055E2C(ts);
                     (*(vu16*)(0x2000000 + 0x00)) |= 0x1741;
                 }
             }
             break;
 
         case TS_STATE_PRESS_START_SHOW:
-            process->brightness--;
-            if (process->brightness == 0) {
-                process->psTextPosY = 30720;
-                sub_801E150(process->sprites[TS_SPRITE_PRESS_START_TEXT], 0, 0, 0, 0);
-                process->sprites[TS_SPRITE_PRESS_START_TEXT]->xPosition = 120;
-                process->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition = 120;
-                process->sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_0 = 0;
-                process->sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_2 = 0;
-                process->sprites[TS_SPRITE_PRESS_START_TEXT]->field_E = 0;
-                sprite_show_8020CBC(process->sprites[TS_SPRITE_PRESS_START_TEXT]);
-                process->process.state = TS_STATE_PRESS_START_WAIT;
+            ts->brightness--;
+            if (ts->brightness == 0) {
+                ts->psTextPosY = 30720;
+                sub_801E150(ts->sprites[TS_SPRITE_PRESS_START_TEXT], 0, 0, 0, 0);
+                ts->sprites[TS_SPRITE_PRESS_START_TEXT]->xPosition = 120;
+                ts->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition = 120;
+                ts->sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_0 = 0;
+                ts->sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_2 = 0;
+                ts->sprites[TS_SPRITE_PRESS_START_TEXT]->field_E = 0;
+                sprite_show_8020CBC(ts->sprites[TS_SPRITE_PRESS_START_TEXT]);
+                ts->process.state = TS_STATE_PRESS_START_WAIT;
             }
             break;
 
         case TS_STATE_PRESS_START_WAIT:
             if (gGameState.field_2A & (A_BUTTON | START_BUTTON)) {
-                process->psTextVelocity = 0;
-                process->states[TS_ELEMENT_PRESS_START_TEXT] = 2;
-                process->xVelocitySuitcase = 0;
-                process->states[TS_ELEMENT_SUITCASE] = 6;
+                ts->psTextVelocity = 0;
+                ts->states[TS_ELEMENT_PRESS_START_TEXT] = 2;
+                ts->xVelocitySuitcase = 0;
+                ts->states[TS_ELEMENT_SUITCASE] = 6;
                 play_sfx_80195B4(96, -1);
-                process->process.state = TS_STATE_SUITCASE_OPENS;
+                ts->process.state = TS_STATE_SUITCASE_OPENS;
             }
             break;
 
         case TS_STATE_SUITCASE_OPENS:
             for (j = 0; j < TS_ELEMENT_COUNT; j++) {
-                if (process->states[j] < 0) {
+                if (ts->states[j] < 0) {
                     continue;
                 }
 
                 switch (j) {
                     case TS_ELEMENT_SUITCASE:
-                        switch (process->states[TS_ELEMENT_SUITCASE]) {
+                        switch (ts->states[TS_ELEMENT_SUITCASE]) {
                             case 6:
-                                process->xVelocitySuitcase -= 102;
-                                process->xPosSuitcase += process->xVelocitySuitcase;
-                                if (process->xPosSuitcase <= 0x2000) {
-                                    process->xPosSuitcase = 0x4000;
-                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 6, 0, 0, 0);
-                                    process->timer = 0;
-                                    process->states[TS_ELEMENT_SUITCASE] = 7;
+                                ts->xVelocitySuitcase -= 102;
+                                ts->xPosSuitcase += ts->xVelocitySuitcase;
+                                if (ts->xPosSuitcase <= 0x2000) {
+                                    ts->xPosSuitcase = 0x4000;
+                                    sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 6, 0, 0, 0);
+                                    ts->timer = 0;
+                                    ts->states[TS_ELEMENT_SUITCASE] = 7;
                                 }
                                 break;
 
                             case 7:
-                                if (process->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(process->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
-                                    process->states[TS_ELEMENT_SUITCASE] = -1;
+                                if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+                                    ts->states[TS_ELEMENT_SUITCASE] = -1;
                                 }
 
-                                if (process->timer < 0xFFFF) {
-                                    if (process->timer == 15) {
-                                        process->beanPosX = 0x4000;
-                                        process->beanPosY = 33280;
-                                        process->beanVelocityX = 384;
-                                        process->beanVelocityY = 1536;
-                                        sub_801E150(process->sprites[TS_SPRITE_BEAN_POINTER], 11, 0, 0,
+                                if (ts->timer < 0xFFFF) {
+                                    if (ts->timer == 15) {
+                                        ts->beanPosX = 0x4000;
+                                        ts->beanPosY = 33280;
+                                        ts->beanVelocityX = 384;
+                                        ts->beanVelocityY = 1536;
+                                        sub_801E150(ts->sprites[TS_SPRITE_BEAN_POINTER], 11, 0, 0,
                                                     0);
-                                        process->sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 64;
-                                        process->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 130;
-                                        process->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_0 = 0;
-                                        process->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_2 = 0;
-                                        process->sprites[TS_SPRITE_BEAN_POINTER]->field_E = 0;
-                                        sprite_show_8020CBC(process->sprites[TS_SPRITE_BEAN_POINTER]);
-                                        process->states[TS_ELEMENT_POINTER] = 0;
+                                        ts->sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 64;
+                                        ts->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 130;
+                                        ts->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_0 = 0;
+                                        ts->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_2 = 0;
+                                        ts->sprites[TS_SPRITE_BEAN_POINTER]->field_E = 0;
+                                        sprite_show_8020CBC(ts->sprites[TS_SPRITE_BEAN_POINTER]);
+                                        ts->states[TS_ELEMENT_POINTER] = 0;
                                     }
-                                    process->timer++;
+                                    ts->timer++;
                                 }
                                 break;
                         }
-                        process->sprites[TS_SPRITE_SUITCASE]->xPosition = process->xPosSuitcase / 256;
-                        process->sprites[TS_SPRITE_SUITCASE]->yPosition = process->yPosSuitcase / 256;
+                        ts->sprites[TS_SPRITE_SUITCASE]->xPosition = ts->xPosSuitcase / 256;
+                        ts->sprites[TS_SPRITE_SUITCASE]->yPosition = ts->yPosSuitcase / 256;
                         break;
 
                     case TS_ELEMENT_PRESS_START_TEXT:
-                        if (process->states[TS_ELEMENT_PRESS_START_TEXT] == 2) {
-                            process->psTextVelocity -= 98;
-                            process->psTextPosY -= process->psTextVelocity;
-                            if (process->psTextPosY > 45055) {
-                                sprite_hide_8021F20(process->sprites[TS_SPRITE_PRESS_START_TEXT]);
-                                process->states[TS_ELEMENT_PRESS_START_TEXT] = -1;
+                        if (ts->states[TS_ELEMENT_PRESS_START_TEXT] == 2) {
+                            ts->psTextVelocity -= 98;
+                            ts->psTextPosY -= ts->psTextVelocity;
+                            if (ts->psTextPosY > 45055) {
+                                sprite_hide_8021F20(ts->sprites[TS_SPRITE_PRESS_START_TEXT]);
+                                ts->states[TS_ELEMENT_PRESS_START_TEXT] = -1;
                             }
                         }
-                        process->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition =
-                            process->psTextPosY / 256;
+                        ts->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition =
+                            ts->psTextPosY / 256;
                         break;
 
                     case TS_ELEMENT_POINTER:
-                        switch (process->states[TS_ELEMENT_POINTER]) {
+                        switch (ts->states[TS_ELEMENT_POINTER]) {
                             case 0:
-                                process->beanVelocityY -= 98;
-                                process->beanPosY -= process->beanVelocityY;
-                                process->beanPosX += process->beanVelocityX;
-                                if (process->beanVelocityY < 0 && process->beanPosY > 35839) {
-                                    process->beanPosY = 35840;
-                                    process->flags_6 = 2;
-                                    process->states[TS_ELEMENT_POINTER] = 1;
+                                ts->beanVelocityY -= 98;
+                                ts->beanPosY -= ts->beanVelocityY;
+                                ts->beanPosX += ts->beanVelocityX;
+                                if (ts->beanVelocityY < 0 && ts->beanPosY > 35839) {
+                                    ts->beanPosY = 35840;
+                                    ts->flags_6 = 2;
+                                    ts->states[TS_ELEMENT_POINTER] = 1;
                                 }
                                 break;
 
                             case 1:
-                                if (process->beanPosY / 256 <= 20 * process->flags_6 + 92) {
-                                    sub_801E150(process->sprites[process->flags_6 + 2],
-                                                process->flags_6 + 3, 0, 0, 0);
-                                    process->sprites[process->flags_6 + 2]->xPosition = 180;
-                                    process->sprites[process->flags_6 + 2]->yPosition =
-                                        20 * process->flags_6 + 100;
-                                    sprite_show_8020CBC(process->sprites[process->flags_6 + 2]);
+                                if (ts->beanPosY / 256 <= 20 * ts->flags_6 + 92) {
+                                    sub_801E150(ts->sprites[ts->flags_6 + 2],
+                                                ts->flags_6 + 3, 0, 0, 0);
+                                    ts->sprites[ts->flags_6 + 2]->xPosition = 180;
+                                    ts->sprites[ts->flags_6 + 2]->yPosition =
+                                        20 * ts->flags_6 + 100;
+                                    sprite_show_8020CBC(ts->sprites[ts->flags_6 + 2]);
 
-                                    if (process->flags_6 == 0) {
-                                        sub_801E150(process->sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0,
+                                    if (ts->flags_6 == 0) {
+                                        sub_801E150(ts->sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0,
                                                     0);
-                                        process->states[TS_ELEMENT_POINTER] = 2;
+                                        ts->states[TS_ELEMENT_POINTER] = 2;
                                     } else {
-                                        process->flags_6--;
+                                        ts->flags_6--;
                                     }
                                 }
 
-                                if (process->states[TS_ELEMENT_POINTER] == 1) {
-                                    process->beanPosY -= 1536;
+                                if (ts->states[TS_ELEMENT_POINTER] == 1) {
+                                    ts->beanPosY -= 1536;
                                 }
                                 break;
 
                             case 2:
-                                if (process->sprites[TS_SPRITE_BEAN_POINTER]->field_12_3) {
-                                    sub_801E150(process->sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
-                                    sub_801E150(process->sprites[TS_SPRITE_SELECTION_VISUAL], 0, 0, 0,
+                                if (ts->sprites[TS_SPRITE_BEAN_POINTER]->field_12_3) {
+                                    sub_801E150(ts->sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
+                                    sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 0, 0, 0,
                                                 0);
-                                    process->sprites[TS_SPRITE_SELECTION_VISUAL]->xPosition = 64;
-                                    process->sprites[TS_SPRITE_SELECTION_VISUAL]->yPosition = 140;
-                                    process->sprites[TS_SPRITE_SELECTION_VISUAL]->field_1F_0 = 1;
-                                    process->sprites[TS_SPRITE_SELECTION_VISUAL]->field_E = 1;
-                                    sprite_show_8020CBC(process->sprites[TS_SPRITE_SELECTION_VISUAL]);
-                                    process->flags_0 = 0;
+                                    ts->sprites[TS_SPRITE_SELECTION_VISUAL]->xPosition = 64;
+                                    ts->sprites[TS_SPRITE_SELECTION_VISUAL]->yPosition = 140;
+                                    ts->sprites[TS_SPRITE_SELECTION_VISUAL]->field_1F_0 = 1;
+                                    ts->sprites[TS_SPRITE_SELECTION_VISUAL]->field_E = 1;
+                                    sprite_show_8020CBC(ts->sprites[TS_SPRITE_SELECTION_VISUAL]);
+                                    ts->flags_0 = 0;
 
                                     off_839EC80[0x01] |= 0x20;
                                     off_839EC80[0x40] = 0xF0;
@@ -1015,12 +1015,12 @@ void open_update(struct OPENProcess* process) {
                                     off_839EC80[0x4A] |= 0x10;
                                     off_839EC80[0x4A] |= 0x20;
                                     sub_80574FC();
-                                    process->process.state = TS_STATE_GAME_SELECT;
+                                    ts->process.state = TS_STATE_GAME_SELECT;
                                 }
                                 break;
                         }
-                        process->sprites[TS_SPRITE_BEAN_POINTER]->xPosition = process->beanPosX / 256;
-                        process->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = process->beanPosY / 256;
+                        ts->sprites[TS_SPRITE_BEAN_POINTER]->xPosition = ts->beanPosX / 256;
+                        ts->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = ts->beanPosY / 256;
                         break;
                 }
             }
@@ -1030,51 +1030,51 @@ void open_update(struct OPENProcess* process) {
             if (gGameState.field_2A & (A_BUTTON | START_BUTTON)) {
                 BUFFER_REG_BLDCNT = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
                 BUFFER_REG_BLDY = 0;
-                process->brightness = 16;
+                ts->brightness = 16;
                 play_sfx_80195B4(96, -1);
                 sub_80193B4(0, 0, 16);
-                process->process.state = TS_STATE_FADE_OUT;
+                ts->process.state = TS_STATE_FADE_OUT;
             } else {
-                s8 selection = process->selection;
+                s8 selection = ts->selection;
                 if (gGameState.field_2E & DPAD_UP) {
-                    process->selection--;
-                    if (process->selection < 0) {
-                        process->selection = 2;
+                    ts->selection--;
+                    if (ts->selection < 0) {
+                        ts->selection = 2;
                     }
                     play_sfx_80195B4(95, -1);
                 } else if (gGameState.field_2E & DPAD_DOWN) {
-                    process->selection++;
-                    if (process->selection > 2) {
-                        process->selection = 0;
+                    ts->selection++;
+                    if (ts->selection > 2) {
+                        ts->selection = 0;
                     }
                     play_sfx_80195B4(95, -1);
                 }
 
-                if (process->selection != selection) {
-                    if (process->flags_0 != 2) {
-                        sub_801E150(process->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * selection + 2, 0,
+                if (ts->selection != selection) {
+                    if (ts->flags_0 != 2) {
+                        sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * selection + 2, 0,
                                     0, 0);
                     }
-                    process->flags_0 = 2;
-                    process->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 20 * process->selection + 92;
+                    ts->flags_0 = 2;
+                    ts->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 20 * ts->selection + 92;
                 }
             }
             break;
 
         case TS_STATE_FADE_OUT:
-            process->brightness--;
-            BUFFER_REG_BLDY = 16 - process->brightness;
-            if (process->brightness != 0) {
+            ts->brightness--;
+            BUFFER_REG_BLDY = 16 - ts->brightness;
+            if (ts->brightness != 0) {
                 break;
             }
 
-            if (process != NULL) {
-                process->process.definition = &stru_8CDC238;
+            if (ts != NULL) {
+                ts->process.definition = &stru_8CDC238;
                 DmaStop(0);
                 sub_8018B78(2, 0);
 
-                if (process->opdr) {
-                    process_remove((struct Process*)process->opdr, 3);
+                if (ts->opdr) {
+                    process_remove((struct Process*)ts->opdr, 3);
                 }
                 free_heap_8018DA8(dword_3000DA0);
                 sub_8021FD4();
@@ -1084,10 +1084,10 @@ void open_update(struct OPENProcess* process) {
                 BUFFER_REG_DISPCNT = 0;
                 gGameState.field_31 = 2;
                 sub_8017E34();
-                process_remove(&process->process, 3);
+                process_remove(&ts->process, 3);
             }
 
-            switch (process->selection) {
+            switch (ts->selection) {
                 case 0:
                     sub_80574B4();
                     sub_801AFE4(0);
@@ -1116,20 +1116,20 @@ void open_update(struct OPENProcess* process) {
             break;
     }
 
-    switch (process->flags_0) {
+    switch (ts->flags_0) {
         case 0:
-            if (process->sprites[TS_SPRITE_SELECTION_VISUAL]->field_12_3) {
-                sub_801E150(process->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * process->selection + 1, 0,
+            if (ts->sprites[TS_SPRITE_SELECTION_VISUAL]->field_12_3) {
+                sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * ts->selection + 1, 0,
                             0, 0);
-                process->flags_0 = 1;
+                ts->flags_0 = 1;
             }
             break;
 
         case 2:
-            if (process->sprites[TS_SPRITE_SELECTION_VISUAL]->field_12_3) {
-                sub_801E150(process->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * process->selection, 0, 0,
+            if (ts->sprites[TS_SPRITE_SELECTION_VISUAL]->field_12_3) {
+                sub_801E150(ts->sprites[TS_SPRITE_SELECTION_VISUAL], 3 * ts->selection, 0, 0,
                             0);
-                process->flags_0 = 0;
+                ts->flags_0 = 0;
             }
             break;
     }

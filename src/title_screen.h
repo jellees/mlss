@@ -21,7 +21,7 @@ struct COMPProcess
     struct Sprite* alphaDreamLogo;
 };
 
-struct OPENProcess
+struct TitleScreen
 {
     struct Process process;
     s8 brightness;
