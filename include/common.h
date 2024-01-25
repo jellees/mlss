@@ -1,8 +1,6 @@
 #include "global.h"
 
 // Structs
-struct Process;
-
 struct ProcessDefinition {
     u32 field_0;
     void (*field_4)(void*);
@@ -206,7 +204,7 @@ extern int dword_83A6C5C[];
 extern int dword_83A7140[];
 extern int dword_83A7300[];
 extern u16 word_83A74C0[];
-extern u8 byte_83A74E4[];
+extern u8 byte_83A74E9[];
 extern s16 word_83A74EC[];
 extern s16 word_83A7530[];
 extern s16 word_83A7574[];

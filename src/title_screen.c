@@ -569,12 +569,8 @@ void open_8056224(void) {
 }
 #endif
 
-// https://decomp.me/scratch/gWuPM
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/open_update.s\"");
-#else
 void open_update(struct OPENProcess* process) {
-    int i;
+    int i, j;
 
     sub_8021F7C();
 
@@ -583,7 +579,7 @@ void open_update(struct OPENProcess* process) {
             process->brightness--;
             (*(vu16*)(0x2000000 + 0x54)) = process->brightness;
             if (process->brightness == 0) {
-                process->process.state = byte_83A74E4[process->flags_2];
+                process->process.state = byte_83A74E9[process->flags_2];
                 if (process->process.state == 2) {
                     process->brightness = 60;
                 }
@@ -591,18 +587,15 @@ void open_update(struct OPENProcess* process) {
             break;
 
         case 1:
-            // 0805634A
             for (i = 0; i < 6; i++) {
-                // 08056356
                 if (process->states[i] < 0) {
                     continue;
                 }
 
-                // 0805635A
                 switch (i) {
-                    case 0: // 0805637C
+                    case 0:
                         switch (process->states[0]) {
-                            case 0: // 080563B4
+                            case 0:
                                 process->yPosSuitcase += process->yVelocitySuitcase;
                                 process->yVelocitySuitcase += 32;
                                 if (process->yPosSuitcase > 35839) {
@@ -613,7 +606,7 @@ void open_update(struct OPENProcess* process) {
                                 }
                                 break;
 
-                            case 1: // 08056400
+                            case 1:
                                 if (process->sprites[5]->field_12_3) {
                                     sub_801E150(process->sprites[5], 2, 0, 0, 0);
                                     process->sprites[5]->field_12_1 = 1;
@@ -621,7 +614,7 @@ void open_update(struct OPENProcess* process) {
                                 }
                                 break;
 
-                            case 2: // 0805643C
+                            case 2:
                                 if (process->sprites[5]->field_12_3) {
                                     sub_801E150(process->sprites[5], 3, 0, 0, 0);
                                     process->sprites[5]->field_12_1 = 1;
@@ -629,7 +622,7 @@ void open_update(struct OPENProcess* process) {
                                 }
                                 break;
 
-                            case 3: // 08056478
+                            case 3:
                                 if (process->sprites[5]->field_12_3) {
                                     sub_801E150(process->sprites[5], 4, 0, 0, 0);
                                     (*(vu16*)(0x2000000 + 0x00)) |= 0x400;
@@ -650,7 +643,7 @@ void open_update(struct OPENProcess* process) {
                                 }
                                 break;
 
-                            case 4: // 08056502
+                            case 4:
                                 if (process->timer < 0xFFFF) {
                                     switch (process->timer) {
                                         case 32: // 08056528
@@ -670,7 +663,7 @@ void open_update(struct OPENProcess* process) {
                                             process->states[2] = 0;
                                             break;
 
-                                        case 64: // 0805659C
+                                        case 64:
                                             process->nTextProgression = 1945;
                                             process->nTextPosY = 36608;
                                             process->nTextScaleX = 51;
@@ -691,7 +684,7 @@ void open_update(struct OPENProcess* process) {
                                 }
                                 break;
 
-                            case 5: // 08056620
+                            case 5:
                                 if (process->sprites[5]->field_12_3) {
                                     sub_801E150(process->sprites[5], 2, 0, 0, 0);
                                     process->sprites[5]->field_12_4 = 1;
@@ -712,9 +705,9 @@ void open_update(struct OPENProcess* process) {
                         process->sprites[5]->yPosition = process->yPosSuitcase / 256;
                         break;
 
-                    case 1: // 080566B8
+                    case 1:
                         switch (process->states[1]) {
-                            case 0: // 080566CA
+                            case 0:
                                 process->mlTextProgression -= 98;
                                 process->mlTextPosY -= process->mlTextProgression;
                                 process->mlTextScaleX += 5;
@@ -727,7 +720,7 @@ void open_update(struct OPENProcess* process) {
                                 }
                                 break;
 
-                            case 1: // 08056708
+                            case 1:
                                 process->mlTextScaleX = word_83A74EC[2 * process->mlTextProgression];
                                 process->mlTextScaleY =
                                     word_83A74EC[2 * process->mlTextProgression + 1];
@@ -752,7 +745,7 @@ void open_update(struct OPENProcess* process) {
                         (*(vu32*)(0x2000000 + 0x2C)) = process->mlTextAffineDst.dy;
                         break;
 
-                    case 2: // 080567DC
+                    case 2:
                         switch (process->states[2]) {
                             case 0:
                                 process->ssTextProgression -= 98;
@@ -781,7 +774,7 @@ void open_update(struct OPENProcess* process) {
                         process->sprites[8]->yScale = process->ssTextScaleY;
                         break;
 
-                    case 3: // 08056870
+                    case 3:
                         switch (process->states[3]) {
                             case 0:
                                 process->nTextProgression -= 98;
@@ -836,7 +829,7 @@ void open_update(struct OPENProcess* process) {
             }
             break;
 
-        case 2: // 080569D4
+        case 2:
             process->brightness--;
             if (process->brightness == 0) {
                 process->psTextPosY = 30720;
@@ -851,7 +844,7 @@ void open_update(struct OPENProcess* process) {
             }
             break;
 
-        case 3: // 08056A2E
+        case 3:
             if ((gGameState.field_2A & 9) != 0) {
                 process->psTextVelocity = 0;
                 process->states[4] = 2;
@@ -862,14 +855,14 @@ void open_update(struct OPENProcess* process) {
             }
             break;
 
-        case 4: // 08056A68
-            for (i = 0; i < 6; i++) {
-                if (process->states[i] < 0) {
+        case 4:
+            for (j = 0; j < 6; j++) {
+                if (process->states[j] < 0) {
                     continue;
                 }
 
-                switch (i) {
-                    case 0: // 08056AB2
+                switch (j) {
+                    case 0:
                         switch (process->states[0]) {
                             case 6:
                                 process->xVelocitySuitcase -= 102;
@@ -889,7 +882,6 @@ void open_update(struct OPENProcess* process) {
                                 }
 
                                 if (process->timer < 0xFFFF) {
-                                    // Could also be a switch with only one case.
                                     if (process->timer == 15) {
                                         process->beanPosX = 0x4000;
                                         process->beanPosY = 33280;
@@ -904,32 +896,15 @@ void open_update(struct OPENProcess* process) {
                                         sprite_show_8020CBC(process->sprites[1]);
                                         process->states[5] = 0;
                                     }
-                                    /*switch (process->timer)
-                                    {
-                                    case 15:
-                                        process->beanPosX = 0x4000;
-                                        process->beanPosY = 33280;
-                                        process->beanVelocityX = 384;
-                                        process->beanVelocityY = 1536;
-                                        sub_801E150(process->sprites[1], 11, 0, 0, 0);
-                                        process->sprites[1]->xPosition = 64;
-                                        process->sprites[1]->yPosition = 130;
-                                        process->sprites[1]->field_1F_0 = 0;
-                                        process->sprites[1]->field_1F_2 = 0;
-                                        process->sprites[1]->field_E = 0;
-                                        sprite_show_8020CBC(process->sprites[1]);
-                                        process->states[5] = 0;
-                                        break;
-                                    }*/
+                                    process->timer++;
                                 }
-                                process->timer++;
                                 break;
                         }
                         process->sprites[5]->xPosition = process->xPosSuitcase / 256;
                         process->sprites[5]->yPosition = process->yPosSuitcase / 256;
                         break;
 
-                    case 4: // 08056BD8
+                    case 4:
                         if (process->states[4] == 2) {
                             process->psTextVelocity -= 98;
                             process->psTextPosY -= process->psTextVelocity;
@@ -941,7 +916,7 @@ void open_update(struct OPENProcess* process) {
                         process->sprites[0]->yPosition = process->psTextPosY / 256;
                         break;
 
-                    case 5: // 08056C18
+                    case 5:
                         switch (process->states[5]) {
                             case 0:
                                 process->beanVelocityY -= 98;
@@ -954,7 +929,7 @@ void open_update(struct OPENProcess* process) {
                                 }
                                 break;
 
-                            case 1: // 08056C98
+                            case 1:
                                 if (process->beanPosY / 256 <= 20 * process->flags_6 + 92) {
                                     sub_801E150(process->sprites[process->flags_6 + 2],
                                                 process->flags_6 + 3, 0, 0, 0);
@@ -976,7 +951,7 @@ void open_update(struct OPENProcess* process) {
                                 }
                                 break;
 
-                            case 2: // 08056D5C
+                            case 2:
                                 if (process->sprites[1]->field_12_3) {
                                     sub_801E150(process->sprites[1], 13, 0, 0, 0);
                                     sub_801E150(process->sprites[7], 0, 0, 0, 0);
@@ -1082,7 +1057,8 @@ void open_update(struct OPENProcess* process) {
                     sub_80574B4();
                     sub_801AFE4(0);
                     (*(vu16*)(0x2000000 + 0x50)) = 0;
-                    sub_812538C(alloc_Zero(356, 0, "LOAD", 0), 8, "LOAD", 0xFFFF);
+                    sub_812538C(alloc_Zero(356, 0, (char*)0x081E2784 /*"LOAD"*/, 0), 8,
+                                (char*)0x081E2784 /*"LOAD"*/, 0xFFFF);
                     return;
 
                 case 1:
@@ -1093,7 +1069,11 @@ void open_update(struct OPENProcess* process) {
 
                 case 2:
                     sub_80574B4();
-                    optn_init(alloc_Zero(84, 0, "OPTN", 0), 8, "OPTN", 0);
+                    optn_init(alloc_Zero(84, 0, (char*)0x081E278C /*"OPTN"*/, 0), 8,
+                              (char*)0x081E278C /*"OPTN"*/, 0);
+                    return;
+
+                default:
                     return;
             }
             break;
@@ -1115,4 +1095,3 @@ void open_update(struct OPENProcess* process) {
             break;
     }
 }
-#endif

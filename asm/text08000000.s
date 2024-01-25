@@ -8054,7 +8054,7 @@ reset_game_80189C4: @ 080189C4
 	strh r3, [r0, #0x0A]
 	ldrh r0, [r0, #0x0A]
 	movs r0, #0xFC
-	bl _081DA6C8
+	bl sub_81DA6C8
 	pop {r4}
 	pop {r0}
 	bx r0
