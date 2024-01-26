@@ -3,6 +3,52 @@
 
 #include "process.h"
 
+enum TitleScreenStates {
+    // Fade in from white.
+    TS_STATE_FADE_IN = 0,
+    // Suitcase falls out of sky and opens, revealing logo.
+    TS_STATE_SUITCASE_FALLING,
+    // Waits a few frames and then show PRESS START.
+    TS_STATE_PRESS_START_SHOW,
+    // Wait for player input for press start.
+    TS_STATE_PRESS_START_WAIT,
+    // Suitcase opening animation.
+    TS_STATE_SUITCASE_OPENS,
+    // Wait for player to select game.
+    TS_STATE_GAME_SELECT,
+    // Player has chosen, load next process and fade out.
+    TS_STATE_FADE_OUT
+};
+
+enum TitleScreenElements {
+    TS_ELEMENT_SUITCASE = 0,
+    TS_ELEMENT_ML_TEXT,
+    TS_ELEMENT_SS_TEXT,
+    TS_ELEMENT_LICENSE_TEXT,
+    TS_ELEMENT_PRESS_START_TEXT,
+    TS_ELEMENT_POINTER,
+
+    TS_ELEMENT_COUNT
+};
+
+enum TitleScreenSprites {
+    TS_SPRITE_PRESS_START_TEXT = 0,
+    TS_SPRITE_BEAN_POINTER,
+    TS_SPRITE_ML_GAME_TEXT, // Mario & Luigi logo.
+    TS_SPRITE_MB_GAME_TEXT, // Mario bros logo.
+    TS_SPRITE_OPTIONS_TEXT,
+    TS_SPRITE_SUITCASE,
+    TS_SPRITE_NINTENDO_TEXT,
+    TS_SPRITE_SUITCASE_VISUAL, // The contents of the suitcase.
+    TS_SPRITE_SS_TEXT,
+};
+
+enum TitleScreenSuitcaseVisualStates {
+    TS_SV_STATE_APPEAR = 0,
+    TS_SV_STATE_IDLE,
+    TS_SV_STATE_DISAPPEAR,
+};
+
 struct COMPProcess
 {
     struct Process process;
@@ -25,11 +71,13 @@ struct TitleScreen
 {
     struct Process process;
     s8 brightness;
-    u8 flags_0 : 2;
-    u8 flags_2 : 2;
-    u8 flags_4 : 1;
-    u8 flags_5 : 1;
-    u8 flags_6 : 2;
+    u8 suitcaseVisualState : 2;
+    // Index to the state after fade in.
+    u8 entryStateIdx : 2;
+    bool8 isSkippingSuitcaseAnim : 1;
+    bool8 skipSuitcaseAnim : 1;
+    // Index used for game selection text sprites.
+    u8 spriteIdx : 2;
 
     int xPosSuitcase;
     int yPosSuitcase;
