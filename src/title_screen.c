@@ -230,16 +230,6 @@ void comp_update(struct COMPProcess* comp) {
     sub_8021F7C();
 }
 
-// suitcase state
-// 0 = suitcase falling out of sky
-// 1 = suitcase hitting ground and falling straight
-// 2 = suitcase falling over
-// 3 = suitcase opening
-// 4 = text coming out of suitcase
-// 5 = suitcase closes
-// 6 = go to left
-// 7 = bump open sideways
-
 // https://decomp.me/scratch/WOp2S
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/text08055A00.s\"");
@@ -374,7 +364,7 @@ struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, cha
 #endif
 
 void open_8055E2C(struct TitleScreen* ts) {
-    sprite_hide_8021F20(ts->sprites[TS_SPRITE_NINTENDO_TEXT]);
+    sprite_hide_8021F20(ts->sprites[TS_SPRITE_LICENSE_TEXT]);
 
     sub_801E150(ts->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
     ts->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
@@ -415,7 +405,7 @@ void open_8055E2C(struct TitleScreen* ts) {
     ts->mlTextPosY = 0;
     ts->mlTextScaleX = 256;
     ts->mlTextScaleY = 256;
-    ts->states[TS_ELEMENT_SUITCASE] = -1;
+    ts->states[TS_ITEM_SUITCASE] = -1;
 }
 
 // https://decomp.me/scratch/WbD37
@@ -569,43 +559,43 @@ void open_update(struct TitleScreen* ts) {
             }
             break;
 
-        case TS_STATE_SUITCASE_FALLING:
-            for (i = 0; i < TS_ELEMENT_COUNT; i++) {
+        case TS_STATE_TITLE_ANIMATION:
+            for (i = 0; i < TS_ITEM_COUNT; i++) {
                 if (ts->states[i] < 0) {
                     continue;
                 }
 
                 switch (i) {
-                    case TS_ELEMENT_SUITCASE:
-                        switch (ts->states[TS_ELEMENT_SUITCASE]) {
-                            case 0:
+                    case TS_ITEM_SUITCASE:
+                        switch (ts->states[TS_ITEM_SUITCASE]) {
+                            case TS_ITEM_SC_STATE_FALLING:
                                 ts->yPosSuitcase += ts->yVelocitySuitcase;
                                 ts->yVelocitySuitcase += 32;
                                 if (ts->yPosSuitcase > 35839) {
                                     ts->yPosSuitcase = 35840;
                                     sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 1, 0, 0, 0);
                                     ts->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
-                                    ts->states[TS_ELEMENT_SUITCASE] = 1;
+                                    ts->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_HIT_GROUND;
                                 }
                                 break;
 
-                            case 1:
+                            case TS_ITEM_SC_STATE_HIT_GROUND:
                                 if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
                                     sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
                                     ts->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
-                                    ts->states[TS_ELEMENT_SUITCASE] = 2;
+                                    ts->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_FALL_OVER;
                                 }
                                 break;
 
-                            case 2:
+                            case TS_ITEM_SC_STATE_FALL_OVER:
                                 if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
                                     sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 3, 0, 0, 0);
                                     ts->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
-                                    ts->states[TS_ELEMENT_SUITCASE] = 3;
+                                    ts->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_OPEN;
                                 }
                                 break;
 
-                            case 3:
+                            case TS_ITEM_SC_STATE_OPEN:
                                 if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
                                     sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
                                     BUFFER_REG_DISPCNT |= DISPCNT_BG2_ON;
@@ -620,13 +610,13 @@ void open_update(struct TitleScreen* ts) {
                                     ts->mlTextAffineSrc.sx = 256;
                                     ts->mlTextAffineSrc.sy = 256;
                                     ts->mlTextAffineSrc.alpha = 0;
-                                    ts->states[TS_ELEMENT_SUITCASE] = 4;
-                                    ts->states[TS_ELEMENT_ML_TEXT] = 0;
+                                    ts->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_OPEN_WAIT;
+                                    ts->states[TS_ITEM_ML_LOGO] = 0;
                                     ts->timer = 0;
                                 }
                                 break;
 
-                            case 4:
+                            case TS_ITEM_SC_STATE_OPEN_WAIT:
                                 if (ts->timer < 0xFFFF) {
                                     switch (ts->timer) {
                                         case 32:
@@ -643,7 +633,7 @@ void open_update(struct TitleScreen* ts) {
                                             ts->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 1;
                                             ts->sprites[TS_SPRITE_SS_TEXT]->field_E = 0;
                                             sprite_show_8020CBC(ts->sprites[TS_SPRITE_SS_TEXT]);
-                                            ts->states[TS_ELEMENT_SS_TEXT] = 0;
+                                            ts->states[TS_ITEM_SS_TEXT] = 0;
                                             break;
 
                                         case 64:
@@ -651,29 +641,29 @@ void open_update(struct TitleScreen* ts) {
                                             ts->nTextPosY = 36608;
                                             ts->nTextScaleX = 51;
                                             ts->nTextScaleY = 51;
-                                            sub_801E150(ts->sprites[TS_SPRITE_NINTENDO_TEXT], 0, 0, 0,
+                                            sub_801E150(ts->sprites[TS_SPRITE_LICENSE_TEXT], 0, 0, 0,
                                                         0);
-                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->xPosition = 118;
-                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->yPosition = 143;
-                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->xScale = 51;
-                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->yScale = 51;
-                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_0 = 1;
-                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_2 = 1;
-                                            ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_E = 0;
-                                            sprite_show_8020CBC(ts->sprites[TS_SPRITE_NINTENDO_TEXT]);
-                                            ts->states[TS_ELEMENT_LICENSE_TEXT] = 0;
+                                            ts->sprites[TS_SPRITE_LICENSE_TEXT]->xPosition = 118;
+                                            ts->sprites[TS_SPRITE_LICENSE_TEXT]->yPosition = 143;
+                                            ts->sprites[TS_SPRITE_LICENSE_TEXT]->xScale = 51;
+                                            ts->sprites[TS_SPRITE_LICENSE_TEXT]->yScale = 51;
+                                            ts->sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_0 = 1;
+                                            ts->sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_2 = 1;
+                                            ts->sprites[TS_SPRITE_LICENSE_TEXT]->field_E = 0;
+                                            sprite_show_8020CBC(ts->sprites[TS_SPRITE_LICENSE_TEXT]);
+                                            ts->states[TS_ITEM_LICENSE_TEXT] = 0;
                                             break;
                                     }
                                     ts->timer++;
                                 }
                                 break;
 
-                            case 5:
+                            case TS_ITEM_SC_STATE_CLOSE:
                                 if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
                                     sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
                                     ts->sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
-                                    sprite_hide_8021F20(ts->sprites[TS_SPRITE_NINTENDO_TEXT]);
-                                    ts->states[TS_ELEMENT_SUITCASE] = -1;
+                                    sprite_hide_8021F20(ts->sprites[TS_SPRITE_LICENSE_TEXT]);
+                                    ts->states[TS_ITEM_SUITCASE] = -1;
                                     BUFFER_REG_BG0CNT = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(24);
                                     BUFFER_REG_BG0HOFS = 0;
                                     BUFFER_REG_BG0VOFS = 0;
@@ -689,8 +679,8 @@ void open_update(struct TitleScreen* ts) {
                         ts->sprites[TS_SPRITE_SUITCASE]->yPosition = ts->yPosSuitcase / 256;
                         break;
 
-                    case TS_ELEMENT_ML_TEXT:
-                        switch (ts->states[TS_ELEMENT_ML_TEXT]) {
+                    case TS_ITEM_ML_LOGO:
+                        switch (ts->states[TS_ITEM_ML_LOGO]) {
                             case 0:
                                 ts->mlTextProgression -= 98;
                                 ts->mlTextPosY -= ts->mlTextProgression;
@@ -701,7 +691,7 @@ void open_update(struct TitleScreen* ts) {
                                                         | BGCNT_256COLOR | BGCNT_SCREENBASE(25)
                                                         | BGCNT_AFF256x256;
                                     ts->mlTextScaleX = 256;
-                                    ts->states[TS_ELEMENT_ML_TEXT] = 1;
+                                    ts->states[TS_ITEM_ML_LOGO] = 1;
                                     ts->mlTextProgression = 0;
                                 }
                                 break;
@@ -712,7 +702,7 @@ void open_update(struct TitleScreen* ts) {
                                 ts->mlTextProgression++;
                                 // Is the cast really necessary here?
                                 if ((u16)ts->mlTextProgression == 17) {
-                                    ts->states[TS_ELEMENT_ML_TEXT] = -1;
+                                    ts->states[TS_ITEM_ML_LOGO] = -1;
                                 }
                                 break;
                         }
@@ -730,8 +720,8 @@ void open_update(struct TitleScreen* ts) {
                         BUFFER_REG_BG2Y = ts->mlTextAffineDst.dy;
                         break;
 
-                    case TS_ELEMENT_SS_TEXT:
-                        switch (ts->states[TS_ELEMENT_SS_TEXT]) {
+                    case TS_ITEM_SS_TEXT:
+                        switch (ts->states[TS_ITEM_SS_TEXT]) {
                             case 0:
                                 ts->ssTextProgression -= 98;
                                 ts->ssTextPosY -= ts->ssTextProgression;
@@ -739,7 +729,7 @@ void open_update(struct TitleScreen* ts) {
                                 ts->ssTextScaleY = ts->ssTextScaleX;
                                 if (ts->ssTextScaleX > 255) {
                                     ts->ssTextScaleX = 256;
-                                    ts->states[TS_ELEMENT_SS_TEXT] = 1;
+                                    ts->states[TS_ITEM_SS_TEXT] = 1;
                                     ts->ssTextProgression = 0;
                                 }
                                 break;
@@ -749,7 +739,7 @@ void open_update(struct TitleScreen* ts) {
                                 ts->ssTextScaleY = word_83A7530[2 * ts->ssTextProgression + 1];
                                 ts->ssTextProgression++;
                                 if ((u16)ts->ssTextProgression == 17) {
-                                    ts->states[TS_ELEMENT_SS_TEXT] = -1;
+                                    ts->states[TS_ITEM_SS_TEXT] = -1;
                                 }
                                 break;
                         }
@@ -758,20 +748,20 @@ void open_update(struct TitleScreen* ts) {
                         ts->sprites[TS_SPRITE_SS_TEXT]->yScale = ts->ssTextScaleY;
                         break;
 
-                    case TS_ELEMENT_LICENSE_TEXT:
-                        switch (ts->states[TS_ELEMENT_LICENSE_TEXT]) {
+                    case TS_ITEM_LICENSE_TEXT:
+                        switch (ts->states[TS_ITEM_LICENSE_TEXT]) {
                             case 0:
                                 ts->nTextProgression -= 98;
                                 if (ts->nTextProgression < 0) {
-                                    ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_0 =
-                                        ts->sprites[TS_SPRITE_NINTENDO_TEXT]->field_1F_2 = 0;
+                                    ts->sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_0 =
+                                        ts->sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_2 = 0;
                                 }
                                 ts->nTextPosY -= ts->nTextProgression;
                                 ts->nTextScaleX += 5;
                                 ts->nTextScaleY = ts->nTextScaleX;
                                 if (ts->nTextScaleX > 255) {
                                     ts->nTextScaleX = 256;
-                                    ts->states[TS_ELEMENT_LICENSE_TEXT] = 1;
+                                    ts->states[TS_ITEM_LICENSE_TEXT] = 1;
                                     ts->nTextProgression = 0;
                                 }
                                 break;
@@ -782,15 +772,15 @@ void open_update(struct TitleScreen* ts) {
                                 ts->nTextProgression++;
                                 if ((u16)ts->nTextProgression == 17) {
                                     sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 5, 0, 0, 0);
-                                    ts->states[TS_ELEMENT_SUITCASE] = 5;
+                                    ts->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_CLOSE;
                                     ts->skipSuitcaseAnim = FALSE;
-                                    ts->states[TS_ELEMENT_LICENSE_TEXT] = -1;
+                                    ts->states[TS_ITEM_LICENSE_TEXT] = -1;
                                 }
                                 break;
                         }
-                        ts->sprites[TS_SPRITE_NINTENDO_TEXT]->yPosition = ts->nTextPosY / 256;
-                        ts->sprites[TS_SPRITE_NINTENDO_TEXT]->xScale = ts->nTextScaleX;
-                        ts->sprites[TS_SPRITE_NINTENDO_TEXT]->yScale = ts->nTextScaleY;
+                        ts->sprites[TS_SPRITE_LICENSE_TEXT]->yPosition = ts->nTextPosY / 256;
+                        ts->sprites[TS_SPRITE_LICENSE_TEXT]->xScale = ts->nTextScaleX;
+                        ts->sprites[TS_SPRITE_LICENSE_TEXT]->yScale = ts->nTextScaleY;
                         break;
                 }
             }
@@ -833,38 +823,38 @@ void open_update(struct TitleScreen* ts) {
         case TS_STATE_PRESS_START_WAIT:
             if (gGameState.field_2A & (A_BUTTON | START_BUTTON)) {
                 ts->psTextVelocity = 0;
-                ts->states[TS_ELEMENT_PRESS_START_TEXT] = 2;
+                ts->states[TS_ITEM_PRESS_START_TEXT] = 2;
                 ts->xVelocitySuitcase = 0;
-                ts->states[TS_ELEMENT_SUITCASE] = 6;
+                ts->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_MOVE_LEFT;
                 play_sfx_80195B4(96, -1);
                 ts->process.state = TS_STATE_SUITCASE_OPENS;
             }
             break;
 
         case TS_STATE_SUITCASE_OPENS:
-            for (j = 0; j < TS_ELEMENT_COUNT; j++) {
+            for (j = 0; j < TS_ITEM_COUNT; j++) {
                 if (ts->states[j] < 0) {
                     continue;
                 }
 
                 switch (j) {
-                    case TS_ELEMENT_SUITCASE:
-                        switch (ts->states[TS_ELEMENT_SUITCASE]) {
-                            case 6:
+                    case TS_ITEM_SUITCASE:
+                        switch (ts->states[TS_ITEM_SUITCASE]) {
+                            case TS_ITEM_SC_STATE_MOVE_LEFT:
                                 ts->xVelocitySuitcase -= 102;
                                 ts->xPosSuitcase += ts->xVelocitySuitcase;
                                 if (ts->xPosSuitcase <= 0x2000) {
                                     ts->xPosSuitcase = 0x4000;
                                     sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 6, 0, 0, 0);
                                     ts->timer = 0;
-                                    ts->states[TS_ELEMENT_SUITCASE] = 7;
+                                    ts->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_BUMP_OPEN;
                                 }
                                 break;
 
-                            case 7:
+                            case TS_ITEM_SC_STATE_BUMP_OPEN:
                                 if (ts->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
                                     sub_801E150(ts->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
-                                    ts->states[TS_ELEMENT_SUITCASE] = -1;
+                                    ts->states[TS_ITEM_SUITCASE] = -1;
                                 }
 
                                 if (ts->timer < 0xFFFF) {
@@ -880,7 +870,7 @@ void open_update(struct TitleScreen* ts) {
                                         ts->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_2 = 0;
                                         ts->sprites[TS_SPRITE_BEAN_POINTER]->field_E = 0;
                                         sprite_show_8020CBC(ts->sprites[TS_SPRITE_BEAN_POINTER]);
-                                        ts->states[TS_ELEMENT_POINTER] = 0;
+                                        ts->states[TS_ITEM_POINTER] = 0;
                                     }
                                     ts->timer++;
                                 }
@@ -890,20 +880,20 @@ void open_update(struct TitleScreen* ts) {
                         ts->sprites[TS_SPRITE_SUITCASE]->yPosition = ts->yPosSuitcase / 256;
                         break;
 
-                    case TS_ELEMENT_PRESS_START_TEXT:
-                        if (ts->states[TS_ELEMENT_PRESS_START_TEXT] == 2) {
+                    case TS_ITEM_PRESS_START_TEXT:
+                        if (ts->states[TS_ITEM_PRESS_START_TEXT] == 2) {
                             ts->psTextVelocity -= 98;
                             ts->psTextPosY -= ts->psTextVelocity;
                             if (ts->psTextPosY > 45055) {
                                 sprite_hide_8021F20(ts->sprites[TS_SPRITE_PRESS_START_TEXT]);
-                                ts->states[TS_ELEMENT_PRESS_START_TEXT] = -1;
+                                ts->states[TS_ITEM_PRESS_START_TEXT] = -1;
                             }
                         }
                         ts->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition = ts->psTextPosY / 256;
                         break;
 
-                    case TS_ELEMENT_POINTER:
-                        switch (ts->states[TS_ELEMENT_POINTER]) {
+                    case TS_ITEM_POINTER:
+                        switch (ts->states[TS_ITEM_POINTER]) {
                             case 0:
                                 ts->beanVelocityY -= 98;
                                 ts->beanPosY -= ts->beanVelocityY;
@@ -911,7 +901,7 @@ void open_update(struct TitleScreen* ts) {
                                 if (ts->beanVelocityY < 0 && ts->beanPosY > 35839) {
                                     ts->beanPosY = 35840;
                                     ts->spriteIdx = 2;
-                                    ts->states[TS_ELEMENT_POINTER] = 1;
+                                    ts->states[TS_ITEM_POINTER] = 1;
                                 }
                                 break;
 
@@ -926,13 +916,13 @@ void open_update(struct TitleScreen* ts) {
 
                                     if (ts->spriteIdx == 0) {
                                         sub_801E150(ts->sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0, 0);
-                                        ts->states[TS_ELEMENT_POINTER] = 2;
+                                        ts->states[TS_ITEM_POINTER] = 2;
                                     } else {
                                         ts->spriteIdx--;
                                     }
                                 }
 
-                                if (ts->states[TS_ELEMENT_POINTER] == 1) {
+                                if (ts->states[TS_ITEM_POINTER] == 1) {
                                     ts->beanPosY -= 1536;
                                 }
                                 break;
@@ -948,25 +938,24 @@ void open_update(struct TitleScreen* ts) {
                                     sprite_show_8020CBC(ts->sprites[TS_SPRITE_SUITCASE_VISUAL]);
                                     ts->suitcaseVisualState = TS_SV_STATE_APPEAR;
 
-                                    off_839EC80[0x01] |= 0x20;
-                                    off_839EC80[0x40] = 0xF0;
-                                    off_839EC80[0x41] = 0x00;
-                                    off_839EC80[0x44] = 0xA0;
-                                    off_839EC80[0x45] = 0x90;
+                                    off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_WIN0_ON >> 8;
+                                    off_839EC80[REG_OFFSET_WIN0H] = 240;
+                                    off_839EC80[REG_OFFSET_WIN0H + 1] = 0;
+                                    off_839EC80[REG_OFFSET_WIN0V] = 160;
+                                    off_839EC80[REG_OFFSET_WIN0V + 1] = 144;
+                                    off_839EC80[REG_OFFSET_WININ] |= WININ_WIN0_BG0;
+                                    off_839EC80[REG_OFFSET_WININ] |= WININ_WIN0_BG1;
+                                    off_839EC80[REG_OFFSET_WININ] |= WININ_WIN0_BG2;
+                                    off_839EC80[REG_OFFSET_WININ] |= WININ_WIN0_BG3;
+                                    *(s8*)&off_839EC80[REG_OFFSET_WININ] &= ~WININ_WIN0_OBJ;
+                                    off_839EC80[REG_OFFSET_WININ] |= WININ_WIN0_CLR;
+                                    off_839EC80[REG_OFFSET_WINOUT] |= WINOUT_WIN01_BG0;
+                                    off_839EC80[REG_OFFSET_WINOUT] |= WINOUT_WIN01_BG1;
+                                    off_839EC80[REG_OFFSET_WINOUT] |= WINOUT_WIN01_BG2;
+                                    off_839EC80[REG_OFFSET_WINOUT] |= WINOUT_WIN01_BG3;
+                                    off_839EC80[REG_OFFSET_WINOUT] |= WINOUT_WIN01_OBJ;
+                                    off_839EC80[REG_OFFSET_WINOUT] |= WINOUT_WIN01_CLR;
 
-                                    off_839EC80[0x48] |= 1;
-                                    off_839EC80[0x48] |= 2;
-                                    off_839EC80[0x48] |= 4;
-                                    off_839EC80[0x48] |= 8;
-                                    *(s8*)&off_839EC80[0x48] &= 0xEF;
-                                    off_839EC80[0x48] |= 0x20;
-
-                                    off_839EC80[0x4A] |= 1;
-                                    off_839EC80[0x4A] |= 2;
-                                    off_839EC80[0x4A] |= 4;
-                                    off_839EC80[0x4A] |= 8;
-                                    off_839EC80[0x4A] |= 0x10;
-                                    off_839EC80[0x4A] |= 0x20;
                                     sub_80574FC();
                                     ts->process.state = TS_STATE_GAME_SELECT;
                                 }
@@ -1026,7 +1015,7 @@ void open_update(struct TitleScreen* ts) {
                 sub_8018B78(2, 0);
 
                 if (ts->opdr) {
-                    process_remove((struct Process*)ts->opdr, 3);
+                    process_remove(&ts->opdr->process, 3);
                 }
                 free_heap_8018DA8(dword_3000DA0);
                 sub_8021FD4();
