@@ -45,8 +45,9 @@ struct GameState {
     u8 field_31;
 
     // ...
-    u8 pad1[0x852];
+    u8 pad1[0x84E];
 
+    int field_880;
     u32 field_884;
     s8 field_888_0 : 1;
     u8 field_888_1 : 2;
@@ -64,12 +65,6 @@ struct struc_3000D18
     u32 field_4;
     u32 field_8;
     u32 field_C;
-};
-
-struct struc_203FFB8
-{
-    u8 field_0_0 : 2;
-    u8 field_0_2 : 1;
 };
 
 struct Sprite
@@ -101,7 +96,8 @@ struct Sprite
     u8 field_1E;
     u8 field_1F_0 : 2;
     u8 field_1F_2 : 2;
-    u8 field_20;
+    u8 field_20[2];
+    u8 field_22;
 };
 
 struct struc_203FFF8
@@ -129,14 +125,33 @@ struct EeprStruct1{
 struct OPDRProcess
 {
     struct Process process;
-    u8 field_1C;
-    u8 field_1D;
-    u8 field_1E;
-    u8 field_1F;
-    u8 field_20;
-    u8 field_21;
-    u8 field_22;
-    u8 field_23;
+    char topScore[6];
+    char pScore[2];
+};
+
+struct struc_11
+{
+    u16 field_0;
+    u16 field_2;
+    u16 field_4;
+    u16 field_6;
+    u32 field_8;
+    u32 field_C;
+    struct struc_11* field_10;
+};
+
+struct struc_203FFB8
+{
+    u8 field_0_0 : 2;
+    u8 field_0_2 : 1;
+    u8 field_1;
+    u8 field_2;
+    u8 field_3;
+
+    u8 pad1[0x34];
+
+    struct struc_11* field_38;
+    u32 field_3C;
 };
 
 // Function prototypes
@@ -153,6 +168,7 @@ u32 sub_80198B0(int*);
 void sub_801AFE4(int);
 void sub_801E150(struct Sprite*, int, int, int, int);
 void sub_8020994(int, int, int, int);
+void sub_8020A78(void);
 void sprite_show_8020CBC(struct Sprite*);
 struct Sprite* sub_8020DD0(int, int, int, int, int, int, int);
 void sub_80210A8(struct Sprite*, int, int, int, int, int, int, int);
@@ -171,11 +187,12 @@ void sub_81DA698(void*, void*, size_t);
 void sub_81DA6C8(int);
 
 // EWRAM
-
 extern struct struc_203FFB8 stru_203FFB8;
 extern struct struc_203FFF8 stru_203FFF8;
 
 // IWRAM
+extern void (*dword_3000D48)(int,int);
+extern int (*dword_3000D4C)(int,int);
 extern int* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
 extern struct GameState gGameState;
@@ -208,9 +225,12 @@ extern u8 byte_83A74E9[];
 extern s16 word_83A74EC[];
 extern s16 word_83A7530[];
 extern s16 word_83A7574[];
+extern s16 word_83A75B8[];
+extern s16 word_83A75C8[];
 extern u8* off_839EC80;
 extern struct ProcessDefinition stru_8CDBD68;
 extern struct ProcessDefinition stru_8CDBD78;
 extern struct ProcessDefinition stru_8CDC238;
+extern struct ProcessDefinition stru_8CDC248;
 extern struct ProcessDefinition stru_8CDC258;
 extern struct ProcessDefinition stru_8CDC268;

@@ -1017,6 +1017,7 @@ void open_update(struct TitleScreen* ts) {
                 if (ts->opdr) {
                     process_remove(&ts->opdr->process, 3);
                 }
+
                 free_heap_8018DA8(dword_3000DA0);
                 sub_8021FD4();
                 // Turn on sound.
@@ -1072,4 +1073,178 @@ void open_update(struct TitleScreen* ts) {
             }
             break;
     }
+}
+
+// https://decomp.me/scratch/3i7ME
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/opdr_update2.s\"");
+#else
+void opdr_update2(struct OPDRProcess* opdr) {
+    struct TitleScreen* ts;
+    int var1;
+    struct Sprite* sprite;
+    u16 var2;
+
+    ts = (struct TitleScreen*)opdr->process.parentProcess;
+    sub_8020A78();
+    var1 = gGameState.field_880;
+    sprite = ts->sprites[7];
+
+    if ((u8)(sprite->field_20[1] - 3) <= 2) {
+        u32 i;
+        struct struc_11* var11;
+
+        var11 = stru_203FFB8.field_38;
+        var2 = word_83A75B8[sprite->field_22 - 10] - 34;
+
+        for (i = 0; i < 6; i += 3) {
+            var11->field_0 = var2;
+            var11->field_2 = 43 + (i * 7);
+            var11->field_4 = (opdr->topScore[i] + 44) | 0x2400;
+            var11->field_6 = 0;
+            var11->field_8 = 0x40000000;
+            var11 = var11->field_10;
+
+            var11->field_0 = var2;
+            var11->field_2 = 50 + (i * 7);
+            var11->field_4 = (opdr->topScore[i + 1] + 44) | 0x2400;
+            var11->field_6 = 0;
+            var11->field_8 = 0x40000000;
+            var11 = var11->field_10;
+
+            var11->field_0 = var2;
+            var11->field_2 = 57 + (i * 7);
+            var11->field_4 = (opdr->topScore[i + 1] + 44) | 0x2400;
+            var11->field_6 = 0;
+            var11->field_8 = 0x40000000;
+            var11 = var11->field_10;
+        }
+
+        var2 = word_83A75C8[sprite->field_22 - 10] - 21;
+
+        var11->field_0 = var2;
+        var11->field_2 = 64;
+        var11->field_4 = (opdr->pScore[0] + 44) | 0x2400;
+        var11->field_6 = 0;
+        var11->field_8 = 0x40000000;
+        var11 = var11->field_10;
+
+        var11->field_0 = var2;
+        var11->field_2 = 71;
+        var11->field_4 = (opdr->pScore[1] + 44) | 0x2400;
+        var11->field_6 = 0;
+        var11->field_8 = 0x40000000;
+        var11 = var11->field_10;
+
+        stru_203FFB8.field_38 = var11;
+    }
+
+    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    gGameState.field_880 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+}
+#endif
+
+// https://decomp.me/scratch/xtOmX
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80572CC.s\"");
+#else
+struct OPDRProcess* sub_80572CC(struct OPDRProcess* opdr, u8 priority, char* label, int a4, int f,
+                                u8 a5) {
+    process_add(&opdr->process, priority, label);
+    opdr->process.definition = &stru_8CDC248;
+
+    opdr->topScore[5] = sub_81DAC8C(a4, 10);
+    a4 = sub_81DAC14(a4, 10);
+    opdr->topScore[4] = sub_81DAC8C(a4, 10);
+    a4 = sub_81DAC14(a4, 10);
+    opdr->topScore[3] = sub_81DAC8C(a4, 10);
+    a4 = sub_81DAC14(a4, 10);
+    opdr->topScore[2] = sub_81DAC8C(a4, 10);
+    a4 = sub_81DAC14(a4, 10);
+    opdr->topScore[1] = sub_81DAC8C(a4, 10);
+    a4 = sub_81DAC14(a4, 10);
+    opdr->topScore[0] = sub_81DAC8C(a4, 10);
+
+    opdr->pScore[1] = sub_81DAC8C(a5, 10);
+    a5 = sub_81DAC14(a5, 10);
+    opdr->pScore[0] = sub_81DAC8C(a5, 10);
+
+    return opdr;
+}
+#endif
+
+//! The contents of this function is also found in open_update.
+void sub_805737C(struct TitleScreen* ts, int flags) {
+    ts->process.definition = &stru_8CDC238;
+    DmaStop(0);
+    sub_8018B78(2, 0);
+
+    if (ts->opdr) {
+        process_remove(&ts->opdr->process, 3);
+    }
+
+    free_heap_8018DA8(dword_3000DA0);
+    sub_8021FD4();
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
+    gGameState.field_2 |= 1;
+    BUFFER_REG_DISPCNT = 0;
+    gGameState.field_31 = 2;
+    sub_8017E34();
+    process_remove(&ts->process, flags);
+}
+
+//! The contents of this function is also found in opdr_update2.
+void opdr_update(void) {
+    int var1 = gGameState.field_880;
+    sub_8020A78();
+    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+    gGameState.field_880 = var1;
+}
+
+//! The contents of this function is also found in comp_update.
+void sub_8057458(struct COMPProcess* comp, int flags) {
+    comp->process.definition = &stru_8CDC258;
+    sub_8021FD4();
+    if (comp->opdr) {
+        process_remove(comp->opdr, 3);
+    }
+    process_remove(&comp->process, flags);
+}
+
+struct Process* sub_8057484(struct Process* opdr, u8 priority, char* label) {
+    process_add(opdr, priority, label);
+    opdr->definition = &stru_8CDC268;
+    return opdr;
+}
+
+void sub_80574A0(void) {
+    REG_SIOMLT_SEND = 0xFEFE;
+}
+
+void sub_80574B4(void) {
+    REG_IME = 0;
+    REG_IE &= ~INTR_FLAG_SERIAL;
+    REG_IF |= INTR_FLAG_SERIAL;
+    REG_IME = 1;
+
+    REG_IME = 0;
+    REG_SIOCNT = SIO_MULTI_MODE | SIO_115200_BPS;
+    REG_IME = 1;
+}
+
+void sub_80574FC(void) {
+    sub_8018B78(1, sub_80574A0);
+
+    REG_IME = 0;
+    REG_RCNT = 0;
+    REG_SIOCNT = SIO_MULTI_MODE;
+    REG_SIOCNT |= SIO_INTR_ENABLE | SIO_115200_BPS;
+    REG_SIOMLT_SEND = 0xFEFE;
+    REG_IME = 1;
+
+    REG_IME = 0;
+    REG_IE |= INTR_FLAG_SERIAL;
+    REG_IF |= INTR_FLAG_SERIAL;
+    REG_IME = 1;
 }
