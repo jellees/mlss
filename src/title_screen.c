@@ -188,7 +188,7 @@ void comp_update(struct COMPProcess* comp) {
                     }
                     process_remove(&comp->process, 3);
                 }
-                open_init_8055A00(alloc_Zero(228, 0, "OPEN", 0), 8, "OPEN", 0);
+                open_init_8055A00(alloc_Zero(sizeof(struct TitleScreen), 0, "OPEN", 0), 8, "OPEN", 0);
                 return;
             }
             break;
