@@ -136,7 +136,7 @@ optn_init:
 	ands r2, r6
 	mov r0, r9
 	adds r1, r5, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r4, _08052224 @ =0x083A1F60
 	mov r0, r8
 	ldr r2, [r0, #0x00]
@@ -151,12 +151,12 @@ optn_init:
 	ands r2, r6
 	mov r0, r9
 	adds r1, r5, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _0805222C @ =0x083A13A0
 	movs r2, #0x80
 	lsls r2, r2, #0x02
 	mov r1, r9
-	bl sub_81DA698
+	bl CpuFastSet
 	movs r2, #0xC0
 	lsls r2, r2, #0x01
 	add r2, r9
@@ -218,7 +218,7 @@ _08052130:
 	movs r2, #0x80
 	lsls r2, r2, #0x02
 	mov r0, r9
-	bl sub_81DA698
+	bl CpuFastSet
 	mov r0, r9
 	cmp r0, #0x00
 	beq _0805217E
@@ -265,11 +265,11 @@ _0805217E:
 	ldr r0, _08052244 @ =0x083A2880
 	ldr r1, _08052248 @ =0x02000280
 	movs r2, #0x10
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _0805224C @ =0x083A1BA0
 	ldr r1, _08052250 @ =0x02000080
 	movs r2, #0x78
-	bl sub_81DA698
+	bl CpuFastSet
 	b _08052268
 _080521E8: .4byte 0x08CDC1F8
 _080521EC: .4byte 0x02000050
@@ -302,11 +302,11 @@ _08052254:
 	ldr r0, _0805241C @ =0x083A28C0
 	ldr r1, _08052420 @ =0x02000280
 	movs r2, #0x10
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _08052424 @ =0x083A1D80
 	ldr r1, _08052428 @ =0x02000080
 	movs r2, #0x78
-	bl sub_81DA698
+	bl CpuFastSet
 _08052268:
 	ldr r1, _0805242C @ =0x0300034C
 	ldr r0, _08052430 @ =0x0000FFFF
@@ -400,13 +400,13 @@ _080522F0:
 	movs r2, #0x80
 	lsls r2, r2, #0x02
 	mov r0, r8
-	bl sub_81DA698
+	bl CpuFastSet
 	movs r4, #0x00
 	str r4, [sp, #0x00C]
 	ldr r1, _0805245C @ =0x06004000
 	ldr r2, _08052460 @ =0x01000008
 	add r0, sp, #0x00C
-	bl sub_81DA698
+	bl CpuFastSet
 	adds r0, r7, #0x0
 	movs r1, #0x00
 	bl sub_8052B54
@@ -856,7 +856,7 @@ _08052C38:
 	ldr r1, _08052C4C @ =0x06001000
 	movs r2, #0xC0
 	lsls r2, r2, #0x03
-	bl sub_81DA698
+	bl CpuFastSet
 _08052C44:
 	add sp, #0x018
 	pop {r4, r5, r6, r7}
@@ -1707,7 +1707,7 @@ bclr_init:
 	lsrs r2, r2, #0x0B
 	adds r0, r6, #0x0
 	adds r1, r5, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	cmp r6, #0x00
 	beq _0805330C
 	adds r0, r6, #0x0
@@ -1756,7 +1756,7 @@ _08053324:
 	movs r2, #0x80
 	lsls r2, r2, #0x02
 	adds r0, r4, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	cmp r4, #0x00
 	beq _08053370
 	adds r0, r4, #0x0
@@ -1803,7 +1803,7 @@ _08053370:
 	ldr r0, _0805340C @ =0x083A1BA0
 	ldr r1, _08053410 @ =0x02000080
 	movs r2, #0x78
-	bl sub_81DA698
+	bl CpuFastSet
 	b _0805341E
 _080533D0: .4byte 0x08CDC1D8
 _080533D4: .4byte 0x02000050
@@ -1826,7 +1826,7 @@ _08053414:
 	ldr r0, _08053674 @ =0x083A1D80
 	ldr r1, _08053678 @ =0x02000080
 	movs r2, #0x78
-	bl sub_81DA698
+	bl CpuFastSet
 _0805341E:
 	ldr r1, _08053678 @ =0x02000080
 	ldr r2, _0805367C @ =0x00007FFF
@@ -1874,7 +1874,7 @@ _0805341E:
 	ldr r1, _080536A8 @ =0x06004000
 	ldr r2, _080536AC @ =0x01000008
 	add r0, sp, #0x018
-	bl sub_81DA698
+	bl CpuFastSet
 	movs r0, #0x80
 	lsls r0, r0, #0x01
 	ldr r2, _080536B0 @ =0x081E272C
@@ -2065,12 +2065,12 @@ _080535F0:
 	ldr r1, _080536C4 @ =0x06004020
 	movs r2, #0xF0
 	lsls r2, r2, #0x04
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, [r7, #0x28]
 	ldr r1, _080536C8 @ =0x06002000
 	movs r2, #0x80
 	lsls r2, r2, #0x02
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r1, _080536CC @ =0x02000008
 	ldr r3, _080536D0 @ =0x00000406
 	adds r0, r3, #0x0
@@ -2384,7 +2384,7 @@ sub_8053CB4:
 	lsrs r2, r2, #0x0B
 	adds r0, r6, #0x0
 	adds r1, r5, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	cmp r6, #0x00
 	beq _08053D38
 	adds r0, r6, #0x0
@@ -2401,7 +2401,7 @@ _08053D38:
 	ldr r0, _08053D74 @ =0x083A1BA0
 	ldr r1, _08053D78 @ =0x02000080
 	movs r2, #0x78
-	bl sub_81DA698
+	bl CpuFastSet
 	b _08053D86
 _08053D54: .4byte 0x08CDC1C8
 _08053D58: .4byte 0x02000050
@@ -2417,7 +2417,7 @@ _08053D7C:
 	ldr r0, _08053F5C @ =0x083A1D80
 	ldr r1, _08053F60 @ =0x02000080
 	movs r2, #0x78
-	bl sub_81DA698
+	bl CpuFastSet
 _08053D86:
 	ldr r1, _08053F60 @ =0x02000080
 	ldr r2, _08053F64 @ =0x00007FFF
@@ -2465,7 +2465,7 @@ _08053D86:
 	ldr r1, _08053F90 @ =0x06004000
 	ldr r2, _08053F94 @ =0x01000008
 	add r0, sp, #0x018
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _08053F98 @ =0x084E8A28
 	ldr r5, [r0, #0x00]
 	ldr r0, _08053F9C @ =0x083A2978
@@ -2604,12 +2604,12 @@ _08053EEC:
 	movs r2, #0x80
 	lsls r2, r2, #0x05
 	ldr r0, [sp, #0x01C]
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, [r7, #0x28]
 	ldr r1, _08053FA8 @ =0x06002000
 	movs r2, #0x80
 	lsls r2, r2, #0x02
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r1, _08053FAC @ =0x02000008
 	ldr r2, _08053FB0 @ =0x00000406
 	adds r0, r2, #0x0

@@ -7,14 +7,14 @@ struct GameBoyPlayerLogo* gbpl_init(struct GameBoyPlayerLogo* gbpl, u8 priority,
                                     void (*finishCallback)(void)) {
     process_add(&gbpl->process, priority, label);
     gbpl->process.definition = &stru_8CDBD78;
-    gGameState.field_88A_4 = 0;
+    gGameState.field_88A_3 = 0;
     gbpl->brightness = 16;
     gbpl->finishCallback = finishCallback;
     gbpl->dpadInput = 0;
     gbpl->previousDpadInput = 0;
     gbpl->frames = 0;
     gbpl->previousFrames = 0;
-    sub_81DA698(dword_81DD7F4, (void*)0x2000080, 128);
+    CpuFastSet(dword_81DD7F4, (void*)0x2000080, 128);
     sub_8018218(dword_81DD9F4, (void*)BG_CHAR_ADDR(2), sizeof(dword_81DD9F4), 32, 0);
     sub_8018218(dword_81E19F4, (void*)BG_SCREEN_ADDR(0), sizeof(dword_81E19F4), 32, 0);
     gGameState.field_884 |= 0xFFFF;
@@ -54,7 +54,7 @@ void gbpl_update(struct GameBoyPlayerLogo* gbpl) {
             if (gbpl->brightness == 0) {
                 if (gbpl != NULL) {
                     gbpl->process.definition = &stru_8CDBD78;
-                    gGameState.field_88A_4 = 1;
+                    gGameState.field_88A_3 = 1;
                     BUFFER_REG_DISPCNT = 0;
                     BUFFER_REG_BLDCNT = 0;
                     process_remove(&gbpl->process,

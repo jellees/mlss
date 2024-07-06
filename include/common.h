@@ -55,7 +55,7 @@ struct GameState {
     s8 field_889;
     // possible flags
     s8 field_88A_0 : 3;
-    s8 field_88A_4 : 1;
+    s8 field_88A_3 : 1;
 };
 
 struct struc_3000D18
@@ -183,7 +183,7 @@ void sub_80574B4(void);
 void sub_80574FC(void);
 struct struc_203FFF8* sub_81251DC();
 struct Process* sub_812538C(struct Process*, u8, char*, int);
-void sub_81DA698(void*, void*, size_t);
+void CpuFastSet(void*, void*, size_t);
 void sub_81DA6C8(int);
 
 // EWRAM

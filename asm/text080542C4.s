@@ -213,7 +213,7 @@ _0805448C:
 	ands r2, r7
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	movs r0, #0x2D
 	movs r1, #0x00
 	bl sub_8127ECC
@@ -230,7 +230,7 @@ _0805448C:
 	ands r2, r7
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r4, _080546B0 @ =0x0300034C
 	ldr r2, _080546B4 @ =0x00000888
 	adds r0, r4, r2
@@ -255,7 +255,7 @@ _0805456C:
 	ands r2, r7
 	adds r0, r5, #0x0
 	ldr r1, _080546B8 @ =0x02000080
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _080546BC @ =0x0000FFFF
 	strh r0, [r4, #0x02]
 	ldr r4, _080546C0 @ =0x083A297C
@@ -272,7 +272,7 @@ _0805456C:
 	ands r2, r7
 	adds r0, r6, #0x0
 	adds r1, r5, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	movs r0, #0x06
 	movs r1, #0x00
 	bl sub_8127ECC
@@ -292,7 +292,7 @@ _0805456C:
 	ands r2, r7
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _080546CC @ =0x03000C78
 	mov r1, r10
 	str r1, [r0, #0x00]
@@ -838,7 +838,7 @@ _08054A50:
 	lsls r1, r1, #0x13
 	movs r2, #0x80
 	lsls r2, r2, #0x04
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _08054ADC @ =0x03001034
 	mov r3, r9
 	ldr r1, [r3, #0x24]
@@ -978,7 +978,7 @@ _08054B62:
 	ldr r1, _08054D28 @ =0x06002000
 	movs r2, #0xC0
 	lsls r2, r2, #0x03
-	bl sub_81DA698
+	bl CpuFastSet
 	mov r2, r9
 	ldr r5, [r2, #0x20]
 	movs r4, #0xE0
@@ -1048,7 +1048,7 @@ _08054B96:
 	ldr r1, _08054D30 @ =0x0600C000
 	movs r2, #0x80
 	lsls r2, r2, #0x01
-	bl sub_81DA698
+	bl CpuFastSet
 	mov r0, r9
 	ldr r5, [r0, #0x20]
 	movs r4, #0xE1
@@ -1122,7 +1122,7 @@ _08054C28:
 	add r0, r8
 	ldr r1, _08054D34 @ =0x0600C400
 	movs r2, #0x20
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r1, _08054D38 @ =0x03000C78
 	ldr r0, _08054D3C @ =0x0800063C
 	str r0, [r1, #0x00]
@@ -1140,7 +1140,7 @@ _08054CB2:
 	ldr r1, _08054D50 @ =0x02000400
 	adds r0, r2, #0x0
 	movs r2, #0x08
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _08054D54 @ =0x0000FFFF
 	strh r0, [r4, #0x00]
 	ldr r1, _08054D58 @ =0x02000080

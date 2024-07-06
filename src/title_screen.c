@@ -51,13 +51,13 @@ struct COMPProcess* comp_init(struct COMPProcess* comp, u8 priority, char* label
 
     cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
     dword_3000C84(dword_83A2B48, cgdw);
-    sub_81DA698(cgdw, (void*)BG_CHAR_ADDR(2), (sub_80198B0(dword_83A2B48) >> 2) & 0x1FFFFF);
-    sub_81DA698(dword_83A2F98, (void*)BG_SCREEN_ADDR(28), 320);
+    CpuFastSet(cgdw, (void*)BG_CHAR_ADDR(2), (sub_80198B0(dword_83A2B48) >> 2) & 0x1FFFFF);
+    CpuFastSet(dword_83A2F98, (void*)BG_SCREEN_ADDR(28), 320);
     zero = 0;
-    sub_81DA698((int*)&zero, (void*)0x600E500, 0x10000C0);
+    CpuFastSet((int*)&zero, (void*)0x600E500, 0x10000C0);
     dword_3000C84(dword_83A34B8, cgdw);
-    sub_81DA698(cgdw, (void*)BG_CHAR_ADDR(3), (sub_80198B0(dword_83A34B8) >> 2) & 0x1FFFFF);
-    sub_81DA698(dword_83A3860, (void*)BG_SCREEN_ADDR(29), 320);
+    CpuFastSet(cgdw, (void*)BG_CHAR_ADDR(3), (sub_80198B0(dword_83A34B8) >> 2) & 0x1FFFFF);
+    CpuFastSet(dword_83A3860, (void*)BG_SCREEN_ADDR(29), 320);
     free_heap_8018DA8(cgdw);
 
     dword_3000C78 = sub_800063C;
@@ -75,7 +75,7 @@ struct COMPProcess* comp_init(struct COMPProcess* comp, u8 priority, char* label
     BUFFER_REG_BG0VOFS = 99;
 
     comp->verticalOffset = 25344;
-    sub_81DA698(&dword_83A3498, (void*)0x2000000 + 0x80, 8);
+    CpuFastSet(&dword_83A3498, (void*)0x2000000 + 0x80, 8);
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 = -1;
 
@@ -141,7 +141,7 @@ void comp_update(struct COMPProcess* comp) {
             if (comp->brightness == 0) {
                 sprite_hide_8021F20(comp->mario);
                 sprite_hide_8021F20(comp->luigi);
-                sub_81DA698(dword_83A3D60, (void*)0x2000000 + 0x80, 8);
+                CpuFastSet(dword_83A3D60, (void*)0x2000000 + 0x80, 8);
                 gGameState.field_2 = -1;
                 BUFFER_REG_BG0CNT = BGCNT_CHARBASE(3) | BGCNT_SCREENBASE(29);
                 sprite_show_8020CBC(comp->alphaDreamLogo);
@@ -293,12 +293,12 @@ struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, cha
 
     cgdw = alloc_zero_8018DB4(0x8000, 1, tmp1, 0);
     dword_3000C84(dword_83A3D80, cgdw);
-    sub_81DA698(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A3D80) >> 2) & 0x1FFFFF);
+    CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A3D80) >> 2) & 0x1FFFFF);
     dword_3000C84(dword_83A4874, cgdw);
-    sub_81DA698(cgdw, (void*)0x6004000, (sub_80198B0(dword_83A4874) >> 2) & 0x1FFFFF);
-    sub_81DA698(dword_83A575C, (void*)0x600C000, 320);
-    sub_81DA698(dword_83A5C5C, (void*)0x600D000, 1024);
-    sub_81DA698(dword_83A6C5C, (void*)0x600C800, 312);
+    CpuFastSet(cgdw, (void*)0x6004000, (sub_80198B0(dword_83A4874) >> 2) & 0x1FFFFF);
+    CpuFastSet(dword_83A575C, (void*)0x600C000, 320);
+    CpuFastSet(dword_83A5C5C, (void*)0x600D000, 1024);
+    CpuFastSet(dword_83A6C5C, (void*)0x600C800, 312);
     free_heap_8018DA8(cgdw);
     sub_8020994(0, 0, 0, 0);
 
@@ -343,7 +343,7 @@ struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, cha
     (*(vu16*)(0x2000000 + 0x14)) = 0;
     (*(vu16*)(0x2000000 + 0x16)) = 0;
 
-    sub_81DA698(gGameState.field_888_1 == 0 ? dword_83A7300 : dword_83A7140, (void*)0x2000080, 112);
+    CpuFastSet(gGameState.field_888_1 == 0 ? dword_83A7300 : dword_83A7140, (void*)0x2000080, 112);
 
     (*(vu16*)(0x2000000 + 0x80)) = 0x7FFF;
     gGameState.field_2 = -1;

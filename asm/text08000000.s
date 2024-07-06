@@ -6976,7 +6976,7 @@ _080181E6:
 	adds r0, r6, #0x0
 	adds r1, r5, #0x0
 	movs r2, #0x08
-	bl sub_81DA698
+	bl CpuFastSet
 _080181F8:
 	adds r6, #0x20
 	adds r5, #0x20

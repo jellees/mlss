@@ -3835,7 +3835,7 @@ sub_801DC00:
 	ldr r1, [r0, #0x00]
 	ldr r2, _0801DC34 @ =0x01001400
 	mov r0, sp
-	bl sub_81DA698
+	bl CpuFastSet
 	add sp, #0x004
 	pop {r0}
 	bx r0
@@ -5363,7 +5363,7 @@ sub_801E80C:
 	lsls r0, r0, #0x11
 	orrs r2, r0
 	add r0, sp, #0x010
-	bl sub_81DA698
+	bl CpuFastSet
 	adds r0, r5, #0x0
 	cmp r0, #0x00
 	bge _0801E860
@@ -23102,7 +23102,7 @@ _080290F4:
 	adds r0, r5, #0x0
 	adds r1, r6, #0x0
 	movs r2, #0x08
-	bl sub_81DA698
+	bl CpuFastSet
 _08029108:
 	adds r5, #0x20
 	adds r6, #0x20
@@ -23140,7 +23140,7 @@ _0802913A:
 	adds r1, r5, #0x0
 	movs r2, #0x08
 	str r3, [sp, #0x000]
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, [r6, #0x00]
 	orrs r0, r7
 	str r0, [r6, #0x00]

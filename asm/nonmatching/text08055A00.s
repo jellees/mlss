@@ -189,7 +189,7 @@ _08055B1A:
 	ands r2, r0
 	adds r0, r6, #0x0
 	adds r1, r5, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r4, _08055CE8 @ =0x083A4874
 	mov r1, r9
 	ldr r2, [r1, #0x00]
@@ -205,22 +205,22 @@ _08055B1A:
 	ands r2, r3
 	adds r0, r6, #0x0
 	adds r1, r5, #0x0
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _08055CF0 @ =0x083A575C
 	ldr r1, _08055CF4 @ =0x0600C000
 	movs r2, #0xA0
 	lsls r2, r2, #0x01
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _08055CF8 @ =0x083A5C5C
 	ldr r1, _08055CFC @ =0x0600D000
 	movs r2, #0x80
 	lsls r2, r2, #0x03
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r0, _08055D00 @ =0x083A6C5C
 	ldr r1, _08055D04 @ =0x0600C800
 	movs r2, #0x9C
 	lsls r2, r2, #0x01
-	bl sub_81DA698
+	bl CpuFastSet
 	adds r0, r6, #0x0
 	bl free_heap_8018DA8
 	movs r0, #0x00
@@ -395,7 +395,7 @@ _08055D64:
 	adds r0, r1, #0x0
 	adds r1, r4, #0x0
 	movs r2, #0x70
-	bl sub_81DA698
+	bl CpuFastSet
 	ldr r2, _08055DE4 @ =0x00007FFF
 	adds r0, r2, #0x0
 	strh r0, [r4, #0x00]
