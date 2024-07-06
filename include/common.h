@@ -122,7 +122,7 @@ struct EeprStruct1{
     u8 field_8_6 : 1;
 };
 
-struct OPDRProcess
+struct MarioBrosScoreVisual
 {
     struct Process process;
     char topScore[6];

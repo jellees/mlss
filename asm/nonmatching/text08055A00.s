@@ -106,7 +106,7 @@ open_init_8055A00: @ 08055A00
 	str r1, [sp, #0x000]
 	movs r1, #0x08
 	adds r2, r4, #0x0
-	bl sub_80572CC
+	bl mbsv_init
 	str r0, [r6, #0x00]
 	mov r3, r10
 	str r3, [r0, #0x14]

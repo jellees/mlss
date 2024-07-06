@@ -130,7 +130,7 @@ struct TitleScreen {
 
     struct BgAffineSrcData mlTextAffineSrc;
     struct BgAffineDstData mlTextAffineDst;
-    struct OPDRProcess* opdr;
+    struct MarioBrosScoreVisual* mbsv;
     s8 selection;
     struct Sprite* sprites[9];
 };

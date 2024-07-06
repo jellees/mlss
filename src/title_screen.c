@@ -267,9 +267,9 @@ struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, cha
     stru_203FFF8.field_7_7 = gGameState.field_888_1;
 
     dword_3000DA0 = alloc_Zero(340, 0, "ORST", 1);
-    open->opdr = sub_80572CC(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR", stru_203FFF8.field_0,
-                             stru_203FFF8.field_4);
-    open->opdr->process.parentProcess = &proc->process;
+    open->mbsv = mbsv_init(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR", stru_203FFF8.field_0,
+                           stru_203FFF8.field_4);
+    open->mbsv->process.parentProcess = &proc->process;
 
     open->selection = selection != 0 ? selection - 1 : 0;
     open->suitcaseVisualState = 0;
@@ -1014,8 +1014,8 @@ void open_update(struct TitleScreen* ts) {
                 DmaStop(0);
                 sub_8018B78(2, 0);
 
-                if (ts->opdr) {
-                    process_remove(&ts->opdr->process, 3);
+                if (ts->mbsv) {
+                    process_remove(&ts->mbsv->process, 3);
                 }
 
                 free_heap_8018DA8(dword_3000DA0);
@@ -1079,7 +1079,7 @@ void open_update(struct TitleScreen* ts) {
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/opdr_update2.s\"");
 #else
-void opdr_update2(struct OPDRProcess* opdr) {
+void opdr_update2(struct MarioBrosScoreVisual* opdr) {
     struct TitleScreen* ts;
     int var1;
     struct Sprite* sprite;
@@ -1144,23 +1144,25 @@ void opdr_update2(struct OPDRProcess* opdr) {
 }
 #endif
 
-static inline char* write_number_to_string_and_advance(char* string, u32* arg)
-{
-    *string = *arg % 10;
-    *arg /= 10;
+static inline char* write_number_to_string_and_advance(char* string, u32* value) {
+    *string = *value % 10;
+    *value /= 10;
     return string - 1;
 }
 
-struct OPDRProcess* sub_80572CC(struct OPDRProcess *opdr, u8 priority, char *label, u32 topScore, u8 pScore)
-{
+/**
+ * Initialises the process for the Mario Bros Score visual on the title screen.
+ */
+struct MarioBrosScoreVisual* mbsv_init(struct MarioBrosScoreVisual* mbsv, u8 priority, char* label,
+                                       u32 topScore, u8 pScore) {
     char* topScoreStr;
     char* pScoreHigher;
     char* pScoreLower;
-    
-    process_add(&opdr->process, priority, label);
-    opdr->process.definition = &stru_8CDC248;
 
-    topScoreStr = &opdr->topScore[5];
+    process_add(&mbsv->process, priority, label);
+    mbsv->process.definition = &stru_8CDC248;
+
+    topScoreStr = &mbsv->topScore[5];
     topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
     topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
     topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
@@ -1168,13 +1170,13 @@ struct OPDRProcess* sub_80572CC(struct OPDRProcess *opdr, u8 priority, char *lab
     topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
     topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
 
-    pScoreLower = &opdr->pScore[0];
-    pScoreHigher = &opdr->pScore[1];
+    pScoreLower = &mbsv->pScore[0];
+    pScoreHigher = &mbsv->pScore[1];
     *pScoreHigher = pScore % 10;
     pScore /= 10;
     *pScoreLower = pScore % 10;
 
-    return opdr;
+    return mbsv;
 }
 
 //! The contents of this function is also found in open_update.
@@ -1183,8 +1185,8 @@ void sub_805737C(struct TitleScreen* ts, int flags) {
     DmaStop(0);
     sub_8018B78(2, 0);
 
-    if (ts->opdr) {
-        process_remove(&ts->opdr->process, 3);
+    if (ts->mbsv) {
+        process_remove(&ts->mbsv->process, 3);
     }
 
     free_heap_8018DA8(dword_3000DA0);
