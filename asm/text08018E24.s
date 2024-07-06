@@ -747,7 +747,7 @@ _080193EC:
 	ldrh r1, [r2, #0x00]
 	subs r0, r0, r1
 	adds r1, r6, #0x0
-	bl sub_81DAAA4
+	bl __divsi3
 	strh r0, [r4, #0x00]
 	cmp r7, #0x00
 	bne _08019448
@@ -825,7 +825,7 @@ _08019490:
 	lsls r1, r1, #0x08
 	subs r0, r0, r1
 	adds r1, r7, #0x0
-	bl sub_81DAAA4
+	bl __divsi3
 	strh r0, [r4, #0x00]
 	cmp r6, #0x00
 	bne _080194F0
@@ -900,7 +900,7 @@ _08019530:
 	lsls r1, r1, #0x08
 	subs r0, r0, r1
 	adds r1, r5, #0x0
-	bl sub_81DAAA4
+	bl __divsi3
 	ldr r3, _08019584 @ =0x00000896
 	adds r4, r4, r3
 	strh r0, [r4, #0x00]

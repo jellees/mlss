@@ -183,7 +183,6 @@ void sub_80574B4(void);
 void sub_80574FC(void);
 struct struc_203FFF8* sub_81251DC();
 struct Process* sub_812538C(struct Process*, u8, char*, int);
-void CpuFastSet(void*, void*, size_t);
 void sub_81DA6C8(int);
 
 // EWRAM

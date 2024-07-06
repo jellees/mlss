@@ -16,57 +16,57 @@ sub_80572CC:
 	adds r5, #0x21
 	adds r0, r4, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC8C
+	bl __umodsi3
 	strb r0, [r5, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC14
+	bl __udivsi3
 	adds r4, r0, #0x0
 	subs r5, #0x01
 	movs r1, #0x0A
-	bl sub_81DAC8C
+	bl __umodsi3
 	strb r0, [r5, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC14
+	bl __udivsi3
 	adds r4, r0, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC8C
+	bl __umodsi3
 	strb r0, [r7, #0x1F]
 	adds r0, r4, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC14
+	bl __udivsi3
 	adds r4, r0, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC8C
+	bl __umodsi3
 	strb r0, [r7, #0x1E]
 	adds r0, r4, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC14
+	bl __udivsi3
 	adds r4, r0, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC8C
+	bl __umodsi3
 	strb r0, [r7, #0x1D]
 	adds r0, r4, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC14
+	bl __udivsi3
 	movs r1, #0x0A
-	bl sub_81DAC8C
+	bl __umodsi3
 	strb r0, [r7, #0x1C]
 	adds r5, #0x02
 	adds r4, r7, #0x0
 	adds r4, #0x23
 	adds r0, r6, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC8C
+	bl __umodsi3
 	strb r0, [r4, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x0A
-	bl sub_81DAC14
+	bl __udivsi3
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	movs r1, #0x0A
-	bl sub_81DAC8C
+	bl __umodsi3
 	strb r0, [r5, #0x00]
 	adds r0, r7, #0x0
 	pop {r4, r5, r6, r7}

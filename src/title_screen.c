@@ -1153,21 +1153,21 @@ struct OPDRProcess* sub_80572CC(struct OPDRProcess* opdr, u8 priority, char* lab
     process_add(&opdr->process, priority, label);
     opdr->process.definition = &stru_8CDC248;
 
-    opdr->topScore[5] = sub_81DAC8C(a4, 10);
-    a4 = sub_81DAC14(a4, 10);
-    opdr->topScore[4] = sub_81DAC8C(a4, 10);
-    a4 = sub_81DAC14(a4, 10);
-    opdr->topScore[3] = sub_81DAC8C(a4, 10);
-    a4 = sub_81DAC14(a4, 10);
-    opdr->topScore[2] = sub_81DAC8C(a4, 10);
-    a4 = sub_81DAC14(a4, 10);
-    opdr->topScore[1] = sub_81DAC8C(a4, 10);
-    a4 = sub_81DAC14(a4, 10);
-    opdr->topScore[0] = sub_81DAC8C(a4, 10);
+    opdr->topScore[5] = __umodsi3(a4, 10);
+    a4 = __udivsi3(a4, 10);
+    opdr->topScore[4] = __umodsi3(a4, 10);
+    a4 = __udivsi3(a4, 10);
+    opdr->topScore[3] = __umodsi3(a4, 10);
+    a4 = __udivsi3(a4, 10);
+    opdr->topScore[2] = __umodsi3(a4, 10);
+    a4 = __udivsi3(a4, 10);
+    opdr->topScore[1] = __umodsi3(a4, 10);
+    a4 = __udivsi3(a4, 10);
+    opdr->topScore[0] = __umodsi3(a4, 10);
 
-    opdr->pScore[1] = sub_81DAC8C(a5, 10);
-    a5 = sub_81DAC14(a5, 10);
-    opdr->pScore[0] = sub_81DAC8C(a5, 10);
+    opdr->pScore[1] = __umodsi3(a5, 10);
+    a5 = __udivsi3(a5, 10);
+    opdr->pScore[0] = __umodsi3(a5, 10);
 
     return opdr;
 }
