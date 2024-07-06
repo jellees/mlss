@@ -1144,34 +1144,38 @@ void opdr_update2(struct OPDRProcess* opdr) {
 }
 #endif
 
-// https://decomp.me/scratch/xtOmX
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_80572CC.s\"");
-#else
-struct OPDRProcess* sub_80572CC(struct OPDRProcess* opdr, u8 priority, char* label, int a4, int f,
-                                u8 a5) {
+static inline char* write_number_to_string_and_advance(char* string, u32* arg)
+{
+    *string = *arg % 10;
+    *arg /= 10;
+    return string - 1;
+}
+
+struct OPDRProcess* sub_80572CC(struct OPDRProcess *opdr, u8 priority, char *label, u32 topScore, u8 pScore)
+{
+    char* topScoreStr;
+    char* pScoreHigher;
+    char* pScoreLower;
+    
     process_add(&opdr->process, priority, label);
     opdr->process.definition = &stru_8CDC248;
 
-    opdr->topScore[5] = __umodsi3(a4, 10);
-    a4 = __udivsi3(a4, 10);
-    opdr->topScore[4] = __umodsi3(a4, 10);
-    a4 = __udivsi3(a4, 10);
-    opdr->topScore[3] = __umodsi3(a4, 10);
-    a4 = __udivsi3(a4, 10);
-    opdr->topScore[2] = __umodsi3(a4, 10);
-    a4 = __udivsi3(a4, 10);
-    opdr->topScore[1] = __umodsi3(a4, 10);
-    a4 = __udivsi3(a4, 10);
-    opdr->topScore[0] = __umodsi3(a4, 10);
+    topScoreStr = &opdr->topScore[5];
+    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
+    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
+    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
+    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
+    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
+    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
 
-    opdr->pScore[1] = __umodsi3(a5, 10);
-    a5 = __udivsi3(a5, 10);
-    opdr->pScore[0] = __umodsi3(a5, 10);
+    pScoreLower = &opdr->pScore[0];
+    pScoreHigher = &opdr->pScore[1];
+    *pScoreHigher = pScore % 10;
+    pScore /= 10;
+    *pScoreLower = pScore % 10;
 
     return opdr;
 }
-#endif
 
 //! The contents of this function is also found in open_update.
 void sub_805737C(struct TitleScreen* ts, int flags) {
