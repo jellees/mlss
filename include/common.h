@@ -154,6 +154,39 @@ struct struc_203FFB8
     u32 field_3C;
 };
 
+struct WindowAttr
+{
+    s8 field_0;
+    u8 field_1;
+    u8 xStart;
+    u8 yStart;
+    u8 xSize;
+    u8 ySize;
+};
+
+struct OPTNProcess
+{
+    struct Process process;
+    s8 brightness;
+    u8 field_1D;
+    struct Process* odtr;
+    u8* bwcw;
+    u8* field_28;
+    u8* field_2C;
+    u16* bwsw;
+    int* bbwf;
+    int* bbwi;
+    s8 options_0 : 1;
+    s8 options_1 : 3;
+    s8 options_4 : 3;
+    s8 yIdx;
+    int* winw;
+    s8 okButtonPosX;
+    s8 okButtonPosY;
+    struct WindowAttr field_48;
+    struct Sprite* sprite;
+};
+
 // Function prototypes
 void sub_800063C();
 void sub_8017E34(void);
@@ -176,7 +209,7 @@ void sub_80213A0(int, int, int, int);
 void sprite_hide_8021F20(struct Sprite*);
 void sub_8021F7C(void);
 void sub_8021FD4(void);
-struct Process* optn_init(struct Process*, u8, char*, int);
+struct OPTNProcess* optn_init(struct OPTNProcess*, u8, char*, int);
 void open_init_8055A00(void*, int, char*, int);
 void open_8056224();
 void sub_80574B4(void);
