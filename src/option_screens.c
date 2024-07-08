@@ -310,7 +310,18 @@ void optn_update(struct OPTNProcess* optn) {
             break;
 
         case OPTS_STATE_EASY_SLEEP_CONFIRMATION:
-            if (optn->field_48.field_1 != 0) {
+            if (optn->field_48.field_1 == 0) {
+                if (gGameState.field_2A & A_BUTTON) {
+                    optn->sprite->xPosition = 40;
+                    optn->sprite->yPosition = 24 * optn->selection + 55;
+                    off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
+                    optn->field_48.field_0_0 = 1;
+                    optn->field_48.field_1 = 7;
+                    BUFFER_REG_DISPCNT &= ~DISPCNT_BG0_ON;
+                    play_sfx_80195B4(96, -1);
+                    optn->process.state = OPTS_STATE_SELECT_OPTION;
+                }
+            } else {
                 sub_8051EE0(&optn->field_48);
 
                 if (optn->field_48.field_1 == 6) {
@@ -321,17 +332,6 @@ void optn_update(struct OPTNProcess* optn) {
                     optn->sprite->xPosition = optn->okButtonPosX + 6;
                     optn->sprite->yPosition = optn->okButtonPosY + 7;
                     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
-                }
-            } else {
-                if (gGameState.field_2A & A_BUTTON) {
-                    optn->sprite->xPosition = 40;
-                    optn->sprite->yPosition = 24 * optn->selection + 55;
-                    off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
-                    optn->field_48.field_0_0 = 1;
-                    optn->field_48.field_1 = 7;
-                    BUFFER_REG_DISPCNT &= ~DISPCNT_BG0_ON;
-                    play_sfx_80195B4(96, -1);
-                    optn->process.state = OPTS_STATE_SELECT_OPTION;
                 }
             }
             break;
