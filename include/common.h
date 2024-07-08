@@ -56,6 +56,9 @@ struct GameState {
     // possible flags
     s8 field_88A_0 : 3;
     s8 field_88A_3 : 1;
+    u8 field_88A_4 : 1;
+    s8 field_88A_5 : 3;
+    u8 field_88B_0 : 1;
 };
 
 struct struc_3000D18
@@ -156,8 +159,9 @@ struct struc_203FFB8
 
 struct WindowAttr
 {
-    s8 field_0;
-    u8 field_1;
+    // Made this a bitfield to match optn_update.
+    u8 field_0_0 : 1;
+    s8 field_1;
     u8 xStart;
     u8 yStart;
     u8 xSize;
@@ -168,7 +172,7 @@ struct OPTNProcess
 {
     struct Process process;
     s8 brightness;
-    u8 field_1D;
+    s8 field_1D;
     struct Process* odtr;
     u8* bwcw;
     u8* field_28;
@@ -178,11 +182,11 @@ struct OPTNProcess
     int* bbwi;
     s8 options_0 : 1;
     s8 options_1 : 3;
-    s8 options_4 : 3;
-    s8 yIdx;
+    u8 options_4 : 3;
+    s8 selection;
     int* winw;
-    s8 okButtonPosX;
-    s8 okButtonPosY;
+    u8 okButtonPosX;
+    u8 okButtonPosY;
     struct WindowAttr field_48;
     struct Sprite* sprite;
 };
@@ -192,12 +196,15 @@ void sub_800063C();
 void sub_8017E34(void);
 void sub_8018218(void*, void*, size_t, int, int);
 void sub_8018B78(int, void (*)(void));
+void free_heap_8018D9C(void*);
 void free_heap_8018DA8(void* ptr);
 void* alloc_zero_8018DB4(int, bool32, char*, int);
 void* alloc_Zero(int, bool32, char*, int);
 void sub_80193B4(int, int, int);
 void play_sfx_80195B4(int, int);
 u32 sub_80198B0(int*);
+void sub_801A6B0(void);
+void sub_801ABE8(u16, u16, int);
 void sub_801AFE4(int);
 void sub_801E150(struct Sprite*, int, int, int, int);
 void sub_8020994(int, int, int, int);
@@ -209,7 +216,12 @@ void sub_80213A0(int, int, int, int);
 void sprite_hide_8021F20(struct Sprite*);
 void sub_8021F7C(void);
 void sub_8021FD4(void);
+void sub_8051EE0(struct WindowAttr*);
 struct OPTNProcess* optn_init(struct OPTNProcess*, u8, char*, int);
+u8 sub_8052A8C(struct OPTNProcess*);
+void sub_8052EFC(struct OPTNProcess*);
+void sub_805420C(struct OPTNProcess*);
+void option_screen_set_ok_button(struct OPTNProcess*, int, int);
 void open_init_8055A00(void*, int, char*, int);
 void open_8056224();
 void sub_80574B4(void);
@@ -239,6 +251,7 @@ extern int loc_819832C(int, int);
 extern u8 dword_81DD7F4[];
 extern u8 dword_81DD9F4[16384];
 extern u8 dword_81E19F4[1280];
+extern u16 word_83A2900[];
 extern int dword_83A2B48[];
 extern int dword_83A2F98[];
 extern int dword_83A3498[];
@@ -262,6 +275,7 @@ extern s16 word_83A75C8[];
 extern u8* off_839EC80;
 extern struct ProcessDefinition stru_8CDBD68;
 extern struct ProcessDefinition stru_8CDBD78;
+extern struct ProcessDefinition stru_8CDC1F8;
 extern struct ProcessDefinition stru_8CDC238;
 extern struct ProcessDefinition stru_8CDC248;
 extern struct ProcessDefinition stru_8CDC258;

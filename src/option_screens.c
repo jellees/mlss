@@ -1,5 +1,8 @@
 #include "global.h"
 #include "common.h"
+#include "process.h"
+#include "title_screen.h"
+#include "option_screens.h"
 
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/generate_window_bg_8051B98.s\"");
@@ -44,7 +47,7 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     optn->odtr = odtr;
     odtr->parentProcess = &optn->process;
 
-    optn->yIdx = 0;
+    optn->selection = 0;
     optn->brightness = 16;
     optn->winw = alloc_zero_8018DB4(2048, 1, "WINW", 0);
     optn->options_4 =
@@ -206,3 +209,253 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     return optn;
 }
 #endif
+
+void optn_update(struct OPTNProcess* optn) {
+    switch (optn->process.state) {
+        case OPTS_STATE_FADE_IN:
+            optn->brightness--;
+            BUFFER_REG_BLDY = optn->brightness;
+            if (optn->brightness == 0) {
+                optn->process.state = OPTS_STATE_SELECT_OPTION;
+            }
+            break;
+
+        case OPTS_STATE_SELECT_OPTION:
+            if (optn->field_1D > 0) {
+                optn->field_1D--;
+            }
+            if (optn->field_48.field_1 > 0) {
+                sub_8051EE0(&optn->field_48);
+                break;
+            }
+            if (optn->field_1D != 0 || gGameState.field_2A & A_BUTTON) {
+                break;
+            }
+            if (gGameState.field_2A & B_BUTTON) {
+                if (sub_8052A8C(optn)) {
+                    optn->brightness = 16;
+                    sub_80193B4(0, 0, 16);
+                    optn->process.state = OPTS_STATE_LEAVE;
+                } else {
+                    optn->process.state = OPTS_STATE_SAVE_ERROR;
+                }
+                break;
+            }
+            if (gGameState.field_2E & DPAD_UP) {
+                optn->selection--;
+                if (optn->selection < 0) {
+                    optn->selection = 2;
+                }
+                play_sfx_80195B4(95, -1);
+            } else if (gGameState.field_2E & DPAD_DOWN) {
+                optn->selection++;
+                if (optn->selection > 2) {
+                    optn->selection = 0;
+                }
+                play_sfx_80195B4(95, -1);
+            }
+            optn->sprite->yPosition = 24 * optn->selection + 55;
+            switch (optn->selection) {
+                case 0:
+                    if ((optn->options_4 ^ 1) & 1) {
+                        if (gGameState.field_2A & DPAD_LEFT) {
+                            optn->options_4 |= 1;
+                            option_screen_set_ok_button(optn, word_83A2900[0], word_83A2900[1]);
+                            play_sfx_80195B4(95, -1);
+                            optn->process.state = OPTS_STATE_EASY_SLEEP_CONFIRMATION;
+                        }
+                    } else {
+                        if (gGameState.field_2A & DPAD_RIGHT) {
+                            optn->options_4 &= ~1;
+                            play_sfx_80195B4(95, -1);
+                        }
+                    }
+                    break;
+
+                case 1:
+                    if (gGameState.field_888_1 == 1) {
+                        if ((optn->options_4 & 2) == 0) {
+                            if (gGameState.field_2A & DPAD_LEFT) {
+                                optn->options_4 |= 2;
+                                option_screen_set_ok_button(optn, word_83A2900[2], word_83A2900[3]);
+                                play_sfx_80195B4(95, -1);
+                                optn->process.state = OPTS_STATE_RUMBLE_FEATURE_CONFIRMATION;
+                            }
+                        } else {
+                            if (gGameState.field_2A & DPAD_RIGHT) {
+                                optn->options_4 &= ~2;
+                                gGameState.field_88B_0 = 0;
+                                play_sfx_80195B4(95, -1);
+                            }
+                        }
+                    }
+                    break;
+
+                case 2:
+                    if ((optn->options_4 & 4) == 0) {
+                        if (gGameState.field_2A & DPAD_LEFT) {
+                            optn->options_4 |= 4;
+                            option_screen_set_ok_button(optn, word_83A2900[4], word_83A2900[5]);
+                            play_sfx_80195B4(95, -1);
+                            optn->process.state = OPTS_STATE_AUTO_SLEEP_CONFIRMATION;
+                        }
+                    } else {
+                        if (gGameState.field_2A & DPAD_RIGHT) {
+                            optn->options_4 &= ~4;
+                            play_sfx_80195B4(95, -1);
+                        }
+                    }
+                    break;
+            }
+            break;
+
+        case OPTS_STATE_EASY_SLEEP_CONFIRMATION:
+            if (optn->field_48.field_1 != 0) {
+                sub_8051EE0(&optn->field_48);
+
+                if (optn->field_48.field_1 == 6) {
+                    sub_8018218(optn->field_2C, (void*)0x6004020, 0x4B00, 32, 0);
+                } else if (optn->field_48.field_1 == 7) {
+                    sub_8018218(optn->bwsw, (void*)0x600C000, 0x500, 32, 0);
+                } else if (optn->field_48.field_1 == 0) {
+                    optn->sprite->xPosition = optn->okButtonPosX + 6;
+                    optn->sprite->yPosition = optn->okButtonPosY + 7;
+                    BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
+                }
+            } else {
+                if (gGameState.field_2A & A_BUTTON) {
+                    optn->sprite->xPosition = 40;
+                    optn->sprite->yPosition = 24 * optn->selection + 55;
+                    off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
+                    optn->field_48.field_0_0 = 1;
+                    optn->field_48.field_1 = 7;
+                    BUFFER_REG_DISPCNT &= ~DISPCNT_BG0_ON;
+                    play_sfx_80195B4(96, -1);
+                    optn->process.state = OPTS_STATE_SELECT_OPTION;
+                }
+            }
+            break;
+
+        case OPTS_STATE_RUMBLE_FEATURE_CONFIRMATION:
+            if (optn->field_48.field_1 == 0) {
+                if (gGameState.field_2A & A_BUTTON) {
+                    optn->sprite->xPosition = 40;
+                    optn->sprite->yPosition = 24 * optn->selection + 55;
+                    off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
+                    optn->field_48.field_0_0 = 1;
+                    optn->field_48.field_1 = 7;
+                    BUFFER_REG_DISPCNT &= ~DISPCNT_BG0_ON;
+                    gGameState.field_88B_0 = 1;
+                    optn->field_1D = 16;
+                    sub_801ABE8(0, 16, 0);
+                    play_sfx_80195B4(96, -1);
+                    optn->process.state = OPTS_STATE_SELECT_OPTION;
+                }
+            } else {
+                sub_8051EE0(&optn->field_48);
+                if (optn->field_48.field_1 == 6) {
+                    sub_8018218(optn->field_2C + 0x4B00, (void*)0x6004020, 0x4B00, 32, 0);
+                } else if (optn->field_48.field_1 == 7) {
+                    sub_8018218(optn->bwsw + 0x280, (void*)0x600C000, 0x500, 32, 0);
+                } else if (optn->field_48.field_1 == 0) {
+                    optn->sprite->xPosition = optn->okButtonPosX + 6;
+                    optn->sprite->yPosition = optn->okButtonPosY + 7;
+                    BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
+                }
+            }
+            break;
+
+        case OPTS_STATE_AUTO_SLEEP_CONFIRMATION:
+            if (optn->field_48.field_1 == 0) {
+                if (gGameState.field_2A & A_BUTTON) {
+                    optn->sprite->xPosition = 40;
+                    optn->sprite->yPosition = 24 * optn->selection + 55;
+                    off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
+                    optn->field_48.field_0_0 = 1;
+                    optn->field_48.field_1 = 7;
+                    BUFFER_REG_DISPCNT &= ~DISPCNT_BG0_ON;
+                    play_sfx_80195B4(96, -1);
+                    optn->process.state = OPTS_STATE_SELECT_OPTION;
+                }
+            } else {
+                sub_8051EE0(&optn->field_48);
+                if (optn->field_48.field_1 == 6) {
+                    sub_8018218(optn->field_2C + 0x9600, (void*)0x6004020, 0x4B00, 32, 0);
+                } else if (optn->field_48.field_1 == 7) {
+                    sub_8018218(optn->bwsw + 0x500, (void*)0x600C000, 0x500, 32, 0);
+                } else if (optn->field_48.field_1 == 0) {
+                    optn->sprite->xPosition = optn->okButtonPosX + 6;
+                    optn->sprite->yPosition = optn->okButtonPosY + 7;
+                    BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
+                }
+            }
+            break;
+
+        case OPTS_STATE_SAVE_ERROR:
+            sub_8052EFC(optn);
+            sub_805420C(optn);
+            optn->brightness = 240;
+            optn->process.state = OPTS_STATE_SAVE_ERROR_CONFIRMATION;
+            break;
+
+        case OPTS_STATE_SAVE_ERROR_CONFIRMATION:
+            if (optn->field_48.field_1 == 0) {
+                optn->brightness--;
+                if (optn->brightness == 0
+                    || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
+                    optn->brightness = 16;
+                    sub_80193B4(0, 0, 16);
+                    optn->process.state = OPTS_STATE_LEAVE;
+                }
+            } else {
+                sub_8051EE0(&optn->field_48);
+                if (optn->field_48.field_1 == 6) {
+                    sub_8018218(optn->field_2C, (void*)0x6004020, 0x4B00, 32, 0);
+                } else if (optn->field_48.field_1 == 7) {
+                    sub_8018218(optn->bwsw, (void*)0x600C000, 0x500, 32, 0);
+                } else if (optn->field_48.field_1 == 0) {
+                    BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
+                }
+            }
+            break;
+
+        case OPTS_STATE_LEAVE:
+            optn->brightness--;
+            BUFFER_REG_BLDY = 16 - optn->brightness;
+            if (optn->brightness == 0) {
+                if (optn) {
+                    optn->process.definition = &stru_8CDC1F8;
+                    sub_8021FD4();
+                    if (optn->odtr) {
+                        process_remove(optn->odtr, 3);
+                    }
+                    if (optn->winw) {
+                        free_heap_8018D9C(optn->winw);
+                    }
+                    if (optn->bwcw) {
+                        free_heap_8018D9C(optn->bwcw);
+                    }
+                    if (optn->bwsw) {
+                        free_heap_8018D9C(optn->bwsw);
+                    }
+                    if (optn->bbwf) {
+                        free_heap_8018D9C(optn->bbwf);
+                    }
+                    free_heap_8018DA8((void*)optn->bbwi);
+                    sub_801A6B0();
+                    gGameState.field_31 = 2;
+                    BUFFER_REG_DISPCNT = 0;
+                    BUFFER_REG_BLDCNT = BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_NONE;
+                    process_remove(&optn->process, 3);
+                }
+                //! Fix this when other functions are also matching.
+                open_init_8055A00(
+                    alloc_Zero(sizeof(struct TitleScreen), 0, (char*)0x081E2714 /*"OPEN"*/, 0), 8,
+                    (char*)0x081E2714 /*"OPEN"*/, 3);
+                return;
+            }
+            break;
+    }
+
+    sub_8021F7C();
+}
