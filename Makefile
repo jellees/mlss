@@ -24,8 +24,11 @@ LIBGCC := tools/agbcc/lib/libgcc.a
 
 # Flags
 ASFLAGS			:= -mcpu=arm7tdmi -I include
-LDFLAGS			:= -L../tools/agbcc/lib -lgcc -lc --just-symbols=../symbols.txt
-CFLAGS			:= -O2 -mthumb-interwork -fno-common -Wimplicit -Wparentheses -Werror -g
+LDFLAGS			:= -L../tools/agbcc/lib -lgcc -lc --just-symbols=../symbols.txt -g
+# -ffix-debug-line flag comes from https://github.com/jiangzhengwenjz/agbcc new_newlib_pret branch.
+# This branch fixes debug lines so they are emitted properly. If the compiler doesn't produce the
+# same output please switch back to the normal agbcc repo.
+CFLAGS			:= -O2 -mthumb-interwork -fno-common -Wimplicit -Wparentheses -Werror -g -ffix-debug-line
 CPPFLAGS 		:= -I tools/agbcc/include -nostdinc -undef -iquote include -Wno-trigraphs
 
 # Files
