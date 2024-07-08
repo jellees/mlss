@@ -1,9 +1,9 @@
 #ifndef OPTION_SCREENS_H
 #define OPTION_SCREENS_H
 
-#define OPTION_EASY_SLEEP     (1 << 0)
-#define OPTION_RUMBLE_FEATURE (1 << 1)
-#define OPTION_AUTO_FEATURE   (1 << 2)
+#define OPTION_FLAGS_EASY_SLEEP     (1 << 0)
+#define OPTION_FLAGS_RUMBLE_FEATURE (1 << 1)
+#define OPTION_FLAGS_AUTO_FEATURE   (1 << 2)
 
 enum OptionScreenStates {
     OPTS_STATE_FADE_IN = 0,

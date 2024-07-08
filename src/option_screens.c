@@ -257,16 +257,16 @@ void optn_update(struct OPTNProcess* optn) {
             optn->sprite->yPosition = 24 * optn->selection + 55;
             switch (optn->selection) {
                 case 0:
-                    if ((optn->options_4 ^ OPTION_EASY_SLEEP) & OPTION_EASY_SLEEP) {
+                    if ((optn->options_4 ^ OPTION_FLAGS_EASY_SLEEP) & OPTION_FLAGS_EASY_SLEEP) {
                         if (gGameState.field_2A & DPAD_LEFT) {
-                            optn->options_4 |= OPTION_EASY_SLEEP;
+                            optn->options_4 |= OPTION_FLAGS_EASY_SLEEP;
                             option_screen_set_ok_button(optn, word_83A2900[0], word_83A2900[1]);
                             play_sfx_80195B4(95, -1);
                             optn->process.state = OPTS_STATE_EASY_SLEEP_CONFIRMATION;
                         }
                     } else {
                         if (gGameState.field_2A & DPAD_RIGHT) {
-                            optn->options_4 &= ~OPTION_EASY_SLEEP;
+                            optn->options_4 &= ~OPTION_FLAGS_EASY_SLEEP;
                             play_sfx_80195B4(95, -1);
                         }
                     }
@@ -274,16 +274,16 @@ void optn_update(struct OPTNProcess* optn) {
 
                 case 1:
                     if (gGameState.field_888_1 == 1) {
-                        if (!(optn->options_4 & OPTION_RUMBLE_FEATURE)) {
+                        if (!(optn->options_4 & OPTION_FLAGS_RUMBLE_FEATURE)) {
                             if (gGameState.field_2A & DPAD_LEFT) {
-                                optn->options_4 |= OPTION_RUMBLE_FEATURE;
+                                optn->options_4 |= OPTION_FLAGS_RUMBLE_FEATURE;
                                 option_screen_set_ok_button(optn, word_83A2900[2], word_83A2900[3]);
                                 play_sfx_80195B4(95, -1);
                                 optn->process.state = OPTS_STATE_RUMBLE_FEATURE_CONFIRMATION;
                             }
                         } else {
                             if (gGameState.field_2A & DPAD_RIGHT) {
-                                optn->options_4 &= ~OPTION_RUMBLE_FEATURE;
+                                optn->options_4 &= ~OPTION_FLAGS_RUMBLE_FEATURE;
                                 gGameState.field_88B_0 = 0;
                                 play_sfx_80195B4(95, -1);
                             }
@@ -292,16 +292,16 @@ void optn_update(struct OPTNProcess* optn) {
                     break;
 
                 case 2:
-                    if (!(optn->options_4 & OPTION_AUTO_FEATURE)) {
+                    if (!(optn->options_4 & OPTION_FLAGS_AUTO_FEATURE)) {
                         if (gGameState.field_2A & DPAD_LEFT) {
-                            optn->options_4 |= OPTION_AUTO_FEATURE;
+                            optn->options_4 |= OPTION_FLAGS_AUTO_FEATURE;
                             option_screen_set_ok_button(optn, word_83A2900[4], word_83A2900[5]);
                             play_sfx_80195B4(95, -1);
                             optn->process.state = OPTS_STATE_AUTO_SLEEP_CONFIRMATION;
                         }
                     } else {
                         if (gGameState.field_2A & DPAD_RIGHT) {
-                            optn->options_4 &= ~OPTION_AUTO_FEATURE;
+                            optn->options_4 &= ~OPTION_FLAGS_AUTO_FEATURE;
                             play_sfx_80195B4(95, -1);
                         }
                     }
