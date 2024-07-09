@@ -460,7 +460,7 @@ void optn_update(struct OPTNProcess* optn) {
     sub_8021F7C();
 }
 
-// https://decomp.me/scratch/PDUDz
+// https://decomp.me/scratch/cJb6N
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8052A8C.s\"");
 #else
