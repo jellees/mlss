@@ -49,12 +49,11 @@ struct GameState {
 
     int field_880;
     u32 field_884;
-    s32 field_888_0 : 1;
-    u8 field_888_1 : 2;
-    s32 field_888_3 : 1;
-    u32 field_888_4 : 4;
-    s32 field_889 : 8;
-    // possible flags
+    u16 field_888_0 : 1;
+    u16 field_888_1 : 2;
+    u16 field_888_3 : 1;
+    u16 field_888_4 : 4;
+    u16 field_889 : 8;
     s32 field_88A_0 : 3;
     s32 field_88A_3 : 1;
     u32 field_88A_4 : 1;
@@ -63,8 +62,7 @@ struct GameState {
     u32 field_88B_1 : 7;
 };
 
-struct struc_3000D18
-{
+struct struc_3000D18 {
     u8 field_0_0 : 1;
     u8 field_0_1 : 3;
     u32 field_4;
@@ -72,8 +70,7 @@ struct struc_3000D18
     u32 field_C;
 };
 
-struct Sprite
-{
+struct Sprite {
     s16 xPosition;
     s16 yPosition;
     s16 xScale;
@@ -105,8 +102,7 @@ struct Sprite
     u8 field_22;
 };
 
-struct struc_203FFF8
-{
+struct struc_203FFF8 {
     u32 field_0;
     u8 field_4;
     u8 field_5;
@@ -118,7 +114,7 @@ struct struc_203FFF8
     u8 field_7_7 : 1;
 };
 
-struct EeprStruct1{
+struct EeprStruct1 {
     char name[8];
     u8 field_8_0 : 3;
     u8 field_8_3 : 1;
@@ -127,15 +123,13 @@ struct EeprStruct1{
     u8 field_8_6 : 1;
 };
 
-struct MarioBrosScoreVisual
-{
+struct MarioBrosScoreVisual {
     struct Process process;
     char topScore[6];
     char pScore[2];
 };
 
-struct struc_11
-{
+struct struc_11 {
     u16 field_0;
     u16 field_2;
     u16 field_4;
@@ -145,8 +139,7 @@ struct struc_11
     struct struc_11* field_10;
 };
 
-struct struc_203FFB8
-{
+struct struc_203FFB8 {
     u8 field_0_0 : 2;
     u8 field_0_2 : 1;
     u8 field_1;
@@ -159,8 +152,7 @@ struct struc_203FFB8
     u32 field_3C;
 };
 
-struct WindowAttr
-{
+struct WindowAttr {
     // Made this a bitfield to match optn_update.
     u8 field_0_0 : 1;
     s8 field_1;
@@ -170,8 +162,20 @@ struct WindowAttr
     u8 ySize;
 };
 
-struct OPTNProcess
-{
+struct struc_15 {
+    u32 field_0;
+    u32 field_4;
+    // Probably a char string but not sure.
+    u8* field_8;
+    u32 field_C;
+    u32 field_10;
+    u32 field_14;
+    u32 field_18;
+    u32 field_1C;
+    u32 field_20;
+};
+
+struct OPTNProcess {
     struct Process process;
     s8 brightness;
     s8 field_1D;
@@ -181,7 +185,7 @@ struct OPTNProcess
     u8* field_2C;
     u16* bwsw;
     int* bbwf;
-    int* bbwi;
+    struct struc_15* bbwi;
     s8 options_0 : 1;
     s8 options_1 : 3;
     u8 options_4 : 3;
@@ -231,6 +235,9 @@ void sub_80574FC(void);
 int sub_812454C(void);
 struct struc_203FFF8* sub_81251DC();
 struct Process* sub_812538C(struct Process*, u8, char*, int);
+u16 sub_8199624(struct struc_15*);
+void sub_8199D5C(struct struc_15*, int, u8, int);
+void sub_8199D78(struct struc_15*, u8*, int, int, int, int, int, int, int, int);
 void sub_81DA6C8(int);
 
 // EWRAM
@@ -238,14 +245,15 @@ extern struct struc_203FFB8 stru_203FFB8;
 extern struct struc_203FFF8 stru_203FFF8;
 
 // IWRAM
-extern void (*dword_3000D48)(int,int);
-extern int (*dword_3000D4C)(int,int);
+extern void (*dword_3000D48)(int, int);
+extern int (*dword_3000D4C)(int, int);
 extern int* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
 extern struct GameState gGameState;
 extern void (*dword_3000C78)();
 extern void (*dword_3000C84)(int*, void*);
 extern struct struc_3000D18 stru_3000D18;
+extern void (*dword_3001034)(int, void**, int);
 extern int (*dword_3001038)();
 
 // ROM
@@ -255,6 +263,7 @@ extern u8 dword_81DD7F4[];
 extern u8 dword_81DD9F4[16384];
 extern u8 dword_81E19F4[1280];
 extern u16 word_83A2900[];
+extern int* off_83A2920[];
 extern int dword_83A2B48[];
 extern int dword_83A2F98[];
 extern int dword_83A3498[];

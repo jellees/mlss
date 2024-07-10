@@ -469,3 +469,30 @@ int try_save_options(struct OPTNProcess* optn) {
 
     return sub_812454C();
 }
+
+void sub_8052B54(struct OPTNProcess* optn, int a2) {
+    int i;
+
+    dword_3001034(0, (void*)optn->field_28, 6144);
+
+    for (i = 0; i < 3; i++) {
+        if (gGameState.field_888_1 != 1 && i == 1) {
+            sub_8199D78(optn->bbwi, optn->field_28, 32, 4, 0, 0, 1, 2, 7, 0);
+        } else {
+            sub_8199D78(optn->bbwi, optn->field_28, 32, 4, 0, 0, 1, 2, 5, 0);
+        }
+        sub_8199D5C(optn->bbwi, 0, 16 * i + 2, *off_83A2920[i] + 2);
+        do {
+            u8* v5 = optn->bbwi->field_8;
+            if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
+                optn->bbwi->field_8 += 3;
+            }
+        } while (sub_8199624(optn->bbwi));
+    }
+
+    if (a2) {
+        sub_8018218((void*)optn->field_28, (void*)0x6001000, 6144, 32, 0);
+    } else {
+        CpuFastSet((void*)optn->field_28, (void*)0x6001000, 0x600);
+    }
+}
