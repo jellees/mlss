@@ -232,7 +232,7 @@ void optn_update(struct OPTNProcess* optn) {
                 break;
             }
             if (gGameState.field_2A & B_BUTTON) {
-                if ((bool8)sub_8052A8C(optn)) {
+                if ((bool8)try_save_options(optn)) {
                     optn->brightness = 16;
                     sub_80193B4(0, 0, 16);
                     optn->process.state = OPTS_STATE_LEAVE;
@@ -460,12 +460,12 @@ void optn_update(struct OPTNProcess* optn) {
     sub_8021F7C();
 }
 
-int sub_8052A8C(struct OPTNProcess* optn) {
-    gGameState.field_88A_4 = (optn->options_4 & 1) != 0;
-    gGameState.field_88B_0 = ((optn->options_4 >> 1) & 1) != 0;
-    dword_3000FFC->field_8_3 = (optn->options_4 & 1) != 0;
-    dword_3000FFC->field_8_4 = ((optn->options_4 >> 1) & 1) != 0;
-    dword_3000FFC->field_8_5 = ((optn->options_4 >> 2) & 1) != 0;
+int try_save_options(struct OPTNProcess* optn) {
+    gGameState.field_88A_4 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_EASY_SLEEP) & 1) != 0;
+    gGameState.field_88B_0 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_RUMBLE_FEATURE) & 1) != 0;
+    dword_3000FFC->field_8_3 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_EASY_SLEEP) & 1) != 0;
+    dword_3000FFC->field_8_4 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_RUMBLE_FEATURE) & 1) != 0;
+    dword_3000FFC->field_8_5 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_AUTO_FEATURE) & 1) != 0;
 
     return sub_812454C();
 }

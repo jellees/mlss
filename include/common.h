@@ -220,7 +220,7 @@ void sub_8021F7C(void);
 void sub_8021FD4(void);
 void sub_8051EE0(struct WindowAttr*);
 struct OPTNProcess* optn_init(struct OPTNProcess*, u8, char*, int);
-int sub_8052A8C(struct OPTNProcess*);
+int try_save_options(struct OPTNProcess*);
 void sub_8052EFC(struct OPTNProcess*);
 void sub_805420C(struct OPTNProcess*);
 void option_screen_set_ok_button(struct OPTNProcess*, int, int);
