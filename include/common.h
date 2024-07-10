@@ -49,16 +49,18 @@ struct GameState {
 
     int field_880;
     u32 field_884;
-    s8 field_888_0 : 1;
+    s32 field_888_0 : 1;
     u8 field_888_1 : 2;
-    s8 field_888_3 : 1;
-    s8 field_889;
+    s32 field_888_3 : 1;
+    u32 field_888_4 : 4;
+    s32 field_889 : 8;
     // possible flags
-    s8 field_88A_0 : 3;
-    s8 field_88A_3 : 1;
-    u8 field_88A_4 : 1;
-    s8 field_88A_5 : 3;
-    u8 field_88B_0 : 1;
+    s32 field_88A_0 : 3;
+    s32 field_88A_3 : 1;
+    u32 field_88A_4 : 1;
+    s32 field_88A_5 : 3;
+    u32 field_88B_0 : 1;
+    u32 field_88B_1 : 7;
 };
 
 struct struc_3000D18

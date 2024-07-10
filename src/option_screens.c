@@ -460,17 +460,12 @@ void optn_update(struct OPTNProcess* optn) {
     sub_8021F7C();
 }
 
-// https://decomp.me/scratch/cJb6N
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8052A8C.s\"");
-#else
 int sub_8052A8C(struct OPTNProcess* optn) {
     gGameState.field_88A_4 = (optn->options_4 & 1) != 0;
-    gGameState.field_88B_0 = (optn->options_4 & 2) != 0;
+    gGameState.field_88B_0 = ((optn->options_4 >> 1) & 1) != 0;
     dword_3000FFC->field_8_3 = (optn->options_4 & 1) != 0;
-    dword_3000FFC->field_8_4 = (optn->options_4 & 2) != 0;
-    dword_3000FFC->field_8_5 = (optn->options_4 & 4) != 0;
+    dword_3000FFC->field_8_4 = ((optn->options_4 >> 1) & 1) != 0;
+    dword_3000FFC->field_8_5 = ((optn->options_4 >> 2) & 1) != 0;
 
     return sub_812454C();
 }
-#endif
