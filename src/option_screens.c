@@ -487,7 +487,7 @@ void sub_8052B54(struct OPTNProcess* optn, int a2) {
             if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
                 optn->bbwi->field_8 += 3;
             }
-        } while (sub_8199624(optn->bbwi));
+        } while (sub_8199624(optn->bbwi) != 0);
     }
 
     if (a2) {

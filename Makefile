@@ -56,6 +56,8 @@ SUBDIRS  := $(sort $(dir $(OBJS)))
 $(shell mkdir -p $(SUBDIRS))
 
 # Rules
+.PHONY: rom compare clean tools
+
 rom: tools $(ROM) compare
 
 compare: $(ROM)
