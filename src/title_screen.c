@@ -270,9 +270,9 @@ struct TitleScreen* title_screen_create(struct TitleScreen* titleScreen, u8 prio
     process_add(&titleScreen->process, priority, label);
     titleScreen->process.definition = &stru_8CDC238;
 
-    (*(vu16*)(0x2000000 + 0x80)) = 0x7FFF;
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 = 1;
-    (*(vu16*)(0x2000000 + 0x0)) = 0;
+    BUFFER_REG_DISPCNT = 0;
     sub_8017E34();
     gGameState.field_31 = 8;
 
@@ -339,19 +339,19 @@ struct TitleScreen* title_screen_create(struct TitleScreen* titleScreen, u8 prio
 
     dword_3000C78 = sub_800063C;
 
-    (*(vu16*)(0x2000000 + 0x50)) = 191;
-    (*(vu16*)(0x2000000 + 0x54)) = 16;
-    (*(vu16*)(0x2000000 + 0x08)) = 6146;
-    (*(vu16*)(0x2000000 + 0x0A)) = 23043;
-    (*(vu16*)(0x2000000 + 0x0C)) = 22916;
-    (*(vu16*)(0x2000000 + 0x10)) = 0;
-    (*(vu16*)(0x2000000 + 0x12)) = 0;
-    (*(vu16*)(0x2000000 + 0x14)) = 0;
-    (*(vu16*)(0x2000000 + 0x16)) = 0;
+    BUFFER_REG_BLDCNT = 191;
+    BUFFER_REG_BLDY = 16;
+    BUFFER_REG_BG0CNT = 6146;
+    BUFFER_REG_BG1CNT = 23043;
+    BUFFER_REG_BG2CNT = 22916;
+    BUFFER_REG_BG0HOFS = 0;
+    BUFFER_REG_BG0VOFS = 0;
+    BUFFER_REG_BG1HOFS = 0;
+    BUFFER_REG_BG1VOFS = 0;
 
     CpuFastSet(gGameState.field_888_1 == 0 ? dword_83A7140 : dword_83A7300, (void*)0x2000080, 112);
 
-    (*(vu16*)(0x2000000 + 0x80)) = 0x7FFF;
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 = -1;
     gGameState.field_0 = -1;
     runtime_install_interrupt_callback(2, title_screen_scroll_background_hblank);
@@ -359,10 +359,10 @@ struct TitleScreen* title_screen_create(struct TitleScreen* titleScreen, u8 prio
 
     if (selection == 0) {
         titleScreen->entryStateIdx = 0;
-        (*(vu16*)(0x2000000 + 0x00)) |= 4673;
+        BUFFER_REG_DISPCNT |= 4673;
     } else {
         titleScreen->entryStateIdx = 2;
-        (*(vu16*)(0x2000000 + 0x00)) |= 5953;
+        BUFFER_REG_DISPCNT |= 5953;
     }
 
     return titleScreen;
@@ -478,14 +478,14 @@ void title_screen_prepare_game_select(struct TitleScreen* titleScreen, int selec
     off_839EC80[0x4A] |= 0x10;
     off_839EC80[0x4A] |= 0x20;
 
-    (*(vu16*)(0x2000000 + 0x18)) = 0;
-    (*(vu16*)(0x2000000 + 0x1A)) = 0;
-    (*(vu16*)(0x2000000 + 0x20)) = 256;
-    (*(vu16*)(0x2000000 + 0x22)) = 0;
-    (*(vu16*)(0x2000000 + 0x24)) = 0;
-    (*(vu16*)(0x2000000 + 0x26)) = 256;
-    (*(vu32*)(0x2000000 + 0x28)) = 0;
-    (*(vu32*)(0x2000000 + 0x2C)) = 0;
+    BUFFER_REG_BG2HOFS = 0;
+    BUFFER_REG_BG2VOFS = 0;
+    BUFFER_REG_BG2PA = 256;
+    BUFFER_REG_BG2PB = 0;
+    BUFFER_REG_BG2PC = 0;
+    BUFFER_REG_BG2PD = 256;
+    BUFFER_REG_BG2X = 0;
+    BUFFER_REG_BG2Y = 0;
 
     titleScreen->mlTextPosY = 0;
     titleScreen->mlTextScaleX = 256;

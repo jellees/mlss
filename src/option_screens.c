@@ -69,7 +69,7 @@ void sub_8051EE0(struct WindowAttr* arg0) {
     } else {
         if (--arg0->field_1 == 0) {
             (*(s8**)0x0839EC80)[1] &= 0xDF;
-            *(vu16*)0x02000000 &= 0xFDFF;
+            BUFFER_REG_DISPCNT &= 0xFDFF;
         }
     }
 }
@@ -89,9 +89,9 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     process_add(&optn->process, priority, label);
     optn->process.definition = &stru_8CDC1F8;
 
-    (*(vu16*)(0x2000000 + 0x50)) = 191;
-    (*(vu16*)(0x2000000 + 0x54)) = 16;
-    (*(vu16*)(0x2000000 + 0x00)) = 0;
+    BUFFER_REG_BLDCNT = 191;
+    BUFFER_REG_BLDY = 16;
+    BUFFER_REG_DISPCNT = 0;
 
     sub_8017E34();
 
@@ -211,19 +211,19 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     }
     sub_801A548();
 
-    (*(vu16*)(0x2000000 + 0x08)) = 0x1805;
-    (*(vu16*)(0x2000000 + 0x0A)) = 0x1901;
-    (*(vu16*)(0x2000000 + 0x0C)) = 0x1A03;
-    (*(vu16*)(0x2000000 + 0x0E)) = 0x1B03;
-    (*(vu16*)(0x2000000 + 0x10)) = 0;
-    (*(vu16*)(0x2000000 + 0x12)) = 0;
-    (*(vu16*)(0x2000000 + 0x14)) = 0;
-    (*(vu16*)(0x2000000 + 0x16)) = 0;
-    (*(vu16*)(0x2000000 + 0x18)) = 0;
-    (*(vu16*)(0x2000000 + 0x1A)) = 0;
-    (*(vu16*)(0x2000000 + 0x1C)) = 0;
-    (*(vu16*)(0x2000000 + 0x1E)) = 0;
-    (*(vu16*)(0x2000000 + 0x00)) = 0x1C40;
+    BUFFER_REG_BG0CNT = 0x1805;
+    BUFFER_REG_BG1CNT = 0x1901;
+    BUFFER_REG_BG2CNT = 0x1A03;
+    BUFFER_REG_BG3CNT = 0x1B03;
+    BUFFER_REG_BG0HOFS = 0;
+    BUFFER_REG_BG0VOFS = 0;
+    BUFFER_REG_BG1HOFS = 0;
+    BUFFER_REG_BG1VOFS = 0;
+    BUFFER_REG_BG2HOFS = 0;
+    BUFFER_REG_BG2VOFS = 0;
+    BUFFER_REG_BG3HOFS = 0;
+    BUFFER_REG_BG3VOFS = 0;
+    BUFFER_REG_DISPCNT = 0x1C40;
 
     sub_8019308(0, 30, -1);
     sub_80193B4(0, 0xFFu, 0x10u);
