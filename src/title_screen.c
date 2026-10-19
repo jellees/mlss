@@ -1041,71 +1041,61 @@ void open_update(struct TitleScreen* ts) {
 }
 
 // https://decomp.me/scratch/3i7ME
+//! Nonmatching: 18 diff lines, size and registers match. Only the order of the loop setup differs:
+//! the target computes the word_83A75B8 address, then `i = 0`, the spill of &ts->sprites[7],
+//! `opdr + 34` and only then loads y (ldrsh). The insns after `i = 0` look like loop.c-hoisted
+//! values (agbcc has no scheduler), so y's load may come from inside the first loop in the
+//! original. Tried: every order of var11/i/pScore/y, idx/pointer splits of y, y inside the loop,
+//! const tables (no effect), a slot pointer variable. Key fixes already in: plain loops (6 and 2
+//! iterations), separate j and y2 for the second part, var1 reassigned from dword_3000D4C.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/opdr_update2.s\"");
 #else
 void opdr_update2(struct MarioBrosScoreVisual* opdr) {
     struct TitleScreen* ts;
     int var1;
-    struct Sprite* sprite;
-    u16 var2;
 
     ts = (struct TitleScreen*)opdr->process.parentProcess;
     sub_8020A78();
     var1 = gGameState.field_880;
-    sprite = ts->sprites[7];
 
-    if ((u8)(sprite->field_20[1] - 3) <= 2) {
-        u32 i;
+    if ((u8)(ts->sprites[7]->field_20[1] - 3) <= 2) {
         struct struc_11* var11;
+        int y;
+        int y2;
+        int i;
+        char* pScore;
+        int j;
 
         var11 = stru_203FFB8.field_38;
-        var2 = word_83A75B8[sprite->field_22 - 10] - 34;
-
-        for (i = 0; i < 6; i += 3) {
-            var11->field_0 = var2;
-            var11->field_2 = 43 + (i * 7);
+        i = 0;
+        pScore = opdr->pScore;
+        y = word_83A75B8[ts->sprites[7]->field_22 - 10] - 34;
+        for (; i < 6; i++) {
+            var11->field_0 = y;
+            var11->field_2 = 43 + i * 7;
             var11->field_4 = (opdr->topScore[i] + 44) | 0x2400;
-            var11->field_6 = 0;
-            var11->field_8 = 0x40000000;
-            var11 = var11->field_10;
-
-            var11->field_0 = var2;
-            var11->field_2 = 50 + (i * 7);
-            var11->field_4 = (opdr->topScore[i + 1] + 44) | 0x2400;
-            var11->field_6 = 0;
-            var11->field_8 = 0x40000000;
-            var11 = var11->field_10;
-
-            var11->field_0 = var2;
-            var11->field_2 = 57 + (i * 7);
-            var11->field_4 = (opdr->topScore[i + 1] + 44) | 0x2400;
             var11->field_6 = 0;
             var11->field_8 = 0x40000000;
             var11 = var11->field_10;
         }
 
-        var2 = word_83A75C8[sprite->field_22 - 10] - 21;
-
-        var11->field_0 = var2;
-        var11->field_2 = 64;
-        var11->field_4 = (opdr->pScore[0] + 44) | 0x2400;
-        var11->field_6 = 0;
-        var11->field_8 = 0x40000000;
-        var11 = var11->field_10;
-
-        var11->field_0 = var2;
-        var11->field_2 = 71;
-        var11->field_4 = (opdr->pScore[1] + 44) | 0x2400;
-        var11->field_6 = 0;
-        var11->field_8 = 0x40000000;
-        var11 = var11->field_10;
+        y2 = word_83A75C8[ts->sprites[7]->field_22 - 10] - 21;
+        for (j = 0; j < 2; j++) {
+            var11->field_0 = y2;
+            var11->field_2 = 64 + j * 7;
+            var11->field_4 = (pScore[j] + 44) | 0x2400;
+            var11->field_6 = 0;
+            var11->field_8 = 0x40000000;
+            var11 = var11->field_10;
+        }
 
         stru_203FFB8.field_38 = var11;
     }
 
     dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    gGameState.field_880 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+    gGameState.field_880 = var1;
 }
 #endif
 
