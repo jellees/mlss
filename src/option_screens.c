@@ -558,3 +558,85 @@ void sub_8052B54(struct OPTNProcess* optn, int a2) {
         CpuFastSet((void*)optn->field_28, (void*)0x6001000, 0x600);
     }
 }
+
+void sub_8052C50(struct OPTNProcess* optn, int a1) {
+    int i;
+
+    if (a1 <= 1) {
+        dword_3001034(0, (void*)optn->field_2C, 0xE100);
+        dword_3001034(0, (void*)optn->bwsw, 0xF00);
+        if (a1 == 1) {
+            return;
+        }
+    }
+
+    i = 0;
+    if (a1 != 0) {
+        i = a1 - 2;
+    }
+    for (; a1 != 0 ? i <= a1 - 2 : i <= 5; i++) {
+        int j;
+        int text0;
+        int text1;
+        u16 yOff;
+        u16 y1;
+        u16 y0;
+        u16 width;
+        int odd;
+        int zero;
+        int even;
+        u16* hp;
+        int k;
+
+        j = i / 2;
+        zero = 0;
+        text0 = *off_83A292C[j * 2];
+        k = j * 2 + 1;
+        text1 = *off_83A292C[k];
+        width = word_83A2900[j * 2] - 4;
+        hp = &word_83A2900[k];
+        y0 = word_83A290C[j * 2];
+        y1 = word_83A290C[k];
+        yOff = 80 - (s16)*hp * 4;
+        odd = ((s16)width & 1) ? 4 : 0;
+        even = (u16)(i ^ 1) & 1;
+
+        if (even) {
+            u16* dst;
+            u16 tile;
+            int y;
+
+            sub_8199D78(optn->bbwi, optn->field_2C + j * 5 * 0xF00, (s16)width, (u8)odd, zero, zero, 1,
+                        2, 5, zero);
+            sub_8199D5C(optn->bbwi, 0, y0 + yOff, text0 + 2);
+            do {
+                u8* v5 = optn->bbwi->field_8;
+                if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
+                    optn->bbwi->field_8 += 3;
+                }
+            } while (sub_8199624(optn->bbwi) != 0);
+
+            dst = &optn->bwsw[j * 5 * 128];
+            tile = 0xE001;
+            for (y = 0; y < 16; y++) {
+                int x;
+
+                dst += (30 - (s16)width) / 2;
+                for (x = 0; x < (s16)width; x++) {
+                    *dst++ = tile++;
+                }
+                dst += (30 - (s16)width) / 2 + 2;
+            }
+        } else {
+            sub_8199D78(optn->bbwi, optn->field_2C + j * 5 * 0xF00, (s16)width, (u8)odd, 0, 0, 1, 2, 5,
+                        0);
+            sub_8199D5C(optn->bbwi, 0, y1 + yOff, text1 + 2);
+            do {
+                u8* v5 = optn->bbwi->field_8;
+                if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
+                    optn->bbwi->field_8 += 3;
+                }
+            } while (sub_8199624(optn->bbwi) != 0);
+        }
+    }
+}
