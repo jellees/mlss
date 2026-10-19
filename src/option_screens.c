@@ -100,21 +100,21 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
 
     sub_801A548();
 
-    odtr = (struct Process*)alloc_Zero(0x1C, 0, (char*)0x081E26DC /*"OTDR"*/, 0);
-    process_add(odtr, 8, (char*)0x081E26DC /*"OTDR"*/);
+    odtr = (struct Process*)alloc_Zero(0x1C, 0, "OTDR", 0);
+    process_add(odtr, 8, "OTDR");
     odtr->definition = &stru_8CDC208;
     optn->odtr = odtr;
     odtr->parentProcess = &optn->process;
 
     optn->selection = 0;
     optn->brightness = 16;
-    optn->winw = alloc_zero_8018DB4(2048, 1, (char*)0x081E26E4 /*"WINW"*/, 0);
+    optn->winw = alloc_zero_8018DB4(2048, 1, "WINW", 0);
     optn->options_4 =
         gGameState.field_88A_4 | gGameState.field_88B_0 << 1 | dword_3000FFC->field_8_5 << 2;
     optn->field_1D = 0;
 
     dword_3001034(0, (void*)&optn->field_48, 8);
-    cgdw = alloc_zero_8018DB4(0x8000, 1, (char*)0x081E26EC /*"CGDW"*/, 0);
+    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
     dword_3000C84(dword_83A0E94, cgdw);
     CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A0E94) >> 2) & 0x1FFFFF);
     dword_3000C84(dword_83A1F60, cgdw);
@@ -171,14 +171,14 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     gGameState.field_0 = -1;
     gGameState.field_2 = -1;
 
-    optn->bbwf = alloc_zero_8018DB4(sub_819941C - sub_8198784, 0, (char*)0x081E26F4 /*"BBWF"*/, 1);
+    optn->bbwf = alloc_zero_8018DB4(sub_819941C - sub_8198784, 0, "BBWF", 1);
     sub_81994EC(optn->bbwf, off_851F9E8);
-    optn->bbwi = alloc_Zero(20, 0, (char*)0x081E26FC /*"BBWI"*/, 1);
-    optn->bwcw = alloc_zero_8018DB4(115231, 1, (char*)0x081E2704 /*"BWCW"*/, 1);
+    optn->bbwi = alloc_Zero(20, 0, "BBWI", 1);
+    optn->bwcw = alloc_zero_8018DB4(115231, 1, "BWCW", 1);
     optn->field_28 = (u8*)((int)&optn->bwcw[31] & 0xFFFFFFE0);
     optn->field_2C = &optn->field_28[57600];
 
-    optn->bwsw = alloc_zero_8018DB4(3840, 1, (char*)0x081E270C /*"BWSW"*/, 1);
+    optn->bwsw = alloc_zero_8018DB4(3840, 1, "BWSW", 1);
     v21 = &optn->bwsw[192];
     v22 = 0;
     while (v22 < 3) {
@@ -471,8 +471,8 @@ void optn_update(struct OPTNProcess* optn) {
                 }
                 //! Fix this when other functions are also matching.
                 open_init_8055A00(
-                    alloc_Zero(sizeof(struct TitleScreen), 0, (char*)0x081E2714 /*"OPEN"*/, 0), 8,
-                    (char*)0x081E2714 /*"OPEN"*/, 3);
+                    alloc_Zero(sizeof(struct TitleScreen), 0, "OPEN", 0), 8,
+                    "OPEN", 3);
                 return;
             }
             break;

@@ -32,6 +32,8 @@ SECTIONS
         asm/text08057568.o(.text);
 
         asm/rodata081DD790.o(.rodata);
+        src/option_screens.o(.rodata);
+        asm/rodata081E271C.o(.rodata);
         src/title_screen.o(.rodata);
         asm/rodata081E2764.o(.rodata);
 
