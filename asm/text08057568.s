@@ -73935,7 +73935,7 @@ sub_807D2D0:
 	adds r5, r2, #0x0
 	ldr r1, _0807D324 @ =0x0807D531
 	movs r0, #0x03
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r3, _0807D328 @ =0x04000208
 	movs r0, #0x00
 	strh r0, [r3, #0x00]
@@ -74202,7 +74202,7 @@ _0807D4E0: .4byte 0x04000200
 _0807D4E4:
 	movs r0, #0x03
 	movs r1, #0x00
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r3, _0807D51C @ =0x04000208
 	strh r5, [r3, #0x00]
 	ldr r2, _0807D520 @ =0x02000004
@@ -79657,7 +79657,7 @@ _08080476:
 	str r1, [r0, #0x00]
 	movs r0, #0x02
 	ldr r1, _08080550 @ =0x0807D381
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r4, [r4, #0x00]
 	movs r2, #0x94
 	lsls r2, r2, #0x02
@@ -275975,7 +275975,7 @@ sub_80E01C4:
 	strh r6, [r0, #0x00]
 	ldr r1, _080E02A4 @ =0x080E163D
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r2, _080E02A8 @ =0x03001034
 	ldr r0, _080E02AC @ =0x03000FDC
 	ldr r1, [r0, #0x00]
@@ -276069,7 +276069,7 @@ sub_80E02C0:
 	strh r0, [r1, #0x00]
 	movs r0, #0x02
 	adds r1, r3, #0x0
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r0, [r6, #0x00]
 	adds r5, r0, r5
 	movs r1, #0x00
@@ -278179,7 +278179,7 @@ sub_80E163C:
 	bl _call_via_r3
 	ldr r1, _080E1688 @ =0x080E1A2D
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	pop {r0}
 	bx r0
 _080E1674: .4byte 0x03000FD8
@@ -279658,7 +279658,7 @@ sub_80E3034:
 	str r0, [r1, #0x00]
 	ldr r1, _080E3094 @ =0x080E30B1
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r2, [r4, #0x00]
 	ldrb r1, [r2, #0x0B]
 	movs r0, #0x21
@@ -279793,7 +279793,7 @@ sub_80E3158:
 	adds r0, r0, r5
 	ldr r1, [r0, #0x00]
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r6, _080E31F0 @ =0x0200001A
 	movs r0, #0x00
 	strh r0, [r6, #0x00]
@@ -279910,7 +279910,7 @@ _080E326C:
 _080E3276:
 	ldr r1, _080E3288 @ =0x080E3159
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	movs r0, #0x00
 	str r0, [r4, #0x04]
 	b _080E388C
@@ -282436,7 +282436,7 @@ _080E5028:
 	ldr r0, _080E5050 @ =0x03000F9C
 	ldr r1, [r0, #0x00]
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	movs r2, #0x80
 	lsls r2, r2, #0x12
 	ldrh r1, [r2, #0x00]
@@ -282982,7 +282982,7 @@ _080E5400:
 	str r0, [r1, #0x00]
 	ldr r1, _080E5484 @ =0x080E5059
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	cmp r4, #0x03
 	ble _080E5456
 	movs r4, #0x03
@@ -321221,7 +321221,7 @@ btl_80FC310: @ 080FC310
 	adds r0, r0, r1
 	ldr r1, [r0, #0x00]
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r0, [r4, #0x00]
 	ldr r4, [r0, #0x78]
 	cmp r4, #0x00
@@ -321851,7 +321851,7 @@ _080FC852:
 	bne _080FC878
 	movs r0, #0x03
 	movs r1, #0x00
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r0, _080FC8A0 @ =0x03000FE0
 	str r4, [r0, #0x00]
 _080FC878:
@@ -375162,7 +375162,7 @@ _0811ABB6:
 	strb r1, [r0, #0x00]
 	movs r0, #0x02
 	movs r1, #0x00
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r1, _0811ACC0 @ =0x040000B0
 	ldrh r2, [r1, #0x0A]
 	ldr r0, _0811ACC4 @ =0x0000C5FF
@@ -376262,7 +376262,7 @@ _0811B49A:
 	strb r6, [r0, #0x00]
 	movs r0, #0x02
 	movs r1, #0x00
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r1, _0811B5A4 @ =0x040000B0
 	ldrh r2, [r1, #0x0A]
 	ldr r0, _0811B5A8 @ =0x0000C5FF
@@ -465256,7 +465256,7 @@ sub_8151650:
 	bl sub_8019628
 	movs r0, #0x02
 	movs r1, #0x00
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r3, _08151728 @ =0x04000208
 	movs r0, #0x00
 	strh r0, [r3, #0x00]
@@ -465279,7 +465279,7 @@ sub_8151650:
 	strh r0, [r3, #0x00]
 	movs r0, #0x04
 	movs r1, #0x00
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	adds r0, r4, #0x0
 	bl sub_8151BBC
 	ldr r1, _0815173C @ =0x00001F30
@@ -470042,10 +470042,10 @@ sub_8154D38:
 	strh r2, [r3, #0x00]
 	ldr r1, _08154F08 @ =0x081592ED
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r1, _08154F0C @ =0x0815928D
 	movs r0, #0x04
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	movs r1, #0x00
 	mov r0, r9
 	strh r1, [r0, #0x00]
@@ -474909,7 +474909,7 @@ sub_815A288:
 	bl sub_8019628
 	movs r0, #0x02
 	movs r1, #0x00
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r3, _0815A360 @ =0x04000208
 	movs r0, #0x00
 	strh r0, [r3, #0x00]
@@ -474932,7 +474932,7 @@ sub_815A288:
 	strh r0, [r3, #0x00]
 	movs r0, #0x04
 	movs r1, #0x00
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	adds r0, r4, #0x0
 	bl sub_815A5D0
 	ldr r1, _0815A374 @ =0x00001CB8
@@ -480263,10 +480263,10 @@ sub_815DC94:
 	strh r0, [r1, #0x00]
 	ldr r1, _0815DE20 @ =0x08159A91
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r1, _0815DE24 @ =0x08159BD9
 	movs r0, #0x04
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	movs r0, #0x00
 	mov r2, r9
 	strh r0, [r2, #0x00]
@@ -480920,7 +480920,7 @@ _0815E4EC:
 	movs r0, #0x04
 	str r2, [sp, #0x004]
 	str r3, [sp, #0x008]
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r3, [sp, #0x008]
 	strh r7, [r3, #0x00]
 	ldr r2, [sp, #0x004]
@@ -485016,7 +485016,7 @@ _081613EC:
 	strh r5, [r0, #0x00]
 	ldr r1, _081614C4 @ =0x081615E5
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r0, [r7, #0x00]
 	adds r0, #0x01
 	str r0, [r7, #0x00]
@@ -496628,7 +496628,7 @@ _08169C98:
 	str r5, [r0, #0x00]
 	ldr r1, _08169D04 @ =0x0816B385
 	movs r0, #0x02
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r1, _08169CE0 @ =0x02000080
 	movs r0, #0x00
 	strh r0, [r1, #0x00]
@@ -496666,7 +496666,7 @@ sub_8169D10:
 	str r0, [r4, #0x18]
 	movs r0, #0x02
 	movs r1, #0x00
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r1, _08169DF8 @ =0x040000BA
 	movs r0, #0x00
 	strh r0, [r1, #0x00]

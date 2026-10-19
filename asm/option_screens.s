@@ -1170,7 +1170,7 @@ _08054088:
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	movs r3, #0x02
-	bl open_init_8055A00
+	bl title_screen_create
 _080540A0:
 	pop {r4, r5}
 	pop {r0}

@@ -6495,7 +6495,7 @@ _08017DE4:
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	movs r3, #0x02
-	bl open_init_8055A00
+	bl title_screen_create
 	b _08017E1C
 	.byte 0x00, 0x00
 _08017E00: .4byte 0x081DD7B8
@@ -8215,8 +8215,8 @@ _08018B70: .4byte 0x00000888
 nullsub_16: @ 08018B74
 	bx lr
 	.byte 0x00, 0x00
-	thumb_func_start sub_8018B78
-sub_8018B78:
+	thumb_func_start runtime_install_interrupt_callback
+runtime_install_interrupt_callback:
 	push {lr}
 	adds r3, r0, #0x0
 	adds r2, r1, #0x0

@@ -65,7 +65,7 @@ enum TitleScreenSuitcaseVisualStates {
     TS_SV_STATE_DISAPPEAR,
 };
 
-struct COMPProcess {
+struct CompanyIntro {
     struct Process process;
     s8 brightness;
     u8 flags : 1;
@@ -135,8 +135,9 @@ struct TitleScreen {
     struct Sprite* sprites[9];
 };
 
-struct TitleScreen* open_init_8055A00(struct TitleScreen*, u8, char*, int);
-void open_8055F74(struct TitleScreen*, int);
-struct MarioBrosScoreVisual* mbsv_init(struct MarioBrosScoreVisual*, u8, char*, u32, u8);
+struct TitleScreen* title_screen_create(struct TitleScreen*, u8, char*, int);
+void title_screen_prepare_game_select(struct TitleScreen*, int);
+struct MarioBrosScoreVisual* mario_bros_score_visual_create(struct MarioBrosScoreVisual*, u8, char*,
+                                                            u32, u8);
 
 #endif

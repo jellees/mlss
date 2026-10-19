@@ -134,7 +134,7 @@ _08018F12:
 	bne _08018F76
 	ldr r1, _08018FBC @ =0x080196BD
 	movs r0, #0x03
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r3, _08018FA8 @ =0x04000208
 	movs r0, #0x00
 	strh r0, [r3, #0x00]

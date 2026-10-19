@@ -469,10 +469,8 @@ void optn_update(struct OPTNProcess* optn) {
                     BUFFER_REG_BLDCNT = BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_NONE;
                     process_remove(&optn->process, 3);
                 }
-                //! Fix this when other functions are also matching.
-                open_init_8055A00(
-                    alloc_Zero(sizeof(struct TitleScreen), 0, "OPEN", 0), 8,
-                    "OPEN", 3);
+
+                title_screen_create(alloc_Zero(sizeof(struct TitleScreen), 0, "OPEN", 0), 8, "OPEN", 3);
                 return;
             }
             break;
@@ -617,8 +615,7 @@ void sub_8052EFC(struct OPTNProcess* optn) {
     width = word_83A2918[0];
     yPos = word_83A291C[1];
     text = dword_84E8B18;
-    sub_8199D78(optn->bbwi, optn->field_2C, (s16)width, (u8)word_83A291C[0], zero, zero, 1, 2,
-                5, 3);
+    sub_8199D78(optn->bbwi, optn->field_2C, (s16)width, (u8)word_83A291C[0], zero, zero, 1, 2, 5, 3);
     sub_8199D5C(optn->bbwi, 0, yPos + 1, text + 2);
     do {
         u8* v5 = optn->bbwi->field_8;

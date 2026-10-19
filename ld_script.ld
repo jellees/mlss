@@ -29,6 +29,7 @@ SECTIONS
         asm/option_screens.o(.text);
         asm/text080542C4.o(.text);
         src/title_screen.o(.text);
+        src/multiplayer_serial.o(.text);
         asm/text08057568.o(.text);
 
         asm/rodata081DD790.o(.rodata);

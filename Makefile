@@ -71,11 +71,6 @@ clean:
 tools:
 	@$(MAKE) -C tools/gbafix
 
-# title_screen.c calls sub_80574B4/sub_80574FC without a prototype, like the original source:
-# a file-scope prototype would change the order of the inline functions emitted at the end of
-# the file. The implicit declarations produce warnings, so -Werror is off for this file.
-$(C_BUILDDIR)/title_screen.o: CFLAGS := $(filter-out -Werror,$(CFLAGS))
-
 $(C_BUILDDIR)/%.o : $(C_SUBDIR)/%.c
 	@$(CPP) $(CPPFLAGS) $< -o $(C_BUILDDIR)/$*.i
 	@$(CC1) $(C_BUILDDIR)/$*.i $(CFLAGS) -o $(C_BUILDDIR)/$*.s

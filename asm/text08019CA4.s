@@ -113,7 +113,7 @@ _08019F62:
 	ldr r1, [r0, #0x00]
 	movs r0, #0x00
 	str r3, [sp, #0x000]
-	bl sub_8018B78
+	bl runtime_install_interrupt_callback
 	ldr r1, _0801A000 @ =0x0400010C
 	ldr r0, _0801A004 @ =0x0000ABFB
 	str r0, [r1, #0x00]
