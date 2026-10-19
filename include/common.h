@@ -235,6 +235,7 @@ struct OPTNProcess* optn_init(struct OPTNProcess*, u8, char*, int);
 int try_save_options(struct OPTNProcess*);
 void sub_8052C50(struct OPTNProcess*, int);
 void sub_8052EFC(struct OPTNProcess*);
+void sub_805306C(struct Process*);
 void sub_805420C(struct OPTNProcess*);
 void option_screen_set_ok_button(struct OPTNProcess*, int, int);
 void open_init_8055A00(void*, int, char*, int);

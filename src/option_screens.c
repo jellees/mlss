@@ -678,3 +678,89 @@ void sub_8052EFC(struct OPTNProcess* optn) {
         dst += (30 - (s16)width) / 2 + 2;
     }
 }
+
+// https://decomp.me/scratch/TODO
+//! Nonmatching: 4 instructions before the loop are in a different order. The target loads the
+//! gGameState base (r9) before the bitfield mask 6 (r8); ours loads the mask first. Global CSE
+//! inserts the base load in the loop, and loop.c hoists it after the mask. Tried: statement
+//! order, variable types, loop forms, if/else/goto/ternary forms of both conditions, switch
+//! variants, a GameState pointer, OAM as a struct, bitfield base types. Unroll flags don't matter.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_805306C.s\"");
+#else
+void sub_805306C(struct Process* odtr) {
+    struct OPTNProcess* optn;
+    u16* oam;
+    u8 y;
+    int i;
+    int pal;
+
+    optn = (struct OPTNProcess*)odtr->parentProcess;
+    oam = (u16*)gGameState.field_880;
+    y = 48;
+
+    if (optn->field_48.field_1 == 0) {
+        switch (optn->process.state) {
+            case 2:
+            case 3:
+            case 4:
+                oam[0] = optn->okButtonPosY | 0x4000;
+                oam[1] = optn->okButtonPosX | 0x8000;
+                oam[2] = 0x78;
+                oam += 4;
+                break;
+        }
+    }
+
+    sub_8020A78();
+    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    oam = (u16*)dword_3000D4C(stru_203FFB8.field_3C, (int)oam);
+
+    for (i = 0; i <= 2; i++, y += 24) {
+        if (gGameState.field_888_1 != 1 && i == 1) {
+            pal = 1;
+        } else {
+            pal = (u16)((optn->options_4 >> i) ^ 1) & 1;
+        }
+        oam[0] = y | 0x4000;
+        oam[1] = 0x8098;
+        oam[2] = (pal << 12) | 0xC00;
+        oam += 4;
+
+        if (gGameState.field_888_1 == 1 || i != 1) {
+            pal ^= 1;
+        }
+        oam[0] = y | 0x4000;
+        oam[1] = 0x80B0;
+        oam[2] = (pal << 12) | 0xC08;
+        oam += 4;
+    }
+
+    oam[0] = 0x4042;
+    oam[1] = 0x4020;
+    oam[2] = 0xC20;
+    oam += 4;
+    oam[0] = 0x4042;
+    oam[1] = 0x4040;
+    oam[2] = 0xC24;
+    oam += 4;
+    oam[0] = 0x405A;
+    oam[1] = 0x4020;
+    oam[2] = 0xCC0;
+    oam += 4;
+    oam[0] = 0x405A;
+    oam[1] = 0x4040;
+    oam[2] = 0xCC4;
+    oam += 4;
+    oam[0] = 0x4000;
+    oam[1] = 0x8010;
+    oam[2] = 0x1C80;
+    oam += 4;
+    oam[0] = 0x4000;
+    oam[1] = 0x8030;
+    oam[2] = 0x1C88;
+    oam += 4;
+
+    gGameState.field_880 = (int)oam;
+}
+#endif
