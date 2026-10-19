@@ -8,8 +8,7 @@
 asm_unified(".include \"asm/nonmatching/generate_window_bg_8051B98.s\"");
 #endif
 
-void sub_8051EE0(struct WindowAttr* arg0)
-{
+void sub_8051EE0(struct WindowAttr* arg0) {
     u8 xOff, yOff;
     s32 xSize;
     s32 ySize;
@@ -29,7 +28,7 @@ void sub_8051EE0(struct WindowAttr* arg0)
     yOff = ySize >> 4;
 
     {
-        u8 *ptr = *(u8**)0x0839EC80;
+        u8* ptr = *(u8**)0x0839EC80;
         ySize = (arg0->xSize >> 1) + arg0->xStart;
         xySize = xOff + ySize;
         ptr += 0x40;
@@ -37,7 +36,7 @@ void sub_8051EE0(struct WindowAttr* arg0)
     }
 
     {
-        u8 *ptr = *(u8**)0x0839EC80;
+        u8* ptr = *(u8**)0x0839EC80;
         xSize = (arg0->xSize >> 1) + arg0->xStart;
         xSize = xSize - xOff;
         ptr += 0x41;
@@ -45,7 +44,7 @@ void sub_8051EE0(struct WindowAttr* arg0)
     }
 
     {
-        u8 *ptr = *(u8**)0x0839EC80;
+        u8* ptr = *(u8**)0x0839EC80;
         xSize = (arg0->ySize >> 1) + arg0->yStart;
         ySize = yOff + xSize;
         ptr += 0x44;
@@ -53,7 +52,7 @@ void sub_8051EE0(struct WindowAttr* arg0)
     }
 
     {
-        u8 *ptr = *(u8**)0x0839EC80;
+        u8* ptr = *(u8**)0x0839EC80;
         xSize = (arg0->ySize >> 1) + arg0->yStart;
         xSize = xSize - yOff;
         ptr += 0x45;
