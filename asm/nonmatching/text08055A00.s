@@ -348,7 +348,7 @@ _08055D08: .4byte 0x083A74C0
 _08055D0C:
 	mov r0, r10
 	ldr r1, [sp, #0x00C]
-	bl sub_8055F74
+	bl open_8055F74
 _08055D14:
 	ldr r1, _08055DB4 @ =0x03000C78
 	ldr r0, _08055DB8 @ =0x0800063C

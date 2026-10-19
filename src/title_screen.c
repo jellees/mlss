@@ -408,33 +408,18 @@ void open_8055E2C(struct TitleScreen* ts) {
     ts->states[TS_ITEM_SUITCASE] = -1;
 }
 
-// https://decomp.me/scratch/WbD37
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/text08055F74.s\"");
-#else
 void open_8055F74(struct TitleScreen* ts, int selection) {
-    s16 tmp;
+    int i;
 
     sprite_hide_8021F20(ts->sprites[6]);
     sprite_hide_8021F20(ts->sprites[0]);
 
-    tmp = 100;
-    sub_801E150(ts->sprites[2], 3, 0, 0, 0);
-    ts->sprites[2]->xPosition = 180;
-    ts->sprites[2]->yPosition = tmp;
-    sprite_show_8020CBC(ts->sprites[2]);
-
-    tmp = 120;
-    sub_801E150(ts->sprites[3], 4, 0, 0, 0);
-    ts->sprites[3]->xPosition = 180;
-    ts->sprites[3]->yPosition = tmp;
-    sprite_show_8020CBC(ts->sprites[3]);
-
-    tmp = 140;
-    sub_801E150(ts->sprites[4], 5, 0, 0, 0);
-    ts->sprites[4]->xPosition = 180;
-    ts->sprites[4]->yPosition = tmp;
-    sprite_show_8020CBC(ts->sprites[4]);
+    for (i = 0; i < 3; i++) {
+        sub_801E150(ts->sprites[2 + i], 3 + i, 0, 0, 0);
+        ts->sprites[2 + i]->xPosition = 180;
+        ts->sprites[2 + i]->yPosition = 100 + i * 20;
+        sprite_show_8020CBC(ts->sprites[2 + i]);
+    }
 
     sub_801E150(ts->sprites[1], 13, 0, 0, 0);
     ts->sprites[1]->xPosition = 112;
@@ -451,19 +436,17 @@ void open_8055F74(struct TitleScreen* ts, int selection) {
     ts->sprites[8]->field_E = 2;
     sprite_show_8020CBC(ts->sprites[8]);
 
-    tmp = 140;
     sub_801E150(ts->sprites[5], 4, 0, 0, 0);
     ts->sprites[5]->xPosition = 64;
-    ts->sprites[5]->yPosition = tmp;
+    ts->sprites[5]->yPosition = 140;
     ts->sprites[5]->field_1F_0 = 0;
     ts->sprites[5]->field_1F_2 = 1;
     ts->sprites[5]->field_E = 2;
     sprite_show_8020CBC(ts->sprites[5]);
 
-    tmp = 140;
     sub_801E150(ts->sprites[7], 3 * (selection - 1) + 1, 0, 0, 0);
     ts->sprites[7]->xPosition = 64;
-    ts->sprites[7]->yPosition = tmp;
+    ts->sprites[7]->yPosition = 140;
     ts->sprites[7]->field_1F_0 = 1;
     ts->sprites[7]->field_E = 1;
     sprite_show_8020CBC(ts->sprites[7]);
@@ -505,7 +488,6 @@ void open_8055F74(struct TitleScreen* ts, int selection) {
 
     sub_80574FC();
 }
-#endif
 
 void sub_8056224(void) {
     u16* dst;
