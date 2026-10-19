@@ -1040,15 +1040,6 @@ void open_update(struct TitleScreen* ts) {
     }
 }
 
-// https://decomp.me/scratch/3i7ME
-//! Nonmatching: 16 diff lines, only register choices left (order, size and allocation of all
-//! variables match). The `stru_203FFB8` literal temp is r0 here and r3 in the target (local-alloc:
-//! in the target r0-r2 must be busy at that point), and two reload temps differ (opdr + 34 is
-//! built in r6 vs r2, the ldrsh zero index is r1 vs r6). The key to the order was `s16 t` loaded
-//! before the loop and `t - 34` inside it: loop.c hoists the subtraction after `i = 0`.
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/opdr_update2.s\"");
-#else
 void opdr_update2(struct MarioBrosScoreVisual* opdr) {
     struct TitleScreen* ts;
     int var1;
@@ -1059,12 +1050,14 @@ void opdr_update2(struct MarioBrosScoreVisual* opdr) {
 
     if ((u8)(ts->sprites[7]->field_20[1] - 3) <= 2) {
         struct struc_11* var11;
+        struct struc_203FFB8* s;
         int y2;
         int i;
         s16 t;
         int j;
 
-        var11 = stru_203FFB8.field_38;
+        s = &stru_203FFB8;
+        var11 = s->field_38;
         t = word_83A75B8[ts->sprites[7]->field_22 - 10];
         for (i = 0; i < 6; i++) {
             var11->field_0 = t - 34;
@@ -1085,14 +1078,13 @@ void opdr_update2(struct MarioBrosScoreVisual* opdr) {
             var11 = var11->field_10;
         }
 
-        stru_203FFB8.field_38 = var11;
+        s->field_38 = var11;
     }
 
     dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
     var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
     gGameState.field_880 = var1;
 }
-#endif
 
 static inline char* write_number_to_string_and_advance(char* string, u32* value) {
     *string = *value % 10;
