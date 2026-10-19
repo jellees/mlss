@@ -640,3 +640,41 @@ void sub_8052C50(struct OPTNProcess* optn, int a1) {
         }
     }
 }
+
+void sub_8052EFC(struct OPTNProcess* optn) {
+    u16* dst;
+    u16 tile;
+    int y;
+    int x;
+    u16 width;
+    u16 yPos;
+    int text;
+    int zero;
+
+    dword_3001034(0, (void*)optn->field_2C, 0x4B00);
+    dword_3001034(0, (void*)optn->bwsw, 0x500);
+
+    zero = 0;
+    width = word_83A2918[0];
+    yPos = word_83A291C[1];
+    text = dword_84E8B18;
+    sub_8199D78(optn->bbwi, optn->field_2C, (s16)width, (u8)word_83A291C[0], zero, zero, 1, 2,
+                5, 3);
+    sub_8199D5C(optn->bbwi, 0, yPos + 1, text + 2);
+    do {
+        u8* v5 = optn->bbwi->field_8;
+        if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
+            optn->bbwi->field_8 += 3;
+        }
+    } while (sub_8199624(optn->bbwi) != 0);
+
+    dst = optn->bwsw;
+    tile = 0xE001;
+    for (y = 0; y < 16; y++) {
+        dst += (30 - (s16)width) / 2;
+        for (x = 0; x < (s16)width; x++) {
+            *dst++ = tile++;
+        }
+        dst += (30 - (s16)width) / 2 + 2;
+    }
+}
