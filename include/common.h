@@ -316,7 +316,7 @@ extern u32 dword_83A1BA0[];
 extern u32 dword_83A1D80[];
 extern u32 off_83A2880[];
 extern u32 off_83A28C0[];
-extern void* off_851F9E8;
+extern u32 off_851F9E8[];
 extern u8 sub_8198784[];
 extern u8 sub_819941C[];
 extern struct ProcessDefinition stru_8CDC238;

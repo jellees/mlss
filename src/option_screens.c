@@ -74,15 +74,6 @@ void sub_8051EE0(struct WindowAttr* arg0) {
     }
 }
 
-// https://decomp.me/scratch/PDUDz
-//! Nonmatching: with -funroll-loops the plain loops below now match the target's unrolled loops,
-//! but register allocation differs. The target has optn in r7 and the shared constant 16 in r10;
-//! ours puts the 16 in r7 (block-local, so local-alloc takes r7 first) and optn in r10, which
-//! adds a `mov rX, r10` before most optn accesses (8 bytes too big). The decomp.me scratch has
-//! the older hand-unrolled draft.
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/optn_init.s\"");
-#else
 struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label, int a4) {
     struct Process* odtr;
     u16* cgdw;
@@ -93,6 +84,7 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     int v22;
 
     volatile int v31;
+    int i;
 
     process_add(&optn->process, priority, label);
     optn->process.definition = &stru_8CDC1F8;
@@ -114,8 +106,8 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     optn->odtr = odtr;
     odtr->parentProcess = &optn->process;
 
-    optn->brightness = 16;
     optn->selection = 0;
+    optn->brightness = 16;
     optn->winw = alloc_zero_8018DB4(2048, 1, (char*)0x081E26E4 /*"WINW"*/, 0);
     optn->options_4 =
         gGameState.field_88A_4 | gGameState.field_88B_0 << 1 | dword_3000FFC->field_8_5 << 2;
@@ -179,7 +171,7 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     gGameState.field_0 = -1;
     gGameState.field_2 = -1;
 
-    optn->bbwf = alloc_zero_8018DB4(sub_8198784 - sub_819941C, 0, (char*)0x081E26F4 /*"BBWF"*/, 1);
+    optn->bbwf = alloc_zero_8018DB4(sub_819941C - sub_8198784, 0, (char*)0x081E26F4 /*"BBWF"*/, 1);
     sub_81994EC(optn->bbwf, off_851F9E8);
     optn->bbwi = alloc_Zero(20, 0, (char*)0x081E26FC /*"BBWI"*/, 1);
     optn->bwcw = alloc_zero_8018DB4(115231, 1, (char*)0x081E2704 /*"BWCW"*/, 1);
@@ -199,10 +191,9 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
         v26 = &v21[36];
         v27 = &v21[4];
 
-        for (j = 0; j < 22; j++) {
+        for (j = 0; j < 22; j++, v23++) {
             v27[j] = v23;
             v26[j] = v23 + 32;
-            v23++;
         }
         v22++;
         v21 = &v21[96];
@@ -214,20 +205,10 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     sub_8052B54(optn, 0);
     dword_3001034(0, (void*)optn->field_2C, 57600);
 
-    sub_8052C50(optn, 1);
-    sub_8017E34();
-    sub_8052C50(optn, 2);
-    sub_8017E34();
-    sub_8052C50(optn, 3);
-    sub_8017E34();
-    sub_8052C50(optn, 4);
-    sub_8017E34();
-    sub_8052C50(optn, 5);
-    sub_8017E34();
-    sub_8052C50(optn, 6);
-    sub_8017E34();
-    sub_8052C50(optn, 7);
-    sub_8017E34();
+    for (i = 1; i < 8; i++) {
+        sub_8052C50(optn, i);
+        sub_8017E34();
+    }
     sub_801A548();
 
     (*(vu16*)(0x2000000 + 0x08)) = 0x1805;
@@ -249,7 +230,6 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
 
     return optn;
 }
-#endif
 
 void optn_update(struct OPTNProcess* optn) {
     switch (optn->process.state) {
