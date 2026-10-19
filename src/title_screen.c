@@ -1133,38 +1133,26 @@ void mario_bros_score_visual_update(struct MarioBrosScoreVisual* scoreVisual) {
     gGameState.field_880 = var1;
 }
 
-static inline char* write_number_to_string_and_advance(char* string, u32* value) {
-    *string = *value % 10;
-    *value /= 10;
-    return string - 1;
-}
-
 /**
  * Initialises the process for the Mario Bros Score visual on the title screen.
  */
 struct MarioBrosScoreVisual* mario_bros_score_visual_create(struct MarioBrosScoreVisual* scoreVisual,
                                                             u8 priority, char* label, u32 topScore,
                                                             u8 pScore) {
-    char* topScoreStr;
-    char* pScoreHigher;
-    char* pScoreLower;
+    int i;
 
     process_add(&scoreVisual->process, priority, label);
     scoreVisual->process.definition = &stru_8CDC248;
 
-    topScoreStr = &scoreVisual->topScore[5];
-    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
-    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
-    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
-    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
-    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
-    topScoreStr = write_number_to_string_and_advance(topScoreStr, &topScore);
+    for (i = 5; i >= 0; i--) {
+        scoreVisual->topScore[i] = topScore % 10;
+        topScore /= 10;
+    }
 
-    pScoreLower = &scoreVisual->pScore[0];
-    pScoreHigher = &scoreVisual->pScore[1];
-    *pScoreHigher = pScore % 10;
-    pScore /= 10;
-    *pScoreLower = pScore % 10;
+    for (i = 1; i >= 0; i--) {
+        scoreVisual->pScore[i] = pScore % 10;
+        pScore /= 10;
+    }
 
     return scoreVisual;
 }
