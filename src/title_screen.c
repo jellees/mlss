@@ -1041,13 +1041,11 @@ void open_update(struct TitleScreen* ts) {
 }
 
 // https://decomp.me/scratch/3i7ME
-//! Nonmatching: 18 diff lines, size and registers match. Only the order of the loop setup differs:
-//! the target computes the word_83A75B8 address, then `i = 0`, the spill of &ts->sprites[7],
-//! `opdr + 34` and only then loads y (ldrsh). The insns after `i = 0` look like loop.c-hoisted
-//! values (agbcc has no scheduler), so y's load may come from inside the first loop in the
-//! original. Tried: every order of var11/i/pScore/y, idx/pointer splits of y, y inside the loop,
-//! const tables (no effect), a slot pointer variable. Key fixes already in: plain loops (6 and 2
-//! iterations), separate j and y2 for the second part, var1 reassigned from dword_3000D4C.
+//! Nonmatching: 16 diff lines, only register choices left (order, size and allocation of all
+//! variables match). The `stru_203FFB8` literal temp is r0 here and r3 in the target (local-alloc:
+//! in the target r0-r2 must be busy at that point), and two reload temps differ (opdr + 34 is
+//! built in r6 vs r2, the ldrsh zero index is r1 vs r6). The key to the order was `s16 t` loaded
+//! before the loop and `t - 34` inside it: loop.c hoists the subtraction after `i = 0`.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/opdr_update2.s\"");
 #else
@@ -1061,18 +1059,15 @@ void opdr_update2(struct MarioBrosScoreVisual* opdr) {
 
     if ((u8)(ts->sprites[7]->field_20[1] - 3) <= 2) {
         struct struc_11* var11;
-        int y;
         int y2;
         int i;
-        char* pScore;
+        s16 t;
         int j;
 
         var11 = stru_203FFB8.field_38;
-        i = 0;
-        pScore = opdr->pScore;
-        y = word_83A75B8[ts->sprites[7]->field_22 - 10] - 34;
-        for (; i < 6; i++) {
-            var11->field_0 = y;
+        t = word_83A75B8[ts->sprites[7]->field_22 - 10];
+        for (i = 0; i < 6; i++) {
+            var11->field_0 = t - 34;
             var11->field_2 = 43 + i * 7;
             var11->field_4 = (opdr->topScore[i] + 44) | 0x2400;
             var11->field_6 = 0;
@@ -1084,7 +1079,7 @@ void opdr_update2(struct MarioBrosScoreVisual* opdr) {
         for (j = 0; j < 2; j++) {
             var11->field_0 = y2;
             var11->field_2 = 64 + j * 7;
-            var11->field_4 = (pScore[j] + 44) | 0x2400;
+            var11->field_4 = (opdr->pScore[j] + 44) | 0x2400;
             var11->field_6 = 0;
             var11->field_8 = 0x40000000;
             var11 = var11->field_10;
