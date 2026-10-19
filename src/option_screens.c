@@ -75,6 +75,11 @@ void sub_8051EE0(struct WindowAttr* arg0) {
 }
 
 // https://decomp.me/scratch/PDUDz
+//! Nonmatching: with -funroll-loops the plain loops below now match the target's unrolled loops,
+//! but register allocation differs. The target has optn in r7 and the shared constant 16 in r10;
+//! ours puts the 16 in r7 (block-local, so local-alloc takes r7 first) and optn in r10, which
+//! adds a `mov rX, r10` before most optn accesses (8 bytes too big). The decomp.me scratch has
+//! the older hand-unrolled draft.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/optn_init.s\"");
 #else
@@ -103,21 +108,21 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
 
     sub_801A548();
 
-    odtr = (struct Process*)alloc_Zero(0x1C, 0, "ODTR", 0);
-    process_add(odtr, 8, "ODTR");
+    odtr = (struct Process*)alloc_Zero(0x1C, 0, (char*)0x081E26DC /*"OTDR"*/, 0);
+    process_add(odtr, 8, (char*)0x081E26DC /*"OTDR"*/);
     odtr->definition = &stru_8CDC208;
     optn->odtr = odtr;
     odtr->parentProcess = &optn->process;
 
-    optn->selection = 0;
     optn->brightness = 16;
-    optn->winw = alloc_zero_8018DB4(2048, 1, "WINW", 0);
+    optn->selection = 0;
+    optn->winw = alloc_zero_8018DB4(2048, 1, (char*)0x081E26E4 /*"WINW"*/, 0);
     optn->options_4 =
         gGameState.field_88A_4 | gGameState.field_88B_0 << 1 | dword_3000FFC->field_8_5 << 2;
     optn->field_1D = 0;
 
     dword_3001034(0, (void*)&optn->field_48, 8);
-    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
+    cgdw = alloc_zero_8018DB4(0x8000, 1, (char*)0x081E26EC /*"CGDW"*/, 0);
     dword_3000C84(dword_83A0E94, cgdw);
     CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A0E94) >> 2) & 0x1FFFFF);
     dword_3000C84(dword_83A1F60, cgdw);
@@ -141,29 +146,9 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
         // Top and bottom row.
         v13 = &v10[37];
         v14 = &v10[5];
-        i = 0;
-        while (i <= 19) {
-            v14[i + 0] = 2;  // Top
-            v13[i + 0] = 17; // Bottom
-            v14[i + 1] = 2;
-            v13[i + 1] = 17;
-            v14[i + 2] = 2;
-            v13[i + 2] = 17;
-            v14[i + 3] = 2;
-            v13[i + 3] = 17;
-            v14[i + 4] = 2;
-            v13[i + 4] = 17;
-            v14[i + 5] = 2;
-            v13[i + 5] = 17;
-            v14[i + 6] = 2;
-            v13[i + 6] = 17;
-            v14[i + 7] = 2;
-            v13[i + 7] = 17;
-            v14[i + 8] = 2;
-            v13[i + 8] = 17;
-            v14[i + 9] = 2;
-            v13[i + 9] = 17;
-            i += 10;
+        for (i = 0; i < 20; i++) {
+            v14[i] = 2;  // Top
+            v13[i] = 17; // Bottom
         }
 
         // Skip to next row.
@@ -194,14 +179,14 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
     gGameState.field_0 = -1;
     gGameState.field_2 = -1;
 
-    optn->bbwf = alloc_zero_8018DB4(sub_8198784 - sub_819941C, 0, "BBWF", 1);
+    optn->bbwf = alloc_zero_8018DB4(sub_8198784 - sub_819941C, 0, (char*)0x081E26F4 /*"BBWF"*/, 1);
     sub_81994EC(optn->bbwf, off_851F9E8);
-    optn->bbwi = alloc_Zero(20, 0, "BBWI", 1);
-    optn->bwcw = alloc_zero_8018DB4(115231, 1, "BWCW", 1);
+    optn->bbwi = alloc_Zero(20, 0, (char*)0x081E26FC /*"BBWI"*/, 1);
+    optn->bwcw = alloc_zero_8018DB4(115231, 1, (char*)0x081E2704 /*"BWCW"*/, 1);
     optn->field_28 = (u8*)((int)&optn->bwcw[31] & 0xFFFFFFE0);
     optn->field_2C = &optn->field_28[57600];
 
-    optn->bwsw = alloc_zero_8018DB4(3840, 1, "BWSW", 1);
+    optn->bwsw = alloc_zero_8018DB4(3840, 1, (char*)0x081E270C /*"BWSW"*/, 1);
     v21 = &optn->bwsw[192];
     v22 = 0;
     while (v22 < 3) {
@@ -214,15 +199,9 @@ struct OPTNProcess* optn_init(struct OPTNProcess* optn, u8 priority, char* label
         v26 = &v21[36];
         v27 = &v21[4];
 
-        for (j = 0; j < 21;) {
-            v27[0] = v23;
-            v26[0] = v23 + 32;
-            v23++;
-            v27[1] = v23;
-            v26[1] = v23 + 32;
-            v27 += 2;
-            v26 += 2;
-            j += 2;
+        for (j = 0; j < 22; j++) {
+            v27[j] = v23;
+            v26[j] = v23 + 32;
             v23++;
         }
         v22++;
