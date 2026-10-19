@@ -2,6 +2,42 @@
 #include "common.h"
 #include "title_screen.h"
 
+inline void sub_805737C(struct TitleScreen* ts, int flags) {
+    ts->process.definition = &stru_8CDC238;
+    DmaStop(0);
+    sub_8018B78(2, 0);
+
+    if (ts->mbsv) {
+        process_remove(&ts->mbsv->process, 3);
+    }
+
+    free_heap_8018DA8(dword_3000DA0);
+    sub_8021FD4();
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
+    gGameState.field_2 |= 1;
+    BUFFER_REG_DISPCNT = 0;
+    gGameState.field_31 = 2;
+    sub_8017E34();
+    process_remove(&ts->process, flags);
+}
+
+inline void opdr_update(void) {
+    int var1 = gGameState.field_880;
+    sub_8020A78();
+    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+    gGameState.field_880 = var1;
+}
+
+inline void sub_8057458(struct COMPProcess* comp, int flags) {
+    comp->process.definition = &stru_8CDC258;
+    sub_8021FD4();
+    if (comp->opdr) {
+        process_remove(comp->opdr, 3);
+    }
+    process_remove(&comp->process, flags);
+}
+
 struct COMPProcess* comp_init(struct COMPProcess* comp, u8 priority, char* label) {
     struct Process* opdr;
     void* cgdw;
@@ -181,12 +217,7 @@ void comp_update(struct COMPProcess* comp) {
             BUFFER_REG_BLDY = 16 - comp->brightness;
             if (comp->brightness == 0) {
                 if (comp) {
-                    comp->process.definition = &stru_8CDC258;
-                    sub_8021FD4();
-                    if (comp->opdr) {
-                        process_remove(comp->opdr, 3);
-                    }
-                    process_remove(&comp->process, 3);
+                    sub_8057458(comp, 3);
                 }
                 open_init_8055A00(alloc_Zero(sizeof(struct TitleScreen), 0, "OPEN", 0), 8, "OPEN", 0);
                 return;
@@ -506,6 +537,7 @@ void sub_8056224(void) {
         dma[2] = 0xA2400001;
     }
 }
+
 
 void open_update(struct TitleScreen* ts) {
     int i, j;
@@ -975,23 +1007,7 @@ void open_update(struct TitleScreen* ts) {
             }
 
             if (ts != NULL) {
-                ts->process.definition = &stru_8CDC238;
-                DmaStop(0);
-                sub_8018B78(2, 0);
-
-                if (ts->mbsv) {
-                    process_remove(&ts->mbsv->process, 3);
-                }
-
-                free_heap_8018DA8(dword_3000DA0);
-                sub_8021FD4();
-                // Turn on sound.
-                BUFFER_REG_SOUNDCNT_L = 0x7FFF;
-                gGameState.field_2 |= 1;
-                BUFFER_REG_DISPCNT = 0;
-                gGameState.field_31 = 2;
-                sub_8017E34();
-                process_remove(&ts->process, 3);
+                sub_805737C(ts, 3);
             }
 
             switch (ts->selection) {
@@ -1121,56 +1137,17 @@ struct MarioBrosScoreVisual* mbsv_init(struct MarioBrosScoreVisual* mbsv, u8 pri
     return mbsv;
 }
 
-//! The contents of this function is also found in open_update.
-void sub_805737C(struct TitleScreen* ts, int flags) {
-    ts->process.definition = &stru_8CDC238;
-    DmaStop(0);
-    sub_8018B78(2, 0);
-
-    if (ts->mbsv) {
-        process_remove(&ts->mbsv->process, 3);
-    }
-
-    free_heap_8018DA8(dword_3000DA0);
-    sub_8021FD4();
-    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
-    gGameState.field_2 |= 1;
-    BUFFER_REG_DISPCNT = 0;
-    gGameState.field_31 = 2;
-    sub_8017E34();
-    process_remove(&ts->process, flags);
-}
-
-//! The contents of this function is also found in opdr_update2.
-void opdr_update(void) {
-    int var1 = gGameState.field_880;
-    sub_8020A78();
-    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
-    gGameState.field_880 = var1;
-}
-
-//! The contents of this function is also found in comp_update.
-void sub_8057458(struct COMPProcess* comp, int flags) {
-    comp->process.definition = &stru_8CDC258;
-    sub_8021FD4();
-    if (comp->opdr) {
-        process_remove(comp->opdr, 3);
-    }
-    process_remove(&comp->process, flags);
-}
-
-struct Process* sub_8057484(struct Process* opdr, u8 priority, char* label) {
+inline struct Process* sub_8057484(struct Process* opdr, u8 priority, char* label) {
     process_add(opdr, priority, label);
     opdr->definition = &stru_8CDC268;
     return opdr;
 }
 
-void sub_80574A0(void) {
+inline void sub_80574A0(void) {
     REG_SIOMLT_SEND = 0xFEFE;
 }
 
-void sub_80574B4(void) {
+inline void sub_80574B4(void) {
     REG_IME = 0;
     REG_IE &= ~INTR_FLAG_SERIAL;
     REG_IF |= INTR_FLAG_SERIAL;
@@ -1181,7 +1158,7 @@ void sub_80574B4(void) {
     REG_IME = 1;
 }
 
-void sub_80574FC(void) {
+inline void sub_80574FC(void) {
     sub_8018B78(1, sub_80574A0);
 
     REG_IME = 0;
