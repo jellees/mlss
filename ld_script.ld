@@ -35,7 +35,7 @@ SECTIONS
         src/option_screens.o(.rodata);
         asm/rodata081E271C.o(.rodata);
         src/title_screen.o(.rodata);
-        asm/rodata081E2764.o(.rodata);
+        asm/rodata081E2794.o(.rodata);
 
         asm/mariobros.o(.text);
     }

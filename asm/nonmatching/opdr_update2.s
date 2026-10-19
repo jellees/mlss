@@ -1,3 +1,5 @@
+	.include "asm/macros.inc"
+
 thumb_func_start opdr_update2
 opdr_update2:
 	push {r4, r5, r6, r7, lr}

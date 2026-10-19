@@ -230,23 +230,11 @@ void comp_update(struct COMPProcess* comp) {
     sub_8021F7C();
 }
 
-// https://decomp.me/scratch/WOp2S
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/text08055A00.s\"");
-#else
 struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, char* label,
                                       int selection) {
     struct struc_203FFF8* v5;
     void* cgdw;
     u32 i;
-    // int sel;
-    char* tmp1;
-    void (**tmp2)();
-    struct Sprite** sprites;
-
-    struct TitleScreen* proc = open;
-
-    // sel = selection;
 
     process_add(&open->process, priority, label);
     open->process.definition = &stru_8CDC238;
@@ -267,31 +255,26 @@ struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, cha
     stru_203FFF8.field_7_7 = gGameState.field_888_1;
 
     dword_3000DA0 = alloc_Zero(340, 0, "ORST", 1);
-    open->mbsv = mbsv_init(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR", stru_203FFF8.field_0,
-                           stru_203FFF8.field_4);
-    open->mbsv->process.parentProcess = &proc->process;
+    {
+        struct MarioBrosScoreVisual** p = &open->mbsv;
+        *p = mbsv_init(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR", stru_203FFF8.field_0,
+                       stru_203FFF8.field_4);
+        (*p)->process.parentProcess = &open->process;
+    }
 
     open->selection = selection != 0 ? selection - 1 : 0;
     open->suitcaseVisualState = 0;
-    proc->brightness = 16;
-    proc->isSkippingSuitcaseAnim = 0;
-    proc->skipSuitcaseAnim = 1;
-    proc->states[0] = 0;
+    open->brightness = 16;
+    open->isSkippingSuitcaseAnim = 0;
+    open->skipSuitcaseAnim = 1;
+    open->states[0] = 0;
+    for (i = 1; i < 6; i++) {
+        open->states[i] = -1;
+    }
 
-    // Why.
-    tmp2 = &dword_3000C78;
-    tmp1 = "CGDW";
-    sprites = proc->sprites;
+    dword_3000C78 = 0;
 
-    proc->states[1] = 0xFF;
-    proc->states[2] = 0xFF;
-    proc->states[3] = 0xFF;
-    proc->states[4] = 0xFF;
-    proc->states[5] = 0xFF;
-
-    *tmp2 = 0;
-
-    cgdw = alloc_zero_8018DB4(0x8000, 1, tmp1, 0);
+    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
     dword_3000C84(dword_83A3D80, cgdw);
     CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A3D80) >> 2) & 0x1FFFFF);
     dword_3000C84(dword_83A4874, cgdw);
@@ -302,31 +285,22 @@ struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, cha
     free_heap_8018DA8(cgdw);
     sub_8020994(0, 0, 0, 0);
 
-    for (i = 0; i < 9; i += 3) {
-        sprites[i + 0] =
-            sub_8020DD0(0, word_83A74C0[(i * 2) + 0], word_83A74C0[(i * 2) + 1], -1, -1, -1, -1);
-        sub_801E150(sprites[i + 0], 0, -1, 0, 0);
-
-        sprites[i + 1] =
-            sub_8020DD0(0, word_83A74C0[(i * 2) + 2], word_83A74C0[(i * 2) + 3], -1, -1, -1, -1);
-        sub_801E150(sprites[i + 1], 0, -1, 0, 0);
-
-        sprites[i + 2] =
-            sub_8020DD0(0, word_83A74C0[(i * 2) + 4], word_83A74C0[(i * 2) + 5], -1, -1, -1, -1);
-        sub_801E150(sprites[i + 2], 0, -1, 0, 0);
+    for (i = 0; i < 9; i++) {
+        open->sprites[i] = sub_8020DD0(0, word_83A74C0[i * 2], word_83A74C0[i * 2 + 1], -1, -1, -1, -1);
+        sub_801E150(open->sprites[i], 0, -1, 0, 0);
     }
 
     if (selection == 0) {
-        proc->xPosSuitcase = 30720;
-        proc->yPosSuitcase = 0;
-        proc->yVelocitySuitcase = 512;
-        sub_801E150(proc->sprites[5], 0, 0, 0, 0);
-        proc->sprites[5]->xPosition = 120;
-        proc->sprites[5]->yPosition = 0;
-        proc->sprites[5]->field_1F_0 = 0;
-        proc->sprites[5]->field_1F_2 = 1;
-        proc->sprites[5]->field_E = 2;
-        sprite_show_8020CBC(proc->sprites[5]);
+        open->xPosSuitcase = 30720;
+        open->yPosSuitcase = 0;
+        open->yVelocitySuitcase = 512;
+        sub_801E150(open->sprites[5], 0, 0, 0, 0);
+        open->sprites[5]->xPosition = 120;
+        open->sprites[5]->yPosition = 0;
+        open->sprites[5]->field_1F_0 = 0;
+        open->sprites[5]->field_1F_2 = 1;
+        open->sprites[5]->field_E = 2;
+        sprite_show_8020CBC(open->sprites[5]);
     } else {
         open_8055F74(open, selection);
     }
@@ -343,12 +317,12 @@ struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, cha
     (*(vu16*)(0x2000000 + 0x14)) = 0;
     (*(vu16*)(0x2000000 + 0x16)) = 0;
 
-    CpuFastSet(gGameState.field_888_1 == 0 ? dword_83A7300 : dword_83A7140, (void*)0x2000080, 112);
+    CpuFastSet(gGameState.field_888_1 == 0 ? dword_83A7140 : dword_83A7300, (void*)0x2000080, 112);
 
     (*(vu16*)(0x2000000 + 0x80)) = 0x7FFF;
     gGameState.field_2 = -1;
     gGameState.field_0 = -1;
-    sub_8018B78(2, open_8056224);
+    sub_8018B78(2, sub_8056224);
     sub_8019308(0, 41, -1);
 
     if (selection == 0) {
@@ -361,7 +335,6 @@ struct TitleScreen* open_init_8055A00(struct TitleScreen* open, u8 priority, cha
 
     return open;
 }
-#endif
 
 void open_8055E2C(struct TitleScreen* ts) {
     sprite_hide_8021F20(ts->sprites[TS_SPRITE_LICENSE_TEXT]);
@@ -1027,8 +1000,8 @@ void open_update(struct TitleScreen* ts) {
                     sub_801AFE4(0);
                     BUFFER_REG_BLDCNT = 0;
                     //! Change this when other function is matching too.
-                    load_init_812538C(alloc_Zero(356, 0, (char*)0x081E2784 /*"LOAD"*/, 0), 8,
-                                      (char*)0x081E2784 /*"LOAD"*/, 0xFFFF);
+                    load_init_812538C(alloc_Zero(356, 0, "LOAD", 0), 8,
+                                      "LOAD", 0xFFFF);
                     return;
 
                 case 1:
@@ -1040,8 +1013,8 @@ void open_update(struct TitleScreen* ts) {
                 case 2:
                     sub_80574B4();
                     //! Change this when other function is matching too.
-                    optn_init(alloc_Zero(84, 0, (char*)0x081E278C /*"OPTN"*/, 0), 8,
-                              (char*)0x081E278C /*"OPTN"*/, 0);
+                    optn_init(alloc_Zero(84, 0, "OPTN", 0), 8,
+                              "OPTN", 0);
                     return;
 
                 default:

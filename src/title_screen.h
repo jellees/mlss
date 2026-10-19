@@ -135,4 +135,8 @@ struct TitleScreen {
     struct Sprite* sprites[9];
 };
 
+struct TitleScreen* open_init_8055A00(struct TitleScreen*, u8, char*, int);
+void open_8055F74(struct TitleScreen*, int);
+struct MarioBrosScoreVisual* mbsv_init(struct MarioBrosScoreVisual*, u8, char*, u32, u8);
+
 #endif
