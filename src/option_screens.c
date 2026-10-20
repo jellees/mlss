@@ -4,9 +4,99 @@
 #include "title_screen.h"
 #include "option_screens.h"
 
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/generate_window_bg_8051B98.s\"");
-#endif
+void generate_window_bg_8051B98(struct WindowAttr* attr, u16* map, u8 x, u8 y, u8 width, u8 height,
+                                u16 vramOffset) {
+    int row;
+    int column;
+    int i;
+    int j;
+    u16* top;
+    u16* bottom;
+    u16* left;
+    u16* right;
+    int innerHeight;
+
+    dword_3001034(0, (void*)map, 0x800);
+
+    map[y * 32 + x] = 0x68;
+    map[y * 32 + x + width - 1] = 0x468;
+    map[(y + height - 1) * 32 + x] = 0x868;
+    map[(y + height - 1) * 32 + x + width - 1] = 0xC68;
+
+    top = &map[y * 32 + x + 1];
+    bottom = &map[(y + height - 1) * 32 + x + 1];
+    for (i = 0; i < width - 2; i++) {
+        *top++ = 0x69;
+        *bottom++ = 0x869;
+    }
+
+    left = &map[(y + 1) * 32 + x];
+    right = &map[(y + 1) * 32 + x + width - 1];
+    innerHeight = height - 2;
+    for (j = 0; j < innerHeight; j++) {
+        *left = 0x6A;
+        *right = 0x46A;
+        left += 32;
+        right += 32;
+    }
+
+    for (row = 0; row < innerHeight; row++) {
+        u16* tile = &map[(y + row + 1) * 32 + x + 1];
+
+        for (column = 0; column < width - 2; column++) {
+            *tile++ = 0x6B;
+        }
+    }
+
+    sub_8018218(map, (void*)(0x6000000 + vramOffset), 0x800, 32, 0);
+
+    attr->field_0_0 = 0;
+    attr->field_1 = 1;
+    attr->xStart = x * 8;
+    attr->yStart = y * 8;
+    attr->xSize = width * 8;
+    attr->ySize = height * 8;
+
+    off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
+    {
+        u8* ptr = off_839EC80;
+        u8 value = x + (width >> 1);
+        ptr += 0x40;
+        *ptr = value;
+    }
+    {
+        u8* ptr = off_839EC80;
+        ptr += 0x41;
+        *ptr = x + (width >> 1);
+    }
+    {
+        u8* ptr = off_839EC80;
+        u8 value = y + (height >> 1);
+        ptr += 0x44;
+        *ptr = value;
+    }
+    {
+        u8* ptr = off_839EC80;
+        ptr += 0x45;
+        *ptr = y + (height >> 1);
+    }
+
+    off_839EC80[0x48] |= 1;
+    off_839EC80[0x48] |= 2;
+    off_839EC80[0x48] |= 4;
+    off_839EC80[0x48] |= 8;
+    off_839EC80[0x48] |= 0x10;
+    ((s8*)off_839EC80)[0x48] &= ~0x20;
+
+    ((s8*)off_839EC80)[0x4A] &= ~1;
+    ((s8*)off_839EC80)[0x4A] &= ~2;
+    off_839EC80[0x4A] |= 4;
+    off_839EC80[0x4A] |= 8;
+    off_839EC80[0x4A] |= 0x10;
+    ((s8*)off_839EC80)[0x4A] &= ~0x20;
+
+    BUFFER_REG_DISPCNT |= 0x200;
+}
 
 void sub_8051EE0(struct WindowAttr* arg0) {
     u8 xOff, yOff;
