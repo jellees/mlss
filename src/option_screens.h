@@ -20,4 +20,48 @@ enum OptionScreenStates {
     OPTS_STATE_LEAVE,
 };
 
+struct BCLRProcess {
+    struct Process process;
+    u8 field_1C_0 : 1;
+    s8 brightness;
+    u8* bwcw;
+    u8* field_24;
+    u16* bwsw;
+    int* bbwf;
+    struct struc_15* bbwi;
+    struct Process* bidr;
+    int* winw;
+    u16 field_3C;
+    u8 pad_3E[2];
+    struct WindowAttr field_40;
+    struct Sprite* sprite;
+};
+
+struct MBERProcess {
+    struct Process process;     // 0x00
+    u8 brightness;              // 0x1C
+    u8* bwcw;                   // 0x20
+    u8* field_24;               // 0x24
+    u16* bwsw;                  // 0x28
+    int* bbwf;                  // 0x2C
+    struct struc_15* bbwi;      // 0x30
+    int* winw;                  // 0x34
+    struct WindowAttr field_38; // 0x38
+};
+
+struct BCLRProcess* bclr_init(struct BCLRProcess* bclr, u8 priority, char* label);
+void sub_80536E8(struct BCLRProcess* bclr, int flags);
+void bclr_update_8053778(struct BCLRProcess* bclr);
+struct MBERProcess* sub_8053CB4(struct MBERProcess* mber, u8 priority, char* label);
+void sub_8053FC4(struct MBERProcess* mber);
+void sub_80540B0(struct MBERProcess* mber);
+
+// Inline functions. Their out-of-line copies are emitted at the end of the
+// file in this declaration order.
+inline void mber_destroy(struct MBERProcess* mber, int flags);
+inline void option_screen_sprite_renderer_update(void);
+inline void sub_80541B0(struct BCLRProcess* bclr, int width, int height);
+inline void sub_805420C(struct OPTNProcess* optn);
+inline void option_screen_set_ok_button(struct OPTNProcess* optn, int width, int height);
+
 #endif

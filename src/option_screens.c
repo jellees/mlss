@@ -802,3 +802,499 @@ void sub_805306C(struct Process* odtr) {
 
     gGameState.field_880 = (int)oam;
 }
+
+struct BCLRProcess* bclr_init(struct BCLRProcess* bclr, u8 priority, char* label) {
+    struct Process* bidr;
+    u16* cgdw;
+    u16* scdw;
+    u8* strw;
+    int i;
+    int k;
+    volatile int zero;
+    int tileNum;
+
+    process_add(&bclr->process, priority, label);
+    bclr->process.definition = &stru_8CDC1D8;
+
+    BUFFER_REG_BLDCNT = 191;
+    BUFFER_REG_BLDY = 16;
+    BUFFER_REG_DISPCNT = 0;
+    sub_8017E34();
+
+    gGameState.field_31 = 2;
+    gGameState.field_888_5 = 1;
+    gGameState.field_888_6 = 1;
+
+    bidr = (struct Process*)alloc_Zero(0x1C, 0, "BIDR", 0);
+    process_add(bidr, 8, "BIDR");
+    bidr->definition = &stru_8CDC1E8;
+    bclr->bidr = bidr;
+    bidr->parentProcess = &bclr->process;
+
+    bclr->field_1C_0 = 1;
+    bclr->field_3C = 0;
+    bclr->brightness = 16;
+    bclr->winw = alloc_zero_8018DB4(0x800, 1, "WINW", 0);
+
+    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
+    dword_3000C84(dword_83A0E94, cgdw);
+    CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A0E94) >> 2) & 0x1FFFFF);
+    if (cgdw) {
+        free_heap_8018D9C(cgdw);
+    }
+
+    scdw = alloc_zero_8018DB4(0x800, 1, "SCDW", 1);
+    for (i = 15, tileNum = 0x107B; i >= 0; i--) {
+        scdw[0x167 + i] = tileNum;
+        tileNum--;
+    }
+    CpuFastSet(scdw, (void*)0x600E800, 0x200);
+    if (scdw) {
+        free_heap_8018D9C(scdw);
+    }
+
+    sub_8020994(0x2000, 8, 0, 0);
+
+    bclr->sprite = sub_8020DD0(5, 0x6005, 1, -1, -1, -1, -1);
+    sub_801E150(bclr->sprite, 0, -1, 0, 0);
+    sprite_show_8020CBC(bclr->sprite);
+    bclr->sprite->xPosition = 140;
+    bclr->sprite->yPosition = 90;
+
+    if (gGameState.field_888_1 == 0) {
+        CpuFastSet(dword_83A1BA0, (void*)0x2000080, 120);
+    } else {
+        CpuFastSet(dword_83A1D80, (void*)0x2000080, 120);
+    }
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
+    gGameState.field_2 = -1;
+
+    bclr->bbwf = alloc_zero_8018DB4(sub_819941C - sub_8198784, 0, "BBWF", 1);
+    sub_81994EC(bclr->bbwf, off_851F9E8);
+    bclr->bbwi = alloc_Zero(20, 0, "BBWI", 1);
+    bclr->bwcw = alloc_zero_8018DB4(0x12C1F, 1, "BWCW", 1);
+    bclr->field_24 = (u8*)((int)&bclr->bwcw[31] & 0xFFFFFFE0);
+    bclr->bwsw = alloc_zero_8018DB4(0x2800, 1, "BWSW", 1);
+
+    zero = 0;
+    CpuFastSet((void*)&zero, (void*)0x6004000, 0x1000008);
+
+    strw = alloc_zero_8018DB4(0x100, 0, "STRW", 0);
+    for (k = 0; k < 5; k++) {
+        u16 textY;
+        u16 width;
+        int text;
+        u16* dst;
+        u16 tile;
+        int row;
+        int column;
+
+        textY = word_83A2958[k];
+        width = word_83A2944[k * 2];
+        text = *off_83A2964[k];
+        strw[0] = 0xFF;
+        strw[1] = 0x35;
+        CpuSet((void*)(text + 2), strw + 2, 0x7F);
+
+        sub_8199D78(bclr->bbwi, bclr->field_24 + k * 0x3C00, (s16)width, 0, 0, 0, 1, 2, 5, 3);
+        sub_8199D5C(bclr->bbwi, 0, textY, (int)strw);
+        do {
+            u8* v5 = bclr->bbwi->field_8;
+            if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
+                bclr->bbwi->field_8 += 3;
+            }
+        } while (sub_8199624(bclr->bbwi) != 0);
+
+        dst = &bclr->bwsw[k * 1024];
+        tile = 0xE001;
+        for (row = 0; row < 16; row++) {
+            dst += (30 - (s16)width) / 2;
+            for (column = 0; column < (s16)width; column++) {
+                *dst++ = tile++;
+            }
+            dst += (30 - (s16)width) / 2 + 2;
+        }
+    }
+    free_heap_8018D9C(strw);
+
+    CpuFastSet(bclr->field_24, (void*)0x6004020, 0xF00);
+    CpuFastSet(bclr->bwsw, (void*)0x6002000, 0x200);
+
+    BUFFER_REG_BG0CNT = 0x406;
+    BUFFER_REG_BG1CNT = 0x1C02;
+    BUFFER_REG_BG2CNT = 0x1D01;
+    BUFFER_REG_BG0HOFS = 0;
+    BUFFER_REG_BG0VOFS = 0;
+    BUFFER_REG_BG1HOFS = 0;
+    BUFFER_REG_BG1VOFS = 0;
+    BUFFER_REG_BG2HOFS = 0;
+    BUFFER_REG_BG2VOFS = 0;
+
+    sub_80541B0(bclr, word_83A2944[0], word_83A2944[1]);
+
+    BUFFER_REG_BLDCNT = 191;
+    BUFFER_REG_BLDY = 0;
+    BUFFER_REG_DISPCNT = 0x3340;
+
+    return bclr;
+}
+
+void sub_80536E8(struct BCLRProcess* bclr, int flags) {
+    bclr->process.definition = &stru_8CDC1D8;
+    if (bclr->bidr) {
+        process_remove(bclr->bidr, 3);
+    }
+    if (bclr->winw) {
+        free_heap_8018D9C(bclr->winw);
+    }
+    if (bclr->bwcw) {
+        free_heap_8018D9C(bclr->bwcw);
+    }
+    if (bclr->bwsw) {
+        free_heap_8018D9C(bclr->bwsw);
+    }
+    if (bclr->bbwf) {
+        free_heap_8018D9C(bclr->bbwf);
+    }
+    free_heap_8018DA8(bclr->bbwi);
+    sub_8021FD4();
+
+    gGameState.field_888_5 = 0;
+    gGameState.field_888_6 = 0;
+    gGameState.field_888_3 = 0;
+    gGameState.field_31 = 2;
+    BUFFER_REG_DISPCNT = 0;
+    BUFFER_REG_BLDCNT = 0;
+    process_remove(&bclr->process, flags);
+}
+
+void bclr_update_8053778(struct BCLRProcess* bclr) {
+    u16 progress;
+
+    switch (bclr->process.state) {
+        case 0:
+            if (bclr->field_40.field_1 > 0) {
+                sub_8051EE0(&bclr->field_40);
+                if (bclr->field_40.field_1 == 0) {
+                    if (bclr->field_40.field_0_0) {
+                        sub_8018218(bclr->field_24 + 0x3C00, (void*)0x6004020, 0x3C00, 0, 32);
+                        sub_8018218(bclr->bwsw + 0x400, (void*)0x6002000, 0x800, 0, 32);
+                        bclr->field_1C_0 = 1;
+                        sub_80541B0(bclr, word_83A2944[2], word_83A2944[3]);
+                        bclr->sprite->yPosition = 98;
+                        bclr->process.state = 1;
+                    }
+                }
+            } else if (gGameState.field_2A & A_BUTTON) {
+                off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
+                bclr->field_40.field_0_0 = 1;
+                bclr->field_40.field_1 = 7;
+                play_sfx_80195B4(96, -1);
+                if (bclr->field_1C_0) {
+                    bclr->process.state = 5;
+                }
+            } else if (gGameState.field_2A & (DPAD_RIGHT | DPAD_LEFT)) {
+                bclr->field_1C_0 ^= 1;
+                play_sfx_80195B4(95, -1);
+            }
+            bclr->sprite->xPosition = !bclr->field_1C_0 ? 100 : 140;
+            break;
+
+        case 1:
+            if (bclr->field_40.field_1 > 0) {
+                sub_8051EE0(&bclr->field_40);
+                if (bclr->field_40.field_1 == 1) {
+                    if (bclr->field_40.field_0_0) {
+                        sub_8018218(bclr->field_24 + 0x7800, (void*)0x6004020, 0x3C00, 0, 32);
+                        sub_8018218(bclr->bwsw + 0x800, (void*)0x6002000, 0x800, 0, 32);
+                    }
+                }
+                if (bclr->field_40.field_1 == 0) {
+                    if (bclr->field_40.field_0_0) {
+                        sub_80541B0(bclr, word_83A2944[4], word_83A2944[5]);
+                        off_839EC80[0x4A] |= 0x10;
+                        sprite_hide_8021F20(bclr->sprite);
+                        bclr->process.state = 2;
+                    }
+                }
+            } else if (gGameState.field_2A & A_BUTTON) {
+                off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
+                bclr->field_40.field_0_0 = 1;
+                bclr->field_40.field_1 = 7;
+                play_sfx_80195B4(96, -1);
+                if (bclr->field_1C_0) {
+                    bclr->process.state = 5;
+                }
+            } else if (gGameState.field_2A & (DPAD_RIGHT | DPAD_LEFT)) {
+                bclr->field_1C_0 ^= 1;
+                play_sfx_80195B4(95, -1);
+            }
+            bclr->sprite->xPosition = !bclr->field_1C_0 ? 100 : 140;
+            break;
+
+        case 2:
+            if (bclr->field_40.field_1 > 0) {
+                sub_8051EE0(&bclr->field_40);
+                if (bclr->field_40.field_1 != 0) {
+                    break;
+                }
+                sub_812418C();
+                off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x40;
+                off_839EC80[0x42] = 56;
+                off_839EC80[0x43] = 56;
+                off_839EC80[0x46] = 160;
+                off_839EC80[0x47] = 0;
+                off_839EC80[0x49] |= 1;
+                off_839EC80[0x49] |= 2;
+                off_839EC80[0x49] |= 4;
+                off_839EC80[0x49] |= 8;
+                off_839EC80[0x49] |= 0x10;
+                ((s8*)off_839EC80)[0x49] &= ~0x20;
+                off_839EC80[0x4A] |= 1;
+                off_839EC80[0x4A] |= 2;
+                ((s8*)off_839EC80)[0x4A] &= ~4;
+                off_839EC80[0x4A] |= 8;
+                off_839EC80[0x4A] |= 0x10;
+                ((s8*)off_839EC80)[0x4A] &= ~0x20;
+                BUFFER_REG_DISPCNT |= 0x400;
+                gGameState.field_88A_3 = 0;
+                gGameState.field_88C_0 = 0;
+            } else {
+                progress = sub_8124270(bclr->field_3C, 8);
+                if (progress == 0xFFFF) {
+                    gGameState.field_88C_0 = 1;
+                    gGameState.field_8C0 = 0;
+                    gGameState.field_88A_4 = 0;
+                    gGameState.field_88B_0 = 0;
+                    gGameState.field_88A_3 = 1;
+                    sub_8018218(bclr->field_24 + 0xF000, (void*)0x6004020, 0x3C00, 0, 32);
+                    sub_8018218(bclr->bwsw + 0x1000, (void*)0x6002000, 0x800, 0, 32);
+                    bclr->brightness = 240;
+                    BUFFER_REG_DISPCNT &= 0xFBFF;
+                    bclr->process.state = 4;
+                } else {
+                    bclr->field_3C = progress;
+                    {
+                        u8* ptr = off_839EC80;
+                        //! Possible fake match: the target re-reads field_3C after storing it.
+                        u8 value = (*(vu16*)&bclr->field_3C >> 3) + 56;
+                        ptr += 0x42;
+                        *ptr = value;
+                    }
+                    if (bclr->field_3C == 0x400) {
+                        gGameState.field_88C_0 = 1;
+                        gGameState.field_8C0 = 0;
+                        gGameState.field_88A_4 = 0;
+                        gGameState.field_88B_0 = 0;
+                        gGameState.field_88A_3 = 1;
+                        ((s8*)off_839EC80)[REG_OFFSET_DISPCNT + 1] &= ~0x40;
+                        sub_8018218(bclr->field_24 + 0xB400, (void*)0x6004020, 0x3C00, 0, 32);
+                        sub_8018218(bclr->bwsw + 0xC00, (void*)0x6002000, 0x800, 0, 32);
+                        bclr->brightness = 240;
+                        bclr->process.state = 3;
+                    }
+                }
+            }
+            break;
+
+        case 3:
+        case 4:
+            if (--bclr->brightness == 0 || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
+                off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
+                ((s8*)off_839EC80)[0x4A] &= ~1;
+                ((s8*)off_839EC80)[0x4A] &= ~2;
+                ((s8*)off_839EC80)[0x4A] &= ~4;
+                bclr->field_40.field_0_0 = 1;
+                bclr->field_40.field_1 = 7;
+                bclr->process.state = 5;
+            }
+            break;
+
+        case 5:
+            sub_8051EE0(&bclr->field_40);
+            if (bclr->field_40.field_1 == 0) {
+                if (bclr) {
+                    sub_80536E8(bclr, 3);
+                }
+                company_intro_create(alloc_Zero(0x4C, 0, "OPEN", 0), 8, "COMP");
+                return;
+            }
+            break;
+    }
+
+    sub_8021F7C();
+}
+
+struct MBERProcess* sub_8053CB4(struct MBERProcess* mber, u8 priority, char* label) {
+    u16* cgdw;
+    volatile int zero;
+    int text;
+    u16 width;
+    u16* dst;
+    u16 tile;
+    int row;
+    int column;
+
+    process_add(&mber->process, priority, label);
+    mber->process.definition = &stru_8CDC1C8;
+
+    BUFFER_REG_BLDCNT = 191;
+    BUFFER_REG_BLDY = 16;
+    BUFFER_REG_DISPCNT = 0;
+    sub_8017E34();
+
+    mber->brightness = 240;
+    mber->winw = alloc_zero_8018DB4(0x800, 1, "WINW", 0);
+
+    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
+    dword_3000C84(dword_83A0E94, cgdw);
+    CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A0E94) >> 2) & 0x1FFFFF);
+    if (cgdw) {
+        free_heap_8018D9C(cgdw);
+    }
+
+    if (gGameState.field_888_1 == 0) {
+        CpuFastSet(dword_83A1BA0, (void*)0x2000080, 120);
+    } else {
+        CpuFastSet(dword_83A1D80, (void*)0x2000080, 120);
+    }
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
+    gGameState.field_2 = -1;
+
+    mber->bbwf = alloc_zero_8018DB4(sub_819941C - sub_8198784, 0, "BBWF", 1);
+    sub_81994EC(mber->bbwf, off_851F9E8);
+    mber->bbwi = alloc_Zero(20, 0, "BBWI", 1);
+    mber->bwcw = alloc_zero_8018DB4(0x1001F, 1, "BWCW", 1);
+    mber->field_24 = (u8*)((int)&mber->bwcw[31] & 0xFFFFFFE0);
+    mber->bwsw = alloc_zero_8018DB4(0x2000, 1, "BWSW", 1);
+
+    zero = 0;
+    CpuFastSet((void*)&zero, (void*)0x6004000, 0x1000008);
+
+    text = dword_84E8A28;
+    width = word_83A2978[0];
+    sub_8199D78(mber->bbwi, mber->field_24, width, 0, 0, 0, 1, 2, 5, 0);
+    sub_8199D5C(mber->bbwi, 0, 72, text + 2);
+    do {
+        u8* v5 = mber->bbwi->field_8;
+        if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
+            mber->bbwi->field_8 += 3;
+        }
+    } while (sub_8199624(mber->bbwi) != 0);
+
+    dst = mber->bwsw;
+    tile = 0xE001;
+    for (row = 0; row < 16; row++) {
+        dst += (30 - width) / 2;
+        for (column = 0; column < width; column++) {
+            *dst++ = tile++;
+        }
+        dst += (30 - width) / 2 + 2;
+    }
+
+    CpuFastSet(mber->field_24, (void*)0x6004020, 0x1000);
+    CpuFastSet(mber->bwsw, (void*)0x6002000, 0x200);
+
+    BUFFER_REG_BG0CNT = 0x406;
+    BUFFER_REG_BG1CNT = 0x1C02;
+    BUFFER_REG_BG0HOFS = 0;
+    BUFFER_REG_BG0VOFS = 0;
+    BUFFER_REG_BG1HOFS = 0;
+    BUFFER_REG_BG1VOFS = 0;
+    sub_80540B0(mber);
+
+    BUFFER_REG_BLDCNT = 191;
+    BUFFER_REG_BLDY = 0;
+    BUFFER_REG_DISPCNT = 0x3340;
+    return mber;
+}
+
+inline void mber_destroy(struct MBERProcess* mber, int flags) {
+    mber->process.definition = &stru_8CDC1C8;
+    if (mber->winw) {
+        free_heap_8018D9C(mber->winw);
+    }
+    if (mber->bwcw) {
+        free_heap_8018D9C(mber->bwcw);
+    }
+    if (mber->bwsw) {
+        free_heap_8018D9C(mber->bwsw);
+    }
+    if (mber->bbwf) {
+        free_heap_8018D9C(mber->bbwf);
+    }
+    free_heap_8018DA8(mber->bbwi);
+    BUFFER_REG_DISPCNT = 0;
+    BUFFER_REG_BLDCNT = 0;
+    process_remove(&mber->process, flags);
+}
+
+void sub_8053FC4(struct MBERProcess* mber) {
+    switch (mber->process.state) {
+        case 0:
+            if (mber->field_38.field_1 > 0) {
+                sub_8051EE0(&mber->field_38);
+            } else if (--mber->brightness == 0
+                       || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
+                off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
+                mber->field_38.field_0_0 = 1;
+                mber->field_38.field_1 = 7;
+                mber->process.state = 1;
+            }
+            break;
+
+        case 1:
+            sub_8051EE0(&mber->field_38);
+            if (mber->field_38.field_1 == 0) {
+                if (mber) {
+                    mber_destroy(mber, 3);
+                }
+                title_screen_create(alloc_Zero(0xE4, 0, "OPEN", 0), 8, "OPEN", 2);
+            }
+            break;
+    }
+}
+
+void sub_80540B0(struct MBERProcess* mber) {
+    u8 width = word_83A2978[0];
+    u8 height = word_83A2978[1];
+    u8 left = 15 - width / 2;
+    u8 top = 10 - height / 2;
+
+    generate_window_bg_8051B98(&mber->field_38, (u16*)mber->winw, left, top, width, height, 0xE000);
+    off_839EC80[0x4A] |= 0x10;
+}
+
+inline void option_screen_sprite_renderer_update(void) {
+    int var1 = gGameState.field_880;
+    sub_8020A78();
+    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+    gGameState.field_880 = var1;
+}
+
+inline void sub_80541B0(struct BCLRProcess* bclr, int width, int height) {
+    int left = 15 - width / 2;
+    int top = 10 - height / 2;
+
+    generate_window_bg_8051B98(&bclr->field_40, (u16*)bclr->winw, left, top, width, height, 0xE000);
+    off_839EC80[0x4A] |= 0x10;
+}
+
+inline void sub_805420C(struct OPTNProcess* optn) {
+    u8 width = word_83A2918[0];
+    u8 height = word_83A2918[1];
+    u8 left = 15 - width / 2;
+    u8 top = 10 - height / 2;
+
+    generate_window_bg_8051B98(&optn->field_48, (u16*)optn->winw, left, top, width, height, 0xC800);
+}
+
+inline void option_screen_set_ok_button(struct OPTNProcess* optn, int width, int height) {
+    u8 left = 15 - width / 2;
+    u8 top = 10 - height / 2;
+
+    generate_window_bg_8051B98(&optn->field_48, (u16*)optn->winw, left, top, width, height, 0xC800);
+    optn->okButtonPosX = left * 8 + width * 4 - 16;
+    optn->okButtonPosY = (top + height) * 8 - 22;
+}

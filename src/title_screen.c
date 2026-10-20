@@ -38,6 +38,12 @@ inline void company_intro_destroy(struct CompanyIntro* intro, int flags) {
     process_remove(&intro->process, flags);
 }
 
+inline struct Process* sprite_renderer_create(struct Process* renderer, u8 priority, char* label) {
+    process_add(renderer, priority, label);
+    renderer->definition = &stru_8CDC268;
+    return renderer;
+}
+
 struct CompanyIntro* company_intro_create(struct CompanyIntro* intro, u8 priority, char* label) {
     struct Process* renderer;
     void* cgdw;
@@ -52,9 +58,7 @@ struct CompanyIntro* company_intro_create(struct CompanyIntro* intro, u8 priorit
     BUFFER_REG_DISPCNT = 0;
     sub_8017E34();
 
-    renderer = (struct Process*)alloc_Zero(sizeof(struct Process), 0, "OPDR", 0);
-    process_add(renderer, 8, "OPDR");
-    renderer->definition = &stru_8CDC268;
+    renderer = sprite_renderer_create(alloc_Zero(sizeof(struct Process), 0, "OPDR", 0), 8, "OPDR");
     intro->opdr = renderer;
     renderer->parentProcess = &intro->process;
 
@@ -1155,10 +1159,4 @@ struct MarioBrosScoreVisual* mario_bros_score_visual_create(struct MarioBrosScor
     }
 
     return scoreVisual;
-}
-
-inline struct Process* sprite_renderer_create(struct Process* renderer, u8 priority, char* label) {
-    process_add(renderer, priority, label);
-    renderer->definition = &stru_8CDC268;
-    return renderer;
 }

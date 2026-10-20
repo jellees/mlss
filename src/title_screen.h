@@ -135,6 +135,7 @@ struct TitleScreen {
     struct Sprite* sprites[9];
 };
 
+struct CompanyIntro* company_intro_create(struct CompanyIntro*, u8, char*);
 struct TitleScreen* title_screen_create(struct TitleScreen*, u8, char*, int);
 void title_screen_prepare_game_select(struct TitleScreen*, int);
 struct MarioBrosScoreVisual* mario_bros_score_visual_create(struct MarioBrosScoreVisual*, u8, char*,

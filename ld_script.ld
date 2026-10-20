@@ -26,7 +26,6 @@ SECTIONS
         src/game_boy_player_logo.o(.text);
         asm/text0801A548.o(.text);
         src/option_screens.o(.text);
-        asm/option_screens.o(.text);
         asm/text080542C4.o(.text);
         src/title_screen.o(.text);
         src/multiplayer_serial.o(.text);
@@ -34,7 +33,7 @@ SECTIONS
 
         asm/rodata081DD790.o(.rodata);
         src/option_screens.o(.rodata);
-        asm/rodata081E271C.o(.rodata);
+        asm/rodata081E273C.o(.rodata);
         src/title_screen.o(.rodata);
         asm/rodata081E2794.o(.rodata);
 
