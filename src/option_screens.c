@@ -635,21 +635,13 @@ void sub_8052EFC(struct OPTNProcess* optn) {
     }
 }
 
-// https://decomp.me/scratch/TODO
-//! Nonmatching: 4 instructions before the loop are in a different order. The target loads the
-//! gGameState base (r9) before the bitfield mask 6 (r8); ours loads the mask first. Global CSE
-//! inserts the base load in the loop, and loop.c hoists it after the mask. Tried: statement
-//! order, variable types, loop forms, if/else/goto/ternary forms of both conditions, switch
-//! variants, a GameState pointer, OAM as a struct, bitfield base types. Unroll flags don't matter.
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_805306C.s\"");
-#else
 void sub_805306C(struct Process* odtr) {
     struct OPTNProcess* optn;
     u16* oam;
     u8 y;
     int i;
-    int pal;
+    int leftPalette;
+    int rightPalette;
 
     optn = (struct OPTNProcess*)odtr->parentProcess;
     oam = (u16*)gGameState.field_880;
@@ -674,21 +666,22 @@ void sub_805306C(struct Process* odtr) {
 
     for (i = 0; i <= 2; i++, y += 24) {
         if (gGameState.field_888_1 != 1 && i == 1) {
-            pal = 1;
+            leftPalette = 1;
         } else {
-            pal = (u16)((optn->options_4 >> i) ^ 1) & 1;
+            leftPalette = (u16)((optn->options_4 >> i) ^ 1) & 1;
         }
         oam[0] = y | 0x4000;
         oam[1] = 0x8098;
-        oam[2] = (pal << 12) | 0xC00;
+        oam[2] = (leftPalette << 12) | 0xC00;
         oam += 4;
 
+        rightPalette = leftPalette;
         if (gGameState.field_888_1 == 1 || i != 1) {
-            pal ^= 1;
+            rightPalette ^= 1;
         }
         oam[0] = y | 0x4000;
         oam[1] = 0x80B0;
-        oam[2] = (pal << 12) | 0xC08;
+        oam[2] = (rightPalette << 12) | 0xC08;
         oam += 4;
     }
 
@@ -719,4 +712,3 @@ void sub_805306C(struct Process* odtr) {
 
     gGameState.field_880 = (int)oam;
 }
-#endif

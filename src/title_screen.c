@@ -287,10 +287,10 @@ struct TitleScreen* title_screen_create(struct TitleScreen* titleScreen, u8 prio
 
     dword_3000DA0 = alloc_Zero(340, 0, "ORST", 1);
     {
-        struct MarioBrosScoreVisual** p = &titleScreen->mbsv;
-        *p = mario_bros_score_visual_create(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR",
-                                            stru_203FFF8.field_0, stru_203FFF8.field_4);
-        (*p)->process.parentProcess = &titleScreen->process;
+        struct MarioBrosScoreVisual** scoreVisual = &titleScreen->mbsv;
+        *scoreVisual = mario_bros_score_visual_create(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR",
+                                                      stru_203FFF8.field_0, stru_203FFF8.field_4);
+        (*scoreVisual)->process.parentProcess = &titleScreen->process;
     }
 
     titleScreen->selection = selection != 0 ? selection - 1 : 0;
