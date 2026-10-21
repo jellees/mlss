@@ -824,7 +824,7 @@ void sub_805306C(struct Process* odtr) {
     gGameState.field_880 = (int)oam;
 }
 
-//! Same as sprite_renderer_update. Possibly same inline? 
+//! Same as sprite_renderer_update. Possibly same inline?
 inline void option_screen_sprite_renderer_update(void) {
     int var1 = gGameState.field_880;
     sub_8020A78();
