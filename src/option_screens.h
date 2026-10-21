@@ -55,13 +55,7 @@ void bclr_update_8053778(struct BCLRProcess* bclr);
 struct MBERProcess* sub_8053CB4(struct MBERProcess* mber, u8 priority, char* label);
 void sub_8053FC4(struct MBERProcess* mber);
 void sub_80540B0(struct MBERProcess* mber);
-
-// Inline functions. Their out-of-line copies are emitted at the end of the
-// file in this declaration order.
-inline void mber_destroy(struct MBERProcess* mber, int flags);
-inline void option_screen_sprite_renderer_update(void);
-inline void sub_80541B0(struct BCLRProcess* bclr, int width, int height);
-inline void sub_805420C(struct OPTNProcess* optn);
-inline void option_screen_set_ok_button(struct OPTNProcess* optn, int width, int height);
+void generate_window_bg_8051B98(struct WindowAttr* attr, u16* map, u8 x, u8 y, u8 width, u8 height,
+                                u16 vramOffset);
 
 #endif

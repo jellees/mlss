@@ -26,6 +26,7 @@ SECTIONS
         src/game_boy_player_logo.o(.text);
         asm/text0801A548.o(.text);
         src/option_screens.o(.text);
+        src/option_window.o(.text);
         asm/text080542C4.o(.text);
         src/title_screen.o(.text);
         src/multiplayer_serial.o(.text);

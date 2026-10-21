@@ -3,6 +3,27 @@
 #include "process.h"
 #include "title_screen.h"
 #include "option_screens.h"
+#include "option_window.h"
+
+inline void mber_destroy(struct MBERProcess* mber, int flags) {
+    mber->process.definition = &stru_8CDC1C8;
+    if (mber->winw) {
+        free_heap_8018D9C(mber->winw);
+    }
+    if (mber->bwcw) {
+        free_heap_8018D9C(mber->bwcw);
+    }
+    if (mber->bwsw) {
+        free_heap_8018D9C(mber->bwsw);
+    }
+    if (mber->bbwf) {
+        free_heap_8018D9C(mber->bbwf);
+    }
+    free_heap_8018DA8(mber->bbwi);
+    BUFFER_REG_DISPCNT = 0;
+    BUFFER_REG_BLDCNT = 0;
+    process_remove(&mber->process, flags);
+}
 
 void generate_window_bg_8051B98(struct WindowAttr* attr, u16* map, u8 x, u8 y, u8 width, u8 height,
                                 u16 vramOffset) {
@@ -803,6 +824,23 @@ void sub_805306C(struct Process* odtr) {
     gGameState.field_880 = (int)oam;
 }
 
+//! Same as sprite_renderer_update. Possibly same inline? 
+inline void option_screen_sprite_renderer_update(void) {
+    int var1 = gGameState.field_880;
+    sub_8020A78();
+    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+    gGameState.field_880 = var1;
+}
+
+//! Similar but not same as sprite_renderer_create because it uses a different definition.
+static inline struct Process* option_screen_sprite_renderer_create(struct Process* renderer,
+                                                                   u8 priority, char* label) {
+    process_add(renderer, priority, label);
+    renderer->definition = &stru_8CDC1E8;
+    return renderer;
+}
+
 struct BCLRProcess* bclr_init(struct BCLRProcess* bclr, u8 priority, char* label) {
     struct Process* bidr;
     u16* cgdw;
@@ -825,9 +863,8 @@ struct BCLRProcess* bclr_init(struct BCLRProcess* bclr, u8 priority, char* label
     gGameState.field_888_5 = 1;
     gGameState.field_888_6 = 1;
 
-    bidr = (struct Process*)alloc_Zero(0x1C, 0, "BIDR", 0);
-    process_add(bidr, 8, "BIDR");
-    bidr->definition = &stru_8CDC1E8;
+    bidr = option_screen_sprite_renderer_create(alloc_Zero(sizeof(struct Process), 0, "BIDR", 0), 8,
+                                                "BIDR");
     bclr->bidr = bidr;
     bidr->parentProcess = &bclr->process;
 
@@ -1209,26 +1246,6 @@ struct MBERProcess* sub_8053CB4(struct MBERProcess* mber, u8 priority, char* lab
     return mber;
 }
 
-inline void mber_destroy(struct MBERProcess* mber, int flags) {
-    mber->process.definition = &stru_8CDC1C8;
-    if (mber->winw) {
-        free_heap_8018D9C(mber->winw);
-    }
-    if (mber->bwcw) {
-        free_heap_8018D9C(mber->bwcw);
-    }
-    if (mber->bwsw) {
-        free_heap_8018D9C(mber->bwsw);
-    }
-    if (mber->bbwf) {
-        free_heap_8018D9C(mber->bbwf);
-    }
-    free_heap_8018DA8(mber->bbwi);
-    BUFFER_REG_DISPCNT = 0;
-    BUFFER_REG_BLDCNT = 0;
-    process_remove(&mber->process, flags);
-}
-
 void sub_8053FC4(struct MBERProcess* mber) {
     switch (mber->process.state) {
         case 0:
@@ -1263,38 +1280,4 @@ void sub_80540B0(struct MBERProcess* mber) {
 
     generate_window_bg_8051B98(&mber->field_38, (u16*)mber->winw, left, top, width, height, 0xE000);
     off_839EC80[0x4A] |= 0x10;
-}
-
-inline void option_screen_sprite_renderer_update(void) {
-    int var1 = gGameState.field_880;
-    sub_8020A78();
-    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
-    gGameState.field_880 = var1;
-}
-
-inline void sub_80541B0(struct BCLRProcess* bclr, int width, int height) {
-    int left = 15 - width / 2;
-    int top = 10 - height / 2;
-
-    generate_window_bg_8051B98(&bclr->field_40, (u16*)bclr->winw, left, top, width, height, 0xE000);
-    off_839EC80[0x4A] |= 0x10;
-}
-
-inline void sub_805420C(struct OPTNProcess* optn) {
-    u8 width = word_83A2918[0];
-    u8 height = word_83A2918[1];
-    u8 left = 15 - width / 2;
-    u8 top = 10 - height / 2;
-
-    generate_window_bg_8051B98(&optn->field_48, (u16*)optn->winw, left, top, width, height, 0xC800);
-}
-
-inline void option_screen_set_ok_button(struct OPTNProcess* optn, int width, int height) {
-    u8 left = 15 - width / 2;
-    u8 top = 10 - height / 2;
-
-    generate_window_bg_8051B98(&optn->field_48, (u16*)optn->winw, left, top, width, height, 0xC800);
-    optn->okButtonPosX = left * 8 + width * 4 - 16;
-    optn->okButtonPosY = (top + height) * 8 - 22;
 }
