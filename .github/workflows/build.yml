@@ -1,0 +1,51 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Checkout agbcc
+        uses: actions/checkout@master
+        with:
+          repository: 'pret/agbcc'
+          path: 'agbcc'
+
+      - name: Install binutils
+        run: sudo apt install gcc-arm-none-eabi binutils-arm-none-eabi
+        # build-essential, git, and libpng-dev are already installed
+        # gcc-arm-none-eabi is only needed for the modern build
+        # as an alternative to dkP
+
+      - name: Install agbcc
+        run: |
+          ./build.sh
+          ./install.sh ../
+        working-directory: ./agbcc
+
+      - name: Build
+        run: |
+          make
+
+      - name: Calculate progress
+        run: | 
+          echo "PROGRESS=$(python3 score.py -p)" >> $GITHUB_ENV
+      
+      - name: Create progress badge
+        uses: schneegans/dynamic-badges-action@v1.3.0
+        with:
+          auth: ${{ secrets.MLSS_PROGRESS_SECRET }}
+          gistID: a2579776d2828ebc37aab474c6be355c
+          filename: mlss-progress.json
+          label: Progress
+          message: ${{ env.PROGRESS }}%
+          valColorRange: ${{ env.PROGRESS }}
+          maxColorRange: 100
+          minColorRange: 0
