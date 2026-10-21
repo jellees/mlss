@@ -1,5 +1,6 @@
 #include "global.h"
 #include "common.h"
+#include "multiplayer_serial.h"
 #include "title_screen.h"
 
 inline void title_screen_destroy(struct TitleScreen* titleScreen, int flags) {

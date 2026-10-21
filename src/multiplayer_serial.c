@@ -1,5 +1,6 @@
 #include "global.h"
 #include "common.h"
+#include "multiplayer_serial.h"
 
 void multiplayer_serial_interrupt(void) {
     REG_SIOMLT_SEND = 0xFEFE;
