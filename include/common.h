@@ -29,7 +29,10 @@ struct struc_3000388 {
     u8 pad[8];
     u8 field_8;
     u8 field_9;
-    u8 pad2[2];
+    u8 pad2[0x32];
+    u16 field_3C_0 : 10;
+    u16 field_3C_10 : 6;
+    u8 pad3[2];
 };
 
 struct GameState {
@@ -54,7 +57,7 @@ struct GameState {
     // ...
     u8 pad1[0xA];
     struct struc_3000388 field_3C;
-    u8 pad1_2[0x838];
+    u8 pad1_2[0x804];
 
     int field_880;
     u32 field_884;
@@ -346,3 +349,5 @@ extern struct ProcessDefinition stru_8CDC248;
 extern struct ProcessDefinition stru_8CDC258;
 extern struct ProcessDefinition stru_8CDC268;
 extern struct ProcessDefinition stru_8CDC3B8;
+extern struct ProcessDefinition stru_8CDC3D8;
+extern struct ProcessDefinition stru_8CDC3E8;

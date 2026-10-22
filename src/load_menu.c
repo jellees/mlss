@@ -16,6 +16,7 @@ struct LoadMenu* load_init_812538C(struct LoadMenu* menu, u8 priority, char* lab
     menu->field_50->field_8 = 10;
     menu->field_50->field_9 = 8;
 
+    //! Possible fake match.
     tld = &menu->tld;
     *tld = tld_init_8127A94(alloc_Zero(sizeof(struct Process), 0, "TLD", 0), 8, "TLD");
     fade = &menu->fade;

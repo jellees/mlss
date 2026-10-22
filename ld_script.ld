@@ -34,6 +34,7 @@ SECTIONS
         src/load_menu.o(.text);
         asm/load_menu.o(.text);
         asm/text08127E50.o(.text);
+        src/save_menu.o(.text);
         asm/save_menu.o(.text);
         asm/text0812A9A0.o(.text);
 
@@ -45,6 +46,7 @@ SECTIONS
         src/load_menu.o(.rodata);
         asm/load_menu.o(.rodata);
         asm/rodata08210F64.o(.rodata);
+        src/save_menu.o(.rodata);
         asm/save_menu.o(.rodata);
         asm/rodata08210FBC.o(.rodata);
 
