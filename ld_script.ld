@@ -33,6 +33,7 @@ SECTIONS
         asm/text08057568.o(.text);
         src/load_menu.o(.text);
         asm/load_menu.o(.text);
+        asm/text08127BC8.o(.text);
         asm/text08127E50.o(.text);
         src/save_menu.o(.text);
         asm/save_menu.o(.text);
