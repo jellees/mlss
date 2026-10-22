@@ -1054,7 +1054,8 @@ void title_screen_update(struct TitleScreen* titleScreen) {
                     multiplayer_serial_disable();
                     sub_801AFE4(0);
                     BUFFER_REG_BLDCNT = 0;
-                    load_init_812538C(alloc_Zero(sizeof(struct LoadMenu), 0, "LOAD", 0), 8, "LOAD", 0xFFFF);
+                    load_init_812538C(alloc_Zero(sizeof(struct LoadMenu), 0, "LOAD", 0), 8, "LOAD",
+                                      0xFFFF);
                     return;
 
                 case 1:
@@ -1065,7 +1066,7 @@ void title_screen_update(struct TitleScreen* titleScreen) {
 
                 case 2:
                     multiplayer_serial_disable();
-                    optn_init(alloc_Zero(84, 0, "OPTN", 0), 8, "OPTN", 0);
+                    optn_init(alloc_Zero(sizeof(struct OPTNProcess), 0, "OPTN", 0), 8, "OPTN", 0);
                     return;
 
                 default:
