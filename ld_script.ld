@@ -31,12 +31,20 @@ SECTIONS
         src/title_screen.o(.text);
         src/multiplayer_serial.o(.text);
         asm/text08057568.o(.text);
+        asm/load_menu.o(.text);
+        asm/text08127E50.o(.text);
+        asm/save_menu.o(.text);
+        asm/text0812A9A0.o(.text);
 
         asm/rodata081DD790.o(.rodata);
         src/option_screens.o(.rodata);
         asm/rodata081E273C.o(.rodata);
         src/title_screen.o(.rodata);
         asm/rodata081E2794.o(.rodata);
+        asm/load_menu.o(.rodata);
+        asm/rodata08210F64.o(.rodata);
+        asm/save_menu.o(.rodata);
+        asm/rodata08210FBC.o(.rodata);
 
         asm/mariobros.o(.text);
     }
