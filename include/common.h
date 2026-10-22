@@ -254,6 +254,8 @@ void sub_8021F7C(void);
 void sub_812418C(void);
 u16 sub_8124270(u16, int);
 void sub_8021FD4(void);
+void sub_80FAFD8(void*, int);
+void sub_81166AC(struct Process*, int);
 void sub_8051EE0(struct WindowAttr*);
 struct OPTNProcess* optn_init(struct OPTNProcess*, u8, char*, int);
 int try_save_options(struct OPTNProcess*);

@@ -20,5 +20,6 @@ struct LoadMenu {
 };
 
 struct LoadMenu* load_init_812538C(struct LoadMenu*, u8, char*, u16);
+void sub_8125464(struct LoadMenu*, int);
 
 #endif

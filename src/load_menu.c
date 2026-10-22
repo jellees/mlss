@@ -29,3 +29,34 @@ struct LoadMenu* load_init_812538C(struct LoadMenu* menu, u8 priority, char* lab
     BUFFER_REG_DISPCNT = 0;
     return menu;
 }
+
+void sub_8125464(struct LoadMenu* menu, int flags) {
+    menu->process.definition = &stru_8CDC3B8;
+    BUFFER_REG_DISPCNT = 0;
+    BUFFER_REG_WININ = 0;
+    BUFFER_REG_WINOUT = 0;
+    BUFFER_REG_BLDCNT = 0;
+    gGameState.field_888_5 = 0;
+    gGameState.field_888_3 = 0;
+    gGameState.field_888_6 = 0;
+
+    if (menu->field_160) {
+        sub_80FAFD8(menu->field_160, 3);
+    }
+
+    sub_8021FD4();
+
+    if (menu->field_54) {
+        free_heap_8018D9C(menu->field_54);
+    }
+
+    if (menu->fade) {
+        sub_81166AC(menu->fade, 3);
+    }
+
+    if (menu->tld) {
+        process_remove(menu->tld, 3);
+    }
+
+    process_remove(&menu->process, flags);
+}
