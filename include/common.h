@@ -26,7 +26,9 @@ struct Process {
 };
 
 struct struc_3000388 {
-    u8 pad[8];
+    u16 field_0;
+    u16 field_2;
+    u8 pad[4];
     u8 field_8;
     u8 field_9;
     u8 pad2[0x32];
@@ -72,7 +74,8 @@ struct GameState {
     s32 field_88A_0 : 3;
     s32 field_88A_3 : 1;
     u32 field_88A_4 : 1;
-    s32 field_88A_5 : 3;
+    u32 field_88A_5 : 1;
+    s32 field_88A_6 : 2;
     u32 field_88B_0 : 1;
     u32 field_88B_1 : 7;
     u8 field_88C_0 : 1;
@@ -98,7 +101,9 @@ struct Sprite {
     s16 field_A;
     u8 pad[2];
     s16 field_E;
-    u8 field_10;
+    u8 field_10_0 : 1;
+    u8 field_10_1 : 5;
+    u8 field_10_6 : 2;
     u8 field_11_0 : 6;
     u8 field_11_6 : 1;
     u8 field_11_7 : 1;
@@ -117,8 +122,16 @@ struct Sprite {
     u8 field_1E;
     u8 field_1F_0 : 2;
     u8 field_1F_2 : 2;
+    u8 field_1F_4 : 2;
+    u8 field_1F_6 : 2;
     u8 field_20[2];
     u8 field_22;
+    u8 pad23[6];
+    u8 field_29_0 : 1;
+    u8 field_29_1 : 1;
+    u8 field_29_2 : 3;
+    u8 field_29_5 : 1;
+    u8 field_29_6 : 2;
 };
 
 struct struc_203FFF8 {
@@ -133,13 +146,34 @@ struct struc_203FFF8 {
     u8 field_7_7 : 1;
 };
 
+struct SaveSlotData {
+    u8 pad[0x6EC];
+    u32 field_6EC;
+};
+
+struct SaveSlot {
+    u8 field_0;
+    struct SaveSlotData data;
+    u32 field_6F4;
+};
+
 struct EeprStruct1 {
-    char name[8];
+    char name[6];
+    u8 field_6;
+    u8 field_7;
     u8 field_8_0 : 3;
     u8 field_8_3 : 1;
     u8 field_8_4 : 1;
     u8 field_8_5 : 1;
     u8 field_8_6 : 1;
+    u8 pad9[7];
+    struct SaveSlot slots[3];
+};
+
+struct struc_3000D40 {
+    u16 field_0_0 : 1;
+    u16 field_0_1 : 1;
+    u16 slot : 2;
 };
 
 struct MarioBrosScoreVisual {
@@ -243,7 +277,7 @@ void sub_801A6B0(void);
 void sub_801ABE8(u16, u16, int);
 void sub_801AFE4(int);
 void sub_801E150(struct Sprite*, int, int, int, int);
-void sub_8020994(int, int, int, int);
+void sub_8020994(u16, int, int, int);
 void sub_8020A78(void);
 void sprite_show_8020CBC(struct Sprite*);
 struct Sprite* sub_8020DD0(int, int, int, int, int, int, int);
@@ -268,6 +302,30 @@ int sub_812454C(void);
 struct struc_203FFF8* sub_81251DC();
 struct Process* tld_init_8127A94(struct Process*, u8, char*);
 struct Process* init_ybpa_process_8114B4C(void*, u8, char*, u8);
+void* sub_8127ECC(int, int*);
+int sub_8127E50(void*, void*, int);
+void* alloc_heap_8018CEC(int, int, char*);
+void free_heap_memory_8018C68(void*);
+void sub_81229F0(void*);
+void sub_8127DB4(void*, int, int, int, int, u16, u8);
+void sub_80E8DE4(void);
+void sub_80E8DC0(void);
+void* sub_80FB080(void*, u8, char*);
+void* sub_80F92DC(void*, int, int, void*, int, void*, int, int, int, int);
+void sub_80E9384(void*, int);
+void sub_8125220(u8, u8*, u8);
+u16 sub_8123DC4(u16, int);
+void sub_8021308(struct Sprite*);
+void sub_8123BA8(int);
+void sub_819A43C(void);
+void sub_8021574(int, int, int, int, int, void*, int);
+void sub_80196E0(void);
+void sub_801AFA0(void);
+void sub_80FC198(void);
+void sub_812335C(void);
+void sub_8018A4C(u32);
+void make_fldm_801AF5C(int);
+void sub_8122BFC(void);
 u16 sub_8199624(struct struc_15*);
 void sub_8199D5C(struct struc_15*, int, u8, int);
 void sub_8199D78(struct struc_15*, u8*, int, int, int, int, int, int, int, int);
@@ -282,6 +340,8 @@ extern void (*dword_3000D48)(int, int);
 extern int (*dword_3000D4C)(int, int);
 extern struct ORSTData* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
+extern u8 byte_3000C80;
+extern struct struc_3000D40 stru_3000D40;
 extern struct GameState gGameState;
 extern void (*dword_3000C78)();
 extern void (*dword_3000C84)(int*, void*);
@@ -292,6 +352,7 @@ extern int (*dword_3001038)();
 // ROM
 extern int loc_8198220();
 extern int loc_819832C(int, int);
+extern int loc_8198350(int, int);
 extern u8 dword_81DD7F4[];
 extern u8 dword_81DD9F4[16384];
 extern u8 dword_81E19F4[1280];
