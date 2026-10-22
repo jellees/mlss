@@ -1,5 +1,6 @@
 #include "global.h"
 #include "common.h"
+#include "load_menu.h"
 #include "multiplayer_serial.h"
 #include "title_screen.h"
 
@@ -1053,7 +1054,7 @@ void title_screen_update(struct TitleScreen* titleScreen) {
                     multiplayer_serial_disable();
                     sub_801AFE4(0);
                     BUFFER_REG_BLDCNT = 0;
-                    load_init_812538C(alloc_Zero(356, 0, "LOAD", 0), 8, "LOAD", 0xFFFF);
+                    load_init_812538C(alloc_Zero(sizeof(struct LoadMenu), 0, "LOAD", 0), 8, "LOAD", 0xFFFF);
                     return;
 
                 case 1:

@@ -31,6 +31,7 @@ SECTIONS
         src/title_screen.o(.text);
         src/multiplayer_serial.o(.text);
         asm/text08057568.o(.text);
+        src/load_menu.o(.text);
         asm/load_menu.o(.text);
         asm/text08127E50.o(.text);
         asm/save_menu.o(.text);
@@ -41,6 +42,7 @@ SECTIONS
         asm/rodata081E273C.o(.rodata);
         src/title_screen.o(.rodata);
         asm/rodata081E2794.o(.rodata);
+        src/load_menu.o(.rodata);
         asm/load_menu.o(.rodata);
         asm/rodata08210F64.o(.rodata);
         asm/save_menu.o(.rodata);

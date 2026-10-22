@@ -25,6 +25,13 @@ struct Process {
     struct ProcessDefinition* definition;
 };
 
+struct struc_3000388 {
+    u8 pad[8];
+    u8 field_8;
+    u8 field_9;
+    u8 pad2[2];
+};
+
 struct GameState {
     u16 field_0;
     u16 field_2;
@@ -45,7 +52,9 @@ struct GameState {
     u8 field_31;
 
     // ...
-    u8 pad1[0x84E];
+    u8 pad1[0xA];
+    struct struc_3000388 field_3C;
+    u8 pad1_2[0x838];
 
     int field_880;
     u32 field_884;
@@ -252,7 +261,8 @@ void sub_805306C(struct Process*);
 void title_screen_scroll_background_hblank(void);
 int sub_812454C(void);
 struct struc_203FFF8* sub_81251DC();
-struct Process* load_init_812538C(struct Process*, u8, char*, int);
+struct Process* tld_init_8127A94(struct Process*, u8, char*);
+struct Process* init_ybpa_process_8114B4C(void*, u8, char*, u8);
 u16 sub_8199624(struct struc_15*);
 void sub_8199D5C(struct struc_15*, int, u8, int);
 void sub_8199D78(struct struc_15*, u8*, int, int, int, int, int, int, int, int);
@@ -335,3 +345,4 @@ extern struct ProcessDefinition stru_8CDC238;
 extern struct ProcessDefinition stru_8CDC248;
 extern struct ProcessDefinition stru_8CDC258;
 extern struct ProcessDefinition stru_8CDC268;
+extern struct ProcessDefinition stru_8CDC3B8;
