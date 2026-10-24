@@ -462,9 +462,9 @@ void sub_81254FC(struct LoadMenu* menu) {
     }
 }
 
-//! 26 diff lines left, all register allocation: which operand `ands` ties its result to (keys & 1,
-//! keys & 0x40 in the FB & 0x30 block), r1/r2 swaps in the copy/erase start, and the FB & 0x20 cancel
-//! path's `field_EE = 1` getting cross-jumped into the shared tail.
+//! 10 diff lines left. The empty `if (menu->field_EE);` in the FB & 0x20 cancel path (likely a
+//! removed debug print, like `if (menu->tld);` in load_init_812538C) fixes the reload register
+//! choices there, but keeps &field_EE in r8 until the store; the original recomputes it at the store.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8126520.s\"");
 #else
@@ -528,6 +528,7 @@ u8 sub_8126520(struct LoadMenu* menu) {
                             menu->field_EE = 1;
                             menu->field_EC = 0;
                         } else {
+                            if (menu->field_EE);
                             play_sfx_80195B4(0x61, -1);
                             menu->field_FB = 0;
                             menu->cursor->xPosition = 0x22;
