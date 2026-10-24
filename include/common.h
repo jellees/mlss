@@ -127,12 +127,15 @@ struct Sprite {
     u8 field_1F_6 : 2;
     u8 field_20[2];
     u8 field_22;
-    u8 pad23[6];
+    u8 field_23;
+    u8 pad24[5];
     u8 field_29_0 : 1;
     u8 field_29_1 : 1;
     u8 field_29_2 : 3;
     u8 field_29_5 : 1;
     u8 field_29_6 : 2;
+    u8 pad2A[2];
+    s16 field_2C;
 };
 
 struct struc_203FFF8 {
@@ -147,8 +150,51 @@ struct struc_203FFF8 {
     u8 field_7_7 : 1;
 };
 
+struct LoadMenuItem {
+    u16 id;
+    u8 field_2;
+    u8 field_3;
+    u8 field_4;
+    u8 pad5[3];
+};
+
+struct LoadMenuEntry {
+    struct LoadMenuItem items[2];
+    u16 field_10;
+    u16 field_12;
+    u8 field_14;
+    u8 field_15;
+    u8 field_16;
+    u8 field_17;
+    u8 field_18;
+    u8 pad19[3];
+};
+
+struct TmevData {
+    u8 pad0[4];
+    u8* field_4;
+};
+
+struct Tmev {
+    struct Process process;
+    u8 pad1C[0xC];
+    struct TmevData* field_28;
+};
+
+struct SaveSlotPlayer {
+    u16 field_0;
+    u8 pad2[10];
+};
+
 struct SaveSlotData {
-    u8 pad[0x6EC];
+    u8 field_0_0 : 3;
+    u8 field_0_3 : 1;
+    u8 field_0_4 : 4;
+    u8 pad1[3];
+    struct SaveSlotPlayer field_4[2];
+    u8 pad1C[0x78];
+    struct LoadMenuEntry entry;
+    u8 padB0[0x63C];
     u32 field_6EC;
 };
 
@@ -169,6 +215,18 @@ struct EeprStruct1 {
     u8 field_8_6 : 1;
     u8 pad9[7];
     struct SaveSlot slots[3];
+};
+
+struct struc_3000FF4 {
+    u8 pad0[0x30];
+    u8 field_30;
+    u8 pad31[0x3B];
+    u8 field_6C;
+};
+
+struct struc_8021EA8 {
+    u32 field_0_0 : 9;
+    u32 field_0_9 : 23;
 };
 
 struct struc_3000D40 {
@@ -229,6 +287,18 @@ struct struc_15 {
     u8 field_11;
     u8 field_12;
     u8 field_13;
+};
+
+// Parent process of the save menu; the real type is unknown.
+struct struc_16 {
+    u8 pad0[0x208];
+    u8 field_208_0 : 2;
+    u8 field_208_2 : 1;
+    u8 field_208_3 : 1;
+    u8 field_208_4 : 1;
+    u8 field_208_5 : 1;
+    u8 field_208_6 : 1;
+    u8 field_208_7 : 1;
 };
 
 struct OPTNProcess {
@@ -332,6 +402,11 @@ void sub_8021308(struct Sprite*);
 void sub_8123BA8(int);
 void sub_819A43C(void);
 void sub_8021574(int, int, int, int, int, void*, int);
+u32** sub_81980C8(int);
+void sub_8127BC8(struct LoadMenuEntry*, u8);
+void reset_game_80189C4(void);
+void sub_8025F28(struct Process*);
+struct struc_8021EA8* sub_8021EA8(int, int);
 void sub_80196E0(void);
 void sub_801AFA0(void);
 void sub_80FC198(void);
@@ -353,6 +428,8 @@ extern void (*dword_3000D48)(int, int);
 extern int (*dword_3000D4C)(int, int);
 extern struct ORSTData* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
+extern struct struc_3000FF4* dword_3000FF4;
+extern struct LoadMenuItem* dword_3000FF8;
 extern u8 byte_3000C80;
 extern struct struc_3000D40 stru_3000D40;
 extern struct GameState gGameState;

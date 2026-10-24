@@ -1,3 +1,6 @@
+	.ifndef ASM_MACROS_INC
+	.set ASM_MACROS_INC, 1
+
 @ Begin embedded Luvdis macros
 	.macro arm_func_start name
 	.align 2, 0
@@ -29,3 +32,5 @@
 	.size \name, .-\name
 	.endm
 @ End embedded Luvdis macros
+
+	.endif

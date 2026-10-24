@@ -3,37 +3,6 @@
 
 #include "process.h"
 
-struct LoadMenuItem {
-    u16 id;
-    u8 field_2;
-    u8 field_3;
-    u8 field_4;
-    u8 pad5[3];
-};
-
-struct LoadMenuEntry {
-    struct LoadMenuItem items[2];
-    u16 field_10;
-    u16 field_12;
-    u8 field_14;
-    u8 field_15;
-    u8 field_16;
-    u8 field_17;
-    u8 field_18;
-    u8 pad19[3];
-};
-
-struct TmevData {
-    u8 pad0[4];
-    u8* field_4;
-};
-
-struct Tmev {
-    struct Process process;
-    u8 pad1C[0xC];
-    struct TmevData* field_28;
-};
-
 struct LoadMenu {
     struct Process process;
     struct Sprite* cursor;
@@ -98,6 +67,5 @@ struct Process* tld_init_8127A94(struct Process*, u8, char*);
 u8 sub_8127AB0(struct LoadMenu*);
 void sub_8127ADC(struct LoadMenu*, u16);
 void sub_8127B20(struct LoadMenu*);
-void sub_8127BC8(struct LoadMenuEntry*, u8);
 
 #endif
