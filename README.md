@@ -1,7 +1,7 @@
 # Mario & Luigi Superstar Saga
 
 ![example workflow](https://github.com/jellees/mlss/actions/workflows/build.yml/badge.svg)
-![progress](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2Fjellees%2Fa2579776d2828ebc37aab474c6be355c%2Fraw%2Fe8b074ff4c9a5c65918e9e9c1778e80213883804%2Fmlss-progress.json)
+![Progress](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/jellees/a2579776d2828ebc37aab474c6be355c/raw/mlss-progress.json)
 
 This is a decompilation of Mario & Luigi Superstar Saga (US).
 
