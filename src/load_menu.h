@@ -7,12 +7,18 @@ struct LoadMenuItem {
     u16 id;
     u8 field_2;
     u8 field_3;
-    u8 pad4[4];
+    u8 field_4;
+    u8 pad5[3];
 };
 
 struct LoadMenuEntry {
     struct LoadMenuItem items[2];
-    u8 pad10[8];
+    u16 field_10;
+    u16 field_12;
+    u8 field_14;
+    u8 field_15;
+    u8 field_16;
+    u8 field_17;
     u8 field_18;
     u8 pad19[3];
 };
@@ -31,15 +37,18 @@ struct Tmev {
 struct LoadMenu {
     struct Process process;
     struct Sprite* cursor;
-    struct Sprite* sprites[10];
+    struct Sprite* sprites[6];
+    struct Sprite* arrows[4];
     struct EeprStruct1* save;
     u8 field_4C[4];
     struct struc_3000388* field_50;
     void* field_54;
     void* field_58;
-    u8 pad5C[4];
+    void* field_5C;
     void* field_60;
-    u8 pad64[0x64];
+    struct struc_15 field_64;
+    u8 pad78[0x3C];
+    struct struc_15 field_B4;
     void* field_C8;
     void* field_CC;
     int field_D0;
@@ -65,7 +74,7 @@ struct LoadMenu {
     u8 padF6;
     u8 field_F7;
     u8 field_F8;
-    u8 field_F9;
+    s8 field_F9;
     s8 field_FA;
     s8 field_FB;
     u8 padFC[4];
@@ -81,10 +90,14 @@ void sub_8125464(struct LoadMenu*, int);
 void sub_81254FC(struct LoadMenu*);
 u8 sub_8126520(struct LoadMenu*);
 void sub_8126C3C(struct LoadMenu*);
+void* sub_81270E4(struct LoadMenu*, void*);
 void sub_8127238(struct LoadMenu*);
 void sub_812791C(struct LoadMenu*);
+void tld_update_81279D8(struct Process*);
+struct Process* tld_init_8127A94(struct Process*, u8, char*);
 u8 sub_8127AB0(struct LoadMenu*);
 void sub_8127ADC(struct LoadMenu*, u16);
 void sub_8127B20(struct LoadMenu*);
+void sub_8127BC8(struct LoadMenuEntry*, u8);
 
 #endif
