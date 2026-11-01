@@ -229,6 +229,11 @@ struct struc_8021EA8 {
     u32 field_0_9 : 23;
 };
 
+// Passed by value; packed so agbcc builds it in the stack slot with strb.
+struct FldmFlag {
+    u8 value;
+} __attribute__((packed));
+
 struct struc_3000D40 {
     u16 field_0_0 : 1;
     u16 field_0_1 : 1;
@@ -325,10 +330,10 @@ struct OptionsMenu {
 
 // ORST (options/open-screen runtime data) — 340 bytes, tagged "ORST"
 struct ORSTData {
-    s32 field_0[5];   /* palette scroll accumulators, fixed-point */
-    u16 field_14;     /* BG1HOFS value */
-    u16 field_16;     /* BG0HOFS source for DMA */
-    u8  _pad[316];
+    s32 field_0[5]; /* palette scroll accumulators, fixed-point */
+    u16 field_14;   /* BG1HOFS value */
+    u16 field_16;   /* BG0HOFS source for DMA */
+    u8 _pad[316];
 };
 
 // Function prototypes
@@ -413,6 +418,19 @@ void sub_80FC198(void);
 void sub_812335C(void);
 void sub_8018A4C(u32);
 void make_fldm_801AF5C(int);
+void sub_801AF50(void);
+void sub_801B014(void);
+void sub_801B034(void);
+void sub_801B084(void);
+void sub_801B0AC(u16);
+void* init_fldm_8021FF8(void*, u8, char*, int, struct FldmFlag, struct FldmFlag);
+void sub_80FC1F8(void);
+void sub_80E9AF8(void);
+void sub_80E9B0C(void);
+void sub_80E9D04(void);
+void sub_80E9D1C(void);
+void sub_801BD30(void);
+void sub_801BD50(int);
 void sub_8122BFC(void);
 u16 sub_8199624(struct struc_15*);
 void sub_8199D5C(struct struc_15*, int, u8, int);
@@ -432,6 +450,8 @@ extern struct struc_3000FF4* dword_3000FF4;
 extern struct LoadMenuItem* dword_3000FF8;
 extern u8 byte_3000C80;
 extern struct struc_3000D40 stru_3000D40;
+extern u16 word_3000D3C;
+extern void* dword_3000FB8;
 extern struct GameState gGameState;
 extern void (*dword_3000C78)();
 extern void (*dword_3000C84)(int*, void*);
