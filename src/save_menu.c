@@ -918,6 +918,7 @@ void* sub_8129B4C(struct SaveMenu* menu, void* buf) {
 }
 
 #define SAVE_TMEV_BASE(menu) (*(u32*)((menu)->tmev->field_28->field_4 + 0x194))
+
 #define IWRAM_COPY ((void (*)(void*, void*, int))((u8*)dword_3001034 + (loc_8198154 - loc_81980D8)))
 
 void sub_8129C98(struct SaveMenu* menu) {
