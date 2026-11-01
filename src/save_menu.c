@@ -138,17 +138,13 @@ void sub_812804C(struct SaveMenu* menu) {
                                 continue;
                             }
                             c = *name++;
-                            if (k != 0) {
-                                goto add;
-                            }
                         }
-                        if (c == 0x20) {
+                        if (k == 0 && c == 0x20) {
                             menu->field_B4 += 2;
-                            continue;
+                        } else {
+                            menu->field_B4 =
+                                menu->field_B4 + (((font[k][(c / 8) + 1] >> ((c & 7) * 4)) & 0xF) + 1);
                         }
-                    add:
-                        menu->field_B4 =
-                            menu->field_B4 + (((font[k][(c / 8) + 1] >> ((c & 7) * 4)) & 0xF) + 1);
                     }
                     menu->field_B4 += 2;
                 }
@@ -519,17 +515,13 @@ u8 sub_8128D74(struct SaveMenu* menu) {
                             continue;
                         }
                         c = *name++;
-                        if (k != 0) {
-                            goto addB6;
-                        }
                     }
-                    if (c == 0x20) {
+                    if (k == 0 && c == 0x20) {
                         menu->field_B6 += 2;
-                        continue;
+                    } else {
+                        menu->field_B6 =
+                            menu->field_B6 + (((font[k][(c / 8) + 1] >> ((c & 7) * 4)) & 0xF) + 1);
                     }
-                addB6:
-                    menu->field_B6 =
-                        menu->field_B6 + (((font[k][(c / 8) + 1] >> ((c & 7) * 4)) & 0xF) + 1);
                 }
                 menu->field_B5 = menu->field_B6;
                 while (*name != 0) {
@@ -550,17 +542,13 @@ u8 sub_8128D74(struct SaveMenu* menu) {
                             continue;
                         }
                         c = *name++;
-                        if (k != 0) {
-                            goto addB5;
-                        }
                     }
-                    if (c == 0x20) {
+                    if (k == 0 && c == 0x20) {
                         menu->field_B5 += 2;
-                        continue;
+                    } else {
+                        menu->field_B5 =
+                            menu->field_B5 + (((font[k][(c / 8) + 1] >> ((c & 7) * 4)) & 0xF) + 1);
                     }
-                addB5:
-                    menu->field_B5 =
-                        menu->field_B5 + (((font[k][(c / 8) + 1] >> ((c & 7) * 4)) & 0xF) + 1);
                 }
                 menu->field_B5 += 2;
             }
