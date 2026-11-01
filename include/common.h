@@ -83,6 +83,8 @@ struct GameState {
     u8 field_88C_1 : 7;
     u8 pad2[0x33];
     u8 field_8C0;
+    u8 pad3[0xF];
+    void* field_8D0;
 };
 
 struct struc_3000D18 {
@@ -233,6 +235,13 @@ struct struc_8021EA8 {
 struct FldmFlag {
     u8 value;
 } __attribute__((packed));
+
+struct struc_3000FD0 {
+    u8 pad_0[0x528];
+    u32 field_528;
+    u8 pad_52C[0x4];
+    u32 field_530;
+};
 
 struct struc_3000D40 {
     u16 field_0_0 : 1;
@@ -415,7 +424,15 @@ void sub_80196E0(void);
 void sub_80FC198(void);
 void sub_812335C(void);
 void sub_8018A4C(u32);
-void* init_fldm_8021FF8(void*, u8, char*, int, struct FldmFlag, struct FldmFlag);
+struct EventScriptProcess* bevs_process_init_80F048C(void*, int, u8, char*);
+struct EventScriptProcess* evts_process_init_80EF3FC(void*, int, u8, char*);
+void sub_819A138(void*, u32);
+void sub_8057B58(struct Process*, u32);
+void sub_805C73C(struct Process*, u32);
+void sub_805CCC0(struct Process*, u32);
+void sub_80F0184(struct EventScriptProcess*);
+void sub_80F034C(struct EventScriptProcess*, u32);
+void sub_80F0420(struct EventScriptProcess*, u32);
 void sub_80FC1F8(void);
 void sub_80E9AF8(void);
 void sub_80E9B0C(void);
@@ -442,6 +459,9 @@ extern struct struc_3000FF4* dword_3000FF4;
 extern struct LoadMenuItem* dword_3000FF8;
 extern u8 byte_3000C80;
 extern struct struc_3000D40 stru_3000D40;
+extern struct FieldManager* dword_3000D7C;
+extern struct EventScriptProcess* dword_3000D78;
+extern struct struc_3000FD0* dword_3000FD0;
 extern u16 word_3000D3C;
 extern void* dword_3000FB8;
 extern struct GameState gGameState;
@@ -498,6 +518,8 @@ extern s16 word_83A75C8[];
 extern u8* off_839EC80;
 extern struct ProcessDefinition stru_8CDBD68;
 extern struct ProcessDefinition stru_8CDBD78;
+extern struct ProcessDefinition stru_8CDBDB8;
+extern struct ProcessDefinition stru_8CDBDC8;
 extern struct ProcessDefinition stru_8CDC1F8;
 extern struct ProcessDefinition stru_8CDC208;
 extern struct ProcessDefinition stru_8CDC1C8;
