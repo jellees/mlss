@@ -1,5 +1,6 @@
 #include "global.h"
 #include "common.h"
+#include "game_mode.h"
 #include "load_menu.h"
 #include "title_screen.h"
 
