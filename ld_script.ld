@@ -25,8 +25,8 @@ SECTIONS
         asm/text08019CA4.o(.text);
         src/game_boy_player_logo.o(.text);
         asm/text0801A548.o(.text);
-        src/option_screens.o(.text);
-        src/option_window.o(.text);
+        src/system_screens.o(.text);
+        src/system_screen_popups.o(.text);
         asm/text080542C4.o(.text);
         src/title_screen.o(.text);
         src/multiplayer_serial.o(.text);
@@ -39,7 +39,7 @@ SECTIONS
         asm/text0812A9A0.o(.text);
 
         asm/rodata081DD790.o(.rodata);
-        src/option_screens.o(.rodata);
+        src/system_screens.o(.rodata);
         asm/rodata081E273C.o(.rodata);
         src/title_screen.o(.rodata);
         asm/rodata081E2794.o(.rodata);

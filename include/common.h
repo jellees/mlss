@@ -264,14 +264,14 @@ struct struc_203FFB8 {
     u32 field_3C;
 };
 
-struct WindowAttr {
-    // Made this a bitfield to match optn_update.
-    u8 field_0_0 : 1;
-    s8 field_1;
-    u8 xStart;
-    u8 yStart;
-    u8 xSize;
-    u8 ySize;
+struct Popup {
+    // Made this a bitfield to match options_update.
+    u8 isClosing : 1;
+    s8 zoomFrame;
+    u8 x;
+    u8 y;
+    u8 width;
+    u8 height;
 };
 
 struct struc_15 {
@@ -301,7 +301,7 @@ struct struc_16 {
     u8 field_208_7 : 1;
 };
 
-struct OPTNProcess {
+struct OptionsMenu {
     struct Process process;
     s8 brightness;
     s8 field_1D;
@@ -319,7 +319,7 @@ struct OPTNProcess {
     int* winw;
     u8 okButtonPosX;
     u8 okButtonPosY;
-    struct WindowAttr field_48;
+    struct Popup popup;
     struct Sprite* sprite;
 };
 
@@ -363,13 +363,13 @@ u16 sub_8124270(u16, int);
 void sub_8021FD4(void);
 void sub_80FAFD8(void*, int);
 void sub_81166AC(struct Process*, int);
-void sub_8051EE0(struct WindowAttr*);
-struct OPTNProcess* optn_init(struct OPTNProcess*, u8, char*, int);
-int try_save_options(struct OPTNProcess*);
-void sub_8052B54(struct OPTNProcess*, int);
-void sub_8052C50(struct OPTNProcess*, int);
-void sub_8052EFC(struct OPTNProcess*);
-void sub_805306C(struct Process*);
+void popup_animate(struct Popup*);
+struct OptionsMenu* options_create(struct OptionsMenu*, u8, char*, int);
+int options_save(struct OptionsMenu*);
+void options_draw_labels(struct OptionsMenu*, int);
+void options_draw_info_messages(struct OptionsMenu*, int);
+void options_draw_save_error(struct OptionsMenu*);
+void options_renderer_update(struct Process*);
 void title_screen_scroll_background_hblank(void);
 int sub_812454C(void);
 struct struc_203FFF8* sub_81251DC();

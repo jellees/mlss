@@ -1066,7 +1066,7 @@ void title_screen_update(struct TitleScreen* titleScreen) {
 
                 case 2:
                     multiplayer_serial_disable();
-                    optn_init(alloc_Zero(sizeof(struct OPTNProcess), 0, "OPTN", 0), 8, "OPTN", 0);
+                    options_create(alloc_Zero(sizeof(struct OptionsMenu), 0, "OPTN", 0), 8, "OPTN", 0);
                     return;
 
                 default:

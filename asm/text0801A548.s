@@ -960,7 +960,7 @@ sub_801B034:
 	bl alloc_Zero
 	movs r1, #0x08
 	adds r2, r4, #0x0
-	bl bclr_init
+	bl save_clear_create
 	b _0801B07A
 _0801B058: .4byte 0x0300034C
 _0801B05C: .4byte 0x00000307

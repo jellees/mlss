@@ -6435,7 +6435,7 @@ _08017CE4:
 	bl alloc_Zero
 	ldr r2, _08017DE0 @ =0x081DD7B8
 	movs r1, #0x08
-	bl sub_8053CB4
+	bl mario_bros_save_error_create
 	b _08017E1C
 _08017D24: .4byte 0x04000204
 _08017D28: .4byte 0x00004014
