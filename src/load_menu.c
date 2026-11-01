@@ -16,9 +16,11 @@ struct LoadMenu* load_init_812538C(struct LoadMenu* menu, u8 priority, char* lab
 
     //! Possible fake match. These could be remnants of debug lines.
     //! E.g. if (menu->tld) DEBUG_PRINT("");
-    if (menu->tld);
+    if (menu->tld)
+        ;
     menu->tld = tld_init_8127A94(alloc_Zero(sizeof(struct Process), 0, "TLD", 0), 8, "TLD");
-    if (menu->fade);
+    if (menu->fade)
+        ;
     menu->fade = init_ybpa_process_8114B4C(alloc_Zero(0x5C, 0, "FADE", 1), 8, "FADE", 8);
     menu->fade->parentProcess = menu->tld->parentProcess = &menu->process;
 
@@ -191,12 +193,13 @@ void sub_81254FC(struct LoadMenu* menu) {
                 break;
             }
             //! Possible fake match.
-            if (menu->field_160);
+            if (menu->field_160)
+                ;
             menu->field_160 = sub_80FB080(alloc_Zero(0x2C, 0, "TMEV", 0), 7, "TMEV");
             menu->field_160->process.parentProcess = &menu->process;
             dword_3001034(0, (void*)(VRAM + 0x8000), 0x20);
-            menu->field_60 = sub_80F92DC(menu->field_160, 0, 0xF, (void*)(VRAM + 0x8000), 0x4B00, menu->field_54,
-                                         0, 0x7000, 0xF, 1);
+            menu->field_60 = sub_80F92DC(menu->field_160, 0, 0xF, (void*)(VRAM + 0x8000), 0x4B00,
+                                         menu->field_54, 0, 0x7000, 0xF, 1);
             menu->field_EE = 3;
             sub_8127238(menu);
             menu->field_F2 = 0;
@@ -528,7 +531,8 @@ u8 sub_8126520(struct LoadMenu* menu) {
                             menu->field_EE = 1;
                             menu->field_EC = 0;
                         } else {
-                            if (menu->field_EE);
+                            if (menu->field_EE)
+                                ;
                             play_sfx_80195B4(0x61, -1);
                             menu->field_FB = 0;
                             menu->cursor->xPosition = 0x22;

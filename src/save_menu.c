@@ -76,6 +76,11 @@ static inline u8* get_text(u8** texts, int index) {
     return texts[index];
 }
 
+static inline u8* get_text_indexed(u8** texts, int index) {
+    u8** text = texts + index;
+    return *text;
+}
+
 #define VRAM_ALIGN_800(offset)                                                                         \
     if ((dword_3001038 + (&loc_8198350 - &loc_8198220))(offset, 0x800)) {                              \
         offset = ((dword_3001038 + (&loc_819832C - &loc_8198220))(offset, 0x800) << 11) + 0x800;       \
@@ -927,14 +932,6 @@ void* sub_8129B4C(struct SaveMenu* menu, void* buf) {
 #define SAVE_TMEV_BASE(menu) (*(u32*)((menu)->tmev->field_28->field_4 + 0x194))
 #define IWRAM_COPY ((void (*)(void*, void*, int))((u8*)dword_3001034 + (loc_8198154 - loc_81980D8)))
 
-// https://decomp.me/scratch/TODO
-//! 54 diff lines. Reading the texts through get_text() (inlining adds block boundaries that change
-//! GCC's loop rotation) fixed the line-counting loops, and field_BE being volatile explains its extra
-//! loads. Still off: the typewriter loop's entry test isn't duplicated (the original has two separate
-//! `field_BC = 0` stores) and the argument order around the sub_8083860 calls.
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8129C98.s\"");
-#else
 void sub_8129C98(struct SaveMenu* menu) {
     u8* name;
     u8** texts;
@@ -971,32 +968,35 @@ void sub_8129C98(struct SaveMenu* menu) {
                         sub_8199D78(&menu->field_CC, menu->field_120, 11, 0, 0, 0, 0, 2, 5, 4);
                         sub_8199D5C(&menu->field_CC, 0, 11, (int)get_text(texts, 5));
                     }
-                    for (pos = menu->field_BC;
-                         get_text(texts, 5)[pos] != 0 || get_text(texts, 5)[pos - 1] == 0xFF;
-                         pos++, menu->field_BC++) {
+                    for (pos = menu->field_BC;; pos++, menu->field_BC++) {
+                        if (get_text(texts, 5)[pos] == 0 && get_text(texts, 5)[pos - 1] != 0xFF) {
+                            menu->field_BC = 0;
+                            break;
+                        }
                         if (get_text(texts, 5)[pos] == 0 && get_text(texts, 5)[pos - 1] == 0xFF
                             && ++lines == 3) {
-                            goto copy;
+                            break;
                         }
                         sub_8199624(&menu->field_CC);
                     }
-                    menu->field_BC = 0;
                 }
             } else if (menu->field_AD & 0x80) {
                 int n;
 
                 sub_8199D78(&menu->field_CC, menu->field_120, 11, 0, 0, 0, 0, 2, 5, 4);
-                sub_8199D5C(&menu->field_CC, 0, 11, (int)get_text(texts, (menu->field_AD & 0x7F) + 3));
-                for (n = 0; get_text(texts, (menu->field_AD & 0x7F) + 3)[n] != 0
-                            || get_text(texts, (menu->field_AD & 0x7F) + 3)[n - 1] == 0xFF;
+                sub_8199D5C(&menu->field_CC, 0, 11,
+                            (int)get_text_indexed(texts, (menu->field_AD & 0x7F) + 3));
+                for (n = 0; get_text_indexed(texts, (menu->field_AD & 0x7F) + 3)[n] != 0
+                            || get_text_indexed(texts, (menu->field_AD & 0x7F) + 3)[n - 1] == 0xFF;
                      n++) {
                     sub_8199624(&menu->field_CC);
                 }
-                sub_8083860(menu->field_120, 11, 0, 0x32, get_text(texts, 8), 5);
-                sub_8083860(menu->field_120, 11, 0, 0x3F, get_text(texts, 9), 5);
+                sub_8083860(menu->field_120, 11, 0, 0x32, texts[8], 5);
+                sub_8083860(menu->field_120, 11, 0, 0x3F, texts[9], 5);
             } else {
                 int lines = 0;
                 int n;
+                int i;
 
                 sub_8199D78(&menu->field_CC, menu->field_120, 11, 0, 0, 0, 0, 2, 5, 4);
                 sub_8199D5C(&menu->field_CC, 0, 11, (int)get_text(texts, 0));
@@ -1008,22 +1008,22 @@ void sub_8129C98(struct SaveMenu* menu) {
                 }
                 sub_8199D78(&menu->field_E0, menu->field_120, 11, 0, 0, 0, 0, 2, 5, 4);
                 sub_8199D5C(&menu->field_E0, 0, lines * 13 + 0x18, (int)get_text(texts, 1));
-                for (n = 0; get_text(texts, 1)[n] != 0 || get_text(texts, 1)[n - 1] == 0xFF; n++) {
-                    if (get_text(texts, 1)[n] == 0 && get_text(texts, 1)[n - 1] == 0xFF) {
+                for (i = 0; get_text(texts, 1)[i] != 0 || get_text(texts, 1)[i - 1] == 0xFF; i++) {
+                    if (get_text(texts, 1)[i] == 0 && get_text(texts, 1)[i - 1] == 0xFF) {
                         lines++;
                     }
                     sub_8199624(&menu->field_E0);
                 }
                 sub_8199D78(&menu->field_F4, menu->field_120, 11, 0, 0, 0, 0, 2, 5, 4);
                 sub_8199D5C(&menu->field_F4, 0, lines * 13 + 0x25, (int)get_text(texts, 2));
-                for (n = 0; get_text(texts, 2)[n] != 0 || get_text(texts, 2)[n - 1] == 0xFF; n++) {
-                    if (get_text(texts, 2)[n] == 0 && get_text(texts, 2)[n - 1] == 0xFF) {
+                for (i = 0; get_text(texts, 2)[i] != 0 || get_text(texts, 2)[i - 1] == 0xFF; i++) {
+                    if (get_text(texts, 2)[i] == 0 && get_text(texts, 2)[i - 1] == 0xFF) {
                         lines++;
                     }
                     sub_8199624(&menu->field_F4);
                 }
             }
-        copy:
+
             if (menu->field_BC == 0) {
                 IWRAM_COPY(menu->field_120, (u8*)menu->field_120 - SAVE_TMEV_BASE(menu), 0xF20);
             }
@@ -1083,7 +1083,6 @@ void sub_8129C98(struct SaveMenu* menu) {
     }
     IWRAM_COPY(menu->field_C8, (void*)0x600D000, 0x800);
 }
-#endif
 
 // https://decomp.me/scratch/TODO
 //! Only difference: state 6 starts with a dead `ldrsh` of field_40->field_2C (movs r4, #0x2C;
