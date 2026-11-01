@@ -11,6 +11,7 @@ void sub_801AF50(void) {
 }
 
 void make_fldm_801AF5C(int fromSave) {
+    //! Possible fake match. Not yet sure what happens here?
     struct FldmFlag arg4 = { 1 }, arg5 = { 0 };
     init_fldm_8021FF8(alloc_Zero(0x324, 0, (char*)sFieldLabel, 0), 8, (char*)sFieldLabel,
                       !fromSave ? 0x73 : -1, arg4, arg5);
