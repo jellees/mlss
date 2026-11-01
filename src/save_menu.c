@@ -1072,10 +1072,6 @@ void sub_8129C98(struct SaveMenu* menu) {
     IWRAM_COPY(menu->field_C8, (void*)0x600D000, 0x800);
 }
 
-// https://decomp.me/scratch/TODO
-//! Only difference: state 6 starts with a dead `ldrsh` of field_40->field_2C (movs r4, #0x2C;
-//! ldrsh r0, [r2, r4]) that the original keeps. An empty `if (...);` gets the sprite pointer load
-//! right but the read itself is deleted.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_812A42C.s\"");
 #else

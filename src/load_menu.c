@@ -465,9 +465,6 @@ void sub_81254FC(struct LoadMenu* menu) {
     }
 }
 
-//! 10 diff lines left. The empty `if (menu->field_EE);` in the FB & 0x20 cancel path (likely a
-//! removed debug print, like `if (menu->tld);` in load_init_812538C) fixes the reload register
-//! choices there, but keeps &field_EE in r8 until the store; the original recomputes it at the store.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8126520.s\"");
 #else
