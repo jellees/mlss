@@ -8,38 +8,6 @@
 #include "title_screen.h"
 #include "options_menu.h"
 
-inline CompanyIntro::~CompanyIntro() {
-    sub_8021FD4();
-    if (opdr) {
-        delete opdr;
-    }
-}
-
-inline void SpriteRenderer::update() {
-    int var1 = gGameState.field_880;
-    sub_8020A78();
-    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
-    gGameState.field_880 = var1;
-}
-
-inline TitleScreen::~TitleScreen() {
-    DmaStop(0);
-    runtime_install_interrupt_callback(2, 0);
-
-    if (mbsv) {
-        delete mbsv;
-    }
-
-    delete dword_3000DA0;
-    sub_8021FD4();
-    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
-    gGameState.field_2 |= 1;
-    BUFFER_REG_DISPCNT = 0;
-    gGameState.field_31 = 2;
-    sub_8017E34();
-}
-
 CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) {
     Process* renderer;
     void* cgdw;
@@ -121,6 +89,13 @@ CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) 
     state = 0;
 
     BUFFER_REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON | DISPCNT_OBJ_ON;
+}
+
+inline CompanyIntro::~CompanyIntro() {
+    sub_8021FD4();
+    if (opdr) {
+        delete opdr;
+    }
 }
 
 void CompanyIntro::update() {
@@ -254,6 +229,14 @@ void CompanyIntro::update() {
     sub_8021F7C();
 }
 
+inline void SpriteRenderer::update() {
+    int var1 = gGameState.field_880;
+    sub_8020A78();
+    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+    gGameState.field_880 = var1;
+}
+
 TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(priority, label) {
     struct struc_203FFF8* v5;
     void* cgdw;
@@ -351,6 +334,23 @@ TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(prio
         BUFFER_REG_DISPCNT |= 5953;
     }
 
+}
+
+inline TitleScreen::~TitleScreen() {
+    DmaStop(0);
+    runtime_install_interrupt_callback(2, 0);
+
+    if (mbsv) {
+        delete mbsv;
+    }
+
+    delete dword_3000DA0;
+    sub_8021FD4();
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
+    gGameState.field_2 |= 1;
+    BUFFER_REG_DISPCNT = 0;
+    gGameState.field_31 = 2;
+    sub_8017E34();
 }
 
 void TitleScreen::preparePressStart() {

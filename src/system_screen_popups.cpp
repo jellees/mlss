@@ -1,8 +1,17 @@
 /**
  * \file system_screen_popups.cpp
  * Possible helper file for the popups of the system screens. I am not sure whether this should be its
- * own file or part of system_screens.c. Because these functions don't seem to be inlines but normal
+ * own file or part of system_screens.cpp. Because these functions don't seem to be inlines but normal
  * functions.
+ *
+ * Alternative: these could be inline members of SaveClearScreen and OptionsMenu, defined in
+ * system_screens.cpp after their callers (so they're not inlined) and emitted at the end of that
+ * file. The ROM order after its last normal function, ~MarioBrosSaveError, SaveClearRenderer::update,
+ * SaveClearScreen::showPopup, OptionsMenu::showSaveErrorPopup, OptionsMenu::showInfoPopup, is exactly
+ * the reverse-definition order of such a block. That needs OptionsMenu in system_screens.h (it's in
+ * the interface-only options_menu.h now, so its members aren't emitted) and
+ * SaveClearRenderer::update as normal instead of weak code, which depends on the open OptionsMenu
+ * question (see options_menu.h).
  */
 
 #include "global.h"
