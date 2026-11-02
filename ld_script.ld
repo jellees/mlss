@@ -30,6 +30,8 @@ SECTIONS
         src/field.o(.text);
         asm/field.o(.text);
         asm/text0802A4E8.o(.text);
+        asm/text0804FE68.o(.text);
+        asm/text080508A8.o(.text);
         src/system_screens.o(.text);
         src/system_screen_popups.o(.text);
         asm/text080542C4.o(.text);
@@ -58,6 +60,8 @@ SECTIONS
         src/save_menu.o(.rodata);
         asm/save_menu.o(.rodata);
         asm/rodata08210FBC.o(.rodata);
+        asm/text0804FE68.o(.data);
+        asm/rodata08CDC068.o(.rodata);
 
         asm/mariobros.o(.text);
     }

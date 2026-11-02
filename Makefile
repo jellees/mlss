@@ -29,7 +29,7 @@ LDFLAGS			:= -L../tools/agbcc/lib -lgcc -lc --just-symbols=../symbols.txt -g
 # This branch fixes debug lines so they are emitted properly. If the compiler doesn't produce the
 # same output please switch back to the normal agbcc repo.
 # The original game was built with -funroll-loops (unrolled tile loops in e.g. options_draw_info_messages).
-CFLAGS			:= -O2 -mthumb-interwork -fno-common -Wimplicit -Wparentheses -Werror -g -ffix-debug-line -funroll-loops
+CFLAGS			:= -O2 -mthumb-interwork -fno-common -Wimplicit -Wparentheses -Werror -g -funroll-loops
 CPPFLAGS 		:= -I tools/agbcc/include -nostdinc -undef -iquote include -Wno-trigraphs
 
 # Files
