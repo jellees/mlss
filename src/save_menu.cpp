@@ -453,13 +453,8 @@ void SaveMenu::update() {
     }
 }
 
-// Regalloc differs in C++ (spilled locals land in different stack slots); the C version matched.
-// The include is agbcc's output for that C version.
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm(".include \"asm/nonmatching/sub_8128D74.s\"");
-#else
 u8 SaveMenu::sub_8128D74() {
+    int fakeMatch;
     struct Process* parent = this->parentProcess;
 
     if (this->field_AD & 0x80) {
@@ -467,7 +462,9 @@ u8 SaveMenu::sub_8128D74() {
             u32** font;
             u8* name;
 
-            if (this->field_AE != 0) {
+            //! Fake match (found by decomp-permuter): the unused assignment shifts the numbering
+            //! of the compiler's temporaries, which puts the spilled values in the right stack slots.
+            if (this->field_AE != (fakeMatch = 0)) {
                 play_sfx_80195B4(0x61, -1);
                 this->field_AD &= 0x7F;
                 this->cursor->yPosition = this->field_AA[this->field_AD];
@@ -551,7 +548,8 @@ u8 SaveMenu::sub_8128D74() {
                 }
                 this->field_B5 += 2;
             }
-            if (!(this->field_B0 & 1)) {
+            //! Possible fake match: `!(x & 1)` gives different code in C++ (bool), so `== 0`.
+            if ((this->field_B0 & 1) == 0) {
                 u8* name1 = sub_8123308(this->entry.field_12);
                 name =
                     sub_8123308(this->save->slots[stru_3000D40.slot]
@@ -689,7 +687,6 @@ u8 SaveMenu::sub_8128D74() {
     }
     return 0;
 }
-#endif
 
 void SaveMenu::sub_812936C() {
     struct struc_16* parent = (struct struc_16*)this->parentProcess;
