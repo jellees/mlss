@@ -1,4 +1,5 @@
 @ agbcc output of the matching C version (see load_menu.cpp).
+	.syntax divided
 	.section .rodata
 	.align	2, 0
 .Lsub_8126C3C_C39:

@@ -1,4 +1,5 @@
 @ agbcc output of the matching C version (see save_menu.cpp).
+	.syntax divided
 	.align	2, 0
 	.globl	sub_8128D74__8SaveMenu
 	.type	 sub_8128D74__8SaveMenu,function
