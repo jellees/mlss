@@ -68110,7 +68110,7 @@ _08151598:
 	lsls r1, r1, #0x03
 	ldr r2, _08151630 @ =0x082125E0
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r4, #0x00]
 	ldr r1, _08151634 @ =0x00001CB4
 	adds r4, r7, r1
@@ -68225,7 +68225,7 @@ _081516AE:
 	bl sub_8150F60
 _081516C8:
 	ldr r0, [r5, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	ldr r1, _08151748 @ =0x0300034C
 	ldr r0, _0815174C @ =0x0000FFFF
 	strh r0, [r1, #0x02]
@@ -77883,7 +77883,7 @@ _0815A2F6:
 _0815A306:
 	ldr r0, _0815A380 @ =0x0300101C
 	ldr r0, [r0, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	ldr r1, _0815A384 @ =0x0300034C
 	ldr r0, _0815A388 @ =0x0000FFFF
 	strh r0, [r1, #0x02]
@@ -92188,7 +92188,7 @@ sub_8163DB8:
 	ldr r2, _08163E04 @ =0x0821280C
 	movs r0, #0x01
 	adds r1, r6, #0x0
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r4, r0, #0x0
 	ldr r0, _08163E08 @ =0x03000C84
 	ldr r2, [r0, #0x00]
@@ -92203,7 +92203,7 @@ sub_8163DB8:
 	movs r3, #0x10
 	bl sub_8018218
 	adds r0, r4, #0x0
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	add sp, #0x004
 	pop {r3}
 	mov r8, r3
@@ -92439,7 +92439,7 @@ _08164044:
 	ldr r2, _081640A4 @ =0x08212AE0
 	movs r0, #0x01
 _0816404A:
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x00]
 	ldr r1, [r7, #0x00]
 	adds r1, #0x1F
@@ -92460,7 +92460,7 @@ _0816404A:
 	ldr r1, _081640AC @ =0x00000403
 	ldr r2, _081640B0 @ =0x08212AE8
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x08]
 	adds r0, #0x03
 	movs r1, #0x04
@@ -92695,7 +92695,7 @@ _0816423C:
 	adds r1, r5, #0x3
 	ldr r2, _08164290 @ =0x08212AF0
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r4, r0, #0x0
 	str r4, [r7, #0x1C]
 	adds r4, #0x03
@@ -92754,7 +92754,7 @@ sub_8164294:
 	lsls r1, r1, #0x01
 	ldr r2, _08164318 @ =0x08212AF8
 	movs r0, #0x01
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x24]
 	ldr r1, _0816431C @ =0x08212B30
 	adds r0, r7, #0x0
@@ -92857,7 +92857,7 @@ _08164380:
 	ldr r1, _0816448C @ =0x0000301F
 	ldr r2, _08164490 @ =0x08212B00
 	movs r0, #0x01
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x1C]
 	cmp r0, #0x00
 	bne _0816439C
@@ -93048,7 +93048,7 @@ _08164514:
 	ldr r2, _0816462C @ =0x08212B08
 	movs r0, #0x00
 	adds r1, r4, #0x0
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r7, #0x44]
 	movs r0, #0x00
@@ -93076,7 +93076,7 @@ _08164514:
 	adds r1, r6, #0x3
 	ldr r2, _08164644 @ =0x08212B00
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x48]
 	cmp r0, #0x00
 	beq _08164608
@@ -94141,22 +94141,22 @@ sub_8165144:
 	ldr r0, [r4, #0x48]
 	cmp r0, #0x00
 	beq _0816516A
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _0816516A:
 	ldr r0, [r4, #0x44]
 	cmp r0, #0x00
 	beq _08165174
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _08165174:
 	ldr r0, [r4, #0x1C]
 	cmp r0, #0x00
 	beq _0816517E
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _0816517E:
 	ldr r0, [r4, #0x24]
 	cmp r0, #0x00
 	beq _08165188
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _08165188:
 	bl sub_80E8D74
 	movs r0, #0x01
@@ -94365,14 +94365,14 @@ sub_8165454:
 	adds r4, r0, #0x0
 	adds r5, r1, #0x0
 	ldr r0, [r4, #0x1C]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	ldr r0, [r4, #0x08]
 	cmp r0, #0x00
 	beq _0816546A
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _0816546A:
 	ldr r0, [r4, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	movs r0, #0x01
 	ands r0, r5
 	cmp r0, #0x00
@@ -95511,7 +95511,7 @@ _08165EAE:
 	adds r1, r7, #0x3
 	ldr r2, _08166130 @ =0x08212B90
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r4, r0, #0x0
 	ldr r2, [sp, #0x030]
 	movs r1, #0x8C
@@ -95833,7 +95833,7 @@ _0816618A:
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
 	ldr r0, [r0, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	adds r0, r4, #0x0
 	bl __builtin_delete
 _081661A2:

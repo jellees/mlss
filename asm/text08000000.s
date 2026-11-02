@@ -6163,7 +6163,7 @@ _08017A22:
 	str r2, [r0, #0x00]
 	ldr r0, _08017D78 @ =0x03007FFC
 	str r4, [r0, #0x00]
-	bl init_heap
+	bl init_heap__Fv
 	movs r0, #0x80
 	lsls r0, r0, #0x04
 	ldr r2, _08017D7C @ =0x081DD790

@@ -339,8 +339,6 @@ struct struc_203FFF8* sub_81251DC();
 struct Process* init_ybpa_process_8114B4C(void*, u8, char*, u8);
 void* sub_8127ECC(int, int*);
 int sub_8127E50(void*, void*, int);
-void* alloc_heap_8018CEC(int, int, char*);
-void free_heap_memory_8018C68(void*);
 void sub_81229F0(void*);
 void sub_8127DB4(void*, int, int, int, int, u16, u8);
 void sub_80E8DE4(void);

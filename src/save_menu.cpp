@@ -2,6 +2,7 @@
 
 #include "global.h"
 #include "common.h"
+#include "heap.h"
 #include "save_menu.h"
 
 inline void* SaveMenu::sub_812A930(void* buf) {

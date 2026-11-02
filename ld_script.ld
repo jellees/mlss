@@ -19,7 +19,7 @@ SECTIONS
     .text :
     {
         asm/text08000000.o(.text);
-        asm/heap.o(.text);
+        src/heap.o(.text);
         asm/text08018E24.o(.text);
         src/process.o(.text);
         asm/text08019CA4.o(.text);
@@ -46,6 +46,8 @@ SECTIONS
         asm/text0812A9A0.o(.text);
 
         asm/rodata081DD790.o(.rodata);
+        src/heap.o(.rodata);
+        asm/rodata081DD7D0.o(.rodata);
         src/game_mode.o(.rodata);
         asm/rodata081E23B8.o(.rodata);
         src/field.o(.rodata);
