@@ -12,10 +12,10 @@ struct HeapBlock {
 
 #define HEAP_BLOCK_FREE 1
 
+#define EWRAM_HEAP      ((HeapBlock*)0x2000C80)
 #define EWRAM_HEAP_SIZE 0x3F378
 
 extern HeapBlock gIwramHeap;
-extern HeapBlock gEwramHeap;
 // End of the IWRAM heap (a word in the ROM).
 extern u8* gIwramHeapEnd;
 

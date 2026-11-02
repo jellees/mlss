@@ -5,8 +5,9 @@
 //! Possible fake match: the labels are copied with a loop because C++ folds "FREE"[0] to a
 //! constant, while the original loads the bytes from the string (as COPY_LABEL does in C).
 
-// Close but not matching: the original writes the EWRAM heap's label through its own address constant.
-// https://decomp.me/scratch/TODO
+// Close but not matching: only the registers of the IWRAM heap end (r5) and heap + 0x200 (r6) are
+// swapped. The EWRAM heap is an integer address: as a symbol, its label would be stored relative to
+// the heap register instead of through its own address constant.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/init_heap.s\"");
 #else
@@ -21,12 +22,15 @@ void init_heap() {
         gIwramHeap.label[i] = "FREE"[i];
     }
 
-    CpuFill32(0, &gEwramHeap, EWRAM_HEAP_SIZE);
-    gEwramHeap.previous = NULL;
-    gEwramHeap.next = NULL;
-    gEwramHeap.size = EWRAM_HEAP_SIZE | HEAP_BLOCK_FREE;
-    for (i = 0; i < 4; i++) {
-        gEwramHeap.label[i] = "FREE"[i];
+    CpuFill32(0, EWRAM_HEAP, EWRAM_HEAP_SIZE);
+    EWRAM_HEAP->previous = NULL;
+    EWRAM_HEAP->next = NULL;
+    EWRAM_HEAP->size = EWRAM_HEAP_SIZE | HEAP_BLOCK_FREE;
+    {
+        int j;
+        for (j = 0; j < 4; j++) {
+            EWRAM_HEAP->label[j] = "FREE"[j];
+        }
     }
 }
 #endif
@@ -63,7 +67,6 @@ void free_heap_memory_8018C68(void* p) {
 }
 
 // Close but not matching: register allocation differs (size and block swap registers).
-// https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/alloc_heap_8018CEC.s\"");
 #else
@@ -75,7 +78,7 @@ void* alloc_heap_8018CEC(int heap, u32 size, char* label) {
         return NULL;
     }
 
-    block = &gEwramHeap;
+    block = EWRAM_HEAP;
     if (heap == 0) {
         block = &gIwramHeap;
     }
