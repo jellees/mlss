@@ -91,7 +91,7 @@ sub_804FEC8:
 	ldr r2, _0804FFC0 @ =0x081E26BC
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x01
 	negs r1, r1
 	add r2, sp, #0x004
@@ -1318,7 +1318,7 @@ _08050882:
 	cmp r0, #0x00
 	beq _0805089A
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0805089A:
 	pop {r4, r5}
 	pop {r0}

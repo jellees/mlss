@@ -3,8 +3,8 @@
 	.syntax unified
 	.text
 
-	thumb_func_start sub_812A42C
-sub_812A42C:
+	thumb_func_start sub_812A42C__8SaveMenu
+sub_812A42C__8SaveMenu:
 	push {r4, r5, lr}
 	adds r3, r0, #0x0
 	adds r0, #0xB8

@@ -1710,7 +1710,7 @@ sub_8051628:
 	lsrs r1, r1, #0x18
 	lsls r3, r3, #0x10
 	lsrs r4, r3, #0x10
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08051684 @ =0x08CDC1A8
 	str r0, [r6, #0x18]
 	movs r1, #0x80
@@ -1765,36 +1765,36 @@ _080516A0:
 	movs r1, #0x00
 	adds r2, r5, #0x0
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x08
 	adds r2, r5, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08051730 @ =0x08CDC1B8
 	str r0, [r4, #0x18]
 	str r4, [r6, #0x40]
 	str r6, [r4, #0x14]
 	adds r0, r4, #0x0
-	bl process_disable
+	bl disable__7Process
 	ldr r4, _08051734 @ =0x081E26CC
 	movs r0, #0x5C
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	movs r3, #0x08
 	bl init_ybpa_process_8114B4C
 	str r0, [r6, #0x48]
 	str r6, [r0, #0x14]
-	bl process_disable
+	bl disable__7Process
 	ldr r0, _08051738 @ =0x0000059C
 	ldr r4, _0805173C @ =0x081E26D4
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldrh r3, [r6, #0x24]
 	movs r2, #0x1C
 	ldsh r1, [r6, r2]

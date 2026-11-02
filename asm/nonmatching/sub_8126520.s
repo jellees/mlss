@@ -3,8 +3,8 @@
 	.syntax unified
 	.text
 
-	thumb_func_start sub_8126520
-sub_8126520:
+	thumb_func_start sub_8126520__8LoadMenu
+sub_8126520__8LoadMenu:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9

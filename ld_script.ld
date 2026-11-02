@@ -33,6 +33,7 @@ SECTIONS
         asm/text0804FE68.o(.text);
         asm/text080508A8.o(.text);
         src/system_screens.o(.text);
+        src/system_screens.o(.gnu.linkonce.t.*);
         src/system_screen_popups.o(.text);
         asm/text080542C4.o(.text);
         src/title_screen.o(.text);
@@ -42,7 +43,6 @@ SECTIONS
         asm/text08127BC8.o(.text);
         asm/text08127E50.o(.text);
         src/save_menu.o(.text);
-        asm/save_menu.o(.text);
         asm/text0812A9A0.o(.text);
 
         asm/rodata081DD790.o(.rodata);
@@ -58,10 +58,20 @@ SECTIONS
         src/load_menu.o(.rodata);
         asm/rodata08210F64.o(.rodata);
         src/save_menu.o(.rodata);
-        asm/save_menu.o(.rodata);
         asm/rodata08210FBC.o(.rodata);
+        src/field.o(.gnu.linkonce.d.*);
+        asm/rodata08CDBDC8.o(.rodata);
         asm/text0804FE68.o(.data);
         asm/rodata08CDC068.o(.rodata);
+        src/system_screens.o(.gnu.linkonce.d._vt.18MarioBrosSaveError);
+        src/system_screens.o(.gnu.linkonce.d._vt.15SaveClearScreen);
+        src/system_screens.o(.gnu.linkonce.d._vt.17SaveClearRenderer);
+        asm/rodata08CDC1F8.o(.rodata);
+        src/title_screen.o(.gnu.linkonce.d.*);
+        asm/rodata08CDC278.o(.rodata);
+        src/load_menu.o(.gnu.linkonce.d.*);
+        src/save_menu.o(.gnu.linkonce.d.*);
+        asm/rodata08CDC3F8.o(.rodata);
 
         asm/mariobros.o(.text);
     }

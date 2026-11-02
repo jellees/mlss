@@ -1,30 +1,21 @@
+#pragma implementation "title_screen.h"
+
 #include "global.h"
 #include "common.h"
 #include "game_mode.h"
 #include "load_menu.h"
 #include "multiplayer_serial.h"
 #include "title_screen.h"
+#include "options_menu.h"
 
-inline void title_screen_destroy(struct TitleScreen* titleScreen, int flags) {
-    titleScreen->process.definition = &stru_8CDC238;
-    DmaStop(0);
-    runtime_install_interrupt_callback(2, 0);
-
-    if (titleScreen->mbsv) {
-        process_remove(&titleScreen->mbsv->process, 3);
-    }
-
-    free_heap_8018DA8(dword_3000DA0);
+inline CompanyIntro::~CompanyIntro() {
     sub_8021FD4();
-    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
-    gGameState.field_2 |= 1;
-    BUFFER_REG_DISPCNT = 0;
-    gGameState.field_31 = 2;
-    sub_8017E34();
-    process_remove(&titleScreen->process, flags);
+    if (opdr) {
+        delete opdr;
+    }
 }
 
-inline void sprite_renderer_update(void) {
+inline void SpriteRenderer::update() {
     int var1 = gGameState.field_880;
     sub_8020A78();
     dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
@@ -32,67 +23,66 @@ inline void sprite_renderer_update(void) {
     gGameState.field_880 = var1;
 }
 
-inline void company_intro_destroy(struct CompanyIntro* intro, int flags) {
-    intro->process.definition = &stru_8CDC258;
-    sub_8021FD4();
-    if (intro->opdr) {
-        process_remove(intro->opdr, 3);
+inline TitleScreen::~TitleScreen() {
+    DmaStop(0);
+    runtime_install_interrupt_callback(2, 0);
+
+    if (mbsv) {
+        delete mbsv;
     }
-    process_remove(&intro->process, flags);
+
+    delete dword_3000DA0;
+    sub_8021FD4();
+    BUFFER_REG_SOUNDCNT_L = 0x7FFF;
+    gGameState.field_2 |= 1;
+    BUFFER_REG_DISPCNT = 0;
+    gGameState.field_31 = 2;
+    sub_8017E34();
 }
 
-inline struct Process* sprite_renderer_create(struct Process* renderer, u8 priority, char* label) {
-    process_add(renderer, priority, label);
-    renderer->definition = &stru_8CDC268;
-    return renderer;
-}
-
-struct CompanyIntro* company_intro_create(struct CompanyIntro* intro, u8 priority, char* label) {
-    struct Process* renderer;
+CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) {
+    Process* renderer;
     void* cgdw;
     struct struc_203FFF8* v11;
     vu32 zero;
-
-    process_add(&intro->process, priority, label);
-    intro->process.definition = &stru_8CDC258;
 
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 = 1;
     BUFFER_REG_DISPCNT = 0;
     sub_8017E34();
 
-    renderer = sprite_renderer_create(alloc_Zero(sizeof(struct Process), 0, "OPDR", 0), 8, "OPDR");
-    intro->opdr = renderer;
-    renderer->parentProcess = &intro->process;
+    renderer = new (0, "OPDR", 0) SpriteRenderer(8, "OPDR");
+    opdr = renderer;
+    renderer->parentProcess = this;
 
     dword_3000C78 = 0;
     sub_8020994(0, 0, 0, 0x80);
     stru_203FFB8.field_0_2 = 1;
 
-    intro->mario = sub_8020DD0(2, 4097, 1, -1, -1, -1, -1);
-    sub_801E150(intro->mario, 12, -1, 0, 0);
-    intro->mario->xPosition = 80;
-    intro->mario->yPosition = -35;
-    intro->mario->field_11_6 = 1;
+    mario = sub_8020DD0(2, 4097, 1, -1, -1, -1, -1);
+    sub_801E150(mario, 12, -1, 0, 0);
+    mario->xPosition = 80;
+    mario->yPosition = -35;
+    mario->field_11_6 = 1;
 
-    intro->luigi = sub_8020DD0(2, 4098, 1, -1, -1, -1, -1);
-    sub_801E150(intro->luigi, 12, -1, 0, 0);
-    intro->luigi->xPosition = 160;
-    intro->luigi->yPosition = -35;
+    luigi = sub_8020DD0(2, 4098, 1, -1, -1, -1, -1);
+    sub_801E150(luigi, 12, -1, 0, 0);
+    luigi->xPosition = 160;
+    luigi->yPosition = -35;
 
-    intro->alphaDreamLogo = sub_8020DD0(7, 33103, 1, -1, -1, -1, -1);
-    sub_801E150(intro->alphaDreamLogo, 0, -1, 0, 0);
-    intro->alphaDreamLogo->xPosition = 120;
-    intro->alphaDreamLogo->yPosition = 74;
+    alphaDreamLogo = sub_8020DD0(7, 33103, 1, -1, -1, -1, -1);
+    sub_801E150(alphaDreamLogo, 0, -1, 0, 0);
+    alphaDreamLogo->xPosition = 120;
+    alphaDreamLogo->yPosition = 74;
 
     sub_80213A0(0, 4109, -1, 1);
     sub_80213A0(0, 4110, -1, 1);
-    intro->xPosMario = 20480;
-    intro->yPosMario = -8960;
-    intro->xPosLuigi = 40960;
-    intro->yPosLuigi = -8960;
+    xPosMario = 20480;
+    yPosMario = -8960;
+    xPosLuigi = 40960;
+    yPosLuigi = -8960;
 
-    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
+    cgdw = new (1, "CGDW", 0) u8[0x8000];
     dword_3000C84(dword_83A2B48, cgdw);
     CpuFastSet(cgdw, (void*)BG_CHAR_ADDR(2), (sub_80198B0(dword_83A2B48) >> 2) & 0x1FFFFF);
     CpuFastSet(dword_83A2F98, (void*)BG_SCREEN_ADDR(28), 320);
@@ -101,7 +91,7 @@ struct CompanyIntro* company_intro_create(struct CompanyIntro* intro, u8 priorit
     dword_3000C84(dword_83A34B8, cgdw);
     CpuFastSet(cgdw, (void*)BG_CHAR_ADDR(3), (sub_80198B0(dword_83A34B8) >> 2) & 0x1FFFFF);
     CpuFastSet(dword_83A3860, (void*)BG_SCREEN_ADDR(29), 320);
-    free_heap_8018DA8(cgdw);
+    operator delete(cgdw);
 
     dword_3000C78 = sub_800063C;
     v11 = sub_81251DC();
@@ -117,165 +107,157 @@ struct CompanyIntro* company_intro_create(struct CompanyIntro* intro, u8 priorit
     BUFFER_REG_BG0HOFS = 0;
     BUFFER_REG_BG0VOFS = 99;
 
-    intro->verticalOffset = 25344;
-    CpuFastSet(&dword_83A3498, (void*)0x2000000 + 0x80, 8);
+    verticalOffset = 25344;
+    CpuFastSet(&dword_83A3498, (void*)(0x2000000 + 0x80), 8);
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
-    gGameState.field_2 = -1;
+    gGameState.field_2 = 0xFFFF;
 
-    sprite_show_8020CBC(intro->mario);
-    sprite_show_8020CBC(intro->luigi);
+    sprite_show_8020CBC(mario);
+    sprite_show_8020CBC(luigi);
 
-    intro->velocity = 0;
-    intro->acceleration = 117;
-    intro->flags = 1;
-    intro->process.state = 0;
+    velocity = 0;
+    acceleration = 117;
+    flags = 1;
+    state = 0;
 
     BUFFER_REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON | DISPCNT_OBJ_ON;
-
-    return intro;
 }
 
-void company_intro_update(struct CompanyIntro* intro) {
-    switch (intro->process.state) {
+void CompanyIntro::update() {
+    switch (state) {
         case 0:
-            intro->yPosMario += intro->velocity;
-            intro->yPosLuigi += intro->velocity;
-            intro->verticalOffset -= intro->velocity;
-            intro->velocity = intro->velocity + intro->acceleration;
-            if (intro->verticalOffset <= 0) {
-                intro->brightness = 16;
-                intro->verticalOffset = 0;
-                intro->velocity = -1324;
+            yPosMario += velocity;
+            yPosLuigi += velocity;
+            verticalOffset -= velocity;
+            velocity = velocity + acceleration;
+            if (verticalOffset <= 0) {
+                brightness = 16;
+                verticalOffset = 0;
+                velocity = -1324;
                 play_sfx_80195B4(134, -1);
-                intro->process.state = 1;
+                state = 1;
             }
             break;
 
         case 1:
-            if (intro->brightness > 10) {
-                intro->verticalOffset ^= 512;
+            if (brightness > 10) {
+                verticalOffset ^= 512;
             } else {
-                intro->verticalOffset ^= 256;
+                verticalOffset ^= 256;
             }
-            intro->brightness--;
-            if (intro->brightness == 0) {
-                intro->brightness = 100;
+            brightness--;
+            if (brightness == 0) {
+                brightness = 100;
                 BUFFER_REG_BG0VOFS = 0;
-                intro->process.state = 2;
+                state = 2;
             }
             break;
 
         case 2:
-            if (intro->brightness == 80) {
+            if (brightness == 80) {
                 play_sfx_80195B4(221, -1);
             }
-            intro->brightness--;
-            if (intro->brightness == 0) {
-                intro->brightness = 16;
+            brightness--;
+            if (brightness == 0) {
+                brightness = 16;
                 BUFFER_REG_BLDCNT = 191;
                 BUFFER_REG_BLDY = 0;
-                intro->process.state = 3;
+                state = 3;
             }
             break;
 
         case 3:
-            intro->brightness--;
-            BUFFER_REG_BLDY = 16 - intro->brightness;
-            if (intro->brightness == 0) {
-                sprite_hide_8021F20(intro->mario);
-                sprite_hide_8021F20(intro->luigi);
-                CpuFastSet(dword_83A3D60, (void*)0x2000000 + 0x80, 8);
-                gGameState.field_2 = -1;
+            brightness--;
+            BUFFER_REG_BLDY = 16 - brightness;
+            if (brightness == 0) {
+                sprite_hide_8021F20(mario);
+                sprite_hide_8021F20(luigi);
+                CpuFastSet(dword_83A3D60, (void*)(0x2000000 + 0x80), 8);
+                gGameState.field_2 = 0xFFFF;
                 BUFFER_REG_BG0CNT = BGCNT_CHARBASE(3) | BGCNT_SCREENBASE(29);
-                sprite_show_8020CBC(intro->alphaDreamLogo);
-                intro->alphaDreamLogo->field_12_4 = 1;
-                intro->brightness = 16;
-                intro->process.state = 4;
+                sprite_show_8020CBC(alphaDreamLogo);
+                alphaDreamLogo->field_12_4 = 1;
+                brightness = 16;
+                state = 4;
             }
             break;
 
         case 4:
-            intro->brightness--;
-            BUFFER_REG_BLDY = intro->brightness;
+            brightness--;
+            BUFFER_REG_BLDY = brightness;
             if (gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
-                intro->brightness = 16 - intro->brightness;
-                intro->process.state = 6;
-            } else if (intro->brightness == 0) {
-                intro->brightness = 120;
-                intro->alphaDreamLogo->field_12_4 = 0;
-                intro->alphaDreamLogo->field_12_1 = 1;
-                intro->process.state = 5;
+                brightness = 16 - brightness;
+                state = 6;
+            } else if (brightness == 0) {
+                brightness = 120;
+                alphaDreamLogo->field_12_4 = 0;
+                alphaDreamLogo->field_12_1 = 1;
+                state = 5;
             }
             break;
 
         case 5:
             if ((gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) == 0) {
-                intro->brightness--;
-                if (intro->brightness != 0) {
+                brightness--;
+                if (brightness != 0) {
                     break;
                 }
             }
-            intro->brightness = 16;
-            intro->process.state = 6;
+            brightness = 16;
+            state = 6;
             break;
 
         case 6:
-            intro->brightness--;
-            BUFFER_REG_BLDY = 16 - intro->brightness;
-            if (intro->brightness == 0) {
-                if (intro) {
-                    company_intro_destroy(intro, 3);
-                }
-                title_screen_create(alloc_Zero(sizeof(struct TitleScreen), 0, "OPEN", 0), 8, "OPEN", 0);
+            brightness--;
+            BUFFER_REG_BLDY = 16 - brightness;
+            if (brightness == 0) {
+                delete this;
+                new (0, "OPEN", 0) TitleScreen(8, "OPEN", 0);
                 return;
             }
             break;
     }
 
-    if (intro->process.state < 3) {
-        if (intro->process.state != 0 && intro->flags) {
-            intro->xPosMario -= 384;
-            intro->xPosLuigi += 384;
-            intro->yPosMario += intro->velocity;
-            intro->yPosLuigi += intro->velocity;
-            intro->velocity += intro->acceleration;
-            if (intro->yPosMario >= 24064) {
+    if (state < 3) {
+        if (state != 0 && flags) {
+            xPosMario -= 384;
+            xPosLuigi += 384;
+            yPosMario += velocity;
+            yPosLuigi += velocity;
+            velocity += acceleration;
+            if (yPosMario >= 24064) {
                 bool32 temp;
-                intro->yPosMario = 24064;
-                intro->yPosLuigi = 24064;
-                sub_80210A8(intro->mario, 2, 4109, 1, -1, -1, -1, -1);
-                sub_801E150(intro->mario, 0, -1, 0, 0);
-                sprite_show_8020CBC(intro->mario);
-                temp = intro->mario->field_11_6;
+                yPosMario = 24064;
+                yPosLuigi = 24064;
+                sub_80210A8(mario, 2, 4109, 1, -1, -1, -1, -1);
+                sub_801E150(mario, 0, -1, 0, 0);
+                sprite_show_8020CBC(mario);
+                temp = mario->field_11_6;
                 temp ^= 1;
-                intro->mario->field_11_6 = temp;
-                intro->mario->field_12_1 = 1;
+                mario->field_11_6 = temp;
+                mario->field_12_1 = 1;
 
-                sub_80210A8(intro->luigi, 2, 4110, 1, -1, -1, -1, -1);
-                sub_801E150(intro->luigi, 0, -1, 0, 0);
-                sprite_show_8020CBC(intro->luigi);
-                intro->luigi->field_12_1 = 1;
-                intro->flags = 0;
+                sub_80210A8(luigi, 2, 4110, 1, -1, -1, -1, -1);
+                sub_801E150(luigi, 0, -1, 0, 0);
+                sprite_show_8020CBC(luigi);
+                luigi->field_12_1 = 1;
+                flags = 0;
             }
         }
-        BUFFER_REG_BG0VOFS = intro->verticalOffset / 256;
-        intro->mario->xPosition = intro->xPosMario / 256;
-        intro->mario->yPosition = intro->yPosMario / 256;
-        intro->luigi->xPosition = intro->xPosLuigi / 256;
-        intro->luigi->yPosition = intro->yPosLuigi / 256;
+        BUFFER_REG_BG0VOFS = verticalOffset / 256;
+        mario->xPosition = xPosMario / 256;
+        mario->yPosition = yPosMario / 256;
+        luigi->xPosition = xPosLuigi / 256;
+        luigi->yPosition = yPosLuigi / 256;
     }
 
     sub_8021F7C();
 }
 
-struct TitleScreen* title_screen_create(struct TitleScreen* titleScreen, u8 priority, char* label,
-                                        int selection) {
+TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(priority, label) {
     struct struc_203FFF8* v5;
     void* cgdw;
     u32 i;
-
-    process_add(&titleScreen->process, priority, label);
-    titleScreen->process.definition = &stru_8CDC238;
 
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 = 1;
@@ -292,27 +274,24 @@ struct TitleScreen* title_screen_create(struct TitleScreen* titleScreen, u8 prio
     stru_203FFF8.field_7_4 = dword_3000FFC->field_8_0;
     stru_203FFF8.field_7_7 = gGameState.field_888_1;
 
-    dword_3000DA0 = alloc_Zero(340, 0, "ORST", 1);
-    {
-        struct MarioBrosScoreVisual** scoreVisual = &titleScreen->mbsv;
-        *scoreVisual = mario_bros_score_visual_create(alloc_Zero(0x24, 0, "OPDR", 0), 8, "OPDR",
-                                                      stru_203FFF8.field_0, stru_203FFF8.field_4);
-        (*scoreVisual)->process.parentProcess = &titleScreen->process;
-    }
+    dword_3000DA0 = new (0, "ORST", 1) ORSTData;
+    mbsv = new (0, "OPDR", 0)
+        MarioBrosScoreVisual(8, "OPDR", stru_203FFF8.field_0, stru_203FFF8.field_4);
+    mbsv->parentProcess = this;
 
-    titleScreen->selection = selection != 0 ? selection - 1 : 0;
-    titleScreen->suitcaseVisualState = TS_SV_STATE_APPEAR;
-    titleScreen->brightness = 16;
-    titleScreen->isSkippingSuitcaseAnim = 0;
-    titleScreen->skipSuitcaseAnim = 1;
-    titleScreen->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_FALLING;
+    this->selection = selection != 0 ? selection - 1 : 0;
+    suitcaseVisualState = TS_SV_STATE_APPEAR;
+    brightness = 16;
+    isSkippingSuitcaseAnim = 0;
+    skipSuitcaseAnim = 1;
+    states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_FALLING;
     for (i = TS_ITEM_ML_LOGO; i < TS_ITEM_COUNT; i++) {
-        titleScreen->states[i] = -1;
+        states[i] = -1;
     }
 
     dword_3000C78 = 0;
 
-    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
+    cgdw = new (1, "CGDW", 0) u8[0x8000];
     dword_3000C84(dword_83A3D80, cgdw);
     CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A3D80) >> 2) & 0x1FFFFF);
     dword_3000C84(dword_83A4874, cgdw);
@@ -320,28 +299,28 @@ struct TitleScreen* title_screen_create(struct TitleScreen* titleScreen, u8 prio
     CpuFastSet(dword_83A575C, (void*)0x600C000, 320);
     CpuFastSet(dword_83A5C5C, (void*)0x600D000, 1024);
     CpuFastSet(dword_83A6C5C, (void*)0x600C800, 312);
-    free_heap_8018DA8(cgdw);
+    operator delete(cgdw);
     sub_8020994(0, 0, 0, 0);
 
     for (i = 0; i < 9; i++) {
-        titleScreen->sprites[i] =
+        sprites[i] =
             sub_8020DD0(0, word_83A74C0[i * 2], word_83A74C0[i * 2 + 1], -1, -1, -1, -1);
-        sub_801E150(titleScreen->sprites[i], 0, -1, 0, 0);
+        sub_801E150(sprites[i], 0, -1, 0, 0);
     }
 
     if (selection == 0) {
-        titleScreen->xPosSuitcase = 30720;
-        titleScreen->yPosSuitcase = 0;
-        titleScreen->yVelocitySuitcase = 512;
-        sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 0, 0, 0, 0);
-        titleScreen->sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
-        titleScreen->sprites[TS_SPRITE_SUITCASE]->yPosition = 0;
-        titleScreen->sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
-        titleScreen->sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
-        titleScreen->sprites[TS_SPRITE_SUITCASE]->field_E = 2;
-        sprite_show_8020CBC(titleScreen->sprites[TS_SPRITE_SUITCASE]);
+        xPosSuitcase = 30720;
+        yPosSuitcase = 0;
+        yVelocitySuitcase = 512;
+        sub_801E150(sprites[TS_SPRITE_SUITCASE], 0, 0, 0, 0);
+        sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
+        sprites[TS_SPRITE_SUITCASE]->yPosition = 0;
+        sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
+        sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
+        sprites[TS_SPRITE_SUITCASE]->field_E = 2;
+        sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE]);
     } else {
-        title_screen_prepare_game_select(titleScreen, selection);
+        prepareGameSelect(selection);
     }
 
     dword_3000C78 = sub_800063C;
@@ -359,47 +338,46 @@ struct TitleScreen* title_screen_create(struct TitleScreen* titleScreen, u8 prio
     CpuFastSet(gGameState.field_888_1 == 0 ? dword_83A7140 : dword_83A7300, (void*)0x2000080, 112);
 
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
-    gGameState.field_2 = -1;
-    gGameState.field_0 = -1;
+    gGameState.field_2 = 0xFFFF;
+    gGameState.field_0 = 0xFFFF;
     runtime_install_interrupt_callback(2, title_screen_scroll_background_hblank);
     sub_8019308(0, 41, -1);
 
     if (selection == 0) {
-        titleScreen->entryStateIdx = 0;
+        entryStateIdx = 0;
         BUFFER_REG_DISPCNT |= 4673;
     } else {
-        titleScreen->entryStateIdx = 2;
+        entryStateIdx = 2;
         BUFFER_REG_DISPCNT |= 5953;
     }
 
-    return titleScreen;
 }
 
-void title_screen_prepare_press_start(struct TitleScreen* titleScreen) {
-    sprite_hide_8021F20(titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]);
+void TitleScreen::preparePressStart() {
+    sprite_hide_8021F20(sprites[TS_SPRITE_LICENSE_TEXT]);
 
-    sub_801E150(titleScreen->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->yPosition = 80;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->xScale = 256;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->yScale = 256;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 0;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 0;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
-    sprite_show_8020CBC(titleScreen->sprites[TS_SPRITE_SS_TEXT]);
+    sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
+    sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
+    sprites[TS_SPRITE_SS_TEXT]->yPosition = 80;
+    sprites[TS_SPRITE_SS_TEXT]->xScale = 256;
+    sprites[TS_SPRITE_SS_TEXT]->yScale = 256;
+    sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 0;
+    sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 0;
+    sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
+    sprite_show_8020CBC(sprites[TS_SPRITE_SS_TEXT]);
 
-    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->yPosition = 140;
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_E = 2;
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
-    sprite_show_8020CBC(titleScreen->sprites[TS_SPRITE_SUITCASE]);
+    sub_801E150(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+    sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
+    sprites[TS_SPRITE_SUITCASE]->yPosition = 140;
+    sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
+    sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
+    sprites[TS_SPRITE_SUITCASE]->field_E = 2;
+    sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
+    sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE]);
 
-    titleScreen->xPosSuitcase = 30720;
-    titleScreen->yPosSuitcase = 35840;
-    titleScreen->skipSuitcaseAnim = FALSE;
+    xPosSuitcase = 30720;
+    yPosSuitcase = 35840;
+    skipSuitcaseAnim = FALSE;
 
     BUFFER_REG_BG2HOFS = 0;
     BUFFER_REG_BG2VOFS = 0;
@@ -414,56 +392,56 @@ void title_screen_prepare_press_start(struct TitleScreen* titleScreen) {
     BUFFER_REG_BG0VOFS = 0;
     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
 
-    titleScreen->mlTextPosY = 0;
-    titleScreen->mlTextScaleX = 256;
-    titleScreen->mlTextScaleY = 256;
-    titleScreen->states[TS_ITEM_SUITCASE] = -1;
+    mlTextPosY = 0;
+    mlTextScaleX = 256;
+    mlTextScaleY = 256;
+    states[TS_ITEM_SUITCASE] = -1;
 }
 
-void title_screen_prepare_game_select(struct TitleScreen* titleScreen, int selection) {
+void TitleScreen::prepareGameSelect(int selection) {
     int i;
 
-    sprite_hide_8021F20(titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]);
-    sprite_hide_8021F20(titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT]);
+    sprite_hide_8021F20(sprites[TS_SPRITE_LICENSE_TEXT]);
+    sprite_hide_8021F20(sprites[TS_SPRITE_PRESS_START_TEXT]);
 
     for (i = 0; i < 3; i++) {
-        sub_801E150(titleScreen->sprites[TS_SPRITE_ML_GAME_TEXT + i], 3 + i, 0, 0, 0);
-        titleScreen->sprites[TS_SPRITE_ML_GAME_TEXT + i]->xPosition = 180;
-        titleScreen->sprites[TS_SPRITE_ML_GAME_TEXT + i]->yPosition = 100 + i * 20;
-        sprite_show_8020CBC(titleScreen->sprites[TS_SPRITE_ML_GAME_TEXT + i]);
+        sub_801E150(sprites[TS_SPRITE_ML_GAME_TEXT + i], 3 + i, 0, 0, 0);
+        sprites[TS_SPRITE_ML_GAME_TEXT + i]->xPosition = 180;
+        sprites[TS_SPRITE_ML_GAME_TEXT + i]->yPosition = 100 + i * 20;
+        sprite_show_8020CBC(sprites[TS_SPRITE_ML_GAME_TEXT + i]);
     }
 
-    sub_801E150(titleScreen->sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
-    titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 112;
-    titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 92 + 20 * titleScreen->selection;
-    sprite_show_8020CBC(titleScreen->sprites[TS_SPRITE_BEAN_POINTER]);
+    sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
+    sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 112;
+    sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 92 + 20 * this->selection;
+    sprite_show_8020CBC(sprites[TS_SPRITE_BEAN_POINTER]);
 
-    sub_801E150(titleScreen->sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->yPosition = 80;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->xScale = 256;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->yScale = 256;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 0;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 0;
-    titleScreen->sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
-    sprite_show_8020CBC(titleScreen->sprites[TS_SPRITE_SS_TEXT]);
+    sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
+    sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
+    sprites[TS_SPRITE_SS_TEXT]->yPosition = 80;
+    sprites[TS_SPRITE_SS_TEXT]->xScale = 256;
+    sprites[TS_SPRITE_SS_TEXT]->yScale = 256;
+    sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 0;
+    sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 0;
+    sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
+    sprite_show_8020CBC(sprites[TS_SPRITE_SS_TEXT]);
 
-    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->xPosition = 64;
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->yPosition = 140;
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
-    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_E = 2;
-    sprite_show_8020CBC(titleScreen->sprites[TS_SPRITE_SUITCASE]);
+    sub_801E150(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+    sprites[TS_SPRITE_SUITCASE]->xPosition = 64;
+    sprites[TS_SPRITE_SUITCASE]->yPosition = 140;
+    sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
+    sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
+    sprites[TS_SPRITE_SUITCASE]->field_E = 2;
+    sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE]);
 
-    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * (selection - 1) + 1, 0, 0, 0);
-    titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->xPosition = 64;
-    titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->yPosition = 140;
-    titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_1F_0 = 1;
-    titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_E = 1;
-    sprite_show_8020CBC(titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]);
+    sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * (selection - 1) + 1, 0, 0, 0);
+    sprites[TS_SPRITE_SUITCASE_VISUAL]->xPosition = 64;
+    sprites[TS_SPRITE_SUITCASE_VISUAL]->yPosition = 140;
+    sprites[TS_SPRITE_SUITCASE_VISUAL]->field_1F_0 = 1;
+    sprites[TS_SPRITE_SUITCASE_VISUAL]->field_E = 1;
+    sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE_VISUAL]);
 
-    titleScreen->suitcaseVisualState = TS_SV_STATE_IDLE;
+    suitcaseVisualState = TS_SV_STATE_IDLE;
 
     off_839EC80[0x01] |= 0x20;
     off_839EC80[0x40] = 0xF0;
@@ -494,9 +472,9 @@ void title_screen_prepare_game_select(struct TitleScreen* titleScreen, int selec
     BUFFER_REG_BG2X = 0;
     BUFFER_REG_BG2Y = 0;
 
-    titleScreen->mlTextPosY = 0;
-    titleScreen->mlTextScaleX = 256;
-    titleScreen->mlTextScaleY = 256;
+    mlTextPosY = 0;
+    mlTextScaleX = 256;
+    mlTextScaleY = 256;
 
     multiplayer_serial_enable();
 }
@@ -546,282 +524,282 @@ void title_screen_scroll_background_hblank(void) {
     }
 }
 
-void title_screen_update(struct TitleScreen* titleScreen) {
+void TitleScreen::update() {
     int i, j;
 
     sub_8021F7C();
 
-    switch (titleScreen->process.state) {
+    switch (state) {
         case TS_STATE_FADE_IN:
-            titleScreen->brightness--;
-            BUFFER_REG_BLDY = titleScreen->brightness;
-            if (titleScreen->brightness == 0) {
-                titleScreen->process.state = byte_83A74E9[titleScreen->entryStateIdx];
-                if (titleScreen->process.state == TS_STATE_PRESS_START_SHOW) {
-                    titleScreen->brightness = 60;
+            brightness--;
+            BUFFER_REG_BLDY = brightness;
+            if (brightness == 0) {
+                state = byte_83A74E9[entryStateIdx];
+                if (state == TS_STATE_PRESS_START_SHOW) {
+                    brightness = 60;
                 }
             }
             break;
 
         case TS_STATE_TITLE_ANIMATION:
             for (i = 0; i < TS_ITEM_COUNT; i++) {
-                if (titleScreen->states[i] < 0) {
+                if (states[i] < 0) {
                     continue;
                 }
 
                 switch (i) {
                     case TS_ITEM_SUITCASE:
-                        switch (titleScreen->states[TS_ITEM_SUITCASE]) {
+                        switch (states[TS_ITEM_SUITCASE]) {
                             case TS_ITEM_SC_STATE_FALLING:
-                                titleScreen->yPosSuitcase += titleScreen->yVelocitySuitcase;
-                                titleScreen->yVelocitySuitcase += 32;
-                                if (titleScreen->yPosSuitcase > 35839) {
-                                    titleScreen->yPosSuitcase = 35840;
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 1, 0, 0, 0);
-                                    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
-                                    titleScreen->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_HIT_GROUND;
+                                yPosSuitcase += yVelocitySuitcase;
+                                yVelocitySuitcase += 32;
+                                if (yPosSuitcase > 35839) {
+                                    yPosSuitcase = 35840;
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 1, 0, 0, 0);
+                                    sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_HIT_GROUND;
                                 }
                                 break;
 
                             case TS_ITEM_SC_STATE_HIT_GROUND:
-                                if (titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
-                                    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
-                                    titleScreen->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_FALL_OVER;
+                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+                                    sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_FALL_OVER;
                                 }
                                 break;
 
                             case TS_ITEM_SC_STATE_FALL_OVER:
-                                if (titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 3, 0, 0, 0);
-                                    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
-                                    titleScreen->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_OPEN;
+                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 3, 0, 0, 0);
+                                    sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_OPEN;
                                 }
                                 break;
 
                             case TS_ITEM_SC_STATE_OPEN:
-                                if (titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
                                     BUFFER_REG_DISPCNT |= DISPCNT_BG2_ON;
-                                    titleScreen->mlTextProgression = 2560;
-                                    titleScreen->mlTextPosY = 37120;
-                                    titleScreen->mlTextScaleX = 51;
-                                    titleScreen->mlTextScaleY = 51;
-                                    titleScreen->mlTextAffineSrc.texX = 30720;
-                                    titleScreen->mlTextAffineSrc.texY = 0x4000;
-                                    titleScreen->mlTextAffineSrc.scrX = 120;
-                                    titleScreen->mlTextAffineSrc.scrY = 64;
-                                    titleScreen->mlTextAffineSrc.sx = 256;
-                                    titleScreen->mlTextAffineSrc.sy = 256;
-                                    titleScreen->mlTextAffineSrc.alpha = 0;
-                                    titleScreen->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_OPEN_WAIT;
-                                    titleScreen->states[TS_ITEM_ML_LOGO] = 0;
-                                    titleScreen->timer = 0;
+                                    mlTextProgression = 2560;
+                                    mlTextPosY = 37120;
+                                    mlTextScaleX = 51;
+                                    mlTextScaleY = 51;
+                                    mlTextAffineSrc.texX = 30720;
+                                    mlTextAffineSrc.texY = 0x4000;
+                                    mlTextAffineSrc.scrX = 120;
+                                    mlTextAffineSrc.scrY = 64;
+                                    mlTextAffineSrc.sx = 256;
+                                    mlTextAffineSrc.sy = 256;
+                                    mlTextAffineSrc.alpha = 0;
+                                    states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_OPEN_WAIT;
+                                    states[TS_ITEM_ML_LOGO] = 0;
+                                    timer = 0;
                                 }
                                 break;
 
                             case TS_ITEM_SC_STATE_OPEN_WAIT:
-                                if (titleScreen->timer < 0xFFFF) {
-                                    switch (titleScreen->timer) {
+                                if (timer < 0xFFFF) {
+                                    switch (timer) {
                                         case 32:
-                                            titleScreen->ssTextProgression = 2470;
-                                            titleScreen->ssTextPosY = 37376;
-                                            titleScreen->ssTextScaleX = 51;
-                                            titleScreen->ssTextScaleY = 51;
-                                            sub_801E150(titleScreen->sprites[TS_SPRITE_SS_TEXT], 0, 0,
+                                            ssTextProgression = 2470;
+                                            ssTextPosY = 37376;
+                                            ssTextScaleX = 51;
+                                            ssTextScaleY = 51;
+                                            sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0,
                                                         0, 0);
-                                            titleScreen->sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
-                                            titleScreen->sprites[TS_SPRITE_SS_TEXT]->yPosition = 146;
-                                            titleScreen->sprites[TS_SPRITE_SS_TEXT]->xScale = 51;
-                                            titleScreen->sprites[TS_SPRITE_SS_TEXT]->yScale = 51;
-                                            titleScreen->sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 1;
-                                            titleScreen->sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 1;
-                                            titleScreen->sprites[TS_SPRITE_SS_TEXT]->field_E = 0;
+                                            sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
+                                            sprites[TS_SPRITE_SS_TEXT]->yPosition = 146;
+                                            sprites[TS_SPRITE_SS_TEXT]->xScale = 51;
+                                            sprites[TS_SPRITE_SS_TEXT]->yScale = 51;
+                                            sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 1;
+                                            sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 1;
+                                            sprites[TS_SPRITE_SS_TEXT]->field_E = 0;
                                             sprite_show_8020CBC(
-                                                titleScreen->sprites[TS_SPRITE_SS_TEXT]);
-                                            titleScreen->states[TS_ITEM_SS_TEXT] = 0;
+                                                sprites[TS_SPRITE_SS_TEXT]);
+                                            states[TS_ITEM_SS_TEXT] = 0;
                                             break;
 
                                         case 64:
-                                            titleScreen->nTextProgression = 1945;
-                                            titleScreen->nTextPosY = 36608;
-                                            titleScreen->nTextScaleX = 51;
-                                            titleScreen->nTextScaleY = 51;
-                                            sub_801E150(titleScreen->sprites[TS_SPRITE_LICENSE_TEXT], 0,
+                                            nTextProgression = 1945;
+                                            nTextPosY = 36608;
+                                            nTextScaleX = 51;
+                                            nTextScaleY = 51;
+                                            sub_801E150(sprites[TS_SPRITE_LICENSE_TEXT], 0,
                                                         0, 0, 0);
-                                            titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->xPosition =
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->xPosition =
                                                 118;
-                                            titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->yPosition =
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->yPosition =
                                                 143;
-                                            titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->xScale = 51;
-                                            titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->yScale = 51;
-                                            titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_0 =
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->xScale = 51;
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->yScale = 51;
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_0 =
                                                 1;
-                                            titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_2 =
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_2 =
                                                 1;
-                                            titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->field_E = 0;
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->field_E = 0;
                                             sprite_show_8020CBC(
-                                                titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]);
-                                            titleScreen->states[TS_ITEM_LICENSE_TEXT] = 0;
+                                                sprites[TS_SPRITE_LICENSE_TEXT]);
+                                            states[TS_ITEM_LICENSE_TEXT] = 0;
                                             break;
                                     }
-                                    titleScreen->timer++;
+                                    timer++;
                                 }
                                 break;
 
                             case TS_ITEM_SC_STATE_CLOSE:
-                                if (titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
-                                    titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
-                                    sprite_hide_8021F20(titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]);
-                                    titleScreen->states[TS_ITEM_SUITCASE] = -1;
+                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+                                    sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
+                                    sprite_hide_8021F20(sprites[TS_SPRITE_LICENSE_TEXT]);
+                                    states[TS_ITEM_SUITCASE] = -1;
                                     BUFFER_REG_BG0CNT = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(24);
                                     BUFFER_REG_BG0HOFS = 0;
                                     BUFFER_REG_BG0VOFS = 0;
                                     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
-                                    if (!titleScreen->isSkippingSuitcaseAnim) {
-                                        titleScreen->brightness = 60;
-                                        titleScreen->process.state = TS_STATE_PRESS_START_SHOW;
+                                    if (!isSkippingSuitcaseAnim) {
+                                        brightness = 60;
+                                        state = TS_STATE_PRESS_START_SHOW;
                                     }
                                 }
                                 break;
                         }
-                        titleScreen->sprites[TS_SPRITE_SUITCASE]->xPosition =
-                            titleScreen->xPosSuitcase / 256;
-                        titleScreen->sprites[TS_SPRITE_SUITCASE]->yPosition =
-                            titleScreen->yPosSuitcase / 256;
+                        sprites[TS_SPRITE_SUITCASE]->xPosition =
+                            xPosSuitcase / 256;
+                        sprites[TS_SPRITE_SUITCASE]->yPosition =
+                            yPosSuitcase / 256;
                         break;
 
                     case TS_ITEM_ML_LOGO:
-                        switch (titleScreen->states[TS_ITEM_ML_LOGO]) {
+                        switch (states[TS_ITEM_ML_LOGO]) {
                             case 0:
-                                titleScreen->mlTextProgression -= 98;
-                                titleScreen->mlTextPosY -= titleScreen->mlTextProgression;
-                                titleScreen->mlTextScaleX += 5;
-                                titleScreen->mlTextScaleY = titleScreen->mlTextScaleX;
-                                if (titleScreen->mlTextScaleX > 255) {
+                                mlTextProgression -= 98;
+                                mlTextPosY -= mlTextProgression;
+                                mlTextScaleX += 5;
+                                mlTextScaleY = mlTextScaleX;
+                                if (mlTextScaleX > 255) {
                                     BUFFER_REG_BG2CNT = BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1)
                                                         | BGCNT_256COLOR | BGCNT_SCREENBASE(25)
                                                         | BGCNT_AFF256x256;
-                                    titleScreen->mlTextScaleX = 256;
-                                    titleScreen->states[TS_ITEM_ML_LOGO] = 1;
-                                    titleScreen->mlTextProgression = 0;
+                                    mlTextScaleX = 256;
+                                    states[TS_ITEM_ML_LOGO] = 1;
+                                    mlTextProgression = 0;
                                 }
                                 break;
 
                             case 1:
-                                titleScreen->mlTextScaleX =
-                                    word_83A74EC[2 * titleScreen->mlTextProgression];
-                                titleScreen->mlTextScaleY =
-                                    word_83A74EC[2 * titleScreen->mlTextProgression + 1];
-                                titleScreen->mlTextProgression++;
+                                mlTextScaleX =
+                                    word_83A74EC[2 * mlTextProgression];
+                                mlTextScaleY =
+                                    word_83A74EC[2 * mlTextProgression + 1];
+                                mlTextProgression++;
                                 // Is the cast really necessary here?
-                                if ((u16)titleScreen->mlTextProgression == 17) {
-                                    titleScreen->states[TS_ITEM_ML_LOGO] = -1;
+                                if ((u16)mlTextProgression == 17) {
+                                    states[TS_ITEM_ML_LOGO] = -1;
                                 }
                                 break;
                         }
-                        titleScreen->mlTextAffineSrc.sx =
-                            (dword_3001038 + (&loc_819832C - &loc_8198220))(0x10000,
-                                                                            titleScreen->mlTextScaleX);
-                        titleScreen->mlTextAffineSrc.sy =
-                            (dword_3001038 + (&loc_819832C - &loc_8198220))(0x10000,
-                                                                            titleScreen->mlTextScaleY);
-                        titleScreen->mlTextAffineSrc.scrY = titleScreen->mlTextPosY / 256;
-                        BgAffineSet(&titleScreen->mlTextAffineSrc, &titleScreen->mlTextAffineDst, 1);
-                        BUFFER_REG_BG2PA = titleScreen->mlTextAffineDst.pa;
-                        BUFFER_REG_BG2PB = titleScreen->mlTextAffineDst.pb;
-                        BUFFER_REG_BG2PC = titleScreen->mlTextAffineDst.pc;
-                        BUFFER_REG_BG2PD = titleScreen->mlTextAffineDst.pd;
-                        BUFFER_REG_BG2X = titleScreen->mlTextAffineDst.dx;
-                        BUFFER_REG_BG2Y = titleScreen->mlTextAffineDst.dy;
+                        mlTextAffineSrc.sx =
+                            ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(0x10000,
+                                                                            mlTextScaleX);
+                        mlTextAffineSrc.sy =
+                            ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(0x10000,
+                                                                            mlTextScaleY);
+                        mlTextAffineSrc.scrY = mlTextPosY / 256;
+                        BgAffineSet(&mlTextAffineSrc, &mlTextAffineDst, 1);
+                        BUFFER_REG_BG2PA = mlTextAffineDst.pa;
+                        BUFFER_REG_BG2PB = mlTextAffineDst.pb;
+                        BUFFER_REG_BG2PC = mlTextAffineDst.pc;
+                        BUFFER_REG_BG2PD = mlTextAffineDst.pd;
+                        BUFFER_REG_BG2X = mlTextAffineDst.dx;
+                        BUFFER_REG_BG2Y = mlTextAffineDst.dy;
                         break;
 
                     case TS_ITEM_SS_TEXT:
-                        switch (titleScreen->states[TS_ITEM_SS_TEXT]) {
+                        switch (states[TS_ITEM_SS_TEXT]) {
                             case 0:
-                                titleScreen->ssTextProgression -= 98;
-                                titleScreen->ssTextPosY -= titleScreen->ssTextProgression;
-                                titleScreen->ssTextScaleX += 5;
-                                titleScreen->ssTextScaleY = titleScreen->ssTextScaleX;
-                                if (titleScreen->ssTextScaleX > 255) {
-                                    titleScreen->ssTextScaleX = 256;
-                                    titleScreen->states[TS_ITEM_SS_TEXT] = 1;
-                                    titleScreen->ssTextProgression = 0;
+                                ssTextProgression -= 98;
+                                ssTextPosY -= ssTextProgression;
+                                ssTextScaleX += 5;
+                                ssTextScaleY = ssTextScaleX;
+                                if (ssTextScaleX > 255) {
+                                    ssTextScaleX = 256;
+                                    states[TS_ITEM_SS_TEXT] = 1;
+                                    ssTextProgression = 0;
                                 }
                                 break;
 
                             case 1:
-                                titleScreen->ssTextScaleX =
-                                    word_83A7530[2 * titleScreen->ssTextProgression];
-                                titleScreen->ssTextScaleY =
-                                    word_83A7530[2 * titleScreen->ssTextProgression + 1];
-                                titleScreen->ssTextProgression++;
-                                if ((u16)titleScreen->ssTextProgression == 17) {
-                                    titleScreen->states[TS_ITEM_SS_TEXT] = -1;
+                                ssTextScaleX =
+                                    word_83A7530[2 * ssTextProgression];
+                                ssTextScaleY =
+                                    word_83A7530[2 * ssTextProgression + 1];
+                                ssTextProgression++;
+                                if ((u16)ssTextProgression == 17) {
+                                    states[TS_ITEM_SS_TEXT] = -1;
                                 }
                                 break;
                         }
-                        titleScreen->sprites[TS_SPRITE_SS_TEXT]->yPosition =
-                            titleScreen->ssTextPosY / 256;
-                        titleScreen->sprites[TS_SPRITE_SS_TEXT]->xScale = titleScreen->ssTextScaleX;
-                        titleScreen->sprites[TS_SPRITE_SS_TEXT]->yScale = titleScreen->ssTextScaleY;
+                        sprites[TS_SPRITE_SS_TEXT]->yPosition =
+                            ssTextPosY / 256;
+                        sprites[TS_SPRITE_SS_TEXT]->xScale = ssTextScaleX;
+                        sprites[TS_SPRITE_SS_TEXT]->yScale = ssTextScaleY;
                         break;
 
                     case TS_ITEM_LICENSE_TEXT:
-                        switch (titleScreen->states[TS_ITEM_LICENSE_TEXT]) {
+                        switch (states[TS_ITEM_LICENSE_TEXT]) {
                             case 0:
-                                titleScreen->nTextProgression -= 98;
-                                if (titleScreen->nTextProgression < 0) {
-                                    titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_0 =
-                                        titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_2 = 0;
+                                nTextProgression -= 98;
+                                if (nTextProgression < 0) {
+                                    sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_0 =
+                                        sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_2 = 0;
                                 }
-                                titleScreen->nTextPosY -= titleScreen->nTextProgression;
-                                titleScreen->nTextScaleX += 5;
-                                titleScreen->nTextScaleY = titleScreen->nTextScaleX;
-                                if (titleScreen->nTextScaleX > 255) {
-                                    titleScreen->nTextScaleX = 256;
-                                    titleScreen->states[TS_ITEM_LICENSE_TEXT] = 1;
-                                    titleScreen->nTextProgression = 0;
+                                nTextPosY -= nTextProgression;
+                                nTextScaleX += 5;
+                                nTextScaleY = nTextScaleX;
+                                if (nTextScaleX > 255) {
+                                    nTextScaleX = 256;
+                                    states[TS_ITEM_LICENSE_TEXT] = 1;
+                                    nTextProgression = 0;
                                 }
                                 break;
 
                             case 1:
-                                titleScreen->nTextScaleX =
-                                    word_83A7574[2 * titleScreen->nTextProgression];
-                                titleScreen->nTextScaleY =
-                                    word_83A7574[2 * titleScreen->nTextProgression + 1];
-                                titleScreen->nTextProgression++;
-                                if ((u16)titleScreen->nTextProgression == 17) {
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 5, 0, 0, 0);
-                                    titleScreen->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_CLOSE;
-                                    titleScreen->skipSuitcaseAnim = FALSE;
-                                    titleScreen->states[TS_ITEM_LICENSE_TEXT] = -1;
+                                nTextScaleX =
+                                    word_83A7574[2 * nTextProgression];
+                                nTextScaleY =
+                                    word_83A7574[2 * nTextProgression + 1];
+                                nTextProgression++;
+                                if ((u16)nTextProgression == 17) {
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 5, 0, 0, 0);
+                                    states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_CLOSE;
+                                    skipSuitcaseAnim = FALSE;
+                                    states[TS_ITEM_LICENSE_TEXT] = -1;
                                 }
                                 break;
                         }
-                        titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->yPosition =
-                            titleScreen->nTextPosY / 256;
-                        titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->xScale = titleScreen->nTextScaleX;
-                        titleScreen->sprites[TS_SPRITE_LICENSE_TEXT]->yScale = titleScreen->nTextScaleY;
+                        sprites[TS_SPRITE_LICENSE_TEXT]->yPosition =
+                            nTextPosY / 256;
+                        sprites[TS_SPRITE_LICENSE_TEXT]->xScale = nTextScaleX;
+                        sprites[TS_SPRITE_LICENSE_TEXT]->yScale = nTextScaleY;
                         break;
                 }
             }
 
-            if (!titleScreen->isSkippingSuitcaseAnim) {
-                if (titleScreen->skipSuitcaseAnim
+            if (!isSkippingSuitcaseAnim) {
+                if (skipSuitcaseAnim
                     && gGameState.field_2A & (A_BUTTON | B_BUTTON | SELECT_BUTTON | START_BUTTON)) {
-                    titleScreen->isSkippingSuitcaseAnim = TRUE;
-                    titleScreen->brightness = 16;
+                    isSkippingSuitcaseAnim = TRUE;
+                    brightness = 16;
                 }
             } else {
-                titleScreen->brightness--;
-                BUFFER_REG_BLDY = 16 - titleScreen->brightness;
-                if (titleScreen->brightness == 0) {
-                    titleScreen->process.state = TS_STATE_FADE_IN;
-                    titleScreen->entryStateIdx = 1;
-                    titleScreen->brightness = 16;
-                    title_screen_prepare_press_start(titleScreen);
+                brightness--;
+                BUFFER_REG_BLDY = 16 - brightness;
+                if (brightness == 0) {
+                    state = TS_STATE_FADE_IN;
+                    entryStateIdx = 1;
+                    brightness = 16;
+                    preparePressStart();
                     BUFFER_REG_DISPCNT |= DISPCNT_MODE_1 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON
                                           | DISPCNT_BG1_ON | DISPCNT_BG2_ON | DISPCNT_OBJ_ON;
                 }
@@ -829,147 +807,147 @@ void title_screen_update(struct TitleScreen* titleScreen) {
             break;
 
         case TS_STATE_PRESS_START_SHOW:
-            titleScreen->brightness--;
-            if (titleScreen->brightness == 0) {
-                titleScreen->psTextPosY = 30720;
-                sub_801E150(titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT], 0, 0, 0, 0);
-                titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT]->xPosition = 120;
-                titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition = 120;
-                titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_0 = 0;
-                titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_2 = 0;
-                titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT]->field_E = 0;
-                sprite_show_8020CBC(titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT]);
-                titleScreen->process.state = TS_STATE_PRESS_START_WAIT;
+            brightness--;
+            if (brightness == 0) {
+                psTextPosY = 30720;
+                sub_801E150(sprites[TS_SPRITE_PRESS_START_TEXT], 0, 0, 0, 0);
+                sprites[TS_SPRITE_PRESS_START_TEXT]->xPosition = 120;
+                sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition = 120;
+                sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_0 = 0;
+                sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_2 = 0;
+                sprites[TS_SPRITE_PRESS_START_TEXT]->field_E = 0;
+                sprite_show_8020CBC(sprites[TS_SPRITE_PRESS_START_TEXT]);
+                state = TS_STATE_PRESS_START_WAIT;
             }
             break;
 
         case TS_STATE_PRESS_START_WAIT:
             if (gGameState.field_2A & (A_BUTTON | START_BUTTON)) {
-                titleScreen->psTextVelocity = 0;
-                titleScreen->states[TS_ITEM_PRESS_START_TEXT] = 2;
-                titleScreen->xVelocitySuitcase = 0;
-                titleScreen->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_MOVE_LEFT;
+                psTextVelocity = 0;
+                states[TS_ITEM_PRESS_START_TEXT] = 2;
+                xVelocitySuitcase = 0;
+                states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_MOVE_LEFT;
                 play_sfx_80195B4(96, -1);
-                titleScreen->process.state = TS_STATE_SUITCASE_OPENS;
+                state = TS_STATE_SUITCASE_OPENS;
             }
             break;
 
         case TS_STATE_SUITCASE_OPENS:
             for (j = 0; j < TS_ITEM_COUNT; j++) {
-                if (titleScreen->states[j] < 0) {
+                if (states[j] < 0) {
                     continue;
                 }
 
                 switch (j) {
                     case TS_ITEM_SUITCASE:
-                        switch (titleScreen->states[TS_ITEM_SUITCASE]) {
+                        switch (states[TS_ITEM_SUITCASE]) {
                             case TS_ITEM_SC_STATE_MOVE_LEFT:
-                                titleScreen->xVelocitySuitcase -= 102;
-                                titleScreen->xPosSuitcase += titleScreen->xVelocitySuitcase;
-                                if (titleScreen->xPosSuitcase <= 0x2000) {
-                                    titleScreen->xPosSuitcase = 0x4000;
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 6, 0, 0, 0);
-                                    titleScreen->timer = 0;
-                                    titleScreen->states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_BUMP_OPEN;
+                                xVelocitySuitcase -= 102;
+                                xPosSuitcase += xVelocitySuitcase;
+                                if (xPosSuitcase <= 0x2000) {
+                                    xPosSuitcase = 0x4000;
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 6, 0, 0, 0);
+                                    timer = 0;
+                                    states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_BUMP_OPEN;
                                 }
                                 break;
 
                             case TS_ITEM_SC_STATE_BUMP_OPEN:
-                                if (titleScreen->sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
-                                    titleScreen->states[TS_ITEM_SUITCASE] = -1;
+                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+                                    states[TS_ITEM_SUITCASE] = -1;
                                 }
 
-                                if (titleScreen->timer < 0xFFFF) {
-                                    if (titleScreen->timer == 15) {
-                                        titleScreen->beanPosX = 0x4000;
-                                        titleScreen->beanPosY = 33280;
-                                        titleScreen->beanVelocityX = 384;
-                                        titleScreen->beanVelocityY = 1536;
-                                        sub_801E150(titleScreen->sprites[TS_SPRITE_BEAN_POINTER], 11, 0,
+                                if (timer < 0xFFFF) {
+                                    if (timer == 15) {
+                                        beanPosX = 0x4000;
+                                        beanPosY = 33280;
+                                        beanVelocityX = 384;
+                                        beanVelocityY = 1536;
+                                        sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 11, 0,
                                                     0, 0);
-                                        titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 64;
-                                        titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 130;
-                                        titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_0 = 0;
-                                        titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->field_1F_2 = 0;
-                                        titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->field_E = 0;
+                                        sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 64;
+                                        sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 130;
+                                        sprites[TS_SPRITE_BEAN_POINTER]->field_1F_0 = 0;
+                                        sprites[TS_SPRITE_BEAN_POINTER]->field_1F_2 = 0;
+                                        sprites[TS_SPRITE_BEAN_POINTER]->field_E = 0;
                                         sprite_show_8020CBC(
-                                            titleScreen->sprites[TS_SPRITE_BEAN_POINTER]);
-                                        titleScreen->states[TS_ITEM_POINTER] = 0;
+                                            sprites[TS_SPRITE_BEAN_POINTER]);
+                                        states[TS_ITEM_POINTER] = 0;
                                     }
-                                    titleScreen->timer++;
+                                    timer++;
                                 }
                                 break;
                         }
-                        titleScreen->sprites[TS_SPRITE_SUITCASE]->xPosition =
-                            titleScreen->xPosSuitcase / 256;
-                        titleScreen->sprites[TS_SPRITE_SUITCASE]->yPosition =
-                            titleScreen->yPosSuitcase / 256;
+                        sprites[TS_SPRITE_SUITCASE]->xPosition =
+                            xPosSuitcase / 256;
+                        sprites[TS_SPRITE_SUITCASE]->yPosition =
+                            yPosSuitcase / 256;
                         break;
 
                     case TS_ITEM_PRESS_START_TEXT:
-                        if (titleScreen->states[TS_ITEM_PRESS_START_TEXT] == 2) {
-                            titleScreen->psTextVelocity -= 98;
-                            titleScreen->psTextPosY -= titleScreen->psTextVelocity;
-                            if (titleScreen->psTextPosY > 45055) {
-                                sprite_hide_8021F20(titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT]);
-                                titleScreen->states[TS_ITEM_PRESS_START_TEXT] = -1;
+                        if (states[TS_ITEM_PRESS_START_TEXT] == 2) {
+                            psTextVelocity -= 98;
+                            psTextPosY -= psTextVelocity;
+                            if (psTextPosY > 45055) {
+                                sprite_hide_8021F20(sprites[TS_SPRITE_PRESS_START_TEXT]);
+                                states[TS_ITEM_PRESS_START_TEXT] = -1;
                             }
                         }
-                        titleScreen->sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition =
-                            titleScreen->psTextPosY / 256;
+                        sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition =
+                            psTextPosY / 256;
                         break;
 
                     case TS_ITEM_POINTER:
-                        switch (titleScreen->states[TS_ITEM_POINTER]) {
+                        switch (states[TS_ITEM_POINTER]) {
                             case 0:
-                                titleScreen->beanVelocityY -= 98;
-                                titleScreen->beanPosY -= titleScreen->beanVelocityY;
-                                titleScreen->beanPosX += titleScreen->beanVelocityX;
-                                if (titleScreen->beanVelocityY < 0 && titleScreen->beanPosY > 35839) {
-                                    titleScreen->beanPosY = 35840;
-                                    titleScreen->spriteIdx = 2;
-                                    titleScreen->states[TS_ITEM_POINTER] = 1;
+                                beanVelocityY -= 98;
+                                beanPosY -= beanVelocityY;
+                                beanPosX += beanVelocityX;
+                                if (beanVelocityY < 0 && beanPosY > 35839) {
+                                    beanPosY = 35840;
+                                    spriteIdx = 2;
+                                    states[TS_ITEM_POINTER] = 1;
                                 }
                                 break;
 
                             case 1:
-                                if (titleScreen->beanPosY / 256 <= 20 * titleScreen->spriteIdx + 92) {
-                                    sub_801E150(titleScreen->sprites[titleScreen->spriteIdx + 2],
-                                                titleScreen->spriteIdx + 3, 0, 0, 0);
-                                    titleScreen->sprites[titleScreen->spriteIdx + 2]->xPosition = 180;
-                                    titleScreen->sprites[titleScreen->spriteIdx + 2]->yPosition =
-                                        20 * titleScreen->spriteIdx + 100;
+                                if (beanPosY / 256 <= 20 * spriteIdx + 92) {
+                                    sub_801E150(sprites[spriteIdx + 2],
+                                                spriteIdx + 3, 0, 0, 0);
+                                    sprites[spriteIdx + 2]->xPosition = 180;
+                                    sprites[spriteIdx + 2]->yPosition =
+                                        20 * spriteIdx + 100;
                                     sprite_show_8020CBC(
-                                        titleScreen->sprites[titleScreen->spriteIdx + 2]);
+                                        sprites[spriteIdx + 2]);
 
-                                    if (titleScreen->spriteIdx == 0) {
-                                        sub_801E150(titleScreen->sprites[TS_SPRITE_BEAN_POINTER], 12, 0,
+                                    if (spriteIdx == 0) {
+                                        sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 12, 0,
                                                     0, 0);
-                                        titleScreen->states[TS_ITEM_POINTER] = 2;
+                                        states[TS_ITEM_POINTER] = 2;
                                     } else {
-                                        titleScreen->spriteIdx--;
+                                        spriteIdx--;
                                     }
                                 }
 
-                                if (titleScreen->states[TS_ITEM_POINTER] == 1) {
-                                    titleScreen->beanPosY -= 1536;
+                                if (states[TS_ITEM_POINTER] == 1) {
+                                    beanPosY -= 1536;
                                 }
                                 break;
 
                             case 2:
-                                if (titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->field_12_3) {
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0,
+                                if (sprites[TS_SPRITE_BEAN_POINTER]->field_12_3) {
+                                    sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0,
                                                 0);
-                                    sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL], 0, 0,
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 0, 0,
                                                 0, 0);
-                                    titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->xPosition = 64;
-                                    titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->yPosition = 140;
-                                    titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_1F_0 = 1;
-                                    titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_E = 1;
+                                    sprites[TS_SPRITE_SUITCASE_VISUAL]->xPosition = 64;
+                                    sprites[TS_SPRITE_SUITCASE_VISUAL]->yPosition = 140;
+                                    sprites[TS_SPRITE_SUITCASE_VISUAL]->field_1F_0 = 1;
+                                    sprites[TS_SPRITE_SUITCASE_VISUAL]->field_E = 1;
                                     sprite_show_8020CBC(
-                                        titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]);
-                                    titleScreen->suitcaseVisualState = TS_SV_STATE_APPEAR;
+                                        sprites[TS_SPRITE_SUITCASE_VISUAL]);
+                                    suitcaseVisualState = TS_SV_STATE_APPEAR;
 
                                     off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_WIN0_ON >> 8;
                                     off_839EC80[REG_OFFSET_WIN0H] = 240;
@@ -990,14 +968,14 @@ void title_screen_update(struct TitleScreen* titleScreen) {
                                     off_839EC80[REG_OFFSET_WINOUT] |= WINOUT_WIN01_CLR;
 
                                     multiplayer_serial_enable();
-                                    titleScreen->process.state = TS_STATE_GAME_SELECT;
+                                    state = TS_STATE_GAME_SELECT;
                                 }
                                 break;
                         }
-                        titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->xPosition =
-                            titleScreen->beanPosX / 256;
-                        titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->yPosition =
-                            titleScreen->beanPosY / 256;
+                        sprites[TS_SPRITE_BEAN_POINTER]->xPosition =
+                            beanPosX / 256;
+                        sprites[TS_SPRITE_BEAN_POINTER]->yPosition =
+                            beanPosY / 256;
                         break;
                 }
             }
@@ -1007,56 +985,53 @@ void title_screen_update(struct TitleScreen* titleScreen) {
             if (gGameState.field_2A & (A_BUTTON | START_BUTTON)) {
                 BUFFER_REG_BLDCNT = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
                 BUFFER_REG_BLDY = 0;
-                titleScreen->brightness = 16;
+                brightness = 16;
                 play_sfx_80195B4(96, -1);
                 sub_80193B4(0, 0, 16);
-                titleScreen->process.state = TS_STATE_FADE_OUT;
+                state = TS_STATE_FADE_OUT;
             } else {
-                s8 selection = titleScreen->selection;
+                s8 selection = this->selection;
                 if (gGameState.field_2E & DPAD_UP) {
-                    titleScreen->selection--;
-                    if (titleScreen->selection < 0) {
-                        titleScreen->selection = 2;
+                    this->selection--;
+                    if (this->selection < 0) {
+                        this->selection = 2;
                     }
                     play_sfx_80195B4(95, -1);
                 } else if (gGameState.field_2E & DPAD_DOWN) {
-                    titleScreen->selection++;
-                    if (titleScreen->selection > 2) {
-                        titleScreen->selection = 0;
+                    this->selection++;
+                    if (this->selection > 2) {
+                        this->selection = 0;
                     }
                     play_sfx_80195B4(95, -1);
                 }
 
-                if (titleScreen->selection != selection) {
-                    if (titleScreen->suitcaseVisualState != TS_SV_STATE_DISAPPEAR) {
-                        sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * selection + 2,
+                if (this->selection != selection) {
+                    if (suitcaseVisualState != TS_SV_STATE_DISAPPEAR) {
+                        sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * selection + 2,
                                     0, 0, 0);
                     }
-                    titleScreen->suitcaseVisualState = TS_SV_STATE_DISAPPEAR;
-                    titleScreen->sprites[TS_SPRITE_BEAN_POINTER]->yPosition =
-                        20 * titleScreen->selection + 92;
+                    suitcaseVisualState = TS_SV_STATE_DISAPPEAR;
+                    sprites[TS_SPRITE_BEAN_POINTER]->yPosition =
+                        20 * this->selection + 92;
                 }
             }
             break;
 
         case TS_STATE_FADE_OUT:
-            titleScreen->brightness--;
-            BUFFER_REG_BLDY = 16 - titleScreen->brightness;
-            if (titleScreen->brightness != 0) {
+            brightness--;
+            BUFFER_REG_BLDY = 16 - brightness;
+            if (brightness != 0) {
                 break;
             }
 
-            if (titleScreen != NULL) {
-                title_screen_destroy(titleScreen, 3);
-            }
+            delete this;
 
-            switch (titleScreen->selection) {
+            switch (this->selection) {
                 case 0:
                     multiplayer_serial_disable();
                     sub_801AFE4(0);
                     BUFFER_REG_BLDCNT = 0;
-                    load_init_812538C(alloc_Zero(sizeof(struct LoadMenu), 0, "LOAD", 0), 8, "LOAD",
-                                      0xFFFF);
+                    new (0, "LOAD", 0) LoadMenu(8, "LOAD", 0xFFFF);
                     return;
 
                 case 1:
@@ -1067,7 +1042,7 @@ void title_screen_update(struct TitleScreen* titleScreen) {
 
                 case 2:
                     multiplayer_serial_disable();
-                    options_create(alloc_Zero(sizeof(struct OptionsMenu), 0, "OPTN", 0), 8, "OPTN", 0);
+                    new (0, "OPTN", 0) OptionsMenu(8, "OPTN", 0);
                     return;
 
                 default:
@@ -1076,30 +1051,30 @@ void title_screen_update(struct TitleScreen* titleScreen) {
             break;
     }
 
-    switch (titleScreen->suitcaseVisualState) {
+    switch (suitcaseVisualState) {
         case TS_SV_STATE_APPEAR:
-            if (titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
-                sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL],
-                            3 * titleScreen->selection + 1, 0, 0, 0);
-                titleScreen->suitcaseVisualState = TS_SV_STATE_IDLE;
+            if (sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
+                sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL],
+                            3 * this->selection + 1, 0, 0, 0);
+                suitcaseVisualState = TS_SV_STATE_IDLE;
             }
             break;
 
         case TS_SV_STATE_DISAPPEAR:
-            if (titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
-                sub_801E150(titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * titleScreen->selection,
+            if (sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
+                sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection,
                             0, 0, 0);
-                titleScreen->suitcaseVisualState = TS_SV_STATE_APPEAR;
+                suitcaseVisualState = TS_SV_STATE_APPEAR;
             }
             break;
     }
 }
 
-void mario_bros_score_visual_update(struct MarioBrosScoreVisual* scoreVisual) {
-    struct TitleScreen* titleScreen;
+void MarioBrosScoreVisual::update() {
+    TitleScreen* titleScreen;
     int var1;
 
-    titleScreen = (struct TitleScreen*)scoreVisual->process.parentProcess;
+    titleScreen = (TitleScreen*)parentProcess;
     sub_8020A78();
     var1 = gGameState.field_880;
 
@@ -1117,7 +1092,7 @@ void mario_bros_score_visual_update(struct MarioBrosScoreVisual* scoreVisual) {
         for (i = 0; i < 6; i++) {
             var11->field_0 = t - 34;
             var11->field_2 = 43 + i * 7;
-            var11->field_4 = (scoreVisual->topScore[i] + 44) | 0x2400;
+            var11->field_4 = (topScore[i] + 44) | 0x2400;
             var11->field_6 = 0;
             var11->field_8 = 0x40000000;
             var11 = var11->field_10;
@@ -1127,7 +1102,7 @@ void mario_bros_score_visual_update(struct MarioBrosScoreVisual* scoreVisual) {
         for (j = 0; j < 2; j++) {
             var11->field_0 = y2;
             var11->field_2 = 64 + j * 7;
-            var11->field_4 = (scoreVisual->pScore[j] + 44) | 0x2400;
+            var11->field_4 = (pScore[j] + 44) | 0x2400;
             var11->field_6 = 0;
             var11->field_8 = 0x40000000;
             var11 = var11->field_10;
@@ -1144,23 +1119,18 @@ void mario_bros_score_visual_update(struct MarioBrosScoreVisual* scoreVisual) {
 /**
  * Initialises the process for the Mario Bros Score visual on the title screen.
  */
-struct MarioBrosScoreVisual* mario_bros_score_visual_create(struct MarioBrosScoreVisual* scoreVisual,
-                                                            u8 priority, char* label, u32 topScore,
-                                                            u8 pScore) {
+MarioBrosScoreVisual::MarioBrosScoreVisual(u8 priority, char* label, u32 topScore, u8 pScore)
+    : Process(priority, label) {
     int i;
 
-    process_add(&scoreVisual->process, priority, label);
-    scoreVisual->process.definition = &stru_8CDC248;
-
     for (i = 5; i >= 0; i--) {
-        scoreVisual->topScore[i] = topScore % 10;
+        this->topScore[i] = topScore % 10;
         topScore /= 10;
     }
 
     for (i = 1; i >= 0; i--) {
-        scoreVisual->pScore[i] = pScore % 10;
+        this->pScore[i] = pScore % 10;
         pScore /= 10;
     }
 
-    return scoreVisual;
 }

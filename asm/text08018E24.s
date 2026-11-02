@@ -1354,7 +1354,7 @@ sub_8019940:
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r1, r0, #0x0
 	ldr r0, _08019994 @ =0x03000C84
 	str r1, [r0, #0x00]

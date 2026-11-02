@@ -21404,7 +21404,7 @@ _0803C920:
 	adds r0, r6, r2
 	ldr r0, [r0, #0x00]
 	ldr r0, [r0, #0x00]
-	bl process_disable
+	bl disable__7Process
 	ldr r1, _0803C9A4 @ =0x000002A9
 	adds r0, r6, r1
 	ldrb r3, [r0, #0x00]
@@ -22989,8 +22989,8 @@ sub_803E9F0:
 	ands r0, r1
 	bx lr
 _0803E9FC: .4byte 0x00000291
-	thumb_func_start sub_803EA00
-sub_803EA00:
+	thumb_func_start update__19FieldProcess803EA00
+update__19FieldProcess803EA00:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9
@@ -37179,7 +37179,7 @@ sub_8048040:
 	cmp r0, #0x00
 	beq _0804805C
 	adds r0, r3, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0804805C:
 	pop {r0}
 	bx r0

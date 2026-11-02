@@ -17,6 +17,7 @@ SHA1			:= $(shell { command -v sha1sum || command -v shasum; } 2>/dev/null) -c
 SHELL			:= /bin/bash -o pipefail
 FIX				:= tools/gbafix/./gbafix
 CC1				:= tools/agbcc/bin/agbcc
+CC1PLUS			:= tools/agbcc/bin/agbcp
 
 # Libaries
 LIBC   := tools/agbcc/lib/libc.a
@@ -30,6 +31,7 @@ LDFLAGS			:= -L../tools/agbcc/lib -lgcc -lc --just-symbols=../symbols.txt -g
 # same output please switch back to the normal agbcc repo.
 # The original game was built with -funroll-loops (unrolled tile loops in e.g. options_draw_info_messages).
 CFLAGS			:= -O2 -mthumb-interwork -fno-common -Wimplicit -Wparentheses -Werror -g -funroll-loops
+CXXFLAGS		:= -O2 -mthumb-interwork -fno-common -fno-exceptions -fno-rtti -Werror -g -funroll-loops -quiet
 CPPFLAGS 		:= -I tools/agbcc/include -nostdinc -undef -iquote include -Wno-trigraphs
 
 # Files
@@ -47,10 +49,13 @@ C_SRCS := $(wildcard $(C_SUBDIR)/*.c $(C_SUBDIR)/*/*.c $(C_SUBDIR)/*/*/*.c)
 C_OBJS := $(patsubst $(C_SUBDIR)/%.c,$(C_BUILDDIR)/%.o,$(C_SRCS))
 C_DEPS := $(patsubst $(C_SUBDIR)/%.c,$(C_BUILDDIR)/%.d,$(C_SRCS))
 
+CXX_SRCS := $(wildcard $(C_SUBDIR)/*.cpp $(C_SUBDIR)/*/*.cpp $(C_SUBDIR)/*/*/*.cpp)
+CXX_OBJS := $(patsubst $(C_SUBDIR)/%.cpp,$(C_BUILDDIR)/%.o,$(CXX_SRCS))
+
 ASM_SRCS := $(wildcard $(ASM_SUBDIR)/*.s)
 ASM_OBJS := $(patsubst $(ASM_SUBDIR)/%.s,$(ASM_BUILDDIR)/%.o,$(ASM_SRCS))
 
-OBJS     := $(C_OBJS) $(ASM_OBJS)
+OBJS     := $(C_OBJS) $(CXX_OBJS) $(ASM_OBJS)
 OBJS_REL := $(patsubst $(OBJ_DIR)/%,%,$(OBJS))
 
 SUBDIRS  := $(sort $(dir $(OBJS)))
@@ -74,6 +79,12 @@ tools:
 $(C_BUILDDIR)/%.o : $(C_SUBDIR)/%.c
 	@$(CPP) $(CPPFLAGS) $< -o $(C_BUILDDIR)/$*.i
 	@$(CC1) $(C_BUILDDIR)/$*.i $(CFLAGS) -o $(C_BUILDDIR)/$*.s
+	@echo -e ".text\n\t.align\t2, 0\n" >> $(C_BUILDDIR)/$*.s
+	$(AS) $(ASFLAGS) -o $@ $(C_BUILDDIR)/$*.s
+
+$(C_BUILDDIR)/%.o : $(C_SUBDIR)/%.cpp
+	@$(CPP) $(CPPFLAGS) -x c++ $< -o $(C_BUILDDIR)/$*.ii
+	@$(CC1PLUS) $(C_BUILDDIR)/$*.ii $(CXXFLAGS) -o $(C_BUILDDIR)/$*.s
 	@echo -e ".text\n\t.align\t2, 0\n" >> $(C_BUILDDIR)/$*.s
 	$(AS) $(ASFLAGS) -o $@ $(C_BUILDDIR)/$*.s
 

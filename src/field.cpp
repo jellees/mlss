@@ -1,3 +1,5 @@
+#pragma implementation "field.h"
+
 #include "global.h"
 #include "common.h"
 #include "field.h"
@@ -5,41 +7,40 @@
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/init_fldm_8021FF8.s\"");
 #else
-struct FieldManager* init_fldm_8021FF8(struct FieldManager* fldm, u8 priority, char* label, int room,
-                                       struct FldmFlag arg4, struct FldmFlag arg5) {
-    u8 flag4 = arg4.value;
-    u8 flag5 = arg5.value;
-    struct Process* process;
+FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool arg5)
+    : Process(priority, label) {
+    FieldManager* fldm = this;
+    u8 flag4 = arg4;
+    u8 flag5 = arg5;
+    Process* process;
     struct EventScriptProcess** script;
     void** buffer;
 
-    process_add(&fldm->process, priority, label);
-    fldm->process.definition = &stru_8CDBDB8;
     fldm->field_F8_1 = (room == -1);
 
     script = &fldm->bevs;
-    *script = bevs_process_init_80F048C(alloc_Zero(sizeof(struct EventScriptProcess), 0, "BEVS", 0), 1,
+    *script = bevs_process_init_80F048C(operator new(sizeof(struct EventScriptProcess), 0, "BEVS", 0), 1,
                                         7, "BEVS");
     process = (*script)->process;
-    process->parentProcess = &fldm->process;
-    process_disable(process);
+    process->parentProcess = this;
+    process->disable();
     script = &fldm->evts;
-    *script = evts_process_init_80EF3FC(alloc_Zero(sizeof(struct EventScriptProcess), 0, "EVTS", 0), 1,
+    *script = evts_process_init_80EF3FC(operator new(sizeof(struct EventScriptProcess), 0, "EVTS", 0), 1,
                                         6, "EVTS");
     process = (*script)->process;
-    process->parentProcess = &fldm->process;
-    process_disable(process);
+    process->parentProcess = this;
+    process->disable();
 
     sub_819A138(gGameState.field_8D0, gGameState.field_1C);
     dword_3000D7C = fldm;
     dword_3000D78 = *script;
     BUFFER_REG_DISPCNT = 0;
     fldm->field_D0 = &gGameState.field_3C;
-    fldm->field_1C = alloc_Zero(0x2C0, 1, "FMEX", 1);
-    fldm->field_20 = alloc_Zero(0x574, 1, "FMBK", 1);
+    fldm->field_1C = operator new(0x2C0, 1, "FMEX", 1);
+    fldm->field_20 = operator new(0x574, 1, "FMBK", 1);
     buffer = &fldm->field_23C;
-    *buffer = alloc_zero_8018DB4(0x1000, 1, "PLST", 1);
-    fldm->field_24 = alloc_zero_8018DB4(0x400, 1, "PALW", 1);
+    *buffer = operator new[](0x1000, 1, "PLST", 1);
+    fldm->field_24 = operator new[](0x400, 1, "PALW", 1);
 
     fldm->field_F8_2 = 0;
     fldm->field_F8_0 = 0;
@@ -142,45 +143,37 @@ struct FieldManager* init_fldm_8021FF8(struct FieldManager* fldm, u8 priority, c
     gGameState.field_88A_5 = 1;
     dword_3000FD0->field_528 = 0;
     dword_3000FD0->field_530 = 0;
-    return fldm;
 }
 #endif
 
-void sub_8022554(struct FieldManager* fldm, u32 flags) {
-    fldm->process.definition = &stru_8CDBDB8;
-    if (fldm->field_314) {
-        sub_81166AC(fldm->field_314, 3);
+FieldManager::~FieldManager() {
+    if (field_314) {
+        sub_81166AC(field_314, 3);
     }
-    if (fldm->field_30C) {
-        process_remove(fldm->field_30C, 3);
+    delete field_30C;
+    delete field_310;
+    if (field_1FC) {
+        sub_805CCC0(field_1FC, 3);
     }
-    if (fldm->field_310) {
-        fldm->field_310->definition = &stru_8CDBDC8;
-        process_remove(fldm->field_310, 3);
+    if (field_308) {
+        sub_805C73C(field_308, 3);
     }
-    if (fldm->field_1FC) {
-        sub_805CCC0(fldm->field_1FC, 3);
+    if (field_304) {
+        sub_8057B58(field_304, 3);
     }
-    if (fldm->field_308) {
-        sub_805C73C(fldm->field_308, 3);
+    sub_80292EC(this);
+    operator delete(field_1C);
+    operator delete(field_20);
+    operator delete(field_23C);
+    operator delete(field_24);
+    if (evts) {
+        sub_80F034C(evts, 3);
     }
-    if (fldm->field_304) {
-        sub_8057B58(fldm->field_304, 3);
+    if (bevs) {
+        sub_80F0420(bevs, 3);
     }
-    sub_80292EC(fldm);
-    free_heap_8018DA8(fldm->field_1C);
-    free_heap_8018DA8(fldm->field_20);
-    free_heap_8018DA8(fldm->field_23C);
-    free_heap_8018DA8(fldm->field_24);
-    if (fldm->evts) {
-        sub_80F034C(fldm->evts, 3);
-    }
-    if (fldm->bevs) {
-        sub_80F0420(fldm->bevs, 3);
-    }
-    sub_80F0184(fldm->evts);
+    sub_80F0184(evts);
     sub_8021FD4();
     runtime_install_interrupt_callback(2, NULL);
     gGameState.field_88A_5 = 0;
-    process_remove(&fldm->process, flags);
 }

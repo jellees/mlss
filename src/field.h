@@ -2,6 +2,7 @@
 #define FIELD_H
 
 #include "process.h"
+#include "asm_processes.h"
 
 // Handle returned by bevs_process_init_80F048C and evts_process_init_80EF3FC.
 struct EventScriptProcess {
@@ -9,8 +10,10 @@ struct EventScriptProcess {
     u8 data[0x20];
 };
 
-struct FieldManager {
-    struct Process process;
+#pragma interface
+
+class FieldManager : public Process {
+public:
     void* field_1C;
     void* field_20;
     void* field_24;
@@ -76,7 +79,7 @@ struct FieldManager {
     u8 field_1F8;
     u8 pad_1F9;
     u16 field_1FA;
-    struct Process* field_1FC;
+    Process* field_1FC;
     u8 pad_200[0x8];
     u8 field_208_0 : 1;
     u8 field_208_1 : 1;
@@ -154,20 +157,23 @@ struct FieldManager {
     u8 field_2D8_0 : 5;
     u8 field_2D8_5 : 3;
     u8 pad_2D9[0x2B];
-    struct Process* field_304;
-    struct Process* field_308;
-    struct Process* field_30C;
-    struct Process* field_310;
-    struct Process* field_314;
+    Process* field_304;
+    Process* field_308;
+    Process* field_30C;
+    FieldProcess803EA00* field_310;
+    Process* field_314;
     u32 field_318;
     struct EventScriptProcess* evts;
     struct EventScriptProcess* bevs;
+
+    FieldManager(u8 priority, char* label, int room, bool arg4, bool arg5);
+    ~FieldManager();
+    virtual void update();
 };
 
-struct FieldManager* init_fldm_8021FF8(struct FieldManager* fldm, u8 priority, char* label, int room,
-                                       struct FldmFlag arg4, struct FldmFlag arg5);
-void sub_8022554(struct FieldManager* fldm, u32 flags);
-void sub_8029934(struct FieldManager*);
-void sub_80292EC(struct FieldManager*);
+extern "C" {
+void sub_8029934(FieldManager*);
+void sub_80292EC(FieldManager*);
+}
 
 #endif

@@ -1,8 +1,19 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "gba/gba.h"
+#ifdef __cplusplus
+}
+#endif
 #include "buffer_io_reg.h"
+
+#ifdef __cplusplus
+#undef NULL
+#define NULL 0
+#endif
 
 // Figure out if we need these defines later.
 // #define OFFSET_OF(type, element) ((int)&(((type *)0)->element))

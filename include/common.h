@@ -1,29 +1,12 @@
 #include "global.h"
 
-// Structs
-struct ProcessDefinition {
-    u32 field_0;
-    void (*field_4)(void*);
-    s16 offset;
-    u16 field_A;
-    void (*update)(void*);
-};
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-struct Process {
-    u8 state;
-    u8 priority;
-    s16 flag : 1;
-    s16 wait : 1;
-    s16 executeMax : 4;
-    u16 executeCounter : 4;
-    u16 processCount : 6;
-    u32 frames;
-    char label[4];
-    struct Process* previousProcess;
-    struct Process* nextProcess;
-    struct Process* parentProcess;
-    struct ProcessDefinition* definition;
-};
+// Structs
+// Defined in src/process.h.
+struct Process;
 
 struct struc_3000388 {
     u16 field_0;
@@ -177,12 +160,6 @@ struct TmevData {
     u8* field_4;
 };
 
-struct Tmev {
-    struct Process process;
-    u8 pad1C[0xC];
-    struct TmevData* field_28;
-};
-
 struct SaveSlotPlayer {
     u16 field_0;
     u8 pad2[10];
@@ -231,11 +208,6 @@ struct struc_8021EA8 {
     u32 field_0_9 : 23;
 };
 
-// Passed by value; packed so agbcc builds it in the stack slot with strb.
-struct FldmFlag {
-    u8 value;
-} __attribute__((packed));
-
 struct struc_3000FD0 {
     u8 pad_0[0x528];
     u32 field_528;
@@ -247,12 +219,6 @@ struct struc_3000D40 {
     u16 field_0_0 : 1;
     u16 field_0_1 : 1;
     u16 slot : 2;
-};
-
-struct MarioBrosScoreVisual {
-    struct Process process;
-    char topScore[6];
-    char pScore[2];
 };
 
 struct struc_11 {
@@ -315,28 +281,6 @@ struct struc_16 {
     u8 field_208_7 : 1;
 };
 
-struct OptionsMenu {
-    struct Process process;
-    s8 brightness;
-    s8 field_1D;
-    struct Process* odtr;
-    u8* bwcw;
-    u8* field_28;
-    u8* field_2C;
-    u16* bwsw;
-    int* bbwf;
-    struct struc_15* bbwi;
-    s8 options_0 : 1;
-    s8 options_1 : 3;
-    u8 options_4 : 3;
-    s8 selection;
-    int* winw;
-    u8 okButtonPosX;
-    u8 okButtonPosY;
-    struct Popup popup;
-    struct Sprite* sprite;
-};
-
 // ORST (options/open-screen runtime data) — 340 bytes, tagged "ORST"
 struct ORSTData {
     s32 field_0[5]; /* palette scroll accumulators, fixed-point */
@@ -350,13 +294,25 @@ void sub_800063C();
 void sub_8017E34(void);
 void sub_8018218(void*, void*, size_t, int, int);
 void runtime_install_interrupt_callback(int, void (*)(void));
-void free_heap_8018D9C(void*);
-void free_heap_8018DA8(void* ptr);
-void* alloc_zero_8018DB4(int, bool32, char*, int);
-void* alloc_Zero(int, bool32, char*, int);
+#ifdef __cplusplus
+}
+// The game's global allocation operators (asm/heap.s). heap 0 = IWRAM, otherwise EWRAM;
+// clear zeroes the allocated memory.
+void* operator new(unsigned long size, int heap, char* label, u8 clear);
+void* operator new[](unsigned long size, int heap, char* label, u8 clear);
+void operator delete(void* ptr);
+void operator delete[](void* ptr);
+extern "C" {
+#else
+// C names of the global allocation operators.
+void free_heap_8018D9C(void* ptr) asm("__builtin_vec_delete");
+void free_heap_8018DA8(void* ptr) asm("__builtin_delete");
+void* alloc_zero_8018DB4(int size, bool32 heap, char* label, int clear) asm("__vn__FUliPcUc");
+void* alloc_Zero(int size, bool32 heap, char* label, int clear) asm("__nw__FUliPcUc");
+#endif
 void sub_80193B4(int, int, int);
 void play_sfx_80195B4(int, int);
-u32 sub_80198B0(int*);
+u32 sub_80198B0(void*);
 void sub_8019308(int, int, int);
 void sub_801A548(void);
 void sub_81994EC(int*, void*);
@@ -377,12 +333,6 @@ void sub_8021FD4(void);
 void sub_80FAFD8(void*, int);
 void sub_81166AC(struct Process*, int);
 void popup_animate(struct Popup*);
-struct OptionsMenu* options_create(struct OptionsMenu*, u8, char*, int);
-int options_save(struct OptionsMenu*);
-void options_draw_labels(struct OptionsMenu*, int);
-void options_draw_info_messages(struct OptionsMenu*, int);
-void options_draw_save_error(struct OptionsMenu*);
-void options_renderer_update(struct Process*);
 void title_screen_scroll_background_hblank(void);
 int sub_812454C(void);
 struct struc_203FFF8* sub_81251DC();
@@ -443,7 +393,7 @@ void sub_801BD50(int);
 void sub_8122BFC(void);
 u16 sub_8199624(struct struc_15*);
 void sub_8199D5C(struct struc_15*, int, u8, int);
-void sub_8199D78(struct struc_15*, u8*, int, int, int, int, int, int, int, int);
+void sub_8199D78(struct struc_15*, void*, int, int, int, int, int, int, int, int);
 void sub_81DA6C8(int);
 
 // EWRAM
@@ -466,9 +416,9 @@ extern u16 word_3000D3C;
 extern void* dword_3000FB8;
 extern struct GameState gGameState;
 extern void (*dword_3000C78)();
-extern void (*dword_3000C84)(int*, void*);
+extern void (*dword_3000C84)(void*, void*);
 extern struct struc_3000D18 stru_3000D18;
-extern void (*dword_3001034)(int, void**, int);
+extern void (*dword_3001034)(int, void*, int);
 extern int (*dword_3001038)();
 
 // ROM
@@ -516,15 +466,6 @@ extern s16 word_83A7574[];
 extern s16 word_83A75B8[];
 extern s16 word_83A75C8[];
 extern u8* off_839EC80;
-extern struct ProcessDefinition stru_8CDBD68;
-extern struct ProcessDefinition stru_8CDBD78;
-extern struct ProcessDefinition stru_8CDBDB8;
-extern struct ProcessDefinition stru_8CDBDC8;
-extern struct ProcessDefinition stru_8CDC1F8;
-extern struct ProcessDefinition stru_8CDC208;
-extern struct ProcessDefinition stru_8CDC1C8;
-extern struct ProcessDefinition stru_8CDC1D8;
-extern struct ProcessDefinition stru_8CDC1E8;
 extern int dword_83A0E94[];
 extern int dword_83A1F60[];
 extern u32 dword_83A13A0[];
@@ -535,11 +476,7 @@ extern u32 off_83A28C0[];
 extern u32 off_851F9E8[];
 extern u8 sub_8198784[];
 extern u8 sub_819941C[];
-extern struct ProcessDefinition stru_8CDC238;
-extern struct ProcessDefinition stru_8CDC248;
-extern struct ProcessDefinition stru_8CDC258;
-extern struct ProcessDefinition stru_8CDC268;
-extern struct ProcessDefinition stru_8CDC3B8;
-extern struct ProcessDefinition stru_8CDC3C8;
-extern struct ProcessDefinition stru_8CDC3D8;
-extern struct ProcessDefinition stru_8CDC3E8;
+
+#ifdef __cplusplus
+}
+#endif

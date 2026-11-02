@@ -3,8 +3,8 @@
 	.syntax unified
 	.text
 
-	thumb_func_start fldm_update_8022658
-fldm_update_8022658: @ 08022658
+	thumb_func_start update__12FieldManager
+update__12FieldManager: @ 08022658
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9
@@ -872,7 +872,7 @@ _08022D50:
 	ldr r0, [r0, #0x00]
 	cmp r0, #0x00
 	beq _08022D72
-	bl process_disable
+	bl disable__7Process
 _08022D72:
 	movs r3, #0xC5
 	lsls r3, r3, #0x02
@@ -882,13 +882,13 @@ _08022D72:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	movs r3, #0x08
 	bl init_ybpa_process_8114B4C
 	str r0, [r5, #0x00]
-	bl process_disable
+	bl disable__7Process
 	movs r0, #0x03
 	strb r0, [r7, #0x00]
 	bl _08023DBC
@@ -986,7 +986,7 @@ _08022E4A:
 	adds r0, r5, #0x0
 	bl sub_8057BE4
 	ldr r0, [r6, #0x00]
-	bl process_enable
+	bl enable__7Process
 	b _08022EAA
 _08022E64: .4byte 0x0300034C
 _08022E68: .4byte 0x00000884
@@ -1000,7 +1000,7 @@ _08022E7C:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r2, #0x92
 	lsls r2, r2, #0x01
 	adds r1, r7, r2
@@ -1052,7 +1052,7 @@ _08022EE8:
 	movs r0, #0x0C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_805CCD8
 	str r0, [r4, #0x00]
 	ldr r0, [r5, #0x00]
@@ -1178,7 +1178,7 @@ _08022FFC:
 	ldr r2, _0802307C @ =0x081E25FC
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r6, r0, #0x0
 	ldr r0, _08023080 @ =0x03000C84
 	ldr r2, [r0, #0x00]
@@ -1197,7 +1197,7 @@ _08022FFC:
 	cmp r6, #0x00
 	beq _0802304A
 	adds r0, r6, #0x0
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0802304A:
 	ldr r0, _08023088 @ =0x0839F024
 	ldr r1, _0802308C @ =0x0600F000
@@ -1417,11 +1417,11 @@ _080231FC:
 	movs r1, #0x00
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x08
 	adds r2, r5, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08023320 @ =0x08CDBDD8
 	str r0, [r4, #0x18]
 	str r4, [r6, #0x00]
@@ -1433,11 +1433,11 @@ _080231FC:
 	movs r1, #0x00
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x05
 	adds r2, r5, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08023328 @ =0x08CDBDC8
 	str r0, [r4, #0x18]
 	str r4, [r6, #0x00]
@@ -2219,12 +2219,12 @@ _0802387A:
 	lsls r1, r1, #0x02
 	adds r0, r7, r1
 	ldr r0, [r0, #0x00]
-	bl process_enable
+	bl enable__7Process
 	movs r2, #0xC5
 	lsls r2, r2, #0x02
 	adds r0, r7, r2
 	ldr r0, [r0, #0x00]
-	bl process_enable
+	bl enable__7Process
 	ldr r3, [sp, #0x04C]
 	ldrb r1, [r3, #0x00]
 	movs r0, #0x80
@@ -2711,13 +2711,13 @@ _08023C54:
 	adds r0, r7, r4
 	ldr r0, [r0, #0x00]
 	ldr r0, [r0, #0x00]
-	bl process_enable
+	bl enable__7Process
 	movs r5, #0xC8
 	lsls r5, r5, #0x02
 	adds r0, r7, r5
 	ldr r0, [r0, #0x00]
 	ldr r0, [r0, #0x00]
-	bl process_enable
+	bl enable__7Process
 	movs r0, #0x0F
 _08023C72:
 	strb r0, [r7, #0x00]
@@ -2782,13 +2782,13 @@ _08023CDC:
 	adds r0, r7, r5
 	ldr r0, [r0, #0x00]
 	ldr r0, [r0, #0x00]
-	bl process_enable
+	bl enable__7Process
 	movs r6, #0xC8
 	lsls r6, r6, #0x02
 	adds r0, r7, r6
 	ldr r0, [r0, #0x00]
 	ldr r0, [r0, #0x00]
-	bl process_enable
+	bl enable__7Process
 	ldr r1, _08023D48 @ =0x000002A9
 	adds r0, r7, r1
 	ldrb r1, [r0, #0x00]
@@ -8280,7 +8280,7 @@ _08026888:
 	ldr r2, _080268C4 @ =0x081E2620
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
 	bl sub_8048064
@@ -8337,7 +8337,7 @@ _08026900:
 	ldr r2, _08026934 @ =0x081E2624
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
 	bl init_fobj_803FEB8
@@ -8365,7 +8365,7 @@ _0802693C:
 	ldr r2, _08026970 @ =0x081E262C
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
 	bl init_fobj_803FEB8
@@ -8393,7 +8393,7 @@ _08026978:
 	ldr r2, _080269C0 @ =0x081E2634
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
 	bl sub_804FEC8
@@ -8432,7 +8432,7 @@ _080269C8:
 	ldr r2, _080269FC @ =0x081E263C
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
 	bl init_fobj_803FEB8
@@ -8460,7 +8460,7 @@ _08026A04:
 	ldr r2, _08026A90 @ =0x081E2644
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
 	bl init_fobj_803FEB8
@@ -8534,7 +8534,7 @@ _08026AA0:
 	ldr r2, _08026AD4 @ =0x081E264C
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
 	bl sub_805139C
@@ -8562,7 +8562,7 @@ _08026ADC:
 	ldr r2, _08026B1C @ =0x081E2654
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
 	bl sub_80508A8
@@ -8701,7 +8701,7 @@ _08026BEC:
 	movs r1, #0x01
 	ldr r2, _08026C74 @ =0x081E265C
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r1, r6, #0x0
 	bl sub_804FB28
 	str r0, [r5, #0x00]
@@ -8710,7 +8710,7 @@ _08026BEC:
 	movs r1, #0x01
 	ldr r2, _08026C74 @ =0x081E265C
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r1, r4, #0x0
 	bl sub_804FB28
 	str r0, [r5, #0x04]
@@ -8719,7 +8719,7 @@ _08026BEC:
 	movs r1, #0x01
 	ldr r2, _08026C74 @ =0x081E265C
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r1, r4, #0x0
 	bl sub_804FB28
 	str r0, [r5, #0x08]
@@ -8728,7 +8728,7 @@ _08026BEC:
 	movs r1, #0x01
 	ldr r2, _08026C74 @ =0x081E265C
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r1, r4, #0x0
 	bl sub_804FB28
 	str r0, [r5, #0x0C]
@@ -8812,7 +8812,7 @@ _08026CDC:
 	movs r1, #0x01
 	ldr r2, _08026D5C @ =0x081E2664
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r3, #0x01
 	negs r3, r3
 	str r3, [sp, #0x000]
@@ -9213,7 +9213,7 @@ _08026FF2:
 	bl sub_801BC40
 _08027010:
 	ldr r0, [r4, #0x00]
-	bl process_enable
+	bl enable__7Process
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -9530,7 +9530,7 @@ _08027276:
 	movs r0, #0x44
 	movs r1, #0x00
 	adds r2, r4, #0x0
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r3, r6, #0x0
 	adds r3, #0x08
 	lsls r3, r3, #0x18
@@ -9668,7 +9668,7 @@ _080273C2:
 	lsls r1, r1, #0x02
 	adds r0, r3, r1
 	ldr r0, [r0, #0x00]
-	bl process_exists
+	bl exists__7ProcessP7Process
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 _080273DE:
@@ -9753,7 +9753,7 @@ _0802746E:
 	str r0, [r1, #0x18]
 	adds r0, r1, #0x0
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _0802748A:
@@ -9764,7 +9764,7 @@ _0802748A:
 	cmp r0, #0x00
 	beq _080274A0
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _080274A0:
@@ -9800,15 +9800,15 @@ _080274C8:
 _080274DE:
 	ldr r0, [r6, #0x00]
 	ldr r0, [r0, #0x00]
-	bl process_disable
+	bl disable__7Process
 	movs r1, #0xC8
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
 	ldr r0, [r0, #0x00]
 	ldr r0, [r0, #0x00]
-	bl process_disable
+	bl disable__7Process
 	adds r0, r5, #0x0
-	bl process_disable
+	bl disable__7Process
 	movs r4, #0x00
 	ldr r2, _08027518 @ =0x0000010B
 	adds r0, r5, r2
@@ -9857,7 +9857,7 @@ sub_8027558:
 	adds r5, r0, #0x0
 	ldr r0, _080275DC @ =0x03000D44
 	ldr r0, [r0, #0x00]
-	bl process_disable
+	bl disable__7Process
 	bl sub_801A6B0
 	ldr r0, _080275E0 @ =0x0300034C
 	ldr r1, _080275E4 @ =0x0000089C
@@ -9885,7 +9885,7 @@ sub_8027558:
 	ldr r0, [r4, #0x00]
 	bl sub_805A1A8
 	ldr r0, [r4, #0x00]
-	bl process_disable
+	bl disable__7Process
 	movs r0, #0x02
 	movs r1, #0x00
 	bl runtime_install_interrupt_callback
@@ -9924,7 +9924,7 @@ sub_80275F4:
 	adds r5, r0, #0x0
 	ldr r0, _08027670 @ =0x03000D44
 	ldr r0, [r0, #0x00]
-	bl process_disable
+	bl disable__7Process
 	bl sub_801A6B0
 	ldr r0, _08027674 @ =0x0300034C
 	ldr r1, _08027678 @ =0x0000089C
@@ -9952,7 +9952,7 @@ sub_80275F4:
 	ldr r0, [r4, #0x00]
 	bl sub_805A1A8
 	ldr r0, [r4, #0x00]
-	bl process_disable
+	bl disable__7Process
 	movs r0, #0x02
 	movs r1, #0x00
 	bl runtime_install_interrupt_callback
@@ -10036,7 +10036,7 @@ _080276EE:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r2, #0x92
 	lsls r2, r2, #0x01
 	adds r1, r5, r2
@@ -10809,7 +10809,7 @@ _08027D1A:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r3, #0xAB
 	lsls r3, r3, #0x02
 	add r3, r8
@@ -11132,22 +11132,22 @@ _08027F9E:
 	cmp r6, r0
 	blt _08027F78
 	ldr r0, [r4, #0x00]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	movs r6, #0x00
 	ldr r0, [r4, #0x04]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	ldr r0, [r4, #0x08]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	ldr r0, [r4, #0x0C]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	ldr r0, [r4, #0x10]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	ldr r0, [r4, #0x14]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	ldr r0, [r4, #0x18]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	ldr r0, [r4, #0x1C]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	movs r1, #0xC4
 	lsls r1, r1, #0x02
 	adds r4, r5, r1
@@ -11158,7 +11158,7 @@ _08027F9E:
 	str r0, [r1, #0x18]
 	adds r0, r1, #0x0
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 	str r6, [r4, #0x00]
 _08027FF0:
 	movs r2, #0xC3
@@ -11168,7 +11168,7 @@ _08027FF0:
 	cmp r0, #0x00
 	beq _08028004
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 	str r6, [r4, #0x00]
 _08028004:
 	movs r3, #0xC7
@@ -11222,13 +11222,13 @@ _08028064:
 	bl runtime_install_interrupt_callback
 	ldr r0, [r7, #0x00]
 	ldr r0, [r0, #0x00]
-	bl process_disable
+	bl disable__7Process
 	movs r1, #0xC8
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
 	ldr r0, [r0, #0x00]
 	ldr r0, [r0, #0x00]
-	bl process_disable
+	bl disable__7Process
 	movs r2, #0xAE
 	lsls r2, r2, #0x02
 	adds r6, r5, r2
@@ -11370,7 +11370,7 @@ _08028190:
 	cmp r5, #0x00
 	beq _080281D0
 	adds r0, r4, #0x0
-	bl process_disable
+	bl disable__7Process
 	movs r0, #0x02
 	strb r0, [r4, #0x00]
 	ldr r4, _080281CC @ =0x081E2684
@@ -11378,7 +11378,7 @@ _08028190:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	adds r3, r5, #0x0
@@ -11393,7 +11393,7 @@ _080281D0:
 	beq _080281DC
 	adds r0, r4, #0x0
 	movs r1, #0x03
-	bl sub_8022554
+	bl _._12FieldManager
 _080281DC:
 	bl sub_8123340
 	ldr r3, _08028218 @ =0x03001034
@@ -11429,11 +11429,11 @@ _08028224:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl load_init_812538C
+	bl __8LoadMenuUcPcUs
 _0802823E:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -13116,14 +13116,14 @@ sub_8028EF4:
 	beq _08028F08
 	adds r0, r4, #0x0
 	movs r1, #0x03
-	bl sub_8022554
+	bl _._12FieldManager
 _08028F08:
 	ldr r0, _08028F24 @ =0x000004AC
 	ldr r4, _08028F28 @ =0x081E2694
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	bl sub_812F5D8
@@ -13169,7 +13169,7 @@ make_btl_8028F54: @ 08028F54
 	ldr r0, _08028FA8 @ =0x0000FFFF
 	strh r0, [r1, #0x00]
 	adds r0, r4, #0x0
-	bl process_disable
+	bl disable__7Process
 	movs r0, #0x02
 	strb r0, [r4, #0x00]
 	ldr r1, _08028FAC @ =0x03000C24
@@ -13187,7 +13187,7 @@ _08028F88:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	adds r3, r5, #0x0
@@ -13303,7 +13303,7 @@ sub_8029070:
 sub_8029080:
 	push {r4, lr}
 	adds r4, r0, #0x0
-	bl process_disable
+	bl disable__7Process
 	movs r0, #0x02
 	strb r0, [r4, #0x00]
 	ldr r1, _080290C0 @ =0x03000C24
@@ -13651,35 +13651,35 @@ _0802931A:
 	adds r0, r4, #0x0
 	adds r0, #0xA8
 	ldr r0, [r0, #0x00]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	adds r0, r4, #0x0
 	adds r0, #0xAC
 	ldr r0, [r0, #0x00]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	adds r0, r4, #0x0
 	adds r0, #0xB0
 	ldr r0, [r0, #0x00]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	adds r0, r4, #0x0
 	adds r0, #0xB4
 	ldr r0, [r0, #0x00]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	adds r0, r4, #0x0
 	adds r0, #0xB8
 	ldr r0, [r0, #0x00]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	adds r0, r4, #0x0
 	adds r0, #0xBC
 	ldr r0, [r0, #0x00]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	adds r0, r4, #0x0
 	adds r0, #0xC0
 	ldr r0, [r0, #0x00]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	adds r0, r4, #0x0
 	adds r0, #0xC4
 	ldr r0, [r0, #0x00]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	pop {r4, r5}
 	pop {r0}
 	bx r0

@@ -2,9 +2,19 @@
 #define LOAD_MENU_H
 
 #include "process.h"
+#include "asm_processes.h"
 
-struct LoadMenu {
-    struct Process process;
+#pragma interface
+
+// Renderer process of the load menu ("TLD").
+class LoadMenuRenderer : public Process {
+public:
+    LoadMenuRenderer(u8 priority, char* label);
+    virtual void update();
+};
+
+class LoadMenu : public Process {
+public:
     struct Sprite* cursor;
     struct Sprite* sprites[6];
     struct Sprite* arrows[4];
@@ -49,23 +59,22 @@ struct LoadMenu {
     u8 padFC[4];
     struct LoadMenuEntry entries[3];
     u8 field_154[4];
-    struct Process* tld;
+    Process* tld;
     struct Process* fade;
     struct Tmev* field_160;
-};
 
-struct LoadMenu* load_init_812538C(struct LoadMenu*, u8, char*, u16);
-void sub_8125464(struct LoadMenu*, int);
-void sub_81254FC(struct LoadMenu*);
-u8 sub_8126520(struct LoadMenu*);
-void sub_8126C3C(struct LoadMenu*);
-void* sub_81270E4(struct LoadMenu*, void*);
-void sub_8127238(struct LoadMenu*);
-void sub_812791C(struct LoadMenu*);
-void tld_update_81279D8(struct Process*);
-struct Process* tld_init_8127A94(struct Process*, u8, char*);
-u8 sub_8127AB0(struct LoadMenu*);
-void sub_8127ADC(struct LoadMenu*, u16);
-void sub_8127B20(struct LoadMenu*);
+    LoadMenu(u8 priority, char* label, u16 arg3);
+    ~LoadMenu();
+    virtual void update();
+    u8 sub_8126520();
+    void sub_8126C3C();
+    void* sub_81270E4(void* buf);
+    void sub_8127238();
+    void sub_812791C();
+    u8 sub_8127AB0();
+    void sub_8127ADC(u16 color);
+    void sub_8127B20();
+    void* sub_8127B90(void* buf);
+};
 
 #endif
