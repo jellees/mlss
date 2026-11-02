@@ -294,22 +294,6 @@ void sub_800063C();
 void sub_8017E34(void);
 void sub_8018218(void*, void*, size_t, int, int);
 void runtime_install_interrupt_callback(int, void (*)(void));
-#ifdef __cplusplus
-}
-// The game's global allocation operators (asm/heap.s). heap 0 = IWRAM, otherwise EWRAM;
-// clear zeroes the allocated memory.
-void* operator new(unsigned long size, int heap, char* label, u8 clear);
-void* operator new[](unsigned long size, int heap, char* label, u8 clear);
-void operator delete(void* ptr);
-void operator delete[](void* ptr);
-extern "C" {
-#else
-// C names of the global allocation operators.
-void free_heap_8018D9C(void* ptr) asm("__builtin_vec_delete");
-void free_heap_8018DA8(void* ptr) asm("__builtin_delete");
-void* alloc_zero_8018DB4(int size, bool32 heap, char* label, int clear) asm("__vn__FUliPcUc");
-void* alloc_Zero(int size, bool32 heap, char* label, int clear) asm("__nw__FUliPcUc");
-#endif
 void sub_80193B4(int, int, int);
 void play_sfx_80195B4(int, int);
 u32 sub_80198B0(void*);

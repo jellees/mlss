@@ -2,6 +2,7 @@
 
 #include "global.h"
 #include "common.h"
+#include "heap.h"
 #include "field.h"
 
 #ifndef NONMATCHING

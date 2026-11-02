@@ -19,6 +19,12 @@ extern HeapBlock gEwramHeap;
 // End of the IWRAM heap (a word in the ROM).
 extern u8* gIwramHeapEnd;
 
+// The global allocation operators. heap 0 = IWRAM, otherwise EWRAM; clear zeroes the memory.
+void* operator new(unsigned long size, int heap, char* label, u8 clear);
+void* operator new[](unsigned long size, int heap, char* label, u8 clear);
+void operator delete(void* p);
+void operator delete[](void* p);
+
 void init_heap();
 void free_heap_memory_8018C68(void* p);
 void* alloc_heap_8018CEC(int heap, u32 size, char* label);

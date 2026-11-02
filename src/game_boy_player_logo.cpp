@@ -1,5 +1,6 @@
 #include "global.h"
 #include "common.h"
+#include "heap.h"
 #include "process.h"
 #include "game_boy_player_logo.h"
 

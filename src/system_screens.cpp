@@ -2,6 +2,7 @@
 
 #include "global.h"
 #include "common.h"
+#include "heap.h"
 #include "process.h"
 #include "title_screen.h"
 #include "system_screens.h"
