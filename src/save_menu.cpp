@@ -72,8 +72,12 @@ static inline u8* get_text_indexed(u8** texts, int index) {
 }
 
 #define VRAM_ALIGN_800(offset)                                                                         \
-    if (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_8198350 - (u8*)&loc_8198220)))(offset, 0x800)) {                              \
-        offset = (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(offset, 0x800) << 11) + 0x800;       \
+    if (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_8198350 - (u8*)&loc_8198220)))(offset,    \
+                                                                                            0x800)) {  \
+        offset = (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))( \
+                      offset, 0x800)                                                                   \
+                  << 11)                                                                               \
+                 + 0x800;                                                                              \
     }
 
 void SaveMenu::update() {
@@ -901,7 +905,8 @@ void* SaveMenu::sub_8129B4C(void* buf) {
             hours = time;
             time = ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
                 this->save->slots[stru_3000D40.slot].data.field_6EC, 3600);
-            minutes = ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_8198350 - (u8*)&loc_8198220)))(time, 60);
+            minutes = ((int (*)(int, int))((u8*)dword_3001038
+                                           + ((u8*)&loc_8198350 - (u8*)&loc_8198220)))(time, 60);
         }
         buf =
             sub_8121F1C(buf, hours, minutes, this->save->slots[stru_3000D40.slot].data.entry.field_10);
@@ -1029,7 +1034,7 @@ void SaveMenu::sub_8129C98() {
                                     .data.field_4[this->save->slots[stru_3000D40.slot].data.field_0_3]
                                     .field_0);
                 this->field_B2 = 1;
-            //! Possible fake match: `!(x & 1)` gives different code in C++ (bool), so `== 0`.
+                //! Possible fake match: `!(x & 1)` gives different code in C++ (bool), so `== 0`.
             } else if ((this->field_B0 & 1) == 0) {
                 name = sub_8123308(this->entry.field_12);
             }

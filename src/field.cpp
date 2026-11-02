@@ -20,14 +20,14 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     fldm->field_F8_1 = (room == -1);
 
     script = &fldm->bevs;
-    *script = bevs_process_init_80F048C(operator new(sizeof(struct EventScriptProcess), 0, "BEVS", 0), 1,
-                                        7, "BEVS");
+    *script = bevs_process_init_80F048C(operator new(sizeof(struct EventScriptProcess), 0, "BEVS", 0),
+                                        1, 7, "BEVS");
     process = (*script)->process;
     process->parentProcess = this;
     process->disable();
     script = &fldm->evts;
-    *script = evts_process_init_80EF3FC(operator new(sizeof(struct EventScriptProcess), 0, "EVTS", 0), 1,
-                                        6, "EVTS");
+    *script = evts_process_init_80EF3FC(operator new(sizeof(struct EventScriptProcess), 0, "EVTS", 0),
+                                        1, 6, "EVTS");
     process = (*script)->process;
     process->parentProcess = this;
     process->disable();

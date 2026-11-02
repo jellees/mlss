@@ -62,8 +62,12 @@ LoadMenu::~LoadMenu() {
 
 // Look at this, has possible modulo and division functions in here.
 #define VRAM_ALIGN_800(offset)                                                                         \
-    if (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_8198350 - (u8*)&loc_8198220)))(offset, 0x800)) {                              \
-        offset = (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(offset, 0x800) << 11) + 0x800;       \
+    if (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_8198350 - (u8*)&loc_8198220)))(offset,    \
+                                                                                            0x800)) {  \
+        offset = (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))( \
+                      offset, 0x800)                                                                   \
+                  << 11)                                                                               \
+                 + 0x800;                                                                              \
     }
 
 void LoadMenu::update() {

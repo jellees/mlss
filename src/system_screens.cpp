@@ -12,7 +12,7 @@
 // Sprite renderer of the save clear screen. Its inline update is only emitted for the vtable, as
 // weak code (linked right after this file's .text).
 class SaveClearRenderer : public Process {
-public:
+  public:
     SaveClearRenderer(u8 priority, char* label) : Process(priority, label) {
     }
     virtual void update() {
@@ -425,7 +425,7 @@ void OptionsMenu::update() {
                     if ((this->options_4 ^ OPTION_FLAGS_EASY_SLEEP) & OPTION_FLAGS_EASY_SLEEP) {
                         if (gGameState.field_2A & DPAD_LEFT) {
                             this->options_4 |= OPTION_FLAGS_EASY_SLEEP;
-                            showInfoPopup( word_83A2900[0], word_83A2900[1]);
+                            showInfoPopup(word_83A2900[0], word_83A2900[1]);
                             play_sfx_80195B4(95, -1);
                             this->state = OPTS_STATE_EASY_SLEEP_CONFIRMATION;
                         }
@@ -442,7 +442,7 @@ void OptionsMenu::update() {
                         if (!(this->options_4 & OPTION_FLAGS_RUMBLE_FEATURE)) {
                             if (gGameState.field_2A & DPAD_LEFT) {
                                 this->options_4 |= OPTION_FLAGS_RUMBLE_FEATURE;
-                                showInfoPopup( word_83A2900[2], word_83A2900[3]);
+                                showInfoPopup(word_83A2900[2], word_83A2900[3]);
                                 play_sfx_80195B4(95, -1);
                                 this->state = OPTS_STATE_RUMBLE_FEATURE_CONFIRMATION;
                             }
@@ -460,7 +460,7 @@ void OptionsMenu::update() {
                     if (!(this->options_4 & OPTION_FLAGS_AUTO_FEATURE)) {
                         if (gGameState.field_2A & DPAD_LEFT) {
                             this->options_4 |= OPTION_FLAGS_AUTO_FEATURE;
-                            showInfoPopup( word_83A2900[4], word_83A2900[5]);
+                            showInfoPopup(word_83A2900[4], word_83A2900[5]);
                             play_sfx_80195B4(95, -1);
                             this->state = OPTS_STATE_AUTO_SLEEP_CONFIRMATION;
                         }
@@ -955,7 +955,7 @@ SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, l
     BUFFER_REG_BG2HOFS = 0;
     BUFFER_REG_BG2VOFS = 0;
 
-    showPopup( word_83A2944[0], word_83A2944[1]);
+    showPopup(word_83A2944[0], word_83A2944[1]);
 
     BUFFER_REG_BLDCNT = 191;
     BUFFER_REG_BLDY = 0;
@@ -1001,7 +1001,7 @@ void SaveClearScreen::update() {
                         sub_8018218(this->field_24 + 0x3C00, (void*)0x6004020, 0x3C00, 0, 32);
                         sub_8018218(this->bwsw + 0x400, (void*)0x6002000, 0x800, 0, 32);
                         this->field_1C_0 = 1;
-                        showPopup( word_83A2944[2], word_83A2944[3]);
+                        showPopup(word_83A2944[2], word_83A2944[3]);
                         this->sprite->yPosition = 98;
                         this->state = 1;
                     }
@@ -1032,7 +1032,7 @@ void SaveClearScreen::update() {
                 }
                 if (this->popup.zoomFrame == 0) {
                     if (this->popup.isClosing) {
-                        showPopup( word_83A2944[4], word_83A2944[5]);
+                        showPopup(word_83A2944[4], word_83A2944[5]);
                         off_839EC80[0x4A] |= 0x10;
                         sprite_hide_8021F20(this->sprite);
                         this->state = 2;

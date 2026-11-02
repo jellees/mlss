@@ -259,8 +259,8 @@ TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(prio
     stru_203FFF8.field_7_7 = gGameState.field_888_1;
 
     dword_3000DA0 = new (0, "ORST", 1) ORSTData;
-    mbsv = new (0, "OPDR", 0)
-        MarioBrosScoreVisual(8, "OPDR", stru_203FFF8.field_0, stru_203FFF8.field_4);
+    mbsv =
+        new (0, "OPDR", 0) MarioBrosScoreVisual(8, "OPDR", stru_203FFF8.field_0, stru_203FFF8.field_4);
     mbsv->parentProcess = this;
 
     this->selection = selection != 0 ? selection - 1 : 0;
@@ -287,8 +287,7 @@ TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(prio
     sub_8020994(0, 0, 0, 0);
 
     for (i = 0; i < 9; i++) {
-        sprites[i] =
-            sub_8020DD0(0, word_83A74C0[i * 2], word_83A74C0[i * 2 + 1], -1, -1, -1, -1);
+        sprites[i] = sub_8020DD0(0, word_83A74C0[i * 2], word_83A74C0[i * 2 + 1], -1, -1, -1, -1);
         sub_801E150(sprites[i], 0, -1, 0, 0);
     }
 
@@ -334,7 +333,6 @@ TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(prio
         entryStateIdx = 2;
         BUFFER_REG_DISPCNT |= 5953;
     }
-
 }
 
 inline TitleScreen::~TitleScreen() {
@@ -607,8 +605,7 @@ void TitleScreen::update() {
                                             ssTextPosY = 37376;
                                             ssTextScaleX = 51;
                                             ssTextScaleY = 51;
-                                            sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0,
-                                                        0, 0);
+                                            sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
                                             sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
                                             sprites[TS_SPRITE_SS_TEXT]->yPosition = 146;
                                             sprites[TS_SPRITE_SS_TEXT]->xScale = 51;
@@ -616,8 +613,7 @@ void TitleScreen::update() {
                                             sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 1;
                                             sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 1;
                                             sprites[TS_SPRITE_SS_TEXT]->field_E = 0;
-                                            sprite_show_8020CBC(
-                                                sprites[TS_SPRITE_SS_TEXT]);
+                                            sprite_show_8020CBC(sprites[TS_SPRITE_SS_TEXT]);
                                             states[TS_ITEM_SS_TEXT] = 0;
                                             break;
 
@@ -626,21 +622,15 @@ void TitleScreen::update() {
                                             nTextPosY = 36608;
                                             nTextScaleX = 51;
                                             nTextScaleY = 51;
-                                            sub_801E150(sprites[TS_SPRITE_LICENSE_TEXT], 0,
-                                                        0, 0, 0);
-                                            sprites[TS_SPRITE_LICENSE_TEXT]->xPosition =
-                                                118;
-                                            sprites[TS_SPRITE_LICENSE_TEXT]->yPosition =
-                                                143;
+                                            sub_801E150(sprites[TS_SPRITE_LICENSE_TEXT], 0, 0, 0, 0);
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->xPosition = 118;
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->yPosition = 143;
                                             sprites[TS_SPRITE_LICENSE_TEXT]->xScale = 51;
                                             sprites[TS_SPRITE_LICENSE_TEXT]->yScale = 51;
-                                            sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_0 =
-                                                1;
-                                            sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_2 =
-                                                1;
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_0 = 1;
+                                            sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_2 = 1;
                                             sprites[TS_SPRITE_LICENSE_TEXT]->field_E = 0;
-                                            sprite_show_8020CBC(
-                                                sprites[TS_SPRITE_LICENSE_TEXT]);
+                                            sprite_show_8020CBC(sprites[TS_SPRITE_LICENSE_TEXT]);
                                             states[TS_ITEM_LICENSE_TEXT] = 0;
                                             break;
                                     }
@@ -665,10 +655,8 @@ void TitleScreen::update() {
                                 }
                                 break;
                         }
-                        sprites[TS_SPRITE_SUITCASE]->xPosition =
-                            xPosSuitcase / 256;
-                        sprites[TS_SPRITE_SUITCASE]->yPosition =
-                            yPosSuitcase / 256;
+                        sprites[TS_SPRITE_SUITCASE]->xPosition = xPosSuitcase / 256;
+                        sprites[TS_SPRITE_SUITCASE]->yPosition = yPosSuitcase / 256;
                         break;
 
                     case TS_ITEM_ML_LOGO:
@@ -689,10 +677,8 @@ void TitleScreen::update() {
                                 break;
 
                             case 1:
-                                mlTextScaleX =
-                                    word_83A74EC[2 * mlTextProgression];
-                                mlTextScaleY =
-                                    word_83A74EC[2 * mlTextProgression + 1];
+                                mlTextScaleX = word_83A74EC[2 * mlTextProgression];
+                                mlTextScaleY = word_83A74EC[2 * mlTextProgression + 1];
                                 mlTextProgression++;
                                 // Is the cast really necessary here?
                                 if ((u16)mlTextProgression == 17) {
@@ -700,12 +686,12 @@ void TitleScreen::update() {
                                 }
                                 break;
                         }
-                        mlTextAffineSrc.sx =
-                            ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(0x10000,
-                                                                            mlTextScaleX);
-                        mlTextAffineSrc.sy =
-                            ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(0x10000,
-                                                                            mlTextScaleY);
+                        mlTextAffineSrc.sx = ((int (*)(int, int))(
+                            (u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                            0x10000, mlTextScaleX);
+                        mlTextAffineSrc.sy = ((int (*)(int, int))(
+                            (u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                            0x10000, mlTextScaleY);
                         mlTextAffineSrc.scrY = mlTextPosY / 256;
                         BgAffineSet(&mlTextAffineSrc, &mlTextAffineDst, 1);
                         BUFFER_REG_BG2PA = mlTextAffineDst.pa;
@@ -731,18 +717,15 @@ void TitleScreen::update() {
                                 break;
 
                             case 1:
-                                ssTextScaleX =
-                                    word_83A7530[2 * ssTextProgression];
-                                ssTextScaleY =
-                                    word_83A7530[2 * ssTextProgression + 1];
+                                ssTextScaleX = word_83A7530[2 * ssTextProgression];
+                                ssTextScaleY = word_83A7530[2 * ssTextProgression + 1];
                                 ssTextProgression++;
                                 if ((u16)ssTextProgression == 17) {
                                     states[TS_ITEM_SS_TEXT] = -1;
                                 }
                                 break;
                         }
-                        sprites[TS_SPRITE_SS_TEXT]->yPosition =
-                            ssTextPosY / 256;
+                        sprites[TS_SPRITE_SS_TEXT]->yPosition = ssTextPosY / 256;
                         sprites[TS_SPRITE_SS_TEXT]->xScale = ssTextScaleX;
                         sprites[TS_SPRITE_SS_TEXT]->yScale = ssTextScaleY;
                         break;
@@ -766,10 +749,8 @@ void TitleScreen::update() {
                                 break;
 
                             case 1:
-                                nTextScaleX =
-                                    word_83A7574[2 * nTextProgression];
-                                nTextScaleY =
-                                    word_83A7574[2 * nTextProgression + 1];
+                                nTextScaleX = word_83A7574[2 * nTextProgression];
+                                nTextScaleY = word_83A7574[2 * nTextProgression + 1];
                                 nTextProgression++;
                                 if ((u16)nTextProgression == 17) {
                                     sub_801E150(sprites[TS_SPRITE_SUITCASE], 5, 0, 0, 0);
@@ -779,8 +760,7 @@ void TitleScreen::update() {
                                 }
                                 break;
                         }
-                        sprites[TS_SPRITE_LICENSE_TEXT]->yPosition =
-                            nTextPosY / 256;
+                        sprites[TS_SPRITE_LICENSE_TEXT]->yPosition = nTextPosY / 256;
                         sprites[TS_SPRITE_LICENSE_TEXT]->xScale = nTextScaleX;
                         sprites[TS_SPRITE_LICENSE_TEXT]->yScale = nTextScaleY;
                         break;
@@ -865,25 +845,21 @@ void TitleScreen::update() {
                                         beanPosY = 33280;
                                         beanVelocityX = 384;
                                         beanVelocityY = 1536;
-                                        sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 11, 0,
-                                                    0, 0);
+                                        sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 11, 0, 0, 0);
                                         sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 64;
                                         sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 130;
                                         sprites[TS_SPRITE_BEAN_POINTER]->field_1F_0 = 0;
                                         sprites[TS_SPRITE_BEAN_POINTER]->field_1F_2 = 0;
                                         sprites[TS_SPRITE_BEAN_POINTER]->field_E = 0;
-                                        sprite_show_8020CBC(
-                                            sprites[TS_SPRITE_BEAN_POINTER]);
+                                        sprite_show_8020CBC(sprites[TS_SPRITE_BEAN_POINTER]);
                                         states[TS_ITEM_POINTER] = 0;
                                     }
                                     timer++;
                                 }
                                 break;
                         }
-                        sprites[TS_SPRITE_SUITCASE]->xPosition =
-                            xPosSuitcase / 256;
-                        sprites[TS_SPRITE_SUITCASE]->yPosition =
-                            yPosSuitcase / 256;
+                        sprites[TS_SPRITE_SUITCASE]->xPosition = xPosSuitcase / 256;
+                        sprites[TS_SPRITE_SUITCASE]->yPosition = yPosSuitcase / 256;
                         break;
 
                     case TS_ITEM_PRESS_START_TEXT:
@@ -895,8 +871,7 @@ void TitleScreen::update() {
                                 states[TS_ITEM_PRESS_START_TEXT] = -1;
                             }
                         }
-                        sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition =
-                            psTextPosY / 256;
+                        sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition = psTextPosY / 256;
                         break;
 
                     case TS_ITEM_POINTER:
@@ -914,17 +889,13 @@ void TitleScreen::update() {
 
                             case 1:
                                 if (beanPosY / 256 <= 20 * spriteIdx + 92) {
-                                    sub_801E150(sprites[spriteIdx + 2],
-                                                spriteIdx + 3, 0, 0, 0);
+                                    sub_801E150(sprites[spriteIdx + 2], spriteIdx + 3, 0, 0, 0);
                                     sprites[spriteIdx + 2]->xPosition = 180;
-                                    sprites[spriteIdx + 2]->yPosition =
-                                        20 * spriteIdx + 100;
-                                    sprite_show_8020CBC(
-                                        sprites[spriteIdx + 2]);
+                                    sprites[spriteIdx + 2]->yPosition = 20 * spriteIdx + 100;
+                                    sprite_show_8020CBC(sprites[spriteIdx + 2]);
 
                                     if (spriteIdx == 0) {
-                                        sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 12, 0,
-                                                    0, 0);
+                                        sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0, 0);
                                         states[TS_ITEM_POINTER] = 2;
                                     } else {
                                         spriteIdx--;
@@ -938,16 +909,13 @@ void TitleScreen::update() {
 
                             case 2:
                                 if (sprites[TS_SPRITE_BEAN_POINTER]->field_12_3) {
-                                    sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0,
-                                                0);
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 0, 0,
-                                                0, 0);
+                                    sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
+                                    sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 0, 0, 0, 0);
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->xPosition = 64;
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->yPosition = 140;
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->field_1F_0 = 1;
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->field_E = 1;
-                                    sprite_show_8020CBC(
-                                        sprites[TS_SPRITE_SUITCASE_VISUAL]);
+                                    sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE_VISUAL]);
                                     suitcaseVisualState = TS_SV_STATE_APPEAR;
 
                                     off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_WIN0_ON >> 8;
@@ -973,10 +941,8 @@ void TitleScreen::update() {
                                 }
                                 break;
                         }
-                        sprites[TS_SPRITE_BEAN_POINTER]->xPosition =
-                            beanPosX / 256;
-                        sprites[TS_SPRITE_BEAN_POINTER]->yPosition =
-                            beanPosY / 256;
+                        sprites[TS_SPRITE_BEAN_POINTER]->xPosition = beanPosX / 256;
+                        sprites[TS_SPRITE_BEAN_POINTER]->yPosition = beanPosY / 256;
                         break;
                 }
             }
@@ -1008,12 +974,10 @@ void TitleScreen::update() {
 
                 if (this->selection != selection) {
                     if (suitcaseVisualState != TS_SV_STATE_DISAPPEAR) {
-                        sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * selection + 2,
-                                    0, 0, 0);
+                        sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * selection + 2, 0, 0, 0);
                     }
                     suitcaseVisualState = TS_SV_STATE_DISAPPEAR;
-                    sprites[TS_SPRITE_BEAN_POINTER]->yPosition =
-                        20 * this->selection + 92;
+                    sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 20 * this->selection + 92;
                 }
             }
             break;
@@ -1055,16 +1019,14 @@ void TitleScreen::update() {
     switch (suitcaseVisualState) {
         case TS_SV_STATE_APPEAR:
             if (sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
-                sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL],
-                            3 * this->selection + 1, 0, 0, 0);
+                sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection + 1, 0, 0, 0);
                 suitcaseVisualState = TS_SV_STATE_IDLE;
             }
             break;
 
         case TS_SV_STATE_DISAPPEAR:
             if (sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
-                sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection,
-                            0, 0, 0);
+                sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection, 0, 0, 0);
                 suitcaseVisualState = TS_SV_STATE_APPEAR;
             }
             break;
@@ -1133,5 +1095,4 @@ MarioBrosScoreVisual::MarioBrosScoreVisual(u8 priority, char* label, u32 topScor
         this->pScore[i] = pScore % 10;
         pScore /= 10;
     }
-
 }
