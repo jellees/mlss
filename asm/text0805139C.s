@@ -122,7 +122,7 @@ _08051480: .4byte 0x0000020F
 sub_8051484:
 	push {r4, lr}
 	adds r4, r0, #0x0
-	bl sub_80403C4
+	bl method2__11FieldObjectPUsT1Pv
 	movs r0, #0xA5
 	lsls r0, r0, #0x02
 	adds r4, r4, r0

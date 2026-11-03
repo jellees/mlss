@@ -1655,7 +1655,7 @@ _08024B0A:
 	cmp r0, #0x00
 	bne _08024B50
 	adds r0, r2, #0x0
-	bl sub_80402C4
+	bl sub_80402C4__11FieldObject
 _08024B50:
 	subs r4, #0x01
 	adds r7, #0x04
@@ -1669,7 +1669,7 @@ _08024B54:
 	cmp r0, #0x00
 	bne _08024B6A
 	adds r0, r2, #0x0
-	bl sub_80402C4
+	bl sub_80402C4__11FieldObject
 _08024B6A:
 	subs r4, #0x01
 	adds r7, #0x04
@@ -1683,7 +1683,7 @@ _08024B6E:
 	cmp r0, #0x00
 	bne _08024B84
 	adds r0, r2, #0x0
-	bl sub_80402C4
+	bl sub_80402C4__11FieldObject
 _08024B84:
 	subs r4, #0x01
 	adds r7, #0x04
@@ -1700,7 +1700,7 @@ _08024B8C:
 	cmp r0, #0x00
 	bne _08024BA4
 	adds r0, r2, #0x0
-	bl sub_80402C4
+	bl sub_80402C4__11FieldObject
 _08024BA4:
 	ldr r2, [r7, #0x04]
 	ldr r1, _08024C3C @ =0x000002B5
@@ -1711,7 +1711,7 @@ _08024BA4:
 	cmp r0, #0x00
 	bne _08024BBA
 	adds r0, r2, #0x0
-	bl sub_80402C4
+	bl sub_80402C4__11FieldObject
 _08024BBA:
 	ldr r2, [r7, #0x08]
 	ldr r3, _08024C3C @ =0x000002B5
@@ -1722,7 +1722,7 @@ _08024BBA:
 	cmp r0, #0x00
 	bne _08024BD0
 	adds r0, r2, #0x0
-	bl sub_80402C4
+	bl sub_80402C4__11FieldObject
 _08024BD0:
 	ldr r2, [r7, #0x0C]
 	ldr r6, _08024C3C @ =0x000002B5
@@ -1733,7 +1733,7 @@ _08024BD0:
 	cmp r0, #0x00
 	bne _08024BE6
 	adds r0, r2, #0x0
-	bl sub_80402C4
+	bl sub_80402C4__11FieldObject
 _08024BE6:
 	subs r4, #0x04
 	adds r7, #0x10

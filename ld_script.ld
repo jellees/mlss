@@ -31,6 +31,7 @@ SECTIONS
         asm/field.o(.text);
         asm/text0802A4E8.o(.text);
         asm/text0803EA00.o(.text);
+        src/field_object.o(.text);
         asm/field_object.o(.text);
         asm/field_player_character.o(.text);
         asm/field_monster.o(.text);

@@ -60,7 +60,7 @@ class FieldManager : public Process {
     void* field_24;
     FieldObject* objects[32];
     FieldClass1* field_A8[8];
-    void* field_C8;
+    u16* field_C8;
     u16* field_CC;
     struct struc_3000388* field_D0;
     u8 pad_D4[0x10];

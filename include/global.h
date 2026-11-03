@@ -13,6 +13,9 @@ extern "C" {
 #ifdef __cplusplus
 #undef NULL
 #define NULL 0
+#else
+// The game is C++; C files only need bool for shared prototypes.
+typedef u8 bool;
 #endif
 
 // Figure out if we need these defines later.

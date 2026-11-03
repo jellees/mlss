@@ -408,7 +408,7 @@ sub_8050BC0:
 	bne _08050CA0
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
-	bl sub_80403C4
+	bl method2__11FieldObjectPUsT1Pv
 	movs r1, #0x86
 	lsls r1, r1, #0x02
 	adds r0, r6, r1
@@ -626,7 +626,7 @@ _08050D84:
 	ands r0, r1
 	strb r0, [r2, #0x00]
 	adds r0, r6, #0x0
-	bl sub_80415A0
+	bl sub_80415A0__11FieldObject
 _08050DA2:
 	add sp, #0x00C
 	pop {r3}
@@ -757,7 +757,7 @@ _08050E98: .4byte 0x00000299
 _08050E9C: .4byte 0x0000029B
 _08050EA0:
 	adds r0, r7, #0x0
-	bl sub_80409F4
+	bl method3__11FieldObject
 _08050EA6:
 	pop {r4, r5, r6, r7}
 	pop {r0}

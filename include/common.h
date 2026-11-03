@@ -78,6 +78,54 @@ struct struc_3000D18 {
     u32 field_C;
 };
 
+struct struc_Sprite48 {
+    u8 pad_0[0x4];
+    void* field_4;
+};
+
+// Entries of off_839EE60[][]
+struct struc_839EE60 {
+    u32 field_0_0 : 28;
+    u32 field_0_28 : 1;
+    u32 field_0_29 : 2;
+    u32 field_0_31 : 1;
+};
+
+struct struc_Sprite34 {
+    u8 pad_0[0x8];
+    u32 field_8;
+};
+
+// An OAM buffer entry, linked to the next one (FieldObject::method10)
+struct struc_Oam {
+    u16 attr0;
+    u16 attr1;
+    u16 attr2;
+    u16 field_6;
+    u32 field_8;
+    u8 pad_C[0x4];
+    struct struc_Oam* next;
+};
+
+// Entries of stru_83A065C
+struct struc_83A065C {
+    s8 x;
+    s8 y;
+    u16 attr0;
+    u16 attr1;
+    u16 attr2;
+};
+
+// Collision map cell (get_coldef_ptr_by_xz)
+struct Coldef {
+    u32 field_0_0 : 20;
+    u32 field_0_20 : 4;
+    u32 field_0_24 : 2;
+    u32 field_0_26 : 2;
+    u32 field_0_28 : 1;
+    u32 field_0_29 : 3;
+};
+
 struct Sprite {
     s16 xPosition;
     s16 yPosition;
@@ -107,7 +155,8 @@ struct Sprite {
     u16 field_18;
     u16 field_1A;
     u16 field_1C;
-    u8 field_1E;
+    u8 field_1E_0 : 4;
+    u8 field_1E_4 : 4;
     u8 field_1F_0 : 2;
     u8 field_1F_2 : 2;
     u8 field_1F_4 : 2;
@@ -115,14 +164,18 @@ struct Sprite {
     u8 field_20[2];
     u8 field_22;
     u8 field_23;
-    u8 pad24[5];
-    u8 field_29_0 : 1;
-    u8 field_29_1 : 1;
-    u8 field_29_2 : 3;
-    u8 field_29_5 : 1;
-    u8 field_29_6 : 2;
-    u8 pad2A[2];
+    u8 pad24[4];
+    u16 field_28_0 : 9;
+    u16 field_28_9 : 1;
+    u16 field_28_10 : 3;
+    u16 field_28_13 : 1;
+    u16 field_28_14 : 2;
+    u16 field_2A;
     s16 field_2C;
+    u8 pad2E[0x6];
+    struct struc_Sprite34* field_34;
+    u8 pad38[0x10];
+    struct struc_Sprite48* field_48;
 };
 
 struct struc_203FFF8 {
@@ -325,6 +378,11 @@ void runtime_install_interrupt_callback(int, void (*)(void));
 void sub_80193B4(int, int, int);
 void play_sfx_80195B4(int, int);
 u32 sub_80198B0(void*);
+u16 sub_81152FC(void*, u16);
+void sub_8116654(void*, u8);
+struct Coldef* get_coldef_ptr_by_xz(void* map, s16 x, s16 z);
+void sub_8116680(void*, u8);
+void sub_8020D40(struct Sprite*);
 void sub_8019308(int, int, int);
 void sub_801A548(void);
 void sub_81994EC(int*, void*);
@@ -395,6 +453,7 @@ void sub_80F0184(struct EventScriptProcess*);
 void sub_80F032C(struct EventScriptProcess*);
 u8 sub_80E98C0(void*, int, int);
 void get_field_object_count(u16 room, u8* count);
+void init_fobj_with_data_80FB128(u16 room, u8 index, void* object);
 u8 get_field_object_type(u16 room, u8 index);
 void sub_80F034C(struct EventScriptProcess*, u32);
 void sub_80F0420(struct EventScriptProcess*, u32);
@@ -484,6 +543,12 @@ extern s16 word_83A75C8[];
 extern u8* off_839EC80;
 extern u16 word_839F5A4[]; // Up, Up, Down, Down, Left, Right, Left, Right, B, A
 extern u8 byte_839F5B8[];
+extern struct struc_839EE60* off_839EE60[];
+extern u8 byte_83A05EC[];
+extern u8 byte_83A0636[];
+extern s8 byte_83A0656[];
+extern struct struc_83A065C stru_83A065C[];
+extern u8* off_83A069C[];
 extern u8* off_839F5C8;
 extern struct struc_83BBDD0 stru_83BBDD0[];
 extern struct struc_83BCDC4 stru_83BCDC4[];

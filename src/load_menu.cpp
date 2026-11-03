@@ -353,8 +353,8 @@ void LoadMenu::update() {
                             this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_1F_4 = 3;
                             this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_1F_6 = 3;
                             this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_10_1 = 0;
-                            this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_29_1 = 0;
-                            this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_29_5 = 0;
+                            this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_28_9 = 0;
+                            this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_28_13 = 0;
                         }
                         stru_3000D40.slot = 0;
                         this->field_F1 = this->save->field_6;
@@ -738,8 +738,8 @@ void LoadMenu::sub_8126C3C() {
         this->cursor->field_1F_4 = 0;
         this->cursor->field_1F_6 = 0;
         this->cursor->field_10_1 = 0;
-        this->cursor->field_29_1 = 0;
-        this->cursor->field_29_5 = 0;
+        this->cursor->field_28_9 = 0;
+        this->cursor->field_28_13 = 0;
         this->field_F2 = 1;
     } else if (this->field_F2 == 1) {
         this->arrows[this->field_EC] = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
@@ -753,8 +753,8 @@ void LoadMenu::sub_8126C3C() {
         this->arrows[this->field_EC]->field_1F_4 = 1;
         this->arrows[this->field_EC]->field_1F_6 = 1;
         this->arrows[this->field_EC]->field_10_1 = 0;
-        this->arrows[this->field_EC]->field_29_1 = 0;
-        this->arrows[this->field_EC]->field_29_5 = 0;
+        this->arrows[this->field_EC]->field_28_9 = 0;
+        this->arrows[this->field_EC]->field_28_13 = 0;
         this->arrows[this->field_EC]->field_12_4 = 1;
         this->arrows[this->field_EC]->field_12_1 = 1;
         if (++this->field_EC == 4) {
@@ -784,8 +784,8 @@ void LoadMenu::sub_8126C3C() {
                     this->sprites[index]->field_1F_4 = 3;
                     this->sprites[index]->field_1F_6 = 3;
                     this->sprites[index]->field_10_1 = 0;
-                    this->sprites[index]->field_29_1 = 0;
-                    this->sprites[index]->field_29_5 = 0;
+                    this->sprites[index]->field_28_9 = 0;
+                    this->sprites[index]->field_28_13 = 0;
                     this->sprites[index]->field_12_4 = 1;
                     this->sprites[index]->field_12_1 = 1;
                 } else if ((this->field_F1 >> slot) & 1) {
@@ -801,8 +801,8 @@ void LoadMenu::sub_8126C3C() {
                     this->sprites[index]->field_1F_4 = 3;
                     this->sprites[index]->field_1F_6 = 3;
                     this->sprites[index]->field_10_1 = 0;
-                    this->sprites[index]->field_29_1 = 0;
-                    this->sprites[index]->field_29_5 = 0;
+                    this->sprites[index]->field_28_9 = 0;
+                    this->sprites[index]->field_28_13 = 0;
                 } else {
                     this->sprites[index] = NULL;
                 }

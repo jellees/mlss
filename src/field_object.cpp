@@ -1,0 +1,647 @@
+#include "global.h"
+#include "common.h"
+#include "field_object.h"
+#include "field_player_character.h"
+
+FieldObject::FieldObject(int room, int index) {
+    field_1 = 0xFF;
+    field_29 = -1;
+    field_20C_0 = 1;
+    field_20C_19 = 1;
+    field_20C_25 = 1;
+    field_210_0 = 0;
+    field_210_1 = 1;
+    field_210_2 = 1;
+    field_210_3 = 1;
+    field_210_6 = 1;
+    field_2B5_0 = 0;
+    field_2B7_3 = 31;
+    field_2B8_0 = 7;
+    field_214_0 = 3;
+    field_214_13 = 14;
+    field_214_17 = 1;
+    field_214_18 = 0;
+    field_230 = -1;
+    field_234 = -1;
+    field_238 = -1;
+    field_239 = 16;
+    field_23D = 0;
+    field_26C = 0xFFFF;
+    field_26E = 0xFF;
+    field_268 = -1;
+    sub_8047EFC(this, 0x200, 0x200, 0x52C, 0x75);
+    if (room != -1) {
+        init_fobj_with_data_80FB128(room, index, this);
+    }
+}
+
+void FieldObject::method5() {
+    u32 changed;
+
+    if (field_214_21 == 0) {
+        //! \bug Copies the first 0x28 bytes to field_28 *before* comparing them, so `changed` is always 0.
+        CpuCopy32(this, &field_28, 0x28);
+        changed = field_34 != field_C;
+        if (field_38 != field_10) {
+            changed |= 2;
+        }
+        if (field_3C != field_14) {
+            changed |= 4;
+        }
+        if (field_40 != field_18) {
+            changed |= 8;
+        }
+        field_213_1 = changed;
+        field_50 = sprite->xPosition;
+        field_52 = sprite->yPosition;
+    }
+}
+
+void FieldObject::sub_80400B0(int arg1, int arg2, int arg3) {
+    int speed;
+    int distance;
+
+    field_248 = arg2 == -1 ? field_266 : arg2;
+    if (arg1 == -1) {
+        field_254 = field_258 = field_264;
+    } else if (arg1 == 0) {
+        field_254 = field_258 = 0;
+    } else if (arg1 == 30) {
+        field_254 = field_258 = 0x52C;
+    } else {
+        arg1 <<= 8;
+        speed = 0;
+        distance = 0;
+        do {
+            speed += field_248;
+            distance += speed;
+        } while (distance < arg1);
+        distance -= arg1;
+        if (distance > 0) {
+            distance <<= 8;
+            distance /= speed;
+            speed -= field_248 * distance / 256;
+        }
+        field_254 = speed;
+        field_258 = speed;
+    }
+    field_213_5 = field_258 > 0;
+    field_25C = 0;
+    field_24C = field_14 + field_18;
+    field_250 = field_18;
+    field_240 = field_23E;
+    if (arg3 == -1) {
+        field_23E = field_262;
+    } else {
+        field_23E = arg3;
+    }
+}
+
+void FieldObject::sub_80401F0(int arg1, int arg2, int arg3) {
+    field_248 = arg2 == -1 ? field_266 : arg2;
+    field_254 = arg1 == -1 ? field_264 : arg1;
+    field_258 = field_254;
+    field_25C = 0;
+    field_24C = field_14 + field_18;
+    field_250 = field_18;
+    field_240 = field_23E;
+    if (arg3 == -1) {
+        field_23E = field_262;
+    } else {
+        field_23E = arg3;
+    }
+    field_213_5 = field_258 > 0;
+}
+
+void FieldObject::sub_80402C4() {
+    if (field_25C >= 0) {
+        field_18 += field_258;
+        field_258 -= field_248;
+        if (field_20C_13 == 0) {
+            if (field_18 <= 0) {
+                sub_8047EB8(this);
+                field_18 = 0;
+            } else {
+                field_25C++;
+            }
+        } else if (field_14 + field_18 <= field_24C) {
+            sub_8047EB8(this);
+            if (field_14 + field_18 < 0) {
+                field_18 = -field_14;
+            }
+        } else {
+            field_25C++;
+        }
+    }
+}
+
+void FieldObject::sub_804034C() {
+    if (field_20C_0 && field_214_21 == 0) {
+        if (field_25C >= 0) {
+            if (field_14 + field_18 >= field_3C + field_40) {
+                field_4 = 2;
+            } else {
+                field_4 = 3;
+            }
+        } else if (field_242 != 0 || field_244 != 0) {
+            field_4 = 1;
+        } else {
+            field_4 = 0;
+        }
+    }
+}
+
+// https://decomp.me/scratch/TODO
+// Only constant sharing differs: the original tests field_298_0 with its own 1 but shares another 1 for
+// the `& 1` of the copied 1-bit fields, and derives some masks from each other (-7 from -13).
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/method2__11FieldObjectPUsT1Pv.s\"");
+#else
+void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
+    struct Sprite* sprite;
+    struct struc_839EE60* entry;
+    int animation;
+    int animation2;
+    int flag;
+
+    field_2A8 = arg1;
+    field_2AC = arg2;
+    field_334 = arg3;
+    if (field_298_0) {
+        sprite = sub_8020DD0(0, field_218, field_214_17 != 0, -1, -1, -1, field_21E);
+        field_26C = sub_81152FC(arg3, field_218);
+    } else if (field_222 != 0xFF) {
+        field_218 = arg1[field_222];
+        field_21E = arg2[field_223];
+        sprite = sub_8020DD0(0, field_218, field_214_17 != 0, -1, -1, -1, field_21E);
+        field_26C = sub_81152FC(arg3, field_218);
+    } else {
+        sprite = sub_8020DD0(0, 0x8006, field_214_17 != 0, -1, -1, -1, -1);
+        field_218 = 0x8006;
+        field_21E = (sprite->field_1E_4 + 1) << 12 | sprite->field_1C;
+    }
+    field_214_23 = field_218 == 0x1001 || field_218 == 0x1002 || field_218 == 0x1028;
+    field_214_22 = 0;
+    entry = &off_839EE60[sprite->field_1E_0][sprite->field_16];
+    field_214_18 = entry->field_0_29;
+    field_214_20 = entry->field_0_28;
+    animation2 = -1;
+    if (field_298_0) {
+        animation = field_29B;
+        animation2 = field_29C;
+        flag = field_298_1;
+    } else if (entry->field_0_29 != 0 && field_55 <= 7) {
+        u8 value;
+
+        field_24_0 = field_55;
+        field_2 = field_24_0 << 5;
+        value = byte_83A05EC[field_214_18 * 16 + field_214_20 * 8 + field_24_0];
+        animation = value & 0x7F;
+        flag = value >> 7;
+    } else {
+        animation = field_55;
+        flag = 0;
+    }
+    sub_801E150(sprite, animation, -1, 0, 0);
+    if (animation2 != -1) {
+        sub_801E150(sprite, animation, animation2, 0, 0);
+    }
+    if (sprite->field_48 != 0) {
+        int value = sub_80198B0(sprite->field_48->field_4) >> 5;
+
+        if (value > sprite->field_28_0) {
+            sprite->field_28_0 = value;
+        }
+    }
+    sprite->field_11_6 = flag;
+    if (field_298_0) {
+        sprite->field_1F_0 = field_298_2;
+        sprite->field_1F_2 = field_298_4;
+        sprite->field_12_1 = field_298_6;
+        sprite->field_12_3 = field_299_0;
+        sprite->field_12_4 = field_299_1;
+        sprite->field_2A = field_29E;
+        sprite->field_2C = field_2A0;
+        sprite->xScale = field_2A2;
+        sprite->yScale = field_2A4;
+    } else {
+        sprite->field_1F_2 = 1;
+        sprite->field_1F_0 = 1;
+    }
+    sprite->field_20[0] = field_239;
+    field_298_0 = 0;
+    if (field_214_0 == 0 || field_214_0 == 2 || field_214_0 == 3 || field_214_0 == 5) {
+        sprite->field_12_4 = 1;
+    }
+    this->sprite = sprite;
+    if (field_212_5 == 0) {
+        sub_80415A0();
+        field_212_5 = 1;
+    }
+}
+#endif
+
+//! Possible fake match: field_214_17 is passed as `field_214_17 != 0` here and in method2 (the original
+//! reads it as `(x >> 1) & 1`); the source probably passed the result of an inline bool getter.
+void FieldObject::sub_8040790() {
+    field_214_23 = field_218 == 0x1001 || field_218 == 0x1002 || field_218 == 0x1028;
+    sub_80210A8(sprite, 0, field_218, field_214_17 != 0, -1, -1, -1, field_21E);
+}
+
+// https://decomp.me/scratch/TODO
+// Only the registers of the sprite / size values in the field_48 block differ.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8040804__11FieldObjectUcii.s\"");
+#else
+void FieldObject::sub_8040804(u8 mode, int animation, int flag) {
+    struct struc_839EE60* entry;
+    u8 value;
+
+    if (mode == 0) {
+        field_26C = sub_81152FC(field_334, (sprite->field_1E_0 + 1) << 12 | sprite->field_16);
+        field_214_22 = 0;
+    }
+    entry = &off_839EE60[sprite->field_1E_0][sprite->field_16];
+    field_214_18 = entry->field_0_29;
+    field_214_20 = entry->field_0_28;
+    value = byte_83A05EC[field_214_18 * 16 + field_214_20 * 8 + field_24_0];
+    if (animation == -1) {
+        animation = value & 0x7F;
+    }
+    if (flag == -1) {
+        flag = value >> 7;
+    }
+    sub_801E150(sprite, animation, mode == 1 ? -1 : 0, 0, 0);
+    if (mode == 1 && sprite->field_48 != 0) {
+        int size = sub_80198B0(sprite->field_48->field_4) >> 5;
+
+        if (size > sprite->field_28_0) {
+            sprite->field_28_0 = size;
+        }
+    }
+    sprite->field_11_6 = flag;
+    if (field_214_0 == 0 || field_214_0 == 2 || field_214_0 == 3 || field_214_0 == 5) {
+        sprite->field_12_4 = 1;
+    }
+    sprite->field_20[0] = field_239;
+    if (field_20C_25) {
+        int value2 = sprite->field_12_1;
+
+        sub_8021ED8(sprite);
+        sprite->field_12_1 = value2;
+        if (mode != 0 && field_20C_22) {
+            sub_8047DC8(this, 0xFF);
+        }
+    }
+    sub_80415A0();
+}
+#endif
+
+//! Possible fake match: the `& 1` on the field_299_1 copy only places the constant 1 (used for field_298_0)
+//! where the original has it.
+void FieldObject::method3() {
+    field_298_1 = sprite->field_11_6;
+    field_298_2 = sprite->field_1F_0;
+    field_298_4 = sprite->field_1F_2;
+    field_298_6 = sprite->field_12_1;
+    field_299_0 = sprite->field_12_3;
+    field_299_1 = sprite->field_12_4 & 1;
+    field_29B = sprite->field_20[1];
+    field_29C = sprite->field_23;
+    field_29E = sprite->field_2A;
+    field_2A0 = sprite->field_2C;
+    field_2A2 = sprite->xScale;
+    field_2A4 = sprite->yScale;
+    field_298_0 = 1;
+}
+
+void FieldObject::method6(int arg) {
+    int changed;
+    int flag;
+
+    if (field_20C_0 && field_20C_25 && field_214_21 == 0) {
+        if (field_214_0 > 2) {
+            u8* table = byte_83A0636;
+            int index = field_2 >> 4;
+            int value;
+
+            if (field_214_18 != 1) {
+                index += 16;
+            }
+            value = table[index];
+            field_24_0 = value;
+        }
+        changed = arg;
+        flag = 0;
+        switch (field_214_0) {
+            case 0:
+            case 1:
+            case 4:
+                if (field_24_0 != field_4C_0) {
+                    changed = 1;
+                }
+                if (field_214_0 == 0) {
+                    flag = 1;
+                }
+                break;
+            case 2:
+            case 3:
+            case 5:
+                if (field_4 != field_2C || field_24_0 != field_4C_0) {
+                    changed = 1;
+                }
+                if ((field_242 == 0 && field_244 == 0) || field_214_0 == 5) {
+                    flag = 1;
+                }
+                break;
+        }
+        if (changed) {
+            int value = sprite->field_12_1;
+
+            method7(1);
+            sprite->field_12_1 = value;
+        }
+        sprite->field_12_4 = flag;
+    }
+}
+
+void FieldObject::method7(u8 force) {
+    int animation;
+    int flag;
+
+    if (field_214_18 == 0) {
+        animation = sprite->field_20[1];
+        flag = 0;
+    } else {
+        u8 value = byte_83A05EC[field_214_18 * 16 + field_214_20 * 8 + field_24_0];
+
+        animation = value & 0x7F;
+        flag = value >> 7;
+    }
+    if (sprite->field_20[1] != animation || sprite->field_11_6 != flag || force) {
+        sub_801E150(sprite, animation, 0, 0, 0);
+        sprite->field_11_6 = flag;
+    }
+}
+
+void FieldObject::method8(u16 cameraX, u16 cameraY, FieldObject** objects) {
+    int x;
+    int y;
+    u16 spriteX;
+    u16 spriteY;
+
+    if (field_222 == 0xFF) {
+        return;
+    }
+    x = field_C / 256 - (s16)cameraX;
+    field_6 = x;
+    y = (field_10 - field_14) / 256 - (s16)cameraY - byte_83A0656[field_20C_15];
+    field_8 = y;
+    spriteX = field_6 + field_23A;
+    spriteY = (y - field_18 / 256) + byte_83A0656[field_20C_15] + (field_23B + 1);
+    sprite->xPosition = spriteX;
+    sprite->yPosition = spriteY;
+    sprite->field_E = field_214_13 << 12 | (0x800 - field_10 / 256);
+    if (field_20C_15 <= 2) {
+        FieldObject* other = field_238 >= 0 ? objects[field_238] : 0;
+
+        if (other != 0) {
+            field_A = (other->field_18 - (field_14 - other->field_14) + other->field_274) / 256;
+        } else {
+            field_A = 0;
+        }
+    } else {
+        field_A = 0;
+    }
+    // Type 7 objects are FieldPlayerCharacters.
+    if (field_20C_19 == 7 && ((FieldPlayerCharacter*)this)->field_33C_2) {
+        return;
+    }
+    if (field_211_0 != 0
+        || ((s16)spriteX >= -16 - field_282 && (s16)spriteX <= field_282 + 256 && (s16)spriteY <= field_283 + 0xD0
+            && (field_8 <= (s16)spriteY || field_8 >= -16 - field_283))) {
+        field_214_21 = 0;
+        if (field_20C_25 && sprite->field_12_5) {
+            int value;
+
+            field_214_24 = 1;
+            value = sprite->field_12_1;
+            sub_8021ED8(sprite);
+            sprite->field_12_1 = value;
+            if (field_26E != 0xFF) {
+                sub_8116654(field_334, field_26E);
+            }
+        }
+    } else {
+        field_214_21 = field_20C_18 ^ 1;
+        if (field_20C_25 && sprite->field_12_5 == 0) {
+            if (field_26E != 0xFF) {
+                sub_8116680(field_334, field_26E);
+            }
+            field_23D = 0;
+            sub_8020D40(sprite);
+        }
+    }
+}
+
+// https://decomp.me/scratch/TODO
+// Only register allocation differs (e.g. `right` and the constant 3 swap r7/r8), which adds a few movs.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/method9__11FieldObject.s\"");
+#else
+void FieldObject::method9() {
+    u16 width;
+    int height;
+    int row;
+    int col;
+    int layer0;
+    int layer1;
+    struct Coldef* coldef;
+
+    if (!(field_20C_12 && field_20C_25) || field_214_21) {
+        return;
+    }
+    if (field_214_24 == 0 && field_C == field_34 && field_10 == field_38 && field_14 == field_3C
+        && field_18 == field_40) {
+        return;
+    }
+    width = field_278 >> 8;
+    height = field_27C >> 8;
+    if (field_210_7) {
+        int x = field_C / 256;
+        int y = field_10 / 256;
+        int right = (x + ((width >> 1) - 1)) / 16;
+        int top = (y - height) / 16;
+
+        for (row = y / 16; row >= top; row--) {
+            for (col = (x - (width >> 1)) / 16; col <= right; col++) {
+                coldef = get_coldef_ptr_by_xz(field_290, col, row);
+                if (coldef->field_0_28) {
+                    sprite->field_1F_0 = sprite->field_1F_2 = field_23C =
+                        field_26_1 ? coldef->field_0_26 : coldef->field_0_24;
+                    return;
+                }
+            }
+        }
+    }
+    if (field_230 >= 0) {
+        col = field_230;
+        row = field_234;
+    } else {
+        col = field_C;
+        row = field_10;
+    }
+    col /= 4096;
+    row /= 4096;
+    coldef = get_coldef_ptr_by_xz(field_290, col, row);
+    if (field_26_1) {
+        layer1 = layer0 = coldef->field_0_26;
+        field_23C = layer1;
+    } else {
+        int half;
+        int x;
+        int end;
+
+        layer1 = layer0 = coldef->field_0_24;
+        half = width >> 1;
+        x = (field_C - half * 256) / 4096;
+        end = (field_C + (half - 1) * 256) / 4096;
+        for (; x <= end; x++) {
+            coldef = get_coldef_ptr_by_xz(field_290, x, row);
+            if (coldef->field_0_20 == 0 && coldef->field_0_24 > layer0) {
+                layer1 = layer0 = coldef->field_0_24;
+                col = x;
+                if (coldef->field_0_28) {
+                    break;
+                }
+            }
+        }
+        field_23C = layer1;
+        row = field_10 / 4096;
+        end = (field_10 - field_18) / 4096 - 1;
+        for (;;) {
+            int layer;
+
+            row--;
+            layer = get_coldef_ptr_by_xz(field_290, col, row)->field_0_24;
+            if (layer0 > layer) {
+                layer0 = layer;
+            }
+            if (row <= end) {
+                break;
+            }
+            if (layer1 > layer) {
+                layer1 = layer;
+            }
+        }
+    }
+    sprite->field_1F_0 = layer0 > 0 ? layer0 : 2;
+    sprite->field_1F_2 = layer1 > 0 ? layer1 : 2;
+    if (field_23C < sprite->field_1F_2) {
+        field_23C = sprite->field_1F_2;
+    }
+    field_214_24 = 0;
+}
+#endif
+
+struct struc_Oam* FieldObject::method10(struct struc_Oam* oam, FieldObject** objects) {
+    u16 x;
+    s16 y;
+    struct Sprite* other;
+    int layer;
+
+    if (field_20C_0 && field_20C_25 && field_214_21 == 0) {
+        if (field_20C_15 != 0 && field_20C_26
+            && ((field_212_6 && field_18 >= 0) || (field_18 > 0 && (field_20C_15 > 2 || (s8)field_1 == -1)))) {
+            switch (field_20C_15) {
+                case 1:
+                case 2: {
+                    s16 height = field_18 / 256 - field_A;
+
+                    if (height <= 10) {
+                        field_23D = 1;
+                    } else if (height <= 20) {
+                        field_23D = 2;
+                    } else {
+                        field_23D = 3;
+                    }
+                    if (field_20C_15 == 2) {
+                        field_23D += 3;
+                    }
+                    break;
+                }
+                case 3:
+                    field_23D = 7;
+                    break;
+                case 4:
+                    field_23D = 8;
+                    break;
+            }
+        } else {
+            field_23D = 0;
+        }
+        if (field_23D != 0) {
+            x = stru_83A065C[field_23D - 1].x + field_6;
+            y = (field_8 - field_A) + stru_83A065C[field_23D - 1].y;
+            if ((u16)(x + 16) <= 272 && y >= -16 && y <= 176) {
+                other = field_238 >= 0 ? objects[field_238]->sprite : 0;
+                layer = field_23C;
+                if (other != 0) {
+                    if (layer > other->field_1F_0) {
+                        layer = other->field_1F_0;
+                    }
+                    if (layer > other->field_1F_2) {
+                        layer = other->field_1F_2;
+                    }
+                    oam->field_8 = other->field_34->field_8 - 1;
+                } else {
+                    oam->field_8 = layer << 30 | 0x3FFFC000;
+                }
+                oam->attr0 = stru_83A065C[field_23D - 1].attr0 | (y & 0xFF);
+                //! Possible fake match: the original masks x to 9 bits with a shift pair (maybe a macro).
+                oam->attr1 = stru_83A065C[field_23D - 1].attr1 | ((u32)(x << 23) >> 23);
+                oam->attr2 = layer << 10 | 0xF000 | stru_83A065C[field_23D - 1].attr2;
+                oam->field_6 = 0;
+                oam = oam->next;
+            }
+        }
+    }
+    return oam;
+}
+
+void FieldObject::sub_80415A0() {
+    u8* entry = off_83A069C[sprite->field_1E_0];
+
+    if (entry != 0) {
+        // 7-byte entries of 5- and 6-bit values, packed from the most significant bit.
+        entry += sprite->field_16 * 7;
+        field_272 = ((((entry[0] >> 3) << 1) & 0x3F) + 2) * 256;
+        field_274 = ((((entry[0] << 3) | (entry[1] >> 5)) & 0x3F) + 1) * 256;
+        field_276 = ((((entry[1] << 1) | (entry[2] >> 7)) & 0x3F) + 1) * 256;
+        field_278 = ((((entry[2] >> 2) << 1) & 0x3F) + 2) * 256;
+        field_27A = ((((entry[2] << 4) | (entry[3] >> 4)) & 0x3F) + 1) * 256;
+        field_27C = ((((entry[3] << 2) | (entry[4] >> 6)) & 0x3F) + 1) * 256;
+        field_270 = (entry[4] & 0x3F) * 256;
+        field_282 = (((entry[5] >> 3) << 1) & 0x3F) + 2;
+        field_283 = (((entry[5] << 3) | (entry[6] >> 5)) & 0x3F) + 1;
+        if (field_270 & 0x20) {
+            field_270 |= 0xC0;
+        }
+    } else {
+        field_272 = 0x1000;
+        field_274 = 0x2000;
+        field_276 = 0x800;
+        field_278 = 0x1000;
+        field_27A = 0x2000;
+        field_27C = 0x800;
+        field_270 = 0;
+        field_282 = 16;
+        field_283 = 32;
+    }
+    field_27E = field_278;
+    field_280 = field_27C;
+    if (field_20C_19 == 0) {
+        field_27E = field_278 - 0x800;
+        field_280 = field_27C - 0x200;
+    }
+}

@@ -44,7 +44,7 @@ _0804FEA8:
 	cmp r0, #0x00
 	bne _0804FEB8
 	adds r0, r2, #0x0
-	bl sub_80402C4
+	bl sub_80402C4__11FieldObject
 _0804FEB8:
 	pop {r4}
 	pop {r0}
@@ -254,7 +254,7 @@ _08050042:
 	adds r0, r5, #0x0
 	movs r1, #0x40
 	movs r2, #0x20
-	bl sub_80400B0
+	bl sub_80400B0__11FieldObjectiii
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -977,7 +977,7 @@ sub_80505F4:
 	adds r4, r0, #0x0
 	adds r5, r1, #0x0
 	adds r6, r2, #0x0
-	bl sub_8041368
+	bl method10__11FieldObjectP9struc_OamPP11FieldObject
 	movs r1, #0xD1
 	lsls r1, r1, #0x02
 	adds r4, r4, r1
@@ -1029,7 +1029,7 @@ _08050656:
 sub_805065C:
 	push {r4, lr}
 	adds r4, r0, #0x0
-	bl sub_8040FA0
+	bl method9__11FieldObject
 	movs r0, #0xD1
 	lsls r0, r0, #0x02
 	adds r4, r4, r0
@@ -1061,7 +1061,7 @@ sub_805068C:
 	asrs r5, r2, #0x10
 	adds r1, r6, #0x0
 	adds r2, r5, #0x0
-	bl sub_8040CF4
+	bl method8__11FieldObjectUsUsPP11FieldObject
 	movs r0, #0xD1
 	lsls r0, r0, #0x02
 	adds r4, r4, r0
@@ -1122,7 +1122,7 @@ _08050708:
 sub_8050710:
 	push {r4, lr}
 	adds r4, r0, #0x0
-	bl sub_8040020
+	bl method5__11FieldObject
 	movs r0, #0xD1
 	lsls r0, r0, #0x02
 	adds r4, r4, r0
@@ -1148,7 +1148,7 @@ sub_8050740:
 	push {r4, r5, lr}
 	adds r4, r0, #0x0
 	adds r5, r1, #0x0
-	bl sub_8040AE0
+	bl method6__11FieldObjecti
 	movs r0, #0xD1
 	lsls r0, r0, #0x02
 	adds r4, r4, r0
@@ -1174,7 +1174,7 @@ _0805076C:
 sub_8050774:
 	push {r4, lr}
 	adds r4, r0, #0x0
-	bl sub_80409F4
+	bl method3__11FieldObject
 	movs r0, #0xD1
 	lsls r0, r0, #0x02
 	adds r4, r4, r0
@@ -1202,7 +1202,7 @@ sub_80507A4:
 	adds r5, r1, #0x0
 	adds r6, r2, #0x0
 	adds r7, r3, #0x0
-	bl sub_80403C4
+	bl method2__11FieldObjectPUsT1Pv
 	movs r0, #0xD1
 	lsls r0, r0, #0x02
 	adds r4, r4, r0
@@ -1337,7 +1337,7 @@ _vt.12FieldMonster:
 	.4byte 0, sub_80506D0
 	.4byte 0, sub_8050710
 	.4byte 0, sub_8050740
-	.4byte 0, sub_8040C50
+	.4byte 0, method7__11FieldObjectUc
 	.4byte 0, sub_805068C
 	.4byte 0, sub_805065C
 	.4byte 0, sub_80505F4
@@ -1354,15 +1354,15 @@ _vt.12FieldMonster:
 gVTable_8CDBFC8:
 	.4byte 0, 0
 	.4byte 0, sub_81DD5D4
-	.4byte 0, sub_80403C4
-	.4byte 0, sub_80409F4
+	.4byte 0, method2__11FieldObjectPUsT1Pv
+	.4byte 0, method3__11FieldObject
 	.4byte 0, sub_8047FDC
-	.4byte 0, sub_8040020
-	.4byte 0, sub_8040AE0
-	.4byte 0, sub_8040C50
-	.4byte 0, sub_8040CF4
-	.4byte 0, sub_8040FA0
-	.4byte 0, sub_8041368
+	.4byte 0, method5__11FieldObject
+	.4byte 0, method6__11FieldObjecti
+	.4byte 0, method7__11FieldObjectUc
+	.4byte 0, method8__11FieldObjectUsUsPP11FieldObject
+	.4byte 0, method9__11FieldObject
+	.4byte 0, method10__11FieldObjectP9struc_OamPP11FieldObject
 	.4byte 0, sub_8047CE8
 	.4byte 0, sub_8041A2C
 	.4byte 0, sub_8041FFC

@@ -328,7 +328,7 @@ void FieldManager::sub_8025ACC() {
             sub_80465D8(*objects);
             (*objects)->method13();
             (*objects)->method14(&this->objects[0], 0);
-            sub_804034C(*objects);
+            (*objects)->sub_804034C();
             count--;
             objects++;
         }
@@ -759,7 +759,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
 
                 if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, object->field_22C_10 + 0x1160) == 1) {
                     object->field_20C_0 = 0;
-                    object->field_20F_1 = 0;
+                    object->field_20C_25 = 0;
                 }
                 object->field_210_5 = 1;
                 objects[i] = object;

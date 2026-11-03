@@ -707,8 +707,8 @@ void SaveMenu::sub_812936C() {
     this->cursor->field_1F_6 = 0;
     this->cursor->field_E = 0xEFFF;
     this->cursor->field_10_1 = 0;
-    this->cursor->field_29_1 = 0;
-    this->cursor->field_29_5 = 0;
+    this->cursor->field_28_9 = 0;
+    this->cursor->field_28_13 = 0;
 
     this->field_3C = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
     sub_801E150(this->field_3C, 1, -1, 0, 0);
@@ -721,8 +721,8 @@ void SaveMenu::sub_812936C() {
     this->field_3C->field_1F_4 = 0;
     this->field_3C->field_1F_6 = 0;
     this->field_3C->field_10_1 = 0;
-    this->field_3C->field_29_1 = 0;
-    this->field_3C->field_29_5 = 0;
+    this->field_3C->field_28_9 = 0;
+    this->field_3C->field_28_13 = 0;
     this->field_3C->field_12_4 = 1;
 
     this->field_40 = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
@@ -736,8 +736,8 @@ void SaveMenu::sub_812936C() {
     this->field_40->field_1F_4 = 0;
     this->field_40->field_1F_6 = 0;
     this->field_40->field_10_1 = 0;
-    this->field_40->field_29_1 = 0;
-    this->field_40->field_29_5 = 0;
+    this->field_40->field_28_9 = 0;
+    this->field_40->field_28_13 = 0;
     this->field_40->field_12_4 = 1;
 
     this->field_44 = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
@@ -751,8 +751,8 @@ void SaveMenu::sub_812936C() {
     this->field_44->field_1F_4 = 0;
     this->field_44->field_1F_6 = 0;
     this->field_44->field_10_1 = 0;
-    this->field_44->field_29_1 = 0;
-    this->field_44->field_29_5 = 0;
+    this->field_44->field_28_9 = 0;
+    this->field_44->field_28_13 = 0;
     this->field_44->field_12_4 = 1;
 
     {
@@ -780,8 +780,8 @@ void SaveMenu::sub_812936C() {
                     this->arrows[i]->field_1F_6 = 1;
                 }
                 this->arrows[i]->field_10_1 = 0;
-                this->arrows[i]->field_29_1 = 0;
-                this->arrows[i]->field_29_5 = 0;
+                this->arrows[i]->field_28_9 = 0;
+                this->arrows[i]->field_28_13 = 0;
                 this->arrows[i]->field_12_4 = 1;
                 this->arrows[i]->field_12_1 = 1;
             }
@@ -811,8 +811,8 @@ void SaveMenu::sub_812936C() {
                     this->fileSprites[i]->field_1F_4 = 3;
                     this->fileSprites[i]->field_1F_6 = 3;
                     this->fileSprites[i]->field_10_1 = 0;
-                    this->fileSprites[i]->field_29_1 = 0;
-                    this->fileSprites[i]->field_29_5 = 0;
+                    this->fileSprites[i]->field_28_9 = 0;
+                    this->fileSprites[i]->field_28_13 = 0;
                     this->fileSprites[i]->field_12_4 = 1;
                     this->fileSprites[i]->field_12_1 = 1;
                 } else {
@@ -828,8 +828,8 @@ void SaveMenu::sub_812936C() {
                     this->fileSprites[i]->field_1F_4 = 3;
                     this->fileSprites[i]->field_1F_6 = 3;
                     this->fileSprites[i]->field_10_1 = 0;
-                    this->fileSprites[i]->field_29_1 = 0;
-                    this->fileSprites[i]->field_29_5 = 0;
+                    this->fileSprites[i]->field_28_9 = 0;
+                    this->fileSprites[i]->field_28_13 = 0;
                 }
             }
         }
@@ -856,8 +856,8 @@ void SaveMenu::sub_812936C() {
                     this->currentSprites[i]->field_1F_4 = 3;
                     this->currentSprites[i]->field_1F_6 = 3;
                     this->currentSprites[i]->field_10_1 = 0;
-                    this->currentSprites[i]->field_29_1 = 0;
-                    this->currentSprites[i]->field_29_5 = 0;
+                    this->currentSprites[i]->field_28_9 = 0;
+                    this->currentSprites[i]->field_28_13 = 0;
                 } else {
                     sub_8021574(0, sub_8021EA8(0, dword_3000FF8[i].id)->field_0_0, 0, 0, 0,
                                 this->field_60, -1);
@@ -874,8 +874,8 @@ void SaveMenu::sub_812936C() {
                     this->currentSprites[i]->field_1F_4 = 3;
                     this->currentSprites[i]->field_1F_6 = 3;
                     this->currentSprites[i]->field_10_1 = 0;
-                    this->currentSprites[i]->field_29_1 = 0;
-                    this->currentSprites[i]->field_29_5 = 0;
+                    this->currentSprites[i]->field_28_9 = 0;
+                    this->currentSprites[i]->field_28_13 = 0;
                     this->currentSprites[i]->field_12_4 = 1;
                     this->currentSprites[i]->field_12_1 = 1;
                 }

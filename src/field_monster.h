@@ -18,14 +18,14 @@ public:
     // emitted at the end of the file, in reverse slot order.
     virtual ~FieldMonster() { // slot 1, 0x08050850
     }
-    virtual void method2(void* arg1, u16* arg2, void* arg3);  // 0x080507A4
+    virtual void method2(u16* arg1, u16* arg2, void* arg3);   // 0x080507A4
     virtual void method3();                                    // 0x08050774
     virtual void method4();                                    // 0x080506D0
     virtual void method5();                                    // 0x08050710
     virtual void method6(int arg);                             // 0x08050740
-    virtual void method8();                                    // 0x0805068C
+    virtual void method8(u16 cameraX, u16 cameraY, FieldObject** objects); // 0x0805068C
     virtual void method9();                                    // 0x0805065C
-    virtual void method10();                                   // 0x080505F4
+    virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects); // 0x080505F4
     virtual void method11();                                   // 0x080505C4
     virtual void method12(FieldObject** other, int a, int b);  // 0x08050584
     virtual void method13();                                   // 0x08050554
