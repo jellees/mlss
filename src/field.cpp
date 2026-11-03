@@ -342,17 +342,17 @@ asm_unified(".include \"asm/nonmatching/sub_8025C04__12FieldManageri.s\"");
 u8 FieldManager::sub_8025C04(int index) {
     FieldObject* object = objects[index];
     u8 result = 0;
-    int left = object->field_C - object->field_272 / 2;
-    int top = object->field_10 + object->field_270;
-    int z = object->field_14;
+    int left = object->x - object->field_272 / 2;
+    int top = object->y + object->field_270;
+    int z = object->z;
     int i;
 
-    if (object->field_18 > 0 || (object->field_18 < 0 && object->field_40 < 0)) {
-        z += object->field_18;
+    if (object->height > 0 || (object->height < 0 && object->previousHeight < 0)) {
+        z += object->height;
     }
     for (i = 0; i < 2; i++) {
         FieldObject* other = objects[i];
-        int otherLeft = other->field_C - other->field_272 / 2;
+        int otherLeft = other->x - other->field_272 / 2;
         int otherTop;
         int otherZ;
         int overlap;
@@ -363,16 +363,16 @@ u8 FieldManager::sub_8025C04(int index) {
             overlap = left + object->field_272 - otherLeft;
         }
         if (overlap > 0) {
-            otherTop = other->field_10 + other->field_270;
+            otherTop = other->y + other->field_270;
             if (otherTop > top) {
                 overlap = top - (otherTop - other->field_276);
             } else {
                 overlap = otherTop - (top - object->field_276);
             }
             if (overlap > 0) {
-                otherZ = other->field_14;
-                if (other->field_18 > 0 || (other->field_18 < 0 && other->field_40 < 0)) {
-                    otherZ += other->field_18;
+                otherZ = other->z;
+                if (other->height > 0 || (other->height < 0 && other->previousHeight < 0)) {
+                    otherZ += other->height;
                 }
                 if (otherZ <= z) {
                     overlap = otherZ + other->field_274 - z;
@@ -468,7 +468,7 @@ bool FieldManager::sub_8025E94() {
 }
 
 // https://decomp.me/scratch/TODO
-// Only register allocation differs. The original masks follower->field_24_0 with an extra `& 7` (the 7
+// Only register allocation differs. The original masks follower->direction with an extra `& 7` (the 7
 // lives in a register from the first player block), but an explicit `& 7` adds a stack slot.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8025F28__12FieldManager.s\"");
@@ -493,20 +493,20 @@ void FieldManager::sub_8025F28() {
 
     player = &data->field_4[luigiLeads];
     player->field_0 = field_124;
-    player->field_2_0 = leader->field_24_0;
-    player->field_4 = leader->field_C / 256;
-    player->field_6 = leader->field_10 / 256;
-    player->field_8 = leader->field_14 / 256;
-    player->field_A = leader->field_18 / 256;
+    player->field_2_0 = leader->direction;
+    player->field_4 = leader->x / 256;
+    player->field_6 = leader->y / 256;
+    player->field_8 = leader->z / 256;
+    player->field_A = leader->height / 256;
 
     player = &data->field_4[luigiLeads ^ 1];
     if (field_2D8_0 == 31) {
         player->field_0 = field_124;
-        player->field_2_0 = follower->field_24_0;
-        player->field_4 = follower->field_C / 256;
-        player->field_6 = follower->field_10 / 256;
-        player->field_8 = follower->field_14 / 256;
-        player->field_A = follower->field_18 / 256;
+        player->field_2_0 = follower->direction;
+        player->field_4 = follower->x / 256;
+        player->field_6 = follower->y / 256;
+        player->field_8 = follower->z / 256;
+        player->field_A = follower->height / 256;
     } else {
         player->field_0 = field_2DA;
         player->field_2_0 = field_2D8_5;
@@ -521,13 +521,13 @@ void FieldManager::sub_8025F28() {
 int FieldManager::sub_80261C0(FieldObject* object) {
     if (field_1F4 != 0) {
         FieldStruct3* entry = field_134;
-        s16 x = object->field_C / 256;
-        s16 y = object->field_10 / 256;
-        s16 z = object->field_14 / 2048;
+        s16 x = object->x / 256;
+        s16 y = object->y / 256;
+        s16 z = object->z / 2048;
         int i;
 
         for (i = 0; i < field_1F4; entry++, i++) {
-            if (entry->field_0_1 == 0 && object->field_18 == 0 && z == entry->field_3
+            if (entry->field_0_1 == 0 && object->height == 0 && z == entry->field_3
                 && (object->field_54 == 1 || entry->field_0_0)) {
                 int left = entry->field_1 * 16;
                 int right = left + 15;

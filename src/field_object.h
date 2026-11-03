@@ -7,22 +7,32 @@
 // so that no file emits its vtable or inline members.
 #pragma interface
 
+// FieldObject::state. The base class only sets the generic values below (sub_804034C, from the physics);
+// subclasses use higher values for their own actions (FieldPlayerCharacter: 4, 5 = hammer, 7 = hammer
+// hits, 10, ...). method6 re-applies the animation when it changes.
+enum FieldObjectState {
+    FIELD_OBJECT_STATE_IDLE,
+    FIELD_OBJECT_STATE_MOVING,
+    FIELD_OBJECT_STATE_RISING,
+    FIELD_OBJECT_STATE_FALLING,
+};
+
 class FieldObject {
 public:
     u8 pad_0;
     u8 field_1;
-    u8 field_2;
+    u8 angle; // Facing angle 0-255 (direction = angle / 32)
     u8 pad_3;
-    s16 field_4;
+    s16 state; // enum FieldObjectState
     s16 field_6;
     s16 field_8;
     s16 field_A;
-    s32 field_C;
-    s32 field_10;
-    s32 field_14;
-    s32 field_18;
+    s32 x;
+    s32 y;
+    s32 z; // Height of the floor the object is on
+    s32 height; // Height above that floor (the vertical position is z + height)
     u8 pad_1C[0x8];
-    u8 field_24_0 : 3;
+    u8 direction : 3; // Facing direction 0-7
     u8 field_24_3 : 5;
     u8 pad_25;
     u8 field_26_0 : 1;
@@ -32,20 +42,20 @@ public:
     u8 field_28;
     s8 field_29;
     u8 pad_2A[0x2];
-    s16 field_2C;
+    s16 previousState; // method5's copy of state (0x28 bytes later)
     u8 pad_2E[0x6];
-    s32 field_34;
-    s32 field_38;
-    s32 field_3C;
-    s32 field_40;
+    s32 previousX; // method5 copies the first 0x28 bytes here
+    s32 previousY;
+    s32 previousZ;
+    s32 previousHeight;
     u8 pad_44[0x8];
-    u8 field_4C_0 : 3;
+    u8 previousDirection : 3; // method5's copy of direction (0x28 bytes later)
     u8 field_4C_3 : 5;
     u8 pad_4D[0x3];
     s16 field_50;
     s16 field_52;
     u8 field_54;
-    u8 field_55;
+    u8 initialDirection; // Starting direction, used by method2
     u8 pad_56[0x1B6];
     u32 field_20C_0 : 1;
     u32 field_20C_1 : 4;
@@ -113,8 +123,8 @@ public:
     u8 field_23D;
     u16 field_23E;
     u16 field_240;
-    s16 field_242;
-    s16 field_244;
+    s16 velocityX;
+    s16 velocityY;
     u8 pad_246[0x2];
     s32 field_248;
     s32 field_24C;
