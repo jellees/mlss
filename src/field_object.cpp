@@ -52,7 +52,7 @@ void FieldObject::method5() {
         if (previousHeight != height) {
             changed |= 8;
         }
-        field_213_1 = changed;
+        field_212_9 = changed;
         field_50 = sprite->xPosition;
         field_52 = sprite->yPosition;
     }
@@ -86,7 +86,7 @@ void FieldObject::sub_80400B0(int arg1, int arg2, int arg3) {
         field_254 = speed;
         field_258 = speed;
     }
-    field_213_5 = field_258 > 0;
+    field_212_13 = field_258 > 0;
     field_25C = 0;
     field_24C = z + height;
     field_250 = height;
@@ -111,7 +111,7 @@ void FieldObject::sub_80401F0(int arg1, int arg2, int arg3) {
     } else {
         field_23E = arg3;
     }
-    field_213_5 = field_258 > 0;
+    field_212_13 = field_258 > 0;
 }
 
 void FieldObject::sub_80402C4() {
@@ -871,7 +871,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
                 sub_8046A10(this);
             } else if (field_25C >= 0) {
                 field_25C = -1;
-                field_213_5 = 0;
+                field_212_13 = 0;
                 field_250 = -1;
                 field_24C = -1;
                 field_23E = field_240;
@@ -1032,6 +1032,7 @@ struct Coldef* FieldObject::sub_80457E8(s16 cellX, s16 cellY, int* floor, int* c
         *top = -1;
         *ceiling = -1;
     }
+
     return coldef;
 }
 
@@ -1057,3 +1058,23 @@ int FieldObject::sub_80458B0() {
     return 0;
 }
 #endif
+
+void FieldObject::method17() {
+    if (field_212_7 != 0) {
+        if (--field_2B4 == 0) {
+            if (field_20C_25) {
+                sub_804761C(this, 0);
+                field_2B0 += field_212_7 == 1 ? -2 : 2;
+                field_2B4 = field_2B0[0];
+            } else {
+                sub_804761C(this, 1);
+                field_2B4 = field_2B0[1];
+            }
+        }
+        if (field_2B4 == -1) {
+            sub_804761C(this, field_212_7 == 1);
+            field_212_7 = 0;
+            sprite->field_12_1 = field_212_14;
+        }
+    }
+}

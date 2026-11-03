@@ -93,14 +93,13 @@ public:
     u8 field_210_7 : 1;
     u8 field_211_0 : 1;
     u8 field_211_1 : 7;
-    u8 field_212_0 : 5;
-    u8 field_212_5 : 1;
-    u8 field_212_6 : 1;
-    u8 field_212_7 : 1;
-    u8 field_213_0 : 1;
-    u8 field_213_1 : 4;
-    u8 field_213_5 : 1;
-    u8 field_213_6 : 2;
+    u16 field_212_0 : 5;
+    u16 field_212_5 : 1;
+    u16 field_212_6 : 1;
+    u16 field_212_7 : 2;
+    u16 field_212_9 : 4;
+    u16 field_212_13 : 1;
+    u16 field_212_14 : 2;
     u32 field_214_0 : 3;
     u32 field_214_3 : 10;
     u32 field_214_13 : 4;
@@ -183,7 +182,8 @@ public:
     u8 pad_2A6[0x2];
     u16* field_2A8;
     u16* field_2AC;
-    u8 pad_2B0[0x5];
+    u8* field_2B0;
+    s8 field_2B4;
     u8 field_2B5_0 : 3;
     u8 field_2B5_3 : 1;
     u8 field_2B5_4 : 4;
@@ -227,7 +227,7 @@ public:
     virtual void method14(FieldObject** objects, int arg);
     virtual void method15();
     virtual void method16();
-    virtual void method17();
+    virtual void method17(); // 0x080459C0
     virtual void method18();
     virtual void method19();
 };
