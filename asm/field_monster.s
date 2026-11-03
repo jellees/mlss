@@ -52,8 +52,8 @@ _0804FEB8:
 	.byte 0x00, 0x00
 _0804FEC0: .4byte 0x000002B5
 _0804FEC4: .4byte 0x00000242
-	thumb_func_start __20FieldObjectSubclass1ii
-__20FieldObjectSubclass1ii:
+	thumb_func_start __12FieldMonsterii
+__12FieldMonsterii:
 	push {r4, r5, r6, r7, lr}
 	add sp, #-0x008
 	adds r5, r0, #0x0
@@ -63,7 +63,7 @@ __20FieldObjectSubclass1ii:
 	movs r0, #0xCE
 	lsls r0, r0, #0x02
 	adds r1, r5, r0
-	ldr r0, _0804FFBC @ =gVTable_8CDBF28
+	ldr r0, _0804FFBC @ =_vt.12FieldMonster
 	str r0, [r1, #0x00]
 	movs r1, #0x84
 	lsls r1, r1, #0x02
@@ -173,7 +173,7 @@ _0804FFB0:
 	pop {r1}
 	bx r1
 	.byte 0x00, 0x00
-_0804FFBC: .4byte gVTable_8CDBF28
+_0804FFBC: .4byte _vt.12FieldMonster
 _0804FFC0: .4byte 0x081E26BC
 _0804FFC4: .4byte 0x03000FC0
 _0804FFC8: .4byte 0x0000020F
@@ -1289,7 +1289,7 @@ sub_8050850:
 	movs r1, #0xCE
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
-	ldr r1, _080508A0 @ =gVTable_8CDBF28
+	ldr r1, _080508A0 @ =_vt.12FieldMonster
 	str r1, [r0, #0x00]
 	movs r3, #0xD1
 	lsls r3, r3, #0x02
@@ -1323,13 +1323,13 @@ _0805089A:
 	pop {r4, r5}
 	pop {r0}
 	bx r0
-_080508A0: .4byte gVTable_8CDBF28
+_080508A0: .4byte _vt.12FieldMonster
 _080508A4: .4byte 0x08CDBDE8
 
 	.data
 	.align 2, 0
 
-gVTable_8CDBF28:
+_vt.12FieldMonster:
 	.4byte 0, 0
 	.4byte 0, sub_8050850
 	.4byte 0, sub_80507A4

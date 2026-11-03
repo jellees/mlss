@@ -734,7 +734,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
                 field_111++;
                 break;
             case 3: {
-                FieldObjectSubclass1* object = new (1, "FMON", 1) FieldObjectSubclass1(room, i);
+                FieldMonster* object = new (1, "FMON", 1) FieldMonster(room, i);
 
                 objects[i] = object;
                 if (object->field_344 != 0) {

@@ -228,7 +228,7 @@ _08026978:
 	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
-	bl __20FieldObjectSubclass1ii
+	bl __12FieldMonsterii
 	lsls r2, r7, #0x02
 	adds r1, r5, #0x0
 	adds r1, #0x28

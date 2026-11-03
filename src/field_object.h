@@ -76,22 +76,15 @@ public:
     virtual void method19();
 };
 
-// "FMON"
-class FieldObjectSubclass1 : public FieldObject {
-public:
-    u8 pad_33C[0x8];
-    FieldObject* field_344;
-
-    FieldObjectSubclass1(int room, int index);
-};
-
 // "FSPL"
 class FieldObjectSubclass2 : public FieldObject {
 public:
     FieldObjectSubclass2(int room, int index);
 };
 
-// "FBLK"
+// "FBLK" (from the room's object list) and "SBLK" (created by sub_8026C78 through a second ctor,
+// sub_8050940): both store vtable 0x08CDC068. Implemented in asm/field_object_subclass3.s
+// (0x080508A8-0x0805139C), which ends with its inline override of slot 4 (0x08051368).
 class FieldObjectSubclass3 : public FieldObject {
 public:
     u8 pad_33C[0x14];
@@ -101,7 +94,6 @@ public:
 
 extern "C" {
 void sub_804761C(FieldObject*, int);
-void sub_80503CC(FieldObject*);
 void sub_80465D8(FieldObject*);
 void sub_804034C(FieldObject*);
 void sub_8047EFC(FieldObject*, int, int, int, int);
