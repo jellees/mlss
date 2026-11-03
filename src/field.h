@@ -44,7 +44,7 @@ struct FieldBackup {
     u8 field_0_2 : 1;
     u8 luigiLeads : 1;
     u8 field_0_4 : 1;
-    u8 field_0_5 : 1;
+    u8 brothersTogether : 1;
     u8 field_0_6 : 1;
     u8 field_0_7 : 1;
     u8 pad_1[0x3];
@@ -145,7 +145,7 @@ public:
     u32 field_208_1 : 1;
     u32 luigiLeads : 1;
     u32 field_208_3 : 1;
-    u32 field_208_4 : 1;
+    u32 brothersTogether : 1;
     u32 field_208_5 : 1;
     u32 field_208_6 : 1;
     u32 field_208_7 : 1;

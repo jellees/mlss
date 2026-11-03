@@ -843,7 +843,7 @@ void SaveMenu::sub_812936C() {
 
             for (i = 0; i < 2; i++) {
                 if (dword_3000FF8[i].id == 0
-                    || (!parent->field_208_4 && !parent->field_208_6 && parent->luigiLeads != i)) {
+                    || (!parent->brothersTogether && !parent->field_208_6 && parent->luigiLeads != i)) {
                     sub_8021574(5, 0x6002, 0, 0, 0, this->field_60, -1);
                     this->currentSprites[i] = sub_8020DD0(5, 0x6006, 0, -1, -1, -1, -1);
                     sub_801E150(this->currentSprites[i], i, -1, 0, 0);

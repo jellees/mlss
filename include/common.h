@@ -179,7 +179,7 @@ struct SaveSlotData {
     u32 field_0_2 : 1;
     u32 luigiLeads : 1;
     u32 field_0_4 : 1;
-    u32 field_0_5 : 1;
+    u32 brothersTogether : 1;
     u32 field_0_6 : 3;
     u32 field_0_9 : 1;
     u32 field_0_10 : 3;
@@ -293,7 +293,7 @@ struct struc_16 {
     u8 field_208_0 : 2;
     u8 luigiLeads : 1;
     u8 field_208_3 : 1;
-    u8 field_208_4 : 1;
+    u8 brothersTogether : 1;
     u8 field_208_5 : 1;
     u8 field_208_6 : 1;
     u8 field_208_7 : 1;

@@ -99,7 +99,7 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     fldm->luigiLeads = 0;
     fldm->field_208_3 = 1;
     fldm->field_209_0 = 0;
-    fldm->field_208_4 = 0;
+    fldm->brothersTogether = 0;
     fldm->field_208_5 = 0;
     fldm->field_208_6 = 0;
     fldm->field_208_7 = 0;
@@ -190,7 +190,7 @@ void FieldManager::sub_80254C0() {
     field_20->field_0_2 = field_208_1;
     field_20->luigiLeads = luigiLeads;
     field_20->field_0_4 = field_208_3;
-    field_20->field_0_5 = field_208_4;
+    field_20->brothersTogether = brothersTogether;
     field_20->field_0_6 = field_208_6;
     field_20->field_0_7 = field_208_7;
     field_20->field_0_0 = 1;
@@ -202,7 +202,7 @@ void FieldManager::sub_8025584() {
     field_208_1 = field_20->field_0_2;
     luigiLeads = field_20->luigiLeads;
     field_208_3 = field_20->field_0_4;
-    field_208_4 = field_20->field_0_5;
+    brothersTogether = field_20->brothersTogether;
     field_208_6 = field_20->field_0_6;
     field_208_7 = field_20->field_0_7;
     field_20->field_0_0 = 0;
@@ -224,7 +224,7 @@ void FieldManager::sub_802563C() {
                     if (field_246_2 != 3) {
                         (*objects)->method12(&this->objects[luigiLeads], 1, 0);
                     }
-                    if (field_208_4 == 0 || field_246_2 == 3) {
+                    if (brothersTogether == 0 || field_246_2 == 3) {
                         (*objects)->method12(&this->objects[luigiLeads ^ 1], 1, 0);
                     }
                 }
@@ -481,7 +481,7 @@ void FieldManager::sub_8025F28() {
     data->field_0_2 = field_208_1;
     data->luigiLeads = luigiLeads;
     data->field_0_4 = field_208_3;
-    data->field_0_5 = field_208_4;
+    data->brothersTogether = brothersTogether;
     data->field_0_6 = field_26B_5;
     data->field_0_10 = field_246_2;
     data->field_0_13 = field_FA_5;
