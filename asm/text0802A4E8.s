@@ -895,7 +895,7 @@ _0802AC94:
 	bgt _0802AD60
 	adds r0, r6, #0x0
 	adds r1, r2, #0x0
-	bl sub_80261C0
+	bl sub_80261C0__12FieldManagerP11FieldObject
 	adds r5, r0, #0x0
 	movs r0, #0x01
 	negs r0, r0
@@ -13843,7 +13843,7 @@ _08033C32:
 _08033CB2:
 	adds r0, r6, #0x0
 	mov r1, r8
-	bl sub_80261C0
+	bl sub_80261C0__12FieldManagerP11FieldObject
 	adds r1, r0, #0x0
 	cmp r1, r5
 	beq _08033DAC
@@ -13908,7 +13908,7 @@ _08033CB2:
 	strb r4, [r0, #0x00]
 	adds r0, r6, #0x0
 	mov r3, r12
-	bl sub_80262CC
+	bl sub_80262CC__12FieldManageriiiiibT6
 	movs r1, #0x00
 	mov r2, r10
 	ldr r0, [r2, #0x00]

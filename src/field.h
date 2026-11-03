@@ -13,6 +13,30 @@ struct EventScriptProcess {
 
 #pragma interface
 
+struct FieldStruct1 {
+    struct Sprite* sprite;
+    s16 field_4;
+    s16 field_6;
+};
+
+// "FMEX" buffer (FieldManager::field_1C).
+struct FieldStruct2 {
+    u8 pad_0[0x25C];
+    struct FieldStruct1 field_25C[4];
+    u8 pad_27C[0x44];
+};
+
+// Entries of FieldManager::field_134.
+struct FieldStruct3 {
+    u8 field_0_0 : 1;
+    u8 field_0_1 : 1;
+    u8 field_0_2 : 6;
+    u8 field_1;
+    u8 field_2;
+    u8 field_3;
+    u8 pad_4[0x8];
+};
+
 // "FMBK" buffer (FieldManager::field_20): a copy of the field state.
 struct FieldBackup {
     u8 field_0_0 : 1;
@@ -29,7 +53,7 @@ struct FieldBackup {
 
 class FieldManager : public Process {
 public:
-    void* field_1C;
+    FieldStruct2* field_1C;
     FieldBackup* field_20;
     void* field_24;
     FieldObject* objects[42];
@@ -105,14 +129,17 @@ public:
     u8 field_12D_6 : 2;
     u16 field_12E;
     u16 field_130;
-    u8 pad_132[0xC4];
+    u8 pad_132[0x2];
+    FieldStruct3 field_134[16];
+    u8 field_1F4;
+    u8 pad_1F5;
     s16 field_1F6;
     u8 field_1F8;
     u8 pad_1F9;
     u16 field_1FA;
     Process* field_1FC;
-    FieldPlayer* field_200;
-    FieldPlayer* field_204;
+    FieldObjectSubclass1* field_200;
+    FieldObjectSubclass1* field_204;
     u32 field_208_0 : 1;
     u32 field_208_1 : 1;
     u32 field_208_2 : 1;
@@ -218,6 +245,8 @@ public:
     bool sub_8025D24(int type);
     bool sub_8025E94();
     void sub_8025F28();
+    int sub_80261C0(FieldObject* object);
+    void sub_80262CC(int x, int y, int z, int height, int type, bool arg6, bool playSound);
 };
 
 extern "C" {

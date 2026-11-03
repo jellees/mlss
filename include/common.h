@@ -97,7 +97,9 @@ struct Sprite {
     u8 field_12_1 : 2;
     u8 field_12_3 : 1;
     u8 field_12_4 : 1;
-    u8 field_12_5 : 3;
+    u8 field_12_5 : 1;
+    u8 field_12_6 : 1;
+    u8 field_12_7 : 1;
     u8 field_13;
     u8 field_14;
     u8 field_15;
@@ -319,6 +321,7 @@ void sub_81994EC(int*, void*);
 void sub_801A6B0(void);
 void sub_801ABE8(u16, u16, int);
 void sub_801E150(struct Sprite*, int, int, int, int);
+void sub_8021ED8(struct Sprite*);
 void sub_8020994(u16, int, int, int);
 void sub_8020A78(void);
 void sprite_show_8020CBC(struct Sprite*);
@@ -464,6 +467,8 @@ extern s16 word_83A7574[];
 extern s16 word_83A75B8[];
 extern s16 word_83A75C8[];
 extern u8* off_839EC80;
+extern u16 word_839F5A4[]; // Up, Up, Down, Down, Left, Right, Left, Right, B, A
+extern u8 byte_839F5B8[];
 extern int dword_83A0E94[];
 extern int dword_83A1F60[];
 extern u32 dword_83A13A0[];

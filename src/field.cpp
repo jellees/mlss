@@ -37,7 +37,7 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     dword_3000D78 = *script;
     BUFFER_REG_DISPCNT = 0;
     fldm->field_D0 = &gGameState.field_3C;
-    fldm->field_1C = operator new(0x2C0, 1, "FMEX", 1);
+    fldm->field_1C = (FieldStruct2*)operator new(0x2C0, 1, "FMEX", 1);
     fldm->field_20 = (FieldBackup*)operator new(0x574, 1, "FMBK", 1);
     buffer = &fldm->field_23C;
     *buffer = operator new[](0x1000, 1, "PLST", 1);
@@ -442,9 +442,6 @@ bool FieldManager::sub_8025D24(int type) {
     return 0;
 }
 
-// Up, Up, Down, Down, Left, Right, Left, Right, B, A
-extern "C" const u16 word_839F5A4[10];
-
 bool FieldManager::sub_8025E94() {
     u16 input = gGameState.field_2A;
 
@@ -518,3 +515,75 @@ void FieldManager::sub_8025F28() {
     }
 }
 #endif
+
+int FieldManager::sub_80261C0(FieldObject* object) {
+    if (field_1F4 != 0) {
+        FieldStruct3* entry = field_134;
+        s16 x = object->field_C / 256;
+        s16 y = object->field_10 / 256;
+        s16 z = object->field_14 / 2048;
+        int i;
+
+        for (i = 0; i < field_1F4; entry++, i++) {
+            if (entry->field_0_1 == 0 && object->field_18 == 0 && z == entry->field_3
+                && (object->field_54 == 1 || entry->field_0_0)) {
+                int left = entry->field_1 * 16;
+                int right = left + 15;
+                int top = entry->field_2 * 16;
+                int bottom = top + 15;
+
+                left += 4;
+                right -= 4;
+                top += 7;
+                if (x >= left && x <= right && y >= top && y <= bottom) {
+                    return i;
+                }
+                left -= 8;
+                right += 8;
+                top -= 8;
+                bottom += 8;
+                if (x >= left && x <= right && y >= top && y <= bottom) {
+                    return i | 0x80;
+                }
+            }
+        }
+    }
+    return -1;
+}
+
+void FieldManager::sub_80262CC(int x, int y, int z, int height, int type, bool arg6, bool playSound) {
+    int i;
+
+    if (type != 0) {
+        FieldStruct1* entry = 0;
+        int animation = type - 1;
+
+        for (i = 0; i < 4; i++) {
+            if (field_1C->field_25C[i].sprite->field_12_5) {
+                entry = &field_1C->field_25C[i];
+                break;
+            }
+        }
+        if (entry == 0) {
+            int max = -1;
+            for (i = 0; i < 4; i++) {
+                if (field_1C->field_25C[i].sprite->field_23 > max) {
+                    entry = &field_1C->field_25C[i];
+                    max = field_1C->field_25C[i].sprite->field_23;
+                }
+            }
+        }
+        x /= 256;
+        y = (y - z - height) / 256;
+        sub_801E150(entry->sprite, animation, 0, 0, 0);
+        sub_8021ED8(entry->sprite);
+        entry->sprite->field_12_1 = 2;
+        entry->sprite->field_E = 0x800 - y;
+        entry->sprite->field_1F_0 = 1;
+        entry->field_4 = x;
+        entry->field_6 = y;
+        if (playSound) {
+            play_sfx_80195B4(byte_839F5B8[type], -1);
+        }
+    }
+}

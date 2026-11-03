@@ -17,7 +17,9 @@ public:
     u8 field_24_3 : 5;
     u8 pad_25[0x1B];
     s32 field_40;
-    u8 pad_44[0x1D0];
+    u8 pad_44[0x10];
+    u8 field_54;
+    u8 pad_55[0x1BF];
     u8 field_214_0 : 3;
     u8 field_214_3 : 5;
     u8 pad_215[0x5B];
@@ -46,17 +48,17 @@ public:
     virtual void method14(FieldObject** objects, int arg);
 };
 
-struct FieldButtons {
+struct FieldStruct4 {
     u8 pad_0[0x4];
     u16 field_4;
     u16 field_6;
 };
 
 // The objects at FieldManager::field_200 / field_204.
-class FieldPlayer : public FieldObject {
+class FieldObjectSubclass1 : public FieldObject {
 public:
     u8 pad_33C[0x2C];
-    struct FieldButtons* field_368;
+    struct FieldStruct4* field_368;
 };
 
 extern "C" {
