@@ -138,8 +138,6 @@ class FieldManager : public Process {
     u8 pad_1F9;
     u16 field_1FA;
     Process* field_1FC;
-    // Set in update(): leader = objects[luigiLeads], follower = objects[luigiLeads ^ 1] (objects[0] is
-    // Mario).
     FieldPlayerCharacter* leader;
     FieldPlayerCharacter* follower;
     u32 field_208_0 : 1;
