@@ -509,9 +509,9 @@ _0802A8AA:
 	blt _0802A8AA
 _0802A8C2:
 	adds r0, r6, #0x0
-	bl sub_802563C
+	bl sub_802563C__12FieldManager
 	adds r0, r6, #0x0
-	bl sub_8025ACC
+	bl sub_8025ACC__12FieldManager
 	ldr r0, [r5, #0x00]
 	adds r1, r5, #0x0
 	bl sub_80418E8
@@ -4486,7 +4486,7 @@ _0802D4DE:
 _0802D4EE:
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_8025D24
+	bl sub_8025D24__12FieldManageri
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802D52A
@@ -4600,7 +4600,7 @@ _0802D5B6:
 _0802D5C8:
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_8025D24
+	bl sub_8025D24__12FieldManageri
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802D5D8
@@ -4846,7 +4846,7 @@ _0802D8F6:
 	bne _0802D91C
 	adds r0, r5, #0x0
 	movs r1, #0x03
-	bl sub_8025D24
+	bl sub_8025D24__12FieldManageri
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802D91C
@@ -5489,7 +5489,7 @@ _0802DDF0:
 	eors r1, r0
 	adds r1, #0x02
 	ldr r0, [sp, #0x004]
-	bl sub_8025D24
+	bl sub_8025D24__12FieldManageri
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802DEC8
@@ -9048,9 +9048,9 @@ _0802F96A:
 	blt _0802F96A
 _0802F982:
 	adds r0, r5, #0x0
-	bl sub_802563C
+	bl sub_802563C__12FieldManager
 	adds r0, r5, #0x0
-	bl sub_8025ACC
+	bl sub_8025ACC__12FieldManager
 	ldr r0, [r4, #0x00]
 	adds r1, r4, #0x0
 	bl sub_80418E8
@@ -23304,7 +23304,7 @@ _0803EC56:
 	bls _0803EC72
 	mov r0, r8
 	mov r1, r10
-	bl sub_8025D24
+	bl sub_8025D24__12FieldManageri
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0803ED50

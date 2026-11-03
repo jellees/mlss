@@ -162,14 +162,30 @@ struct TmevData {
 
 struct SaveSlotPlayer {
     u16 field_0;
-    u8 pad2[10];
+    u8 field_2_0 : 3;
+    u8 field_2_3 : 5;
+    u8 pad3;
+    s16 field_4;
+    s16 field_6;
+    s16 field_8;
+    s16 field_A;
 };
 
 struct SaveSlotData {
-    u8 field_0_0 : 3;
-    u8 field_0_3 : 1;
-    u8 field_0_4 : 4;
-    u8 pad1[3];
+    u32 field_0_0 : 1;
+    u32 field_0_1 : 1;
+    u32 field_0_2 : 1;
+    u32 field_0_3 : 1;
+    u32 field_0_4 : 1;
+    u32 field_0_5 : 1;
+    u32 field_0_6 : 3;
+    u32 field_0_9 : 1;
+    u32 field_0_10 : 3;
+    u32 field_0_13 : 5;
+    u32 field_0_18 : 1;
+    u32 field_0_19 : 1;
+    u32 field_0_20 : 10;
+    u32 field_0_30 : 2;
     struct SaveSlotPlayer field_4[2];
     u8 pad1C[0x78];
     struct LoadMenuEntry entry;
@@ -350,7 +366,6 @@ void sub_8021574(int, int, int, int, int, void*, int);
 u32** sub_81980C8(int);
 void sub_8127BC8(struct LoadMenuEntry*, u8);
 void reset_game_80189C4(void);
-void sub_8025F28(struct Process*);
 struct struc_8021EA8* sub_8021EA8(int, int);
 void sub_80196E0(void);
 void sub_80FC198(void);
@@ -394,6 +409,7 @@ extern struct struc_3000D40 stru_3000D40;
 extern struct FieldManager* dword_3000D7C;
 extern struct EventScriptProcess* dword_3000D78;
 extern struct struc_3000FD0* dword_3000FD0;
+extern void* dword_3000FC0;
 extern u16 word_3000D3C;
 extern void* dword_3000FB8;
 extern struct GameState gGameState;

@@ -3,6 +3,7 @@
 
 #include "process.h"
 #include "asm_processes.h"
+#include "field_object.h"
 
 // Handle returned by bevs_process_init_80F048C and evts_process_init_80EF3FC.
 struct EventScriptProcess {
@@ -12,12 +13,26 @@ struct EventScriptProcess {
 
 #pragma interface
 
+// "FMBK" buffer (FieldManager::field_20): a copy of the field state.
+struct FieldBackup {
+    u8 field_0_0 : 1;
+    u8 field_0_1 : 1;
+    u8 field_0_2 : 1;
+    u8 field_0_3 : 1;
+    u8 field_0_4 : 1;
+    u8 field_0_5 : 1;
+    u8 field_0_6 : 1;
+    u8 field_0_7 : 1;
+    u8 pad_1[0x3];
+    u8 data[0x570];
+};
+
 class FieldManager : public Process {
 public:
     void* field_1C;
-    void* field_20;
+    FieldBackup* field_20;
     void* field_24;
-    u8 pad_28[0xA8];
+    FieldObject* objects[42];
     struct struc_3000388* field_D0;
     u8 pad_D4[0x10];
     u32 field_E4;
@@ -29,7 +44,9 @@ public:
     u8 field_F8_2 : 1;
     u8 field_F8_3 : 1;
     u8 field_F8_4 : 1;
-    u8 field_F8_5 : 3;
+    u8 field_F8_5 : 1;
+    u8 field_F8_6 : 1;
+    u8 field_F8_7 : 1;
     u8 field_F9_0 : 2;
     u8 field_F9_2 : 1;
     u8 field_F9_3 : 1;
@@ -37,10 +54,10 @@ public:
     u8 field_F9_5 : 1;
     u8 field_F9_6 : 1;
     u8 field_F9_7 : 1;
-    u8 field_FA_0 : 4;
-    u8 field_FA_4 : 1;
-    u8 field_FA_5 : 3;
-    u8 field_FB;
+    u16 field_FA_0 : 4;
+    u16 field_FA_4 : 1;
+    u16 field_FA_5 : 5;
+    u16 field_FA_10 : 6;
     u16 field_FC_0 : 1;
     u16 field_FC_1 : 1;
     u16 field_FC_2 : 1;
@@ -50,7 +67,21 @@ public:
     u16 field_FC_12 : 4;
     u8 pad_FE[0xC];
     u8 field_10A;
-    u8 pad_10B[0x13];
+    u8 field_10B;
+    u8 pad_10C[0x2];
+    u8 field_10E;
+    u8 field_10F;
+    u8 field_110;
+    u8 field_111;
+    u8 field_112;
+    u8 field_113;
+    u8 field_114;
+    u8 field_115;
+    u8 field_116;
+    u8 field_117;
+    u8 pad_118[0x2];
+    u8 field_11A;
+    u8 pad_11B[0x3];
     u16 field_11E;
     u16 field_120_0 : 10;
     u16 field_120_10 : 2;
@@ -75,36 +106,38 @@ public:
     u16 field_12E;
     u16 field_130;
     u8 pad_132[0xC4];
-    u16 field_1F6;
+    s16 field_1F6;
     u8 field_1F8;
     u8 pad_1F9;
     u16 field_1FA;
     Process* field_1FC;
-    u8 pad_200[0x8];
-    u8 field_208_0 : 1;
-    u8 field_208_1 : 1;
-    u8 field_208_2 : 2;
-    u8 field_208_4 : 1;
-    u8 field_208_5 : 1;
-    u8 field_208_6 : 1;
-    u8 field_208_7 : 1;
-    u8 field_209_0 : 1;
-    u8 field_209_1 : 4;
-    u8 field_209_5 : 1;
-    u8 field_209_6 : 1;
+    FieldPlayer* field_200;
+    FieldPlayer* field_204;
+    u32 field_208_0 : 1;
+    u32 field_208_1 : 1;
+    u32 field_208_2 : 1;
+    u32 field_208_3 : 1;
+    u32 field_208_4 : 1;
+    u32 field_208_5 : 1;
+    u32 field_208_6 : 1;
+    u32 field_208_7 : 1;
+    u32 field_209_0 : 1;
+    u32 field_209_1 : 4;
+    u32 field_209_5 : 1;
+    u32 field_209_6 : 1;
     u32 field_209_7 : 2;
-    u8 field_20A_1 : 1;
-    u8 field_20A_2 : 1;
-    u8 field_20A_3 : 1;
-    u8 field_20A_4 : 1;
-    u8 field_20A_5 : 2;
-    u16 field_20A_7 : 2;
-    u8 field_20B_1 : 1;
-    u8 field_20B_2 : 2;
-    u8 field_20B_4 : 1;
-    u8 field_20B_5 : 1;
-    u8 field_20B_6 : 1;
-    u8 field_20B_7 : 1;
+    u32 field_20A_1 : 1;
+    u32 field_20A_2 : 1;
+    u32 field_20A_3 : 1;
+    u32 field_20A_4 : 1;
+    u32 field_20A_5 : 2;
+    u32 field_20A_7 : 2;
+    u32 field_20B_1 : 1;
+    u32 field_20B_2 : 2;
+    u32 field_20B_4 : 1;
+    u32 field_20B_5 : 1;
+    u32 field_20B_6 : 1;
+    u32 field_20B_7 : 1;
     u8 pad_20C[0x30];
     void* field_23C;
     u16 field_240;
@@ -114,7 +147,9 @@ public:
     u8 field_246_1 : 1;
     u8 field_246_2 : 3;
     u8 field_246_5 : 3;
-    u8 pad_247[0x25];
+    u8 pad_247[0x24];
+    u8 field_26B_0 : 5;
+    u8 field_26B_5 : 3;
     u8 field_26C;
     u8 pad_26D[0xD];
     u16 field_27A;
@@ -156,7 +191,13 @@ public:
     u8 pad_2D0[0x8];
     u8 field_2D8_0 : 5;
     u8 field_2D8_5 : 3;
-    u8 pad_2D9[0x2B];
+    u8 pad_2D9;
+    u16 field_2DA;
+    s32 field_2DC;
+    s32 field_2E0;
+    s32 field_2E4;
+    s32 field_2E8;
+    u8 pad_2EC[0x18];
     Process* field_304;
     Process* field_308;
     Process* field_30C;
@@ -169,6 +210,14 @@ public:
     FieldManager(u8 priority, char* label, int room, bool arg4, bool arg5);
     ~FieldManager();
     virtual void update();
+    void sub_80254C0();
+    void sub_8025584();
+    void sub_802563C();
+    void sub_8025ACC();
+    u8 sub_8025C04(int index);
+    bool sub_8025D24(int type);
+    bool sub_8025E94();
+    void sub_8025F28();
 };
 
 extern "C" {

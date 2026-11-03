@@ -485,7 +485,8 @@ u8 LoadMenu::sub_8126520() {
     }
 
     if (this->field_F2) {
-        if (!((this->field_F1 >> this->field_FA) & 1)) {
+        //! Possible fake match: `!(x & 1)` gives different code in C++ (bool), so `== 0`.
+        if (((this->field_F1 >> this->field_FA) & 1) == 0) {
             BUFFER_REG_BG2CNT = (this->field_DC >> 11) << 8 | 2;
             this->field_E6 = 0x1D40;
         } else if ((this->field_F3 >> this->field_FA) & 1) {

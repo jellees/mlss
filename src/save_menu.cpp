@@ -4,6 +4,7 @@
 #include "common.h"
 #include "heap.h"
 #include "save_menu.h"
+#include "field.h"
 
 inline void* SaveMenu::sub_812A930(void* buf) {
     if (this->field_B1) {
@@ -455,7 +456,7 @@ void SaveMenu::update() {
 
 u8 SaveMenu::sub_8128D74() {
     int fakeMatch;
-    struct Process* parent = this->parentProcess;
+    struct FieldManager* fieldManager = (FieldManager*)this->parentProcess;
 
     if (this->field_AD & 0x80) {
         if (this->field_8C->field_2 & 1) {
@@ -477,7 +478,7 @@ u8 SaveMenu::sub_8128D74() {
             if ((this->save->field_6 >> stru_3000D40.slot) & 1) {
                 this->field_BA = stru_3000D40.slot * 223 + 2;
             }
-            sub_8025F28(parent);
+            fieldManager->sub_8025F28();
             sub_8123BA8(0);
             gGameState.field_88A_5 = 0;
             gGameState.field_88A_3 = 0;

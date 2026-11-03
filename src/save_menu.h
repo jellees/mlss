@@ -8,14 +8,14 @@
 
 // Renderer process of the save menu ("TSDR").
 class SaveMenuRenderer : public Process {
-public:
+  public:
     SaveMenuRenderer(u8 priority, char* label) : Process(priority, label) {
     }
     virtual void update();
 };
 
 class SaveMenu : public Process {
-public:
+  public:
     Process* tsdr;
     struct Process* fade;
     struct Tmev* tmev;

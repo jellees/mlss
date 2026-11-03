@@ -38,7 +38,7 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     BUFFER_REG_DISPCNT = 0;
     fldm->field_D0 = &gGameState.field_3C;
     fldm->field_1C = operator new(0x2C0, 1, "FMEX", 1);
-    fldm->field_20 = operator new(0x574, 1, "FMBK", 1);
+    fldm->field_20 = (FieldBackup*)operator new(0x574, 1, "FMBK", 1);
     buffer = &fldm->field_23C;
     *buffer = operator new[](0x1000, 1, "PLST", 1);
     fldm->field_24 = operator new[](0x400, 1, "PALW", 1);
@@ -96,7 +96,8 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     fldm->field_28D = 0x6A;
     fldm->field_28E = 0x26;
     fldm->field_28F = 0x6A;
-    fldm->field_208_2 = 2;
+    fldm->field_208_2 = 0;
+    fldm->field_208_3 = 1;
     fldm->field_209_0 = 0;
     fldm->field_208_4 = 0;
     fldm->field_208_5 = 0;
@@ -136,7 +137,7 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     fldm->field_30C = 0;
     fldm->field_310 = 0;
     fldm->field_314 = 0;
-    fldm->field_1F6 = 0xFFFF;
+    fldm->field_1F6 = -1;
     fldm->field_1F8 = 0;
     fldm->field_2B2 = -2;
     fldm->field_318 = 0;
@@ -178,3 +179,342 @@ FieldManager::~FieldManager() {
     runtime_install_interrupt_callback(2, NULL);
     gGameState.field_88A_5 = 0;
 }
+
+asm_unified(".include \"asm/nonmatching/update__12FieldManager.s\"");
+
+asm_unified(".include \"asm/nonmatching/update_field_8023DD4.s\"");
+
+void FieldManager::sub_80254C0() {
+    CpuCopy32(dword_3000FC0, field_20->data, 0x574);
+    field_20->field_0_1 = field_208_0;
+    field_20->field_0_2 = field_208_1;
+    field_20->field_0_3 = field_208_2;
+    field_20->field_0_4 = field_208_3;
+    field_20->field_0_5 = field_208_4;
+    field_20->field_0_6 = field_208_6;
+    field_20->field_0_7 = field_208_7;
+    field_20->field_0_0 = 1;
+}
+
+void FieldManager::sub_8025584() {
+    CpuCopy32(field_20->data, dword_3000FC0, 0x574);
+    field_208_0 = field_20->field_0_1;
+    field_208_1 = field_20->field_0_2;
+    field_208_2 = field_20->field_0_3;
+    field_208_3 = field_20->field_0_4;
+    field_208_4 = field_20->field_0_5;
+    field_208_6 = field_20->field_0_6;
+    field_208_7 = field_20->field_0_7;
+    field_20->field_0_0 = 0;
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_802563C__12FieldManager.s\"");
+#else
+void FieldManager::sub_802563C() {
+    int start;
+
+    if (field_10E != 0) {
+        FieldObject** objects = &this->objects[field_10E];
+        int count = field_10F;
+        if (count != 0) {
+            do {
+                if (field_209_0 == 0) {
+                    if (field_246_2 != 3) {
+                        (*objects)->method12(&this->objects[field_208_2], 1, 0);
+                    }
+                    if (field_208_4 == 0 || field_246_2 == 3) {
+                        (*objects)->method12(&this->objects[field_208_2 ^ 1], 1, 0);
+                    }
+                }
+                (*objects++)->method12(&this->objects[2], field_10B - 2, 0);
+                count--;
+            } while (count != 0);
+        }
+    }
+
+    if (field_110 != 0) {
+        FieldObject** objects = &this->objects[field_110];
+        int count = field_111;
+        if (count != 0) {
+            do {
+                int index;
+                int arg;
+                if (field_246_2 == 3) {
+                    (*objects)->method12(&this->objects[0], 1, 0);
+                    index = 2;
+                    arg = field_10B - 2;
+                } else {
+                    index = 0;
+                    arg = field_10B;
+                }
+                (*objects++)->method12(&this->objects[index], arg, 0);
+                count--;
+            } while (count != 0);
+        }
+    }
+
+    if (field_112 != 0) {
+        FieldObject** objects = &this->objects[field_112];
+        int count = field_113;
+        if (count != 0) {
+            do {
+                int index;
+                int arg;
+                if (field_246_2 == 4) {
+                    index = 1;
+                    arg = field_10B - 1;
+                } else {
+                    index = 2;
+                    arg = field_10B - 2;
+                }
+                (*objects)->method12(&this->objects[index], arg, 0);
+                sub_80503CC(*objects++);
+                count--;
+            } while (count != 0);
+        }
+    }
+
+    if (field_114 != 0) {
+        start = field_114;
+    } else if (field_116 != 0) {
+        start = field_116;
+    } else {
+        start = 0;
+    }
+    if (start > 0) {
+        FieldObject** objects = &this->objects[start];
+        int count = field_115 + field_117;
+        if (count != 0) {
+            do {
+                if ((*objects)->sprite->field_20[1] == 1 && (*objects)->sprite->field_12_3) {
+                    sub_804761C(*objects, 0);
+                    (*objects)->field_214_0 = 0;
+                    sub_801E150((*objects)->sprite, 0, 0, 0, 0);
+                    (*objects)->sprite->field_12_1 = 0;
+                    (*objects)->sprite->field_12_3 = 0;
+                }
+                count--;
+                objects++;
+            } while (count != 0);
+        }
+    }
+}
+#endif
+
+void FieldManager::sub_8025ACC() {
+    int start;
+
+    if (field_10E != 0) {
+        start = field_10E;
+    } else if (field_110 != 0) {
+        start = field_110;
+    } else if (field_112 != 0) {
+        start = field_112;
+    } else if (field_114 != 0) {
+        start = field_114;
+    } else if (field_116 != 0) {
+        start = field_116;
+    } else if (field_11A != 0) {
+        start = field_11A;
+    } else {
+        start = 0;
+    }
+    if (start > 0) {
+        FieldObject** objects = &this->objects[start];
+        int count = field_10B - start;
+        while (count != 0) {
+            sub_80465D8(*objects);
+            (*objects)->method13();
+            (*objects)->method14(&this->objects[0], 0);
+            sub_804034C(*objects);
+            count--;
+            objects++;
+        }
+    }
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8025C04__12FieldManageri.s\"");
+#else
+u8 FieldManager::sub_8025C04(int index) {
+    FieldObject* object = objects[index];
+    u8 result = 0;
+    int left = object->field_C - object->field_272 / 2;
+    int top = object->field_10 + object->field_270;
+    int z = object->field_14;
+    int i;
+
+    if (object->field_18 > 0 || (object->field_18 < 0 && object->field_40 < 0)) {
+        z += object->field_18;
+    }
+    for (i = 0; i < 2; i++) {
+        FieldObject* other = objects[i];
+        int otherLeft = other->field_C - other->field_272 / 2;
+        int otherTop;
+        int otherZ;
+        int overlap;
+
+        if (otherLeft < left) {
+            overlap = otherLeft + other->field_272 - left;
+        } else {
+            overlap = left + object->field_272 - otherLeft;
+        }
+        if (overlap > 0) {
+            otherTop = other->field_10 + other->field_270;
+            if (otherTop > top) {
+                overlap = top - (otherTop - other->field_276);
+            } else {
+                overlap = otherTop - (top - object->field_276);
+            }
+            if (overlap > 0) {
+                otherZ = other->field_14;
+                if (other->field_18 > 0 || (other->field_18 < 0 && other->field_40 < 0)) {
+                    otherZ += other->field_18;
+                }
+                if (otherZ <= z) {
+                    overlap = otherZ + other->field_274 - z;
+                } else {
+                    overlap = z + object->field_274 - otherZ;
+                }
+                if (overlap >= 0) {
+                    result |= 1 << i;
+                }
+            }
+        }
+    }
+    return result;
+}
+#endif
+
+bool FieldManager::sub_8025D24(int type) {
+    if (field_12A > 1) {
+        switch (type) {
+            case 0:
+                if ((field_D0->field_0 & 0x300) == 0 && (field_D0->field_2 & field_200->field_368->field_4)) {
+                    return 1;
+                }
+                break;
+            case 1:
+                if ((field_D0->field_0 & 0x300) == 0 && (field_D0->field_2 & field_204->field_368->field_4)) {
+                    return 1;
+                }
+                break;
+            case 2:
+                if ((field_D0->field_0 & field_204->field_368->field_6) == 0 &&
+                    (field_D0->field_2 & field_200->field_368->field_6)) {
+                    return 1;
+                }
+                break;
+            case 3:
+                if ((field_D0->field_0 & field_200->field_368->field_6) == 0 &&
+                    (field_D0->field_2 & field_204->field_368->field_6)) {
+                    return 1;
+                }
+                break;
+            case 4:
+                if (field_D0->field_2 & 8) {
+                    return 1;
+                }
+                break;
+            // field_0 (held) and field_2 (pressed) are read together as one word.
+            case 5:
+                if ((*(u32*)field_D0 & 0xFFFF0300) == 0x40000) {
+                    return 1;
+                }
+                break;
+            case 6: {
+                u32 keys = *(u32*)field_D0;
+                if ((keys & 0x01000200) == 0x01000200 || (keys & 0x02000100) == 0x02000100) {
+                    return 1;
+                }
+                break;
+            }
+            case 7:
+                if ((gGameState.inputPressed & 0x300) == 0x300) {
+                    return 1;
+                }
+                break;
+        }
+    }
+    return 0;
+}
+
+// Up, Up, Down, Down, Left, Right, Left, Right, B, A
+extern "C" const u16 word_839F5A4[10];
+
+bool FieldManager::sub_8025E94() {
+    u16 input = gGameState.field_2A;
+
+    if (input != 0) {
+        if (input == word_839F5A4[(s8)field_1F8]) {
+            if (++field_1F8 == 10) {
+                field_1F8 = 0;
+                field_1F6 = -1;
+                return 1;
+            }
+            field_1F6 = 30;
+        } else {
+            field_1F8 = 0;
+            field_1F6 = -1;
+        }
+    }
+    if (--field_1F6 <= 0) {
+        field_1F8 = 0;
+        field_1F6 = -1;
+    }
+    return 0;
+}
+
+// https://decomp.me/scratch/TODO
+// Only register allocation differs. The original masks field_204->field_24_0 with an extra `& 7` (the 7
+// lives in a register from the first player block), but an explicit `& 7` adds a stack slot.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8025F28__12FieldManager.s\"");
+#else
+void FieldManager::sub_8025F28() {
+    struct SaveSlot* slot = &dword_3000FFC->slots[stru_3000D40.slot];
+    struct SaveSlotData* data = &slot->data;
+    struct SaveSlotPlayer* player;
+
+    data->field_0_0 = field_F8_6;
+    data->field_0_1 = field_208_0;
+    data->field_0_2 = field_208_1;
+    data->field_0_3 = field_208_2;
+    data->field_0_4 = field_208_3;
+    data->field_0_5 = field_208_4;
+    data->field_0_6 = field_26B_5;
+    data->field_0_10 = field_246_2;
+    data->field_0_13 = field_FA_5;
+    data->field_0_18 = field_208_6;
+    data->field_0_19 = field_208_7;
+    data->field_0_20 = word_3000D3C;
+
+    player = &data->field_4[field_208_2];
+    player->field_0 = field_124;
+    player->field_2_0 = field_200->field_24_0;
+    player->field_4 = field_200->field_C / 256;
+    player->field_6 = field_200->field_10 / 256;
+    player->field_8 = field_200->field_14 / 256;
+    player->field_A = field_200->field_18 / 256;
+
+    player = &data->field_4[field_208_2 ^ 1];
+    if (field_2D8_0 == 31) {
+        player->field_0 = field_124;
+        player->field_2_0 = field_204->field_24_0;
+        player->field_4 = field_204->field_C / 256;
+        player->field_6 = field_204->field_10 / 256;
+        player->field_8 = field_204->field_14 / 256;
+        player->field_A = field_204->field_18 / 256;
+    } else {
+        player->field_0 = field_2DA;
+        player->field_2_0 = field_2D8_5;
+        player->field_4 = field_2DC / 256;
+        player->field_6 = field_2E0 / 256;
+        player->field_8 = field_2E4 / 256;
+        player->field_A = field_2E8 / 256;
+    }
+}
+#endif

@@ -8,13 +8,13 @@
 
 // Renderer process of the load menu ("TLD").
 class LoadMenuRenderer : public Process {
-public:
+  public:
     LoadMenuRenderer(u8 priority, char* label);
     virtual void update();
 };
 
 class LoadMenu : public Process {
-public:
+  public:
     struct Sprite* cursor;
     struct Sprite* sprites[6];
     struct Sprite* arrows[4];
