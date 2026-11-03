@@ -2,7 +2,9 @@
 #define FIELD_OBJECT_H
 
 // Objects on the field (Mario, Luigi, NPCs, ...). The class hierarchy is implemented in asm
-// (base class vtable 0x08CDBDE8). Interface-only, so that no file emits its vtable or inline members.
+// (base class vtable 0x08CDBDE8); FieldObject's own file is asm/field_object.s (0x0803FEB8-0x08048064),
+// ending with its inline virtual members in reverse slot order (19 ... 1 = ~FieldObject). Interface-only,
+// so that no file emits its vtable or inline members.
 #pragma interface
 
 class FieldObject {
@@ -52,7 +54,8 @@ public:
     // The vtable pointer follows at 0x338.
 
     FieldObject(int room, int index);
-    virtual void method1();
+    virtual ~FieldObject() {
+    }
     virtual void method2(void* arg1, u16* arg2, void* arg3);
     virtual void method3();
     virtual void method4();
@@ -66,6 +69,11 @@ public:
     virtual void method12(FieldObject** other, int a, int b);
     virtual void method13();
     virtual void method14(FieldObject** objects, int arg);
+    virtual void method15();
+    virtual void method16();
+    virtual void method17();
+    virtual void method18();
+    virtual void method19();
 };
 
 struct FieldStruct4 {
