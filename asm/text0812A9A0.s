@@ -32209,7 +32209,7 @@ _0813EC60:
 	adds r0, r7, #0x0
 	mov r1, r8
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectssPiN23
 	adds r6, r0, #0x0
 	movs r0, #0x92
 	lsls r0, r0, #0x01
@@ -32550,7 +32550,7 @@ _0813EF06:
 	adds r0, r7, #0x0
 	adds r1, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectssPiN23
 	adds r6, r0, #0x0
 	movs r0, #0x92
 	lsls r0, r0, #0x01
@@ -32840,7 +32840,7 @@ _0813F13E:
 	adds r0, r7, #0x0
 	mov r1, r8
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectssPiN23
 	adds r6, r0, #0x0
 	movs r0, #0x92
 	lsls r0, r0, #0x01
@@ -33129,7 +33129,7 @@ _0813F366:
 	adds r0, r7, #0x0
 	adds r1, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectssPiN23
 	ldr r1, [sp, #0x008]
 	movs r0, #0xE0
 	lsls r0, r0, #0x08
@@ -33173,7 +33173,7 @@ _0813F3C4:
 	adds r0, r7, #0x0
 	adds r1, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectssPiN23
 	ldr r1, [sp, #0x008]
 	movs r0, #0xE0
 	lsls r0, r0, #0x08
@@ -33381,7 +33381,7 @@ _0813F7AE:
 	str r0, [sp, #0x004]
 	adds r0, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectssPiN23
 	ldr r1, [sp, #0x010]
 	movs r0, #0x01
 	negs r0, r0
@@ -34196,7 +34196,7 @@ _0813FE20:
 	add r0, sp, #0x020
 	str r0, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectssPiN23
 	ldrb r1, [r0, #0x00]
 	movs r0, #0x80
 	ands r0, r1
@@ -35790,7 +35790,7 @@ _08140B8E:
 	str r6, [sp, #0x004]
 	mov r0, r10
 	ldr r3, [sp, #0x054]
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectssPiN23
 	adds r4, r0, #0x0
 	ldrb r1, [r4, #0x00]
 	movs r0, #0x80
@@ -59860,7 +59860,7 @@ _0814CF5C:
 	str r0, [sp, #0x004]
 	adds r0, r5, #0x0
 	adds r1, r7, #0x0
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectssPiN23
 	ldr r0, [sp, #0x00C]
 	ldr r1, _0814CFB0 @ =0x7FFFFFFF
 	cmp r0, r1
@@ -60304,7 +60304,7 @@ _0814D39E:
 	movs r1, #0x00
 	movs r2, #0x0E
 	movs r3, #0x02
-	bl sub_804173C
+	bl sub_804173C__11FieldObjectiUcUcUc
 	ldr r0, _0814D3B4 @ =0x0814DC6D
 	b _0814D4FC
 	.byte 0x00, 0x00

@@ -118,12 +118,18 @@ struct struc_83A065C {
 
 // Collision map cell (get_coldef_ptr_by_xz)
 struct Coldef {
-    u32 field_0_0 : 20;
-    u32 field_0_20 : 4;
-    u32 field_0_24 : 2;
-    u32 field_0_26 : 2;
-    u32 field_0_28 : 1;
-    u32 field_0_29 : 3;
+    u32 primaryShape : 3;
+    u32 floorType : 4;
+    u32 solid : 1;
+    u32 primaryHeight : 4;
+    u32 gap : 4;
+    u32 secondaryShape : 4;
+    u32 secondaryHeight : 4;
+    u32 primaryPriority : 2;
+    u32 secondaryPriority : 2;
+    u32 priorityOverride : 1;
+    u32 tileFlags : 2;
+    u32 heightScale : 1;
 };
 
 struct Sprite {

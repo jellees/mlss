@@ -502,7 +502,7 @@ _0802A8AA:
 	subs r1, #0x04
 	ldm r1!, {r0}
 	mov r1, r8
-	bl sub_80418E8
+	bl sub_80418E8__11FieldObjectPP11FieldObject
 	adds r4, #0x01
 	ldrb r2, [r7, #0x00]
 	cmp r4, r2
@@ -514,10 +514,10 @@ _0802A8C2:
 	bl sub_8025ACC__12FieldManager
 	ldr r0, [r5, #0x00]
 	adds r1, r5, #0x0
-	bl sub_80418E8
+	bl sub_80418E8__11FieldObjectPP11FieldObject
 	ldr r0, [r5, #0x04]
 	adds r1, r5, #0x0
-	bl sub_80418E8
+	bl sub_80418E8__11FieldObjectPP11FieldObject
 _0802A8DE:
 	mov r3, r10
 	ldrb r1, [r3, #0x00]
@@ -9041,7 +9041,7 @@ _0802F96A:
 	subs r1, #0x04
 	ldm r1!, {r0}
 	mov r1, r8
-	bl sub_80418E8
+	bl sub_80418E8__11FieldObjectPP11FieldObject
 	adds r6, #0x01
 	ldrb r0, [r7, #0x00]
 	cmp r6, r0
@@ -9053,10 +9053,10 @@ _0802F982:
 	bl sub_8025ACC__12FieldManager
 	ldr r0, [r4, #0x00]
 	adds r1, r4, #0x0
-	bl sub_80418E8
+	bl sub_80418E8__11FieldObjectPP11FieldObject
 	ldr r0, [r4, #0x04]
 	adds r1, r4, #0x0
-	bl sub_80418E8
+	bl sub_80418E8__11FieldObjectPP11FieldObject
 	ldr r1, _0802F9B4 @ =0x00000209
 	adds r0, r5, r1
 	ldrb r1, [r0, #0x00]

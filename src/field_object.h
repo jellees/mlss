@@ -19,7 +19,7 @@ enum FieldObjectState {
 
 class FieldObject {
 public:
-    u8 pad_0;
+    s8 field_0;
     u8 field_1;
     u8 angle; // Facing angle 0-255 (direction = angle / 32)
     u8 pad_3;
@@ -32,9 +32,12 @@ public:
     s32 z; // Height of the floor the object is on
     s32 height; // Height above that floor (the vertical position is z + height)
     u8 pad_1C[0x8];
-    u8 direction : 3; // Facing direction 0-7
-    u8 field_24_3 : 5;
-    u8 pad_25;
+    u16 direction : 3; // Facing direction 0-7
+    u16 field_24_3 : 4;
+    u16 field_24_7 : 2;
+    u16 field_24_9 : 1;
+    u16 field_24_10 : 1;
+    u16 field_24_11 : 5;
     u8 field_26_0 : 1;
     u8 field_26_1 : 1;
     u8 field_26_2 : 6;
@@ -49,9 +52,11 @@ public:
     s32 previousZ;
     s32 previousHeight;
     u8 pad_44[0x8];
-    u8 previousDirection : 3; // method5's copy of direction (0x28 bytes later)
-    u8 field_4C_3 : 5;
-    u8 pad_4D[0x3];
+    u16 previousDirection : 3; // method5's copy of direction (0x28 bytes later)
+    u16 field_4C_3 : 4;
+    u16 field_4C_7 : 2;
+    u16 field_4C_9 : 7;
+    u8 pad_4E[0x2];
     s16 field_50;
     s16 field_52;
     u8 field_54;
@@ -60,8 +65,11 @@ public:
     u32 field_20C_0 : 1;
     u32 field_20C_1 : 4;
     u32 field_20C_5 : 1;
-    u32 field_20C_6 : 2;
-    u32 field_20C_8 : 4;
+    u32 field_20C_6 : 1;
+    u32 field_20C_7 : 1;
+    u32 field_20C_8 : 1;
+    u32 field_20C_9 : 1;
+    u32 field_20C_10 : 2;
     u32 field_20C_12 : 1;
     u32 field_20C_13 : 1;
     u32 field_20C_14 : 1;
@@ -176,8 +184,11 @@ public:
     u16* field_2AC;
     u8 pad_2B0[0x5];
     u8 field_2B5_0 : 3;
-    u8 field_2B5_3 : 5;
-    u8 pad_2B6;
+    u8 field_2B5_3 : 1;
+    u8 field_2B5_4 : 4;
+    u8 field_2B6_0 : 6;
+    u8 field_2B6_6 : 1;
+    u8 field_2B6_7 : 1;
     u8 field_2B7_0 : 3;
     u8 field_2B7_3 : 5;
     u8 field_2B8_0 : 3;
@@ -192,6 +203,9 @@ public:
     void sub_80402C4();
     void sub_804034C();
     void sub_80415A0();
+    void sub_804173C(int set, u8 size1, u8 size2, u8 size3);
+    void sub_80418E8(FieldObject** objects);
+    struct Coldef* sub_80457E8(s16 cellX, s16 cellY, int* height1, int* height2, int* height3);
     void sub_8040790();
     void sub_8040804(u8 mode, int animation, int flag);
     virtual ~FieldObject() {
@@ -206,7 +220,7 @@ public:
     virtual void method9(); // 0x08040FA0
     virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects); // 0x08041368
     virtual void method11();
-    virtual void method12(FieldObject** other, int a, int b);
+    virtual void method12(FieldObject** others, int count, u8 flag); // 0x08041A2C
     virtual void method13();
     virtual void method14(FieldObject** objects, int arg);
     virtual void method15();
@@ -238,6 +252,8 @@ void sub_80465D8(FieldObject*);
 void sub_8047EFC(FieldObject*, int, int, int, int);
 void sub_8047EB8(FieldObject*);
 void sub_8047DC8(FieldObject*, int);
+void sub_8046980(FieldObject*);
+void sub_8046A10(FieldObject*);
 }
 
 #endif

@@ -922,7 +922,7 @@ sub_8050584:
 	lsls r3, r3, #0x18
 	lsrs r5, r3, #0x18
 	adds r3, r5, #0x0
-	bl sub_8041A2C
+	bl method12__11FieldObjectPP11FieldObjectiUc
 	movs r0, #0xD1
 	lsls r0, r0, #0x02
 	adds r4, r4, r0
@@ -1364,7 +1364,7 @@ gVTable_8CDBFC8:
 	.4byte 0, method9__11FieldObject
 	.4byte 0, method10__11FieldObjectP9struc_OamPP11FieldObject
 	.4byte 0, sub_8047CE8
-	.4byte 0, sub_8041A2C
+	.4byte 0, method12__11FieldObjectPP11FieldObjectiUc
 	.4byte 0, sub_8041FFC
 	.4byte 0, sub_8047C68
 	.4byte 0, sub_8044630

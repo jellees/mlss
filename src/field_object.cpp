@@ -478,9 +478,9 @@ void FieldObject::method9() {
         for (row = cellY / 16; row >= top; row--) {
             for (col = (cellX - (width >> 1)) / 16; col <= right; col++) {
                 coldef = get_coldef_ptr_by_xz(field_290, col, row);
-                if (coldef->field_0_28) {
+                if (coldef->priorityOverride) {
                     sprite->field_1F_0 = sprite->field_1F_2 = field_23C =
-                        field_26_1 ? coldef->field_0_26 : coldef->field_0_24;
+                        field_26_1 ? coldef->secondaryPriority : coldef->primaryPriority;
                     return;
                 }
             }
@@ -497,23 +497,23 @@ void FieldObject::method9() {
     row /= 4096;
     coldef = get_coldef_ptr_by_xz(field_290, col, row);
     if (field_26_1) {
-        layer1 = layer0 = coldef->field_0_26;
+        layer1 = layer0 = coldef->secondaryPriority;
         field_23C = layer1;
     } else {
         int half;
         int column;
         int end;
 
-        layer1 = layer0 = coldef->field_0_24;
+        layer1 = layer0 = coldef->primaryPriority;
         half = width >> 1;
         column = (x - half * 256) / 4096;
         end = (x + (half - 1) * 256) / 4096;
         for (; column <= end; column++) {
             coldef = get_coldef_ptr_by_xz(field_290, column, row);
-            if (coldef->field_0_20 == 0 && coldef->field_0_24 > layer0) {
-                layer1 = layer0 = coldef->field_0_24;
+            if (coldef->secondaryHeight == 0 && coldef->primaryPriority > layer0) {
+                layer1 = layer0 = coldef->primaryPriority;
                 col = column;
-                if (coldef->field_0_28) {
+                if (coldef->priorityOverride) {
                     break;
                 }
             }
@@ -525,7 +525,7 @@ void FieldObject::method9() {
             int layer;
 
             row--;
-            layer = get_coldef_ptr_by_xz(field_290, col, row)->field_0_24;
+            layer = get_coldef_ptr_by_xz(field_290, col, row)->primaryPriority;
             if (layer0 > layer) {
                 layer0 = layer;
             }
@@ -648,4 +648,383 @@ void FieldObject::sub_80415A0() {
         field_27E = field_278 - 0x800;
         field_280 = field_27C - 0x200;
     }
+}
+
+// https://decomp.me/scratch/TODO
+// Only the registers of size2 and size3 are swapped.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_804173C__11FieldObjectiUcUcUc.s\"");
+#else
+void FieldObject::sub_804173C(int set, u8 size1, u8 size2, u8 size3) {
+    u8* entry = off_83A069C[sprite->field_1E_0];
+
+    if (entry != 0) {
+        entry += sprite->field_16 * 7;
+        if (set == 0) {
+            field_272 = size1 ? size1 * 256 : ((((entry[0] >> 3) << 1) & 0x3F) + 2) * 256;
+            field_274 = size2 ? size2 * 256 : ((((entry[0] << 3) | (entry[1] >> 5)) & 0x3F) + 1) * 256;
+            field_276 = size3 ? size3 * 256 : ((((entry[1] << 1) | (entry[2] >> 7)) & 0x3F) + 1) * 256;
+        } else {
+            field_278 = size1 ? size1 * 256 : ((((entry[2] >> 2) << 1) & 0x3F) + 2) * 256;
+            field_27A = size2 ? size2 * 256 : ((((entry[2] << 4) | (entry[3] >> 4)) & 0x3F) + 1) * 256;
+            field_27C = size3 ? size3 * 256 : ((((entry[3] << 2) | (entry[4] >> 6)) & 0x3F) + 1) * 256;
+        }
+    } else if (set == 0) {
+        field_272 = size1 ? size1 * 256 : 0x1000;
+        field_274 = size2 ? size2 * 256 : 0x2000;
+        field_276 = size3 ? size3 * 256 : 0x800;
+    } else {
+        field_278 = size1 ? size1 * 256 : 0x1000;
+        field_27A = size2 ? size2 * 256 : 0x2000;
+        field_27C = size3 ? size3 * 256 : 0x800;
+    }
+}
+#endif
+
+void FieldObject::sub_80418E8(FieldObject** objects) {
+    FieldObject* other;
+    u16 width;
+    u16 otherWidth;
+    u16 depth;
+    u16 otherDepth;
+    int left;
+    int otherLeft;
+    int top;
+    int otherTop;
+    int overlap;
+
+    if (field_20C_0 && field_214_21 == 0 && field_29 != -1 && field_20C_14 && field_25C <= 0
+        && z + height <= previousZ + previousHeight && field_258 <= 0) {
+        other = objects[field_29];
+        if (other->field_20C_0) {
+            x += other->x - other->previousX;
+            y += other->y - other->previousY;
+            z = other->z;
+            height = other->height + other->field_274;
+            width = field_272;
+            otherWidth = other->field_272;
+            left = x - width / 2;
+            otherLeft = other->x - otherWidth / 2;
+            if (otherLeft < left) {
+                overlap = otherLeft + otherWidth - left;
+            } else {
+                overlap = left + width - otherLeft;
+            }
+            if (overlap > 0) {
+                depth = field_276;
+                otherDepth = other->field_276;
+                top = y + field_270;
+                otherTop = other->y + other->field_270;
+                if (otherTop > top) {
+                    overlap = top - (otherTop - otherDepth);
+                } else {
+                    overlap = otherTop - (top - depth);
+                }
+                if (overlap > 0 && (s8)field_1 == -1) {
+                    field_1 = field_29;
+                    field_25C = -1;
+                }
+            }
+        }
+    }
+}
+
+// https://decomp.me/scratch/TODO
+// Mostly register and stack-slot allocation differs (e.g. `this` is r4 in the original); in this version
+// two identical "landing" blocks also get merged where the original keeps them apart.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/method12__11FieldObjectPP11FieldObjectiUc.s\"");
+#else
+void FieldObject::method12(FieldObject** others, int count, u8 flag) {
+    int left;
+    int top;
+    int bottom;
+    int n;
+    FieldObject* other;
+    int pushThis;
+    int pushOther;
+    int otherWidth;
+    int otherDepth;
+    int offset;
+    int otherOffset;
+    int thisTop;
+    int width;
+    int depth;
+    int otherLeft;
+    int otherTop;
+    int otherBottom;
+    int overlap;
+    int otherX;
+    int otherY;
+    int sideThis;
+    int sideOther;
+    int verticalThis;
+    int verticalOther;
+
+    if (!field_20C_0 || field_214_21 || !(field_20C_6 | field_20C_8)) {
+        return;
+    }
+    left = x - field_272 / 2;
+    top = y;
+    bottom = z;
+    if (height > 0 || (height < 0 && previousHeight < 0)) {
+        bottom += height;
+    }
+    n = field_20C_8 ? count : 2;
+    for (; n != 0; n--, others++) {
+        other = *others;
+        if (field_54 == other->field_54) {
+            continue;
+        }
+        if (flag && !other->field_210_5) {
+            continue;
+        }
+        if (!other->field_20C_0) {
+            continue;
+        }
+        if (other->field_214_21 && other->field_54 != field_29) {
+            continue;
+        }
+        if (other->field_29 == field_54) {
+            continue;
+        }
+        if (other->field_20C_19 == 0) {
+            pushThis = field_20C_6 & other->field_20C_9;
+            pushOther = field_20C_5 & other->field_20C_8;
+        } else {
+            pushThis = field_20C_8 & other->field_20C_9;
+            pushOther = field_20C_9 & other->field_20C_8;
+        }
+        if (!pushThis) {
+            continue;
+        }
+
+        otherWidth = other->field_272;
+        otherLeft = other->x - otherWidth / 2;
+        width = field_272;
+        otherX = other->x;
+        if (otherLeft < left) {
+            overlap = otherLeft + otherWidth - left;
+        } else {
+            overlap = left + width - otherLeft;
+        }
+        if (overlap <= 0) {
+            break;
+        }
+
+        otherOffset = other->field_270;
+        otherDepth = other->field_276;
+        otherTop = other->y + otherOffset;
+        offset = field_270;
+        depth = field_276;
+        thisTop = top + offset;
+        otherY = other->y;
+        if (otherTop > thisTop) {
+            overlap = thisTop - (otherTop - otherDepth);
+        } else {
+            overlap = otherTop - (thisTop - depth);
+        }
+        if (overlap <= 0) {
+            break;
+        }
+
+        otherBottom = other->z;
+        if (other->height > 0 || (other->height < 0 && other->previousHeight < 0)) {
+            otherBottom += other->height;
+        }
+        if (otherBottom <= bottom) {
+            overlap = otherBottom + other->field_274 - bottom;
+        } else {
+            overlap = bottom + field_274 - otherBottom;
+        }
+        if (overlap < 0) {
+            break;
+        }
+
+        sideThis = 0;
+        sideOther = 0;
+        verticalThis = 0;
+        verticalOther = 0;
+        if (field_29 == other->field_54) {
+            verticalThis = 2;
+            verticalOther = 1;
+        } else {
+            int previousBottom = previousZ + previousHeight;
+
+            if (previousBottom + field_274 <= otherBottom) {
+                verticalThis = 1;
+                verticalOther = 2;
+            } else if (previousBottom >= otherBottom + other->field_274) {
+                verticalThis = 2;
+                verticalOther = 1;
+            }
+        }
+
+        if (verticalThis == 2) {
+            // Landing on top of the other object.
+            if (field_29 != other->field_54) {
+                height = (height + overlap) & ~0xFF;
+            }
+            field_238 = other->field_54;
+            field_1 = other->field_54;
+            if (field_2B5_3) {
+                sub_8046A10(this);
+            } else if (field_25C >= 0) {
+                field_25C = -1;
+                field_213_5 = 0;
+                field_250 = -1;
+                field_24C = -1;
+                field_23E = field_240;
+            }
+        } else if (verticalThis == 1) {
+            // Hitting the other object from below.
+            if (field_4C_7 != 1 && other->field_29 != field_54) {
+                height -= overlap;
+                if (field_25C >= 0 && field_258 > 0) {
+                    field_258 = -field_258;
+                }
+            }
+        } else {
+            int previousX = this->previousX;
+            int previousY = this->previousY;
+            int otherPreviousX = other->previousX;
+            int otherPreviousY = other->previousY;
+
+            if (previousX == otherPreviousX && previousY == otherPreviousY) {
+                if (direction <= 1) {
+                    sideThis = 1;
+                    sideOther = 4;
+                } else if (direction <= 2) {
+                    sideThis = 8;
+                    sideOther = 2;
+                } else if (direction <= 5) {
+                    sideThis = 4;
+                    sideOther = 1;
+                } else if (direction <= 6) {
+                    sideThis = 2;
+                    sideOther = 8;
+                } else {
+                    sideThis = 1;
+                    sideOther = 4;
+                }
+            } else {
+                int previousTop = previousY + offset;
+                int otherPreviousTop = otherPreviousY + otherOffset;
+
+                if (previousTop - depth < otherPreviousTop && previousTop > otherPreviousTop - otherDepth) {
+                    if (previousX < otherPreviousX) {
+                        sideThis = 2;
+                        sideOther = 8;
+                    } else {
+                        sideThis = 8;
+                        sideOther = 2;
+                    }
+                } else if (previousY > otherPreviousY) {
+                    sideThis = 1;
+                    sideOther = 4;
+                } else {
+                    sideThis = 4;
+                    sideOther = 1;
+                }
+            }
+            if (sideThis == 8) {
+                if (x < previousX) {
+                    int newX = otherX + ((otherWidth + width) >> 1);
+
+                    if (newX > previousX) {
+                        newX = previousX;
+                    }
+                    if (newX > x) {
+                        x = newX;
+                    }
+                }
+            } else if (sideThis == 2) {
+                if (x > previousX) {
+                    int newX = otherX - ((otherWidth + width) >> 1);
+
+                    if (newX < previousX) {
+                        newX = previousX;
+                    }
+                    if (newX < x) {
+                        x = newX;
+                    }
+                }
+            } else if (sideThis == 1) {
+                if (y < previousY) {
+                    int newY = otherY + (depth + otherOffset - offset);
+
+                    if (newY > previousY) {
+                        newY = previousY;
+                    }
+                    if (newY > y) {
+                        y = newY;
+                    }
+                }
+            } else if (y > previousY) {
+                int newY = otherY + (otherOffset - otherDepth - offset);
+
+                if (newY < previousY) {
+                    newY = previousY;
+                }
+                if (newY < y) {
+                    y = newY;
+                }
+            }
+        }
+
+        if (pushThis) {
+            field_24_3 |= sideThis;
+            field_24_7 |= verticalThis;
+            if (field_0 == -1) {
+                field_0 = other->field_54;
+            }
+            if (other->field_20C_19 == 0) {
+                field_24_9 = 1;
+            } else {
+                field_24_10 = 1;
+            }
+        }
+        if (pushOther) {
+            other->field_24_3 |= sideOther;
+            other->field_24_7 |= verticalOther;
+            //! \bug Probably meant to set other->field_0, like the block above does for this object.
+            if (field_0 == -1) {
+                field_0 = other->field_54;
+            }
+            other->field_24_10 = 1;
+        }
+    }
+    if (field_24_3 && field_2B5_0 && field_2B6_6) {
+        sub_8046980(this);
+        sub_8046A10(this);
+    }
+}
+#endif
+
+asm_unified(".include \"asm/nonmatching/sub_8041FFC.s\"");
+
+asm_unified(".include \"asm/nonmatching/sub_8044630.s\"");
+
+struct Coldef* FieldObject::sub_80457E8(s16 cellX, s16 cellY, int* height1, int* height2, int* height3) {
+    struct Coldef* coldef = get_coldef_ptr_by_xz(field_290, cellX, cellY);
+    int value;
+
+    if (coldef->floorType != 15) {
+        value = (coldef->primaryHeight << 11) << coldef->heightScale;
+        *height1 = value;
+        if (field_210_6 && (coldef->secondaryHeight != 0 || (coldef->solid & field_210_3))) {
+            value += (coldef->gap << 11) << coldef->heightScale;
+            *height2 = value;
+            *height3 = !(coldef->solid & field_210_3) ? value + ((coldef->secondaryHeight << 11) << coldef->heightScale)
+                                                         : 0x7FFFFFFF;
+        } else {
+            *height3 = -1;
+            *height2 = -1;
+        }
+    } else {
+        *height1 = 0x7FFFFFFF;
+        *height3 = -1;
+        *height2 = -1;
+    }
+    return coldef;
 }
