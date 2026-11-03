@@ -597,11 +597,11 @@ struct struc_Oam* FieldObject::method10(struct struc_Oam* oam, FieldObject** obj
                 } else {
                     oam->field_8 = layer << 30 | 0x3FFFC000;
                 }
-                oam->attr0 = stru_83A065C[field_23D - 1].attr0 | (y & 0xFF);
+                oam->data.attr[0] = stru_83A065C[field_23D - 1].attr0 | (y & 0xFF);
                 //! Possible fake match: the original masks x to 9 bits with a shift pair (maybe a macro).
-                oam->attr1 = stru_83A065C[field_23D - 1].attr1 | ((u32)(x << 23) >> 23);
-                oam->attr2 = layer << 10 | 0xF000 | stru_83A065C[field_23D - 1].attr2;
-                oam->field_6 = 0;
+                oam->data.attr[1] = stru_83A065C[field_23D - 1].attr1 | ((u32)(x << 23) >> 23);
+                oam->data.attr[2] = layer << 10 | 0xF000 | stru_83A065C[field_23D - 1].attr2;
+                oam->data.oam.affineParam = 0;
                 oam = oam->next;
             }
         }

@@ -98,10 +98,10 @@ struct struc_Sprite34 {
 
 // An OAM buffer entry, linked to the next one (FieldObject::method10)
 struct struc_Oam {
-    u16 attr0;
-    u16 attr1;
-    u16 attr2;
-    u16 field_6;
+    union {
+        struct OamData oam;
+        u16 attr[4];
+    } data;
     u32 field_8;
     u8 pad_C[0x4];
     struct struc_Oam* next;
