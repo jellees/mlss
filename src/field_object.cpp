@@ -1008,27 +1008,30 @@ asm_unified(".include \"asm/nonmatching/sub_8044630.s\"");
 
 struct Coldef* FieldObject::sub_80457E8(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top) {
     struct Coldef* coldef = get_coldef_ptr_by_xz(field_290, cellX, cellY);
-    int value;
+    int level;
 
     if (coldef->floorType != 15) {
-        value = (coldef->primaryHeight << 11) << coldef->heightScale;
-        *floor = value;
+        // Primary floor
+        level = (coldef->primaryHeight << 11) << coldef->heightScale;
+        *floor = level;
+
+        // Secondary floor: the block above the gap, or a wall up to the sky for solid cells
         if (field_210_6 && (coldef->secondaryHeight != 0 || (coldef->solid & field_210_3))) {
-            value += (coldef->gap << 11) << coldef->heightScale;
-            *ceiling = value;
-            *top = !(coldef->solid & field_210_3)
-                       ? value + ((coldef->secondaryHeight << 11) << coldef->heightScale)
-                       : 0x7FFFFFFF;
+            level += (coldef->gap << 11) << coldef->heightScale;
+            *ceiling = level;
+            *top = (coldef->solid & field_210_3)
+                       ? 0x7FFFFFFF
+                       : level + ((coldef->secondaryHeight << 11) << coldef->heightScale);
         } else {
             *top = -1;
             *ceiling = -1;
         }
     } else {
+        // No floor at all
         *floor = 0x7FFFFFFF;
         *top = -1;
         *ceiling = -1;
     }
-
     return coldef;
 }
 
