@@ -52,7 +52,7 @@ struct FieldBackup {
 };
 
 class FieldManager : public Process {
-public:
+  public:
     FieldStruct2* field_1C;
     FieldBackup* field_20;
     void* field_24;
@@ -138,13 +138,16 @@ public:
     u8 pad_1F9;
     u16 field_1FA;
     Process* field_1FC;
-    // Set in update(): leader = objects[luigiLeads], follower = objects[luigiLeads ^ 1] (objects[0] is Mario).
+    // Set in update(): leader = objects[luigiLeads], follower = objects[luigiLeads ^ 1] (objects[0] is
+    // Mario).
     FieldPlayerCharacter* leader;
     FieldPlayerCharacter* follower;
     u32 field_208_0 : 1;
     u32 field_208_1 : 1;
     u32 luigiLeads : 1;
     u32 field_208_3 : 1;
+    // If brothersTogether is false, the leader is separated from the follower and the follower stays
+    // where they are.
     u32 brothersTogether : 1;
     u32 field_208_5 : 1;
     u32 field_208_6 : 1;
