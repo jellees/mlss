@@ -387,6 +387,8 @@ u32 sub_80198B0(void*);
 u16 sub_81152FC(void*, u16);
 void sub_8116654(void*, u8);
 struct Coldef* get_coldef_ptr_by_xz(void* map, s16 x, s16 z);
+struct Coldef* sub_803FBA4(void* map, int x, int y, int* floor, int* ceiling, int* top, u8 arg6,
+                           bool arg7);
 void sub_8116680(void*, u8);
 void sub_8020D40(struct Sprite*);
 void sub_8019308(int, int, int);
@@ -555,6 +557,7 @@ extern u8 byte_83A0636[];
 extern s8 byte_83A0656[];
 extern struct struc_83A065C stru_83A065C[];
 extern u8* off_83A069C[];
+extern s16 word_83A06E0[][2];
 extern u8* off_839F5C8;
 extern struct struc_83BBDD0 stru_83BBDD0[];
 extern struct struc_83BCDC4 stru_83BCDC4[];

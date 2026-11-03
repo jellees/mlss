@@ -69,7 +69,8 @@ public:
     u32 field_20C_7 : 1;
     u32 field_20C_8 : 1;
     u32 field_20C_9 : 1;
-    u32 field_20C_10 : 2;
+    u32 field_20C_10 : 1;
+    u32 field_20C_11 : 1;
     u32 field_20C_12 : 1;
     u32 field_20C_13 : 1;
     u32 field_20C_14 : 1;
@@ -205,7 +206,8 @@ public:
     void sub_80415A0();
     void sub_804173C(int set, u8 size1, u8 size2, u8 size3);
     void sub_80418E8(FieldObject** objects);
-    struct Coldef* sub_80457E8(s16 cellX, s16 cellY, int* height1, int* height2, int* height3);
+    struct Coldef* sub_80457E8(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top);
+    int sub_80458B0();
     void sub_8040790();
     void sub_8040804(u8 mode, int animation, int flag);
     virtual ~FieldObject() {

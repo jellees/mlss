@@ -730,8 +730,8 @@ void FieldObject::sub_80418E8(FieldObject** objects) {
 }
 
 // https://decomp.me/scratch/TODO
-// Mostly register and stack-slot allocation differs (e.g. `this` is r4 in the original); in this version
-// two identical "landing" blocks also get merged where the original keeps them apart.
+// Mostly register and stack-slot allocation differs (e.g. `this` is r4 in the original); in this
+// version two identical "landing" blocks also get merged where the original keeps them apart.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/method12__11FieldObjectPP11FieldObjectiUc.s\"");
 #else
@@ -911,7 +911,8 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
                 int previousTop = previousY + offset;
                 int otherPreviousTop = otherPreviousY + otherOffset;
 
-                if (previousTop - depth < otherPreviousTop && previousTop > otherPreviousTop - otherDepth) {
+                if (previousTop - depth < otherPreviousTop
+                    && previousTop > otherPreviousTop - otherDepth) {
                     if (previousX < otherPreviousX) {
                         sideThis = 2;
                         sideOther = 8;
@@ -1005,26 +1006,51 @@ asm_unified(".include \"asm/nonmatching/sub_8041FFC.s\"");
 
 asm_unified(".include \"asm/nonmatching/sub_8044630.s\"");
 
-struct Coldef* FieldObject::sub_80457E8(s16 cellX, s16 cellY, int* height1, int* height2, int* height3) {
+struct Coldef* FieldObject::sub_80457E8(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top) {
     struct Coldef* coldef = get_coldef_ptr_by_xz(field_290, cellX, cellY);
     int value;
 
     if (coldef->floorType != 15) {
         value = (coldef->primaryHeight << 11) << coldef->heightScale;
-        *height1 = value;
+        *floor = value;
         if (field_210_6 && (coldef->secondaryHeight != 0 || (coldef->solid & field_210_3))) {
             value += (coldef->gap << 11) << coldef->heightScale;
-            *height2 = value;
-            *height3 = !(coldef->solid & field_210_3) ? value + ((coldef->secondaryHeight << 11) << coldef->heightScale)
-                                                         : 0x7FFFFFFF;
+            *ceiling = value;
+            *top = !(coldef->solid & field_210_3)
+                       ? value + ((coldef->secondaryHeight << 11) << coldef->heightScale)
+                       : 0x7FFFFFFF;
         } else {
-            *height3 = -1;
-            *height2 = -1;
+            *top = -1;
+            *ceiling = -1;
         }
     } else {
-        *height1 = 0x7FFFFFFF;
-        *height3 = -1;
-        *height2 = -1;
+        *floor = 0x7FFFFFFF;
+        *top = -1;
+        *ceiling = -1;
     }
+
     return coldef;
 }
+
+// https://decomp.me/scratch/TODO
+// Only register allocation differs (the original spills the loop counter to the stack).
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80458B0__11FieldObject.s\"");
+#else
+int FieldObject::sub_80458B0() {
+    int floor;
+    int ceiling;
+    int top;
+    u32 i;
+
+    for (i = 0; i < 10; i++) {
+        struct Coldef* coldef = sub_803FBA4(field_290, x + word_83A06E0[i][0], y + word_83A06E0[i][1],
+                                            &floor, &ceiling, &top, 0, field_20C_11);
+
+        if ((coldef->floorType == 5 || coldef->floorType == 7) && top > z && ceiling <= z + field_27A) {
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif

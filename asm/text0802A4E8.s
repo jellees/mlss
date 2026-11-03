@@ -21300,7 +21300,7 @@ sub_803C834:
 	adds r0, r4, #0x0
 	bl sub_804DDF4
 	adds r0, r4, #0x0
-	bl sub_80458B0
+	bl sub_80458B0__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0803C888
