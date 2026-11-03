@@ -3,11 +3,11 @@
 	.syntax unified
 	.text
 
-	thumb_func_start sub_80508A8
-sub_80508A8:
+	thumb_func_start __20FieldObjectSubclass3ii
+__20FieldObjectSubclass3ii:
 	push {r4, r5, lr}
 	adds r4, r0, #0x0
-	bl init_fobj_803FEB8
+	bl __11FieldObjectii
 	movs r0, #0xCE
 	lsls r0, r0, #0x02
 	adds r1, r4, r0
@@ -90,7 +90,7 @@ sub_8050940:
 	lsrs r2, r2, #0x10
 	str r2, [sp, #0x008]
 	adds r2, r3, #0x0
-	bl init_fobj_803FEB8
+	bl __11FieldObjectii
 	movs r0, #0xCE
 	lsls r0, r0, #0x02
 	adds r1, r7, r0
@@ -1380,11 +1380,11 @@ sub_8051368:
 	.byte 0x00, 0x00
 _08051394: .4byte 0x0000020F
 _08051398: .4byte 0x0000023D
-	thumb_func_start sub_805139C
-sub_805139C:
+	thumb_func_start __20FieldObjectSubclass2ii
+__20FieldObjectSubclass2ii:
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0x0
-	bl init_fobj_803FEB8
+	bl __11FieldObjectii
 	movs r0, #0xCE
 	lsls r0, r0, #0x02
 	adds r1, r4, r0

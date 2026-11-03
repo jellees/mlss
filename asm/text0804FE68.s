@@ -52,14 +52,14 @@ _0804FEB8:
 	.byte 0x00, 0x00
 _0804FEC0: .4byte 0x000002B5
 _0804FEC4: .4byte 0x00000242
-	thumb_func_start sub_804FEC8
-sub_804FEC8:
+	thumb_func_start __20FieldObjectSubclass1ii
+__20FieldObjectSubclass1ii:
 	push {r4, r5, r6, r7, lr}
 	add sp, #-0x008
 	adds r5, r0, #0x0
 	adds r4, r1, #0x0
 	adds r6, r2, #0x0
-	bl init_fobj_803FEB8
+	bl __11FieldObjectii
 	movs r0, #0xCE
 	lsls r0, r0, #0x02
 	adds r1, r5, r0
@@ -821,7 +821,7 @@ sub_80504BC:
 	ldr r6, [sp, #0x010]
 	lsls r4, r4, #0x18
 	lsrs r4, r4, #0x18
-	bl init_fobj_803FEB8
+	bl __11FieldObjectii
 	movs r0, #0xCE
 	lsls r0, r0, #0x02
 	adds r1, r5, r0

@@ -678,3 +678,132 @@ void FieldManager::sub_80265EC() {
         sub_804DFE8(field_A8[i]);
     }
 }
+
+// Same instructions, but the original passes i * 4 and &field_FB into the code after the switch from
+// every case (and shares the field_X++ increments), where this recomputes them after one shared block.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/make_field_objects_80267C0__12FieldManageri.s\"");
+#else
+void FieldManager::make_field_objects_80267C0(int room) {
+    FieldObject* object;
+    int i;
+
+    get_field_object_count(room, &field_10B);
+    field_10E = 0;
+    field_10F = 0;
+    field_112 = 0;
+    field_113 = 0;
+    field_11A = 0;
+    field_11B = 0;
+    field_116 = 0;
+    field_117 = 0;
+    field_114 = 0;
+    field_115 = 0;
+    field_118 = 0;
+    field_119 = 0;
+    field_110 = 0;
+    field_111 = 0;
+    for (i = 0; i < field_10B; i++) {
+        switch (get_field_object_type(room, i)) {
+            case 0: {
+                FieldPlayerCharacter* player = new (1, "FPC", 1) FieldPlayerCharacter(room, i);
+
+                if (field_FA_10) {
+                    sub_8047EFC(player, 0x100, 0x100, 0xD2, 13);
+                } else {
+                    sub_8047EFC(player, 0x200, 0x200, 0x52C, 0x75);
+                }
+                player->field_368 = &field_20C[i];
+                objects[i] = player;
+                break;
+            }
+            case 1:
+                object = new (1, "FCHR", 1) FieldObject(room, i);
+                objects[i] = object;
+                if (field_10E == 0) {
+                    field_10E = i;
+                }
+                field_10F++;
+                break;
+            case 2:
+                object = new (1, "FBRD", 1) FieldObject(room, i);
+                objects[i] = object;
+                if (field_110 == 0) {
+                    field_110 = i;
+                }
+                field_111++;
+                break;
+            case 3: {
+                FieldObjectSubclass1* object = new (1, "FMON", 1) FieldObjectSubclass1(room, i);
+
+                objects[i] = object;
+                if (object->field_344 != 0) {
+                    object->field_344->field_54 = i;
+                }
+                if (field_112 == 0) {
+                    field_112 = i;
+                }
+                field_113++;
+                break;
+            }
+            case 4:
+                object = new (1, "FBRL", 1) FieldObject(room, i);
+                objects[i] = object;
+                if (field_114 == 0) {
+                    field_114 = i;
+                }
+                field_115++;
+                break;
+            case 5: {
+                FieldObject* object = new (1, "FRCK", 1) FieldObject(room, i);
+
+                if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, object->field_22C_10 + 0x1160) == 1) {
+                    object->field_20C_0 = 0;
+                    object->field_20F_1 = 0;
+                }
+                object->field_210_5 = 1;
+                objects[i] = object;
+                if (field_116 == 0) {
+                    field_116 = i;
+                }
+                field_117++;
+                break;
+            }
+            case 6:
+                object = new (1, "FSPL", 1) FieldObjectSubclass2(room, i);
+                objects[i] = object;
+                if (field_118 == 0) {
+                    field_118 = i;
+                }
+                field_119++;
+                break;
+            case 7:
+                object = new (1, "FBLK", 1) FieldObjectSubclass3(room, i);
+                objects[i] = object;
+                if (field_11A == 0) {
+                    field_11A = i;
+                }
+                field_11B++;
+                break;
+            default:
+                objects[i] = 0;
+                break;
+        }
+        objects[i]->field_210_4 = objects[i]->field_20C_5;
+        objects[i]->field_239 = 16 >> field_FA_10;
+        objects[i]->field_54 = i;
+    }
+    ((FieldPlayerCharacter*)objects[luigiLeads])->field_352_7 = 1;
+    if (field_10E != 0) {
+        field_11C = field_10E;
+    } else if (field_110 != 0) {
+        field_11C = field_110;
+    } else {
+        field_11C = field_112;
+    }
+    field_11D = field_10F + field_111 + field_113;
+    for (i = 0; i < 8; i++) {
+        field_A8[i] = new (1, "FPSB", 1) FieldClass1(i);
+    }
+}
+#endif

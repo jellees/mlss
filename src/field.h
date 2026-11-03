@@ -57,7 +57,7 @@ class FieldManager : public Process {
     FieldBackup* field_20;
     void* field_24;
     FieldObject* objects[32];
-    FieldObject* field_A8[8];
+    FieldClass1* field_A8[8];
     void* field_C8;
     u16* field_CC;
     struct struc_3000388* field_D0;
@@ -84,7 +84,8 @@ class FieldManager : public Process {
     u16 field_FA_0 : 4;
     u16 field_FA_4 : 1;
     u16 field_FA_5 : 5;
-    u16 field_FA_10 : 6;
+    u16 field_FA_10 : 1;
+    u16 field_FA_11 : 5;
     u16 field_FC_0 : 1;
     u16 field_FC_1 : 1;
     u16 field_FC_2 : 1;
@@ -107,9 +108,12 @@ class FieldManager : public Process {
     u8 field_115;
     u8 field_116;
     u8 field_117;
-    u8 pad_118[0x2];
+    u8 field_118;
+    u8 field_119;
     u8 field_11A;
-    u8 pad_11B[0x3];
+    u8 field_11B;
+    u8 field_11C;
+    u8 field_11D;
     u16 field_11E;
     u16 field_120_0 : 10;
     u16 field_120_10 : 2;
@@ -171,7 +175,7 @@ class FieldManager : public Process {
     u32 field_20B_5 : 1;
     u32 field_20B_6 : 1;
     u32 field_20B_7 : 1;
-    u8 pad_20C[0x30];
+    FieldStruct4 field_20C[2];
     void* field_23C;
     u16 field_240;
     u16 field_242;
@@ -256,6 +260,7 @@ class FieldManager : public Process {
     void sub_802641C(int arg1, int arg2, int arg3, int arg4);
     void sub_80264F4(u16 arg1);
     void sub_80265EC();
+    void make_field_objects_80267C0(int room);
 };
 
 extern "C" {

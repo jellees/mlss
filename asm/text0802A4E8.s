@@ -24954,8 +24954,8 @@ _0803FE66:
 	.byte 0x02, 0x48, 0xA0, 0x61, 0x20, 0x1C, 0x10, 0xBC, 0x02, 0xBC, 0x08, 0x47, 0xC8, 0xBD, 0xCD, 0x08
 	.byte 0x10, 0xB5, 0x04, 0x1C, 0x09, 0x06, 0x09, 0x0E, 0xD9, 0xF7, 0x80, 0xFD, 0x02, 0x48, 0xA0, 0x61
 	.byte 0x20, 0x1C, 0x10, 0xBC, 0x02, 0xBC, 0x08, 0x47, 0xD8, 0xBD, 0xCD, 0x08
-	thumb_func_start init_fobj_803FEB8
-init_fobj_803FEB8: @ 0803FEB8
+	thumb_func_start __11FieldObjectii
+__11FieldObjectii: @ 0803FEB8
 	push {r4, r5, r6, r7, lr}
 	add sp, #-0x004
 	adds r5, r0, #0x0
@@ -37184,11 +37184,11 @@ _0804805C:
 	pop {r0}
 	bx r0
 _08048060: .4byte 0x08CDBDE8
-	thumb_func_start sub_8048064
-sub_8048064:
+	thumb_func_start __20FieldPlayerCharacterii
+__20FieldPlayerCharacterii:
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0x0
-	bl init_fobj_803FEB8
+	bl __11FieldObjectii
 	movs r0, #0xCE
 	lsls r0, r0, #0x02
 	adds r1, r4, r0
@@ -50754,8 +50754,8 @@ sub_804FB14:
 	str r1, [r0, #0x24]
 	bx lr
 	.byte 0x00, 0x00
-	thumb_func_start sub_804FB28
-sub_804FB28:
+	thumb_func_start __11FieldClass1i
+__11FieldClass1i:
 	movs r2, #0x07
 	ands r1, r2
 	ldrb r3, [r0, #0x00]

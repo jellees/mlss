@@ -468,7 +468,7 @@ _08022974:
 	bl _call_via_r3
 	ldrh r1, [r6, #0x00]
 	adds r0, r7, #0x0
-	bl make_field_objects_80267C0
+	bl make_field_objects_80267C0__12FieldManageri
 	ldr r4, [sp, #0x03C]
 	ldrb r1, [r4, #0x00]
 	movs r0, #0x02
