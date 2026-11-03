@@ -23,7 +23,7 @@ struct FieldStruct1 {
 struct FieldStruct2 {
     u8 pad_0[0x25C];
     struct FieldStruct1 field_25C[4];
-    u8 pad_27C[0x44];
+    u8 field_27C[0x44];
 };
 
 // Entries of FieldManager::field_134.
@@ -56,7 +56,10 @@ class FieldManager : public Process {
     FieldStruct2* field_1C;
     FieldBackup* field_20;
     void* field_24;
-    FieldObject* objects[42];
+    FieldObject* objects[32];
+    FieldObject* field_A8[8];
+    void* field_C8;
+    u16* field_CC;
     struct struc_3000388* field_D0;
     u8 pad_D4[0x10];
     u32 field_E4;
@@ -92,7 +95,8 @@ class FieldManager : public Process {
     u8 pad_FE[0xC];
     u8 field_10A;
     u8 field_10B;
-    u8 pad_10C[0x2];
+    u8 pad_10C;
+    u8 field_10D;
     u8 field_10E;
     u8 field_10F;
     u8 field_110;
@@ -249,6 +253,9 @@ class FieldManager : public Process {
     void sub_8025F28();
     int sub_80261C0(FieldObject* object);
     void sub_80262CC(int x, int y, int z, int height, int type, bool arg6, bool playSound);
+    void sub_802641C(int arg1, int arg2, int arg3, int arg4);
+    void sub_80264F4(u16 arg1);
+    void sub_80265EC();
 };
 
 extern "C" {

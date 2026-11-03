@@ -393,24 +393,26 @@ bool FieldManager::sub_8025D24(int type) {
     if (field_12A > 1) {
         switch (type) {
             case 0:
-                if ((field_D0->field_0 & 0x300) == 0 && (field_D0->field_2 & leader->field_368->field_4)) {
+                if ((field_D0->field_0 & 0x300) == 0
+                    && (field_D0->field_2 & leader->field_368->field_4)) {
                     return 1;
                 }
                 break;
             case 1:
-                if ((field_D0->field_0 & 0x300) == 0 && (field_D0->field_2 & follower->field_368->field_4)) {
+                if ((field_D0->field_0 & 0x300) == 0
+                    && (field_D0->field_2 & follower->field_368->field_4)) {
                     return 1;
                 }
                 break;
             case 2:
-                if ((field_D0->field_0 & follower->field_368->field_6) == 0 &&
-                    (field_D0->field_2 & leader->field_368->field_6)) {
+                if ((field_D0->field_0 & follower->field_368->field_6) == 0
+                    && (field_D0->field_2 & leader->field_368->field_6)) {
                     return 1;
                 }
                 break;
             case 3:
-                if ((field_D0->field_0 & leader->field_368->field_6) == 0 &&
-                    (field_D0->field_2 & follower->field_368->field_6)) {
+                if ((field_D0->field_0 & leader->field_368->field_6) == 0
+                    && (field_D0->field_2 & follower->field_368->field_6)) {
                     return 1;
                 }
                 break;
@@ -585,5 +587,94 @@ void FieldManager::sub_80262CC(int x, int y, int z, int height, int type, bool a
         if (playSound) {
             play_sfx_80195B4(byte_839F5B8[type], -1);
         }
+    }
+}
+
+// Only the order of two instructions differs: the original shifts arg3 before loading the table
+// address.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_802641C__12FieldManageriiii.s\"");
+#else
+void FieldManager::sub_802641C(int arg1, int arg2, int arg3, int arg4) {
+    u8* text = 0;
+    u8* dst;
+    u8* src;
+
+    if (arg2 >= 4 && arg2 <= 11) {
+        text = *stru_83BBDD0[arg3].field_C[gGameState.field_8C0];
+    } else if (arg2 > 11) {
+        text = *stru_83BCDC4[arg3].field_0[gGameState.field_8C0];
+    }
+    if (text != 0) {
+        sub_80F032C(evts);
+        dst = field_1C->field_27C;
+        src = off_839F5C8;
+        while (*src != 0) {
+            *dst++ = *src++;
+        }
+        while (*text != 0) {
+            text++;
+        }
+        text++;
+        while (*text != 0) {
+            *dst++ = *text++;
+        }
+        *dst++ = 0xFF;
+        *dst++ = 0x0C;
+        *dst++ = 0x1E;
+        *dst++ = 0xFF;
+        *dst++ = 0x0A;
+        *dst = 0;
+        field_FC_1 = arg4;
+        field_10A = 20;
+    }
+}
+#endif
+
+void FieldManager::sub_80264F4(u16 arg1) {
+    u8 buffer[4];
+    u16* entry;
+    int i;
+
+    field_CC = sub_80FB790(arg1, &field_10D);
+    entry = field_CC;
+
+    for (i = 0; i < field_10D; i++, entry++) {
+        sub_8021574(0, *entry, 0, 0, 0, buffer, -1);
+    }
+
+    if (field_246_2 == 4) {
+        sub_8021574(0, 0x1003, 0, 0, 0, buffer, 12);
+    } else if (field_246_2 == 1) {
+        sub_8021574(0, 0x1004, 0, 0, 0, buffer, 12);
+    }
+
+    sub_8021574(0, 0x8003, 0, 0, 0, buffer, 13);
+    sub_8021574(0, 0x8000, 0, 0, 0, buffer, 14);
+    sub_8021574(0, 0x8001, 0, 0, 0, buffer, 15);
+}
+
+void FieldManager::sub_80265EC() {
+    FieldObject* follower;
+    int i;
+
+    for (i = 0; i < 4; i++) {
+        field_1C->field_25C[i].sprite = sub_8020DD0(0, 0x8009, 1, -1, -1, -1, -1);
+        sub_801E150(field_1C->field_25C[i].sprite, 0, -1, 0, 0);
+    }
+
+    objects[luigiLeads]->method2(field_C8, field_CC, field_314);
+
+    follower = objects[luigiLeads ^ 1];
+    if (follower != 0) {
+        follower->method2(field_C8, field_CC, field_314);
+    }
+
+    for (i = 2; i < field_10B; i++) {
+        objects[i]->method2(field_C8, field_CC, field_314);
+    }
+
+    for (i = 0; i < 8; i++) {
+        sub_804DFE8(field_A8[i]);
     }
 }

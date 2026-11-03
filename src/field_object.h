@@ -33,7 +33,7 @@ public:
     // The vtable pointer follows at 0x338.
 
     virtual void method1();
-    virtual void method2();
+    virtual void method2(void* arg1, u16* arg2, void* arg3);
     virtual void method3();
     virtual void method4();
     virtual void method5();
@@ -66,6 +66,7 @@ void sub_804761C(FieldObject*, int);
 void sub_80503CC(FieldObject*);
 void sub_80465D8(FieldObject*);
 void sub_804034C(FieldObject*);
+void sub_804DFE8(FieldObject*);
 }
 
 #endif

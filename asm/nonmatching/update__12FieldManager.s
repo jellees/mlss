@@ -1129,7 +1129,7 @@ _08022F8C:
 	adds r0, r7, r6
 	ldrh r1, [r0, #0x00]
 	adds r0, r7, #0x0
-	bl sub_80264F4
+	bl sub_80264F4__12FieldManagerUs
 	movs r0, #0x0A
 	strb r0, [r7, #0x00]
 	bl _08023DBC
@@ -1139,7 +1139,7 @@ _08022FA2:
 	adds r0, r7, r1
 	ldrh r1, [r0, #0x00]
 	adds r0, r7, #0x0
-	bl sub_80265EC
+	bl sub_80265EC__12FieldManager
 	bl sub_8020A78
 	movs r0, #0x0B
 	strb r0, [r7, #0x00]

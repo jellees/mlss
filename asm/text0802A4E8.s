@@ -13923,7 +13923,7 @@ _08033D50:
 	movs r1, #0x01
 	ldr r2, [sp, #0x010]
 	adds r3, r7, #0x0
-	bl sub_802641C
+	bl sub_802641C__12FieldManageriiii
 	mov r0, r9
 	cmp r0, #0x00
 	beq _08033DAC
