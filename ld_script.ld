@@ -32,7 +32,7 @@ SECTIONS
         asm/text0802A4E8.o(.text);
         asm/text0803EA00.o(.text);
         asm/field_object.o(.text);
-        asm/text08048064.o(.text);
+        asm/field_player_character.o(.text);
         asm/text0804FE68.o(.text);
         asm/text080508A8.o(.text);
         src/system_screens.o(.text);

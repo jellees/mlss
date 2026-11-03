@@ -76,26 +76,6 @@ public:
     virtual void method19();
 };
 
-struct FieldStruct4 {
-    u8 pad_0[0x4];
-    u16 field_4;
-    u16 field_6;
-    u8 pad_8[0x10];
-};
-
-// "FPC" (Field Player Character): Mario and Luigi (FieldManager::objects[0] / [1], and leader / follower).
-class FieldPlayerCharacter : public FieldObject {
-public:
-    u8 pad_33C[0x16];
-    u8 field_352_0 : 7;
-    u8 field_352_7 : 1;
-    u8 pad_353[0x15];
-    struct FieldStruct4* field_368;
-    u8 pad_36C[0x20];
-
-    FieldPlayerCharacter(int room, int index);
-};
-
 // "FMON"
 class FieldObjectSubclass1 : public FieldObject {
 public:
@@ -119,21 +99,12 @@ public:
     FieldObjectSubclass3(int room, int index);
 };
 
-// "FPSB" (FieldManager::field_A8)
-class FieldClass1 {
-public:
-    u8 pad_0[0x4C];
-
-    FieldClass1(int index);
-};
-
 extern "C" {
 void sub_804761C(FieldObject*, int);
 void sub_80503CC(FieldObject*);
 void sub_80465D8(FieldObject*);
 void sub_804034C(FieldObject*);
-void sub_804DFE8(FieldClass1*);
-void sub_8047EFC(FieldPlayerCharacter*, int, int, int, int);
+void sub_8047EFC(FieldObject*, int, int, int, int);
 }
 
 #endif

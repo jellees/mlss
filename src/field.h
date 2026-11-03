@@ -4,6 +4,7 @@
 #include "process.h"
 #include "asm_processes.h"
 #include "field_object.h"
+#include "field_player_character.h"
 
 // Handle returned by bevs_process_init_80F048C and evts_process_init_80EF3FC.
 struct EventScriptProcess {
