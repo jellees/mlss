@@ -719,15 +719,10 @@ u8 LoadMenu::sub_8126520() {
 }
 #endif
 
-// Regalloc differs in C++ (four spilled locals land in different stack slots); the C version
-// matched. The include is agbcc's output for that C version.
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm(".include \"asm/nonmatching/sub_8126C3C.s\"");
-#else
 void LoadMenu::sub_8126C3C() {
     s32 arrowX[4] = { 0x70, 0xE8, 0x58, 0xE0 };
     s32 arrowY[4] = { 0x68, 0x88, 0x68, 0x50 };
+    int index;
 
     if (this->field_F2 == 0) {
         sub_8021574(5, 0x6003, 0, 0, 0, this->field_4C, -1);
@@ -770,44 +765,45 @@ void LoadMenu::sub_8126C3C() {
 
         for (slot = 0; slot < 3; slot++) {
             for (i = 0; i < 2; i++) {
+                index = slot * 2 + i;
                 if (this->entries[slot].items[i].id != 0
                     && (this->entries[slot].field_18 == 2 || this->entries[slot].field_18 == i)) {
-                    this->sprites[slot * 2 + i] =
+                    this->sprites[index] =
                         sub_8020DD0(0, this->entries[slot].items[i].id, 1, -1, -1, -1, -1);
-                    sub_801E150(this->sprites[slot * 2 + i], this->entries[slot].items[i].field_2, -1,
+                    sub_801E150(this->sprites[index], this->entries[slot].items[i].field_2, -1,
                                 0, 0);
-                    sub_801E150(this->sprites[slot * 2 + i], this->entries[slot].items[i].field_2,
+                    sub_801E150(this->sprites[index], this->entries[slot].items[i].field_2,
                                 this->entries[slot].items[i].field_3, 0, 0);
-                    sprite_show_8020CBC(this->sprites[slot * 2 + i]);
-                    this->sprites[slot * 2 + i]->xPosition = 0xBC - i * 40;
-                    this->sprites[slot * 2 + i]->yPosition = slot != 0 ? 0xB4 : 0x68;
-                    this->sprites[slot * 2 + i]->field_E = 0xEFFF;
-                    this->sprites[slot * 2 + i]->field_1F_0 = 3;
-                    this->sprites[slot * 2 + i]->field_1F_2 = 3;
-                    this->sprites[slot * 2 + i]->field_1F_4 = 3;
-                    this->sprites[slot * 2 + i]->field_1F_6 = 3;
-                    this->sprites[slot * 2 + i]->field_10_1 = 0;
-                    this->sprites[slot * 2 + i]->field_29_1 = 0;
-                    this->sprites[slot * 2 + i]->field_29_5 = 0;
-                    this->sprites[slot * 2 + i]->field_12_4 = 1;
-                    this->sprites[slot * 2 + i]->field_12_1 = 1;
+                    sprite_show_8020CBC(this->sprites[index]);
+                    this->sprites[index]->xPosition = 0xBC - i * 40;
+                    this->sprites[index]->yPosition = slot != 0 ? 0xB4 : 0x68;
+                    this->sprites[index]->field_E = 0xEFFF;
+                    this->sprites[index]->field_1F_0 = 3;
+                    this->sprites[index]->field_1F_2 = 3;
+                    this->sprites[index]->field_1F_4 = 3;
+                    this->sprites[index]->field_1F_6 = 3;
+                    this->sprites[index]->field_10_1 = 0;
+                    this->sprites[index]->field_29_1 = 0;
+                    this->sprites[index]->field_29_5 = 0;
+                    this->sprites[index]->field_12_4 = 1;
+                    this->sprites[index]->field_12_1 = 1;
                 } else if ((this->field_F1 >> slot) & 1) {
                     sub_8021574(5, 0x6002, 0, 0, 0, this->field_4C, -1);
-                    this->sprites[slot * 2 + i] = sub_8020DD0(5, 0x6006, 1, -1, -1, -1, -1);
-                    sub_801E150(this->sprites[slot * 2 + i], i, -1, 0, 0);
-                    sprite_show_8020CBC(this->sprites[slot * 2 + i]);
-                    this->sprites[slot * 2 + i]->xPosition = 0xBC - i * 40;
-                    this->sprites[slot * 2 + i]->yPosition = slot != 0 ? 0xB4 : 0x68;
-                    this->sprites[slot * 2 + i]->field_E = 0xEFFF;
-                    this->sprites[slot * 2 + i]->field_1F_0 = 3;
-                    this->sprites[slot * 2 + i]->field_1F_2 = 3;
-                    this->sprites[slot * 2 + i]->field_1F_4 = 3;
-                    this->sprites[slot * 2 + i]->field_1F_6 = 3;
-                    this->sprites[slot * 2 + i]->field_10_1 = 0;
-                    this->sprites[slot * 2 + i]->field_29_1 = 0;
-                    this->sprites[slot * 2 + i]->field_29_5 = 0;
+                    this->sprites[index] = sub_8020DD0(5, 0x6006, 1, -1, -1, -1, -1);
+                    sub_801E150(this->sprites[index], i, -1, 0, 0);
+                    sprite_show_8020CBC(this->sprites[index]);
+                    this->sprites[index]->xPosition = 0xBC - i * 40;
+                    this->sprites[index]->yPosition = slot != 0 ? 0xB4 : 0x68;
+                    this->sprites[index]->field_E = 0xEFFF;
+                    this->sprites[index]->field_1F_0 = 3;
+                    this->sprites[index]->field_1F_2 = 3;
+                    this->sprites[index]->field_1F_4 = 3;
+                    this->sprites[index]->field_1F_6 = 3;
+                    this->sprites[index]->field_10_1 = 0;
+                    this->sprites[index]->field_29_1 = 0;
+                    this->sprites[index]->field_29_5 = 0;
                 } else {
-                    this->sprites[slot * 2 + i] = NULL;
+                    this->sprites[index] = NULL;
                 }
             }
         }
@@ -818,7 +814,6 @@ void LoadMenu::sub_8126C3C() {
         this->field_EC = 0;
     }
 }
-#endif
 
 void* LoadMenu::sub_81270E4(void* buf) {
     int slot;
