@@ -42,7 +42,7 @@ struct FieldBackup {
     u8 field_0_0 : 1;
     u8 field_0_1 : 1;
     u8 field_0_2 : 1;
-    u8 field_0_3 : 1;
+    u8 luigiLeads : 1;
     u8 field_0_4 : 1;
     u8 field_0_5 : 1;
     u8 field_0_6 : 1;
@@ -138,11 +138,12 @@ public:
     u8 pad_1F9;
     u16 field_1FA;
     Process* field_1FC;
-    FieldObjectSubclass1* field_200;
-    FieldObjectSubclass1* field_204;
+    // Set in update(): leader = objects[luigiLeads], follower = objects[luigiLeads ^ 1] (objects[0] is Mario).
+    FieldPlayerCharacter* leader;
+    FieldPlayerCharacter* follower;
     u32 field_208_0 : 1;
     u32 field_208_1 : 1;
-    u32 field_208_2 : 1;
+    u32 luigiLeads : 1;
     u32 field_208_3 : 1;
     u32 field_208_4 : 1;
     u32 field_208_5 : 1;

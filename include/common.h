@@ -177,7 +177,7 @@ struct SaveSlotData {
     u32 field_0_0 : 1;
     u32 field_0_1 : 1;
     u32 field_0_2 : 1;
-    u32 field_0_3 : 1;
+    u32 luigiLeads : 1;
     u32 field_0_4 : 1;
     u32 field_0_5 : 1;
     u32 field_0_6 : 3;
@@ -291,7 +291,7 @@ struct struc_15 {
 struct struc_16 {
     u8 pad0[0x208];
     u8 field_208_0 : 2;
-    u8 field_208_2 : 1;
+    u8 luigiLeads : 1;
     u8 field_208_3 : 1;
     u8 field_208_4 : 1;
     u8 field_208_5 : 1;

@@ -96,7 +96,7 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     fldm->field_28D = 0x6A;
     fldm->field_28E = 0x26;
     fldm->field_28F = 0x6A;
-    fldm->field_208_2 = 0;
+    fldm->luigiLeads = 0;
     fldm->field_208_3 = 1;
     fldm->field_209_0 = 0;
     fldm->field_208_4 = 0;
@@ -188,7 +188,7 @@ void FieldManager::sub_80254C0() {
     CpuCopy32(dword_3000FC0, field_20->data, 0x574);
     field_20->field_0_1 = field_208_0;
     field_20->field_0_2 = field_208_1;
-    field_20->field_0_3 = field_208_2;
+    field_20->luigiLeads = luigiLeads;
     field_20->field_0_4 = field_208_3;
     field_20->field_0_5 = field_208_4;
     field_20->field_0_6 = field_208_6;
@@ -200,7 +200,7 @@ void FieldManager::sub_8025584() {
     CpuCopy32(field_20->data, dword_3000FC0, 0x574);
     field_208_0 = field_20->field_0_1;
     field_208_1 = field_20->field_0_2;
-    field_208_2 = field_20->field_0_3;
+    luigiLeads = field_20->luigiLeads;
     field_208_3 = field_20->field_0_4;
     field_208_4 = field_20->field_0_5;
     field_208_6 = field_20->field_0_6;
@@ -222,10 +222,10 @@ void FieldManager::sub_802563C() {
             do {
                 if (field_209_0 == 0) {
                     if (field_246_2 != 3) {
-                        (*objects)->method12(&this->objects[field_208_2], 1, 0);
+                        (*objects)->method12(&this->objects[luigiLeads], 1, 0);
                     }
                     if (field_208_4 == 0 || field_246_2 == 3) {
-                        (*objects)->method12(&this->objects[field_208_2 ^ 1], 1, 0);
+                        (*objects)->method12(&this->objects[luigiLeads ^ 1], 1, 0);
                     }
                 }
                 (*objects++)->method12(&this->objects[2], field_10B - 2, 0);
@@ -393,24 +393,24 @@ bool FieldManager::sub_8025D24(int type) {
     if (field_12A > 1) {
         switch (type) {
             case 0:
-                if ((field_D0->field_0 & 0x300) == 0 && (field_D0->field_2 & field_200->field_368->field_4)) {
+                if ((field_D0->field_0 & 0x300) == 0 && (field_D0->field_2 & leader->field_368->field_4)) {
                     return 1;
                 }
                 break;
             case 1:
-                if ((field_D0->field_0 & 0x300) == 0 && (field_D0->field_2 & field_204->field_368->field_4)) {
+                if ((field_D0->field_0 & 0x300) == 0 && (field_D0->field_2 & follower->field_368->field_4)) {
                     return 1;
                 }
                 break;
             case 2:
-                if ((field_D0->field_0 & field_204->field_368->field_6) == 0 &&
-                    (field_D0->field_2 & field_200->field_368->field_6)) {
+                if ((field_D0->field_0 & follower->field_368->field_6) == 0 &&
+                    (field_D0->field_2 & leader->field_368->field_6)) {
                     return 1;
                 }
                 break;
             case 3:
-                if ((field_D0->field_0 & field_200->field_368->field_6) == 0 &&
-                    (field_D0->field_2 & field_204->field_368->field_6)) {
+                if ((field_D0->field_0 & leader->field_368->field_6) == 0 &&
+                    (field_D0->field_2 & follower->field_368->field_6)) {
                     return 1;
                 }
                 break;
@@ -466,7 +466,7 @@ bool FieldManager::sub_8025E94() {
 }
 
 // https://decomp.me/scratch/TODO
-// Only register allocation differs. The original masks field_204->field_24_0 with an extra `& 7` (the 7
+// Only register allocation differs. The original masks follower->field_24_0 with an extra `& 7` (the 7
 // lives in a register from the first player block), but an explicit `& 7` adds a stack slot.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8025F28__12FieldManager.s\"");
@@ -479,7 +479,7 @@ void FieldManager::sub_8025F28() {
     data->field_0_0 = field_F8_6;
     data->field_0_1 = field_208_0;
     data->field_0_2 = field_208_1;
-    data->field_0_3 = field_208_2;
+    data->luigiLeads = luigiLeads;
     data->field_0_4 = field_208_3;
     data->field_0_5 = field_208_4;
     data->field_0_6 = field_26B_5;
@@ -489,22 +489,22 @@ void FieldManager::sub_8025F28() {
     data->field_0_19 = field_208_7;
     data->field_0_20 = word_3000D3C;
 
-    player = &data->field_4[field_208_2];
+    player = &data->field_4[luigiLeads];
     player->field_0 = field_124;
-    player->field_2_0 = field_200->field_24_0;
-    player->field_4 = field_200->field_C / 256;
-    player->field_6 = field_200->field_10 / 256;
-    player->field_8 = field_200->field_14 / 256;
-    player->field_A = field_200->field_18 / 256;
+    player->field_2_0 = leader->field_24_0;
+    player->field_4 = leader->field_C / 256;
+    player->field_6 = leader->field_10 / 256;
+    player->field_8 = leader->field_14 / 256;
+    player->field_A = leader->field_18 / 256;
 
-    player = &data->field_4[field_208_2 ^ 1];
+    player = &data->field_4[luigiLeads ^ 1];
     if (field_2D8_0 == 31) {
         player->field_0 = field_124;
-        player->field_2_0 = field_204->field_24_0;
-        player->field_4 = field_204->field_C / 256;
-        player->field_6 = field_204->field_10 / 256;
-        player->field_8 = field_204->field_14 / 256;
-        player->field_A = field_204->field_18 / 256;
+        player->field_2_0 = follower->field_24_0;
+        player->field_4 = follower->field_C / 256;
+        player->field_6 = follower->field_10 / 256;
+        player->field_8 = follower->field_14 / 256;
+        player->field_A = follower->field_18 / 256;
     } else {
         player->field_0 = field_2DA;
         player->field_2_0 = field_2D8_5;

@@ -54,8 +54,8 @@ struct FieldStruct4 {
     u16 field_6;
 };
 
-// The objects at FieldManager::field_200 / field_204.
-class FieldObjectSubclass1 : public FieldObject {
+// "FPC" (Field Player Character): Mario and Luigi (FieldManager::objects[0] / [1], and leader / follower).
+class FieldPlayerCharacter : public FieldObject {
 public:
     u8 pad_33C[0x2C];
     struct FieldStruct4* field_368;
