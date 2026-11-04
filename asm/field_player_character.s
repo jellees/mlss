@@ -1315,7 +1315,7 @@ _08049058:
 	movs r1, #0x01
 	adds r2, r4, #0x0
 	adds r3, r4, #0x0
-	bl sub_8040804__11FieldObjectUcii
+	bl sub_8040804__11FieldObjectbii
 _080490AC:
 	add sp, #0x010
 	pop {r4, r5, r6}
@@ -1562,7 +1562,7 @@ _0804927C:
 	adds r0, r5, #0x0
 	movs r1, #0x01
 	adds r2, r3, #0x0
-	bl sub_8040804__11FieldObjectUcii
+	bl sub_8040804__11FieldObjectbii
 _0804929C:
 	movs r1, #0x99
 	lsls r1, r1, #0x02
@@ -4380,7 +4380,7 @@ _0804A954:
 	cmp r0, #0x00
 	beq _0804A98C
 	adds r0, r7, #0x0
-	bl sub_8046A10
+	bl sub_8046A10__11FieldObject
 	b _0804AEC4
 	.byte 0x00, 0x00
 _0804A980: .4byte 0x0000020E
@@ -5239,9 +5239,9 @@ _0804AFD4:
 	cmp r0, #0x00
 	beq _0804B008
 	adds r0, r7, #0x0
-	bl sub_8046980
+	bl sub_8046980__11FieldObject
 	adds r0, r7, #0x0
-	bl sub_8046A10
+	bl sub_8046A10__11FieldObject
 _0804B008:
 	add sp, #0x084
 	pop {r3, r4, r5}
@@ -13938,7 +13938,7 @@ _0804FDC4:
 	strb r1, [r2, #0x00]
 	adds r0, r4, #0x0
 	adds r1, r7, #0x0
-	bl sub_8047804
+	bl sub_8047804__11FieldObjectUc
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
@@ -13997,7 +13997,7 @@ _0804FE38:
 	strb r1, [r2, #0x00]
 	adds r0, r4, #0x0
 	adds r1, r7, #0x0
-	bl sub_8047858
+	bl sub_8047858__11FieldObjectUc
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0

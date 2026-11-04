@@ -2939,10 +2939,10 @@ _0802842C: .4byte 0x000002DA
 _08028430:
 	mov r0, r8
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	mov r0, r8
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 _08028440:
 	ldr r3, _080284A0 @ =0x00000246
 	adds r0, r6, r3

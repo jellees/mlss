@@ -537,7 +537,7 @@ _08025A40:
 	beq _08025AAA
 	adds r0, r2, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r2, [r5, #0x00]
 	movs r3, #0x85
 	lsls r3, r3, #0x02

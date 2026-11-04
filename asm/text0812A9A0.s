@@ -16828,7 +16828,7 @@ _08136ADE:
 	lsls r1, r1, #0x1D
 	lsrs r1, r1, #0x1D
 	adds r0, r4, #0x0
-	bl sub_8047364
+	bl sub_8047364__11FieldObjectUc
 	ldr r0, _08136B20 @ =0x0813B1E9
 	b _08136B26
 	.byte 0x00, 0x00
@@ -16997,17 +16997,17 @@ sub_8136C3C:
 	lsrs r4, r4, #0x1F
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_8047364
+	bl sub_8047364__11FieldObjectUc
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl sub_8047258
+	bl sub_8047258__11FieldObjecti
 	adds r0, r5, #0x0
 	adds r0, #0x21
 	ldrb r1, [r0, #0x00]
 	adds r1, #0x04
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r7, #0x01
 	lsls r4, r4, #0x06
 	ldrb r1, [r5, #0x11]
@@ -17448,7 +17448,7 @@ sub_8136FB4:
 	cmp r0, #0x00
 	beq _081370B4
 	adds r0, r4, #0x0
-	bl sub_80473DC
+	bl sub_80473DC__11FieldObject
 	movs r0, #0xCC
 	lsls r0, r0, #0x01
 	adds r1, r4, r0
@@ -17479,10 +17479,10 @@ sub_8136FB4:
 	bne _08137050
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r1, [r4, #0x0C]
 	ldr r2, [r4, #0x10]
 	movs r0, #0x80
@@ -17525,10 +17525,10 @@ _08137050:
 	bne _081370AA
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r1, [r4, #0x0C]
 	ldr r2, [r4, #0x10]
 	movs r0, #0x80
@@ -18102,7 +18102,7 @@ _081374DC:
 	add r0, sp
 	ldrb r1, [r0, #0x00]
 	adds r0, r5, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 	movs r3, #0xB3
 	lsls r3, r3, #0x02
 	adds r2, r5, r3
@@ -21064,7 +21064,7 @@ _08138CAE:
 	cmp r1, r0
 	bne _08138CDC
 	adds r0, r2, #0x0
-	bl sub_8046980
+	bl sub_8046980__11FieldObject
 	ldrh r1, [r4, #0x00]
 	adds r0, r5, #0x0
 	eors r0, r1
@@ -21775,10 +21775,10 @@ sub_8139260:
 	bl sub_8138F64
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_8047364
+	bl sub_8047364__11FieldObjectUc
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_8047258
+	bl sub_8047258__11FieldObjecti
 	adds r0, r4, #0x0
 	adds r0, #0x24
 	ldrb r1, [r0, #0x00]
@@ -21787,10 +21787,10 @@ sub_8139260:
 	adds r1, #0x04
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r4, #0x0
 	movs r1, #0x10
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	movs r0, #0xCC
 	lsls r0, r0, #0x01
 	adds r4, r4, r0
@@ -21816,7 +21816,7 @@ sub_81392CC:
 	cmp r0, #0x00
 	beq _081392E8
 	adds r0, r3, #0x0
-	bl sub_80473DC
+	bl sub_80473DC__11FieldObject
 _081392E8:
 	ldr r0, [r4, #0x04]
 	str r0, [r4, #0x00]
@@ -22199,7 +22199,7 @@ _081395E4:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r4, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _081395FC:
 	ldr r0, _08139610 @ =0x00000242
 	adds r1, r4, r0
@@ -22319,7 +22319,7 @@ sub_81396D8:
 	cmp r0, #0x00
 	beq _081396F6
 	adds r0, r4, #0x0
-	bl sub_80473DC
+	bl sub_80473DC__11FieldObject
 _081396F6:
 	ldr r3, [r5, #0x04]
 	adds r0, r6, #0x0
@@ -25362,7 +25362,7 @@ sub_813AF94:
 	ldrb r1, [r1, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0x85
 	lsls r2, r2, #0x02
 	adds r5, r5, r2
@@ -27979,7 +27979,7 @@ _0813C9F0:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r4, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _0813CA08:
 	movs r2, #0xA4
 	lsls r2, r2, #0x01
@@ -28278,7 +28278,7 @@ _0813CC50:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r5, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _0813CC68:
 	movs r2, #0xA4
 	lsls r2, r2, #0x01
@@ -28590,7 +28590,7 @@ sub_813CE8C:
 	lsrs r2, r2, #0x1E
 	adds r0, r7, #0x0
 	movs r1, #0x08
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	mov r0, r10
 	lsls r4, r0, #0x01
 	movs r1, #0x84
@@ -28600,19 +28600,19 @@ sub_813CE8C:
 	movs r1, #0x00
 	ldsb r1, [r0, r1]
 	adds r0, r7, #0x0
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	ldr r3, [sp, #0x010]
 	adds r4, r3, r4
 	movs r0, #0x00
 	ldsh r1, [r4, r0]
 	adds r0, r7, #0x0
-	bl sub_804794C
+	bl sub_804794C__11FieldObjectUs
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r7, r1
@@ -28702,7 +28702,7 @@ _0813CFA8:
 	adds r1, #0x04
 	mov r0, r8
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0x85
 	lsls r2, r2, #0x02
 	add r2, r8
@@ -28794,10 +28794,10 @@ sub_813D048:
 	beq _0813D0BE
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -28815,7 +28815,7 @@ sub_813D048:
 	lsrs r1, r1, #0x1E
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xCC
 	lsls r0, r0, #0x01
 	b _0813D0DA
@@ -29318,10 +29318,10 @@ _0813D4BC: .4byte sub_813939C
 _0813D4C0:
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r5, r1
@@ -29339,7 +29339,7 @@ _0813D4C0:
 	lsrs r1, r1, #0x1E
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xA0
 	lsls r1, r1, #0x01
 	add r1, r9
@@ -29458,10 +29458,10 @@ sub_813D5B8:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0x83
 	lsls r1, r1, #0x02
 	adds r2, r4, r1
@@ -29484,7 +29484,7 @@ sub_813D5B8:
 	lsrs r1, r1, #0x1E
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xEB
 	lsls r1, r1, #0x01
 	adds r2, r5, r1
@@ -30081,7 +30081,7 @@ _0813DAC4:
 	adds r0, r6, #0x0
 	movs r1, #0x0C
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r3, #0x85
 	lsls r3, r3, #0x02
 	adds r2, r6, r3
@@ -30104,7 +30104,7 @@ _0813DAC4:
 	strb r0, [r2, #0x12]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
 	bl sub_8044630
@@ -30226,7 +30226,7 @@ _0813DCB0:
 	lsrs r1, r1, #0x1E
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -30305,7 +30305,7 @@ sub_813DD30:
 	adds r1, #0x04
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -30365,7 +30365,7 @@ _0813DDD0:
 	adds r1, #0x08
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldrb r1, [r5, #0x12]
 	movs r0, #0x07
 	negs r0, r0
@@ -30418,7 +30418,7 @@ sub_813DE14:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xE9
 	lsls r1, r1, #0x01
 	adds r0, r4, r1
@@ -30542,7 +30542,7 @@ sub_813DEE4:
 	strh r0, [r1, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r5, #0x0
 	adds r1, r4, #0x0
 	bl sub_813DFA4
@@ -31131,7 +31131,7 @@ _0813E414:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xBC
 	lsls r1, r1, #0x01
 	adds r0, r5, r1
@@ -31439,7 +31439,7 @@ sub_813E618:
 	ldrb r1, [r1, #0x00]
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	mov r0, r8
 	add r1, sp, #0x014
 	bl sub_80FBD44
@@ -31755,7 +31755,7 @@ _0813E8DE:
 	ldrb r1, [r0, #0x00]
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r0, r4, r2
@@ -32060,7 +32060,7 @@ _0813EB62:
 	lsrs r1, r1, #0x1E
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
 	adds r0, r7, r1
@@ -33300,7 +33300,7 @@ sub_813F6CC:
 	adds r1, #0x04
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r0, _0813F788 @ =0x0000033E
 	adds r2, r7, r0
 	ldrb r0, [r2, #0x00]
@@ -33441,7 +33441,7 @@ _0813F7CC:
 	ldrb r1, [r1, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r0, _0813F858 @ =0x08142C19
 	str r0, [r6, #0x00]
 	add sp, #0x014
@@ -33546,7 +33546,7 @@ _0813F8A6:
 	ldrb r1, [r1, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r0, r5, r2
@@ -33792,7 +33792,7 @@ _0813FAE8:
 	lsrs r1, r1, #0x18
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xB5
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -33863,10 +33863,10 @@ sub_813FB44:
 	bne _0813FB9C
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	b _0813FBD2
 	.byte 0x00, 0x00
 _0813FB98: .4byte 0x0000033E
@@ -33879,7 +33879,7 @@ _0813FB9C:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r1, _0813FBDC @ =0x0000020D
 	adds r2, r4, r1
 	ldrb r1, [r2, #0x00]
@@ -34146,7 +34146,7 @@ _0813FD98:
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	mov r0, r10
 	adds r1, r5, #0x0
 	ldr r2, [sp, #0x02C]
@@ -34651,7 +34651,7 @@ _081401D4:
 _081401D6:
 	adds r0, r5, #0x0
 	movs r2, #0x07
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -34938,10 +34938,10 @@ _081403F8:
 	strb r0, [r1, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x1
 	lsls r0, r0, #0x18
 	lsrs r6, r0, #0x18
@@ -35219,7 +35219,7 @@ _08140614:
 	strh r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r1, [r6, #0x0C]
 	ldr r2, [r6, #0x10]
 	ldr r3, [r6, #0x14]
@@ -35303,10 +35303,10 @@ _081406E8:
 	strh r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r1, [r6, #0x0C]
 	ldr r2, [r6, #0x10]
 	ldr r3, [r6, #0x14]
@@ -35439,7 +35439,7 @@ sub_81407A0:
 	adds r1, #0x04
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r0, _0814083C @ =0x08140841
 	str r0, [r6, #0x00]
 _08140828:
@@ -35919,10 +35919,10 @@ _08140C90:
 	str r4, [r5, #0x00]
 	mov r0, r8
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	mov r0, r8
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	str r4, [r5, #0x00]
 	ldr r3, _08140DBC @ =0x0000020D
 	add r3, r8
@@ -36093,7 +36093,7 @@ _08140DD4:
 	adds r1, r0, #0x0
 	mov r0, r10
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r3, [sp, #0x040]
 	movs r4, #0xBC
 	lsls r4, r4, #0x01
@@ -36593,7 +36593,7 @@ _08141318:
 	adds r1, #0x04
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xBF
 	lsls r0, r0, #0x01
 	adds r2, r6, r0
@@ -36726,7 +36726,7 @@ _08141408:
 	adds r1, r7, #0x4
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _0814143E:
 	movs r0, #0xBD
 	lsls r0, r0, #0x01
@@ -37124,7 +37124,7 @@ _0814173C:
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08141772:
 	bl sub_8199F30
 	adds r1, r0, #0x0
@@ -37458,7 +37458,7 @@ _08141A10:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xBF
 	lsls r2, r2, #0x01
 	add r2, r9
@@ -37598,7 +37598,7 @@ _08141B30:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xBC
 	lsls r0, r0, #0x01
 	add r0, r9
@@ -37829,7 +37829,7 @@ _08141D00:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xBC
 	lsls r1, r1, #0x01
 	adds r0, r5, r1
@@ -38036,7 +38036,7 @@ _08141E68:
 	adds r1, r1, r0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r0, _08141EE0 @ =0x08141EE5
 	ldr r1, [sp, #0x018]
 	str r0, [r1, #0x00]
@@ -38209,7 +38209,7 @@ _08141FCE:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xC8
 	lsls r2, r2, #0x01
 	adds r1, r5, r2
@@ -38297,7 +38297,7 @@ _0814205C:
 	adds r1, #0x04
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldrb r0, [r6, #0x00]
 	movs r1, #0x10
 	orrs r0, r1
@@ -38458,7 +38458,7 @@ _081421EC:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xBC
 	lsls r2, r2, #0x01
 	adds r0, r6, r2
@@ -38598,7 +38598,7 @@ _08142308:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xBC
 	lsls r0, r0, #0x01
 	add r0, r9
@@ -38755,7 +38755,7 @@ sub_8142400:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	mov r0, sp
 	adds r1, r5, #0x0
 	movs r2, #0x22
@@ -38905,7 +38905,7 @@ _081425B8:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xBC
 	lsls r1, r1, #0x01
 	adds r0, r5, r1
@@ -38992,9 +38992,9 @@ sub_8142658:
 	adds r0, r4, #0x0
 	movs r1, #0x02
 	movs r2, #0x00
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	movs r0, #0xEB
 	lsls r0, r0, #0x01
 	adds r2, r4, r0
@@ -39522,7 +39522,7 @@ sub_8142A70:
 	strh r5, [r0, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r6, r0
@@ -40060,7 +40060,7 @@ sub_8142EFC:
 	cmp r0, #0x00
 	bne _08142F4E
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _08142F68
@@ -40073,9 +40073,9 @@ sub_8142EFC:
 	adds r0, r4, #0x0
 	movs r1, #0x02
 	movs r2, #0x00
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x01
 	orrs r0, r1
@@ -40083,7 +40083,7 @@ sub_8142EFC:
 	b _08142F68
 _08142F4E:
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _08142F68
@@ -40589,7 +40589,7 @@ sub_8143314:
 	adds r0, r6, #0x0
 	movs r1, #0x04
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r2, [r4, #0x00]
 	adds r0, r5, #0x0
 	adds r1, r6, #0x0
@@ -41082,7 +41082,7 @@ _08143748:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r5, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _08143760:
 	movs r2, #0xA4
 	lsls r2, r2, #0x01
@@ -41309,10 +41309,10 @@ sub_8143894:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r0, #0xCC
 	lsls r0, r0, #0x01
 	adds r1, r4, r0
@@ -41488,7 +41488,7 @@ _08143A48:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xBC
 	lsls r0, r0, #0x01
 	add r0, r10
@@ -41766,7 +41766,7 @@ _08143CB8:
 	adds r0, #0x23
 	ldrb r2, [r0, #0x00]
 	adds r0, r4, #0x0
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08143CF8:
 	add sp, #0x004
 	pop {r4, r5, r6, r7}
@@ -41927,7 +41927,7 @@ _08143E20:
 	strb r0, [r2, #0x11]
 _08143E30:
 	adds r0, r7, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r7, r1
@@ -42157,13 +42157,13 @@ _08143F9E:
 	orrs r0, r1
 	strb r0, [r3, #0x11]
 	mov r0, r8
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	mov r0, r8
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	mov r0, r8
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _0814401C @ =0x08144021
 	ldr r1, [sp, #0x00C]
 	str r0, [r1, #0x00]
@@ -42400,10 +42400,10 @@ _081441C8:
 	strb r0, [r2, #0x00]
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r1, [sp, #0x004]
 	movs r2, #0xBC
 	lsls r2, r2, #0x01
@@ -42661,10 +42661,10 @@ sub_81443D0:
 	adds r0, r4, #0x0
 	movs r1, #0x06
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r4, #0x0
 	movs r1, #0x10
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -42698,7 +42698,7 @@ sub_8144428:
 	adds r0, r4, #0x0
 	movs r1, #0x05
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -42912,7 +42912,7 @@ _081445DC:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r5, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _081445F4:
 	movs r4, #0xA4
 	lsls r4, r4, #0x01
@@ -43154,10 +43154,10 @@ _08144782:
 	adds r1, #0x04
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r6, #0x0
 	movs r1, #0x10
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	movs r1, #0xA0
 	lsls r1, r1, #0x01
 	add r1, r8
@@ -43402,7 +43402,7 @@ _08144986:
 	adds r1, #0x08
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldrh r0, [r4, #0x00]
 	adds r0, #0x01
 	strh r0, [r4, #0x00]
@@ -43472,21 +43472,21 @@ _081449FE:
 	adds r1, #0x0C
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r6, #0x0
 	movs r1, #0x0C
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	lsls r4, r4, #0x10
 	asrs r4, r4, #0x10
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
-	bl sub_804794C
+	bl sub_804794C__11FieldObjectUs
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r6, r1
@@ -43669,10 +43669,10 @@ _08144BD2:
 	beq _08144C2C
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r5, r1
@@ -44050,7 +44050,7 @@ _08144ECE:
 	adds r1, r0, #0x0
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r0, r6, r2
@@ -44204,7 +44204,7 @@ sub_8144FF0:
 	movs r1, #0x04
 	strb r1, [r0, #0x00]
 	adds r0, r6, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	ldr r0, [r4, #0x00]
 	adds r0, #0x20
 	movs r1, #0x10
@@ -44476,7 +44476,7 @@ _0814525E:
 	cmp r6, r0
 	beq _0814527A
 	mov r0, r9
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	b _0814527A
 _08145276:
 	ldr r0, _0814528C @ =0x08145291
@@ -44584,7 +44584,7 @@ _08145324:
 	orrs r0, r1
 	strb r0, [r2, #0x12]
 	adds r0, r4, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	ldr r0, _0814534C @ =0x08145351
 	str r0, [r5, #0x00]
 	pop {r4, r5}
@@ -44753,7 +44753,7 @@ _08145480:
 	strb r1, [r0, #0x00]
 _08145482:
 	adds r0, r5, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
@@ -45074,7 +45074,7 @@ sub_814569C:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	add r0, sp, #0x010
 	adds r1, r5, #0x0
 	movs r2, #0x22
@@ -45437,10 +45437,10 @@ _081459AC:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r0, #0x00
 	str r0, [r5, #0x00]
 	b _081459F6
@@ -45859,7 +45859,7 @@ _08145D04:
 	beq _08145D3A
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08145D3A:
 	bl sub_8199F30
 	adds r1, r0, #0x0
@@ -46084,7 +46084,7 @@ _08145ED4:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x1E
 _08145F18:
 	strh r0, [r5, #0x00]
@@ -46179,7 +46179,7 @@ _08145FAC:
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08145FE2:
 	movs r0, #0xBF
 	lsls r0, r0, #0x01
@@ -46294,7 +46294,7 @@ sub_814608C:
 	beq _081460E2
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r2, #0xB7
 	lsls r2, r2, #0x02
 	adds r0, r4, r2
@@ -46308,7 +46308,7 @@ sub_814608C:
 _081460E2:
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -46369,7 +46369,7 @@ _08146146:
 	bne _08146162
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, [r6, #0x08]
 	str r0, [r6, #0x00]
 _08146162:
@@ -46408,7 +46408,7 @@ sub_814616C:
 	strb r0, [r2, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xE8
 	lsls r1, r1, #0x01
 	adds r0, r6, r1
@@ -46818,7 +46818,7 @@ sub_8146498:
 	beq _081464EE
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r2, #0xB7
 	lsls r2, r2, #0x02
 	adds r0, r4, r2
@@ -46832,7 +46832,7 @@ sub_8146498:
 _081464EE:
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -46893,7 +46893,7 @@ _08146552:
 	bne _0814659E
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -47025,7 +47025,7 @@ _08146664:
 	adds r1, #0x04
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xBC
 	lsls r2, r2, #0x01
 	adds r0, r6, r2
@@ -47110,10 +47110,10 @@ _081466F2:
 	bl sub_8146DC8
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	cmp r6, #0x01
 	beq _08146796
 	cmp r6, #0x01
@@ -47139,10 +47139,10 @@ _08146752:
 	blt _08146780
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _0814677C @ =0x08146005
 	mov r2, r10
 	str r0, [r2, #0x00]
@@ -47172,10 +47172,10 @@ _08146796:
 	bgt _081467BC
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _081467B8 @ =0x08146005
 	b _08146ADE
 _081467B8: .4byte sub_8146004
@@ -47202,10 +47202,10 @@ _081467D4:
 	bgt _081467FC
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _081467F8 @ =0x08146005
 	b _08146ADE
 	.byte 0x00, 0x00
@@ -47236,10 +47236,10 @@ _0814681A:
 	blt _08146844
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08146840 @ =0x08146005
 	b _08146ADE
 	.byte 0x00, 0x00
@@ -47266,7 +47266,7 @@ _08146864:
 	adds r1, #0x08
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r5, r1
@@ -47645,7 +47645,7 @@ sub_8146AFC:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldrb r0, [r6, #0x00]
 	movs r1, #0x10
 	orrs r0, r1
@@ -47718,13 +47718,13 @@ _08146BCE:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xBD
 	lsls r1, r1, #0x01
 	add r1, r8
@@ -47807,7 +47807,7 @@ sub_8146C78:
 	beq _08146CD4
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -47823,7 +47823,7 @@ _08146CD0: .4byte 0x00000242
 _08146CD4:
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -47885,7 +47885,7 @@ _08146D3A:
 	bne _08146DB6
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -48381,7 +48381,7 @@ sub_81470F8:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08147190 @ =0x0000020F
 	adds r2, r4, r0
 	ldrb r1, [r2, #0x00]
@@ -48688,10 +48688,10 @@ _0814738A:
 	strb r0, [r1, #0x00]
 	ldr r0, [r4, #0x00]
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r0, [r4, #0x00]
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r2, [r4, #0x00]
 	movs r3, #0x85
 	lsls r3, r3, #0x02
@@ -48877,7 +48877,7 @@ _08147528:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08147584 @ =0x0000020F
 	adds r2, r5, r0
 	ldrb r0, [r2, #0x00]
@@ -49533,7 +49533,7 @@ _08147A44:
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08147A7A:
 	movs r3, #0x85
 	lsls r3, r3, #0x02
@@ -49757,7 +49757,7 @@ _08147BE0:
 	ldrb r1, [r1, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -49880,7 +49880,7 @@ _08147CDA:
 	adds r1, #0x10
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -49917,7 +49917,7 @@ _08147D74:
 	adds r1, r6, r2
 	strh r0, [r1, #0x00]
 	adds r0, r5, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -49978,7 +49978,7 @@ sub_8147DC4:
 	adds r1, #0x04
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r7, r0
@@ -50092,7 +50092,7 @@ _08147EB2:
 	adds r1, #0x08
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r2, [r5, #0x00]
 	ldrb r1, [r2, #0x12]
 	movs r0, #0x07
@@ -50225,7 +50225,7 @@ _08147FD0:
 	adds r1, #0x0C
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -50398,10 +50398,10 @@ _08148126:
 _08148148:
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -50491,7 +50491,7 @@ _08148148:
 	adds r1, #0x10
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r7, r0
@@ -51009,7 +51009,7 @@ _081485FA:
 	bne _08148626
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r3, [sp, #0x00C]
 	ldr r0, _081486EC @ =0x0000020D
 	adds r2, r3, r0
@@ -51332,10 +51332,10 @@ _0814886E:
 	ble _081488B4
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r4, [sp, #0x000]
 	ldr r0, _081488E8 @ =0x0000020D
 	adds r2, r4, r0
@@ -51879,10 +51879,10 @@ sub_8148CF8:
 	bls _08148D32
 	ldr r0, [r4, #0x00]
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r0, [r4, #0x00]
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08148D3C @ =0x08147441
 	str r0, [r5, #0x00]
 _08148D32:
@@ -51946,10 +51946,10 @@ sub_8148DA4:
 	add sp, #-0x004
 	adds r4, r0, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08148E1C @ =0x0000020D
 	adds r2, r4, r0
 	ldrb r1, [r2, #0x00]
@@ -52039,7 +52039,7 @@ sub_8148E2C:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r1, _08148E90 @ =0x0000020F
 	adds r2, r4, r1
 	ldrb r1, [r2, #0x00]
@@ -52153,7 +52153,7 @@ _08148F12:
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	movs r2, #0x02
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r3, r5, r0
@@ -52504,7 +52504,7 @@ _08149172:
 	mov r0, r8
 	movs r1, #0x00
 	movs r2, #0x02
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r3, #0x85
 	lsls r3, r3, #0x02
 	add r3, r8
@@ -53529,7 +53529,7 @@ sub_8149B80:
 	strh r0, [r6, #0x00]
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r0, #0xA5
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
@@ -56405,7 +56405,7 @@ _0814B352:
 _0814B354:
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	b _0814B436
 _0814B35E:
 	cmp r2, #0x0A
@@ -56775,7 +56775,7 @@ sub_814B67C:
 	strh r0, [r1, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _0814B6C4 @ =0x0000020E
 	adds r4, r4, r0
 	ldrb r1, [r4, #0x00]
@@ -57023,7 +57023,7 @@ sub_814B86C:
 	strb r0, [r2, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xEE
 	lsls r1, r1, #0x01
 	adds r0, r6, r1
@@ -58071,7 +58071,7 @@ sub_814C0CC:
 	ldrb r1, [r1, #0x00]
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r6, r0
@@ -58416,7 +58416,7 @@ _0814C380:
 	ldrb r1, [r1, #0x00]
 	mov r0, r8
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0x85
 	lsls r2, r2, #0x02
 	add r2, r8
@@ -58670,7 +58670,7 @@ _0814C5F6:
 	ldr r4, [r0, #0x28]
 	adds r0, r5, #0x0
 	movs r1, #0x28
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	ldr r1, [r4, #0x0C]
 	ldr r0, [r5, #0x0C]
 	subs r2, r1, r0
@@ -58733,7 +58733,7 @@ _0814C65E:
 	adds r1, #0x04
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -58970,7 +58970,7 @@ _0814C82A:
 	adds r1, #0x08
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x02
@@ -59072,7 +59072,7 @@ _0814C902:
 	adds r1, #0x0C
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x0C
 	strh r0, [r7, #0x00]
 	b _0814C9D6
@@ -59275,10 +59275,10 @@ _0814CAA8:
 _0814CABA:
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r1, [r7, #0x0C]
 	ldr r2, [r7, #0x10]
 	cmp r4, #0x01
@@ -59475,10 +59475,10 @@ _0814CC3C:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, [r6, #0x04]
 	str r0, [r6, #0x00]
 _0814CC5C:
@@ -59517,10 +59517,10 @@ sub_814CC84:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
 	adds r0, r6, r1
@@ -59751,7 +59751,7 @@ _0814CE34:
 _0814CE88:
 	mov r0, r12
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x02
@@ -59940,7 +59940,7 @@ _0814D006:
 	str r0, [r6, #0x18]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x02
@@ -60019,7 +60019,7 @@ sub_814D068:
 	str r0, [r4, #0x18]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0xCE
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -60072,7 +60072,7 @@ _0814D0D0:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, [r7, #0x08]
 	str r0, [r7, #0x00]
 _0814D126:
@@ -60127,7 +60127,7 @@ sub_814D1F8:
 	beq _0814D288
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -60149,15 +60149,15 @@ sub_814D1F8:
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r5, #0x0
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	str r4, [sp, #0x000]
 	adds r0, r6, #0x0
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r5, #0x0
-	bl sub_8046B30
+	bl sub_8046B30__11FieldObjectiiUsUs
 	adds r0, r6, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r0, _0814D294 @ =0x0814D299
 	str r0, [r7, #0x00]
 _0814D288:
@@ -60173,12 +60173,12 @@ sub_814D298:
 	adds r4, r1, #0x0
 	adds r6, r2, #0x0
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0814D2BE
 	adds r0, r4, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	movs r0, #0xEB
 	lsls r0, r0, #0x01
 	adds r2, r4, r0
@@ -60188,7 +60188,7 @@ sub_814D298:
 	strb r0, [r2, #0x00]
 _0814D2BE:
 	adds r0, r4, #0x0
-	bl sub_8047A1C
+	bl sub_8047A1C__11FieldObject
 	lsls r0, r0, #0x18
 	movs r1, #0xEB
 	lsls r1, r1, #0x01
@@ -60196,7 +60196,7 @@ _0814D2BE:
 	cmp r0, #0x00
 	bne _0814D2DE
 	adds r0, r4, #0x0
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x08
 	orrs r0, r1
@@ -60728,7 +60728,7 @@ _0814D6E6:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r1, r5, r0
@@ -61201,7 +61201,7 @@ _0814DAA4:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -62489,10 +62489,10 @@ _0814E698:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -63056,7 +63056,7 @@ _0814EC0C:
 	lsrs r1, r1, #0x1E
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	bl sub_815033C
@@ -63085,7 +63085,7 @@ sub_814EC48:
 	bne _0814EC9C
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -63099,21 +63099,21 @@ sub_814EC48:
 	adds r0, r4, #0x0
 	movs r1, #0x02
 	movs r2, #0x00
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x04
 	orrs r0, r1
 	strb r0, [r5, #0x00]
 _0814EC9C:
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0814ECD2
 	adds r0, r4, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -63168,24 +63168,24 @@ sub_814ECE0:
 	movs r1, #0x02
 	movs r2, #0x00
 	movs r3, #0x10
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x04
 	orrs r0, r1
 	strb r0, [r5, #0x00]
 _0814ED2C:
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0814ED9E
 	adds r0, r4, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r2, #0xEE
 	lsls r2, r2, #0x01
 	adds r0, r4, r2
@@ -64065,19 +64065,19 @@ _0814F3D4:
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r6, #0x0
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	ldr r0, [r7, #0x00]
 	str r4, [sp, #0x000]
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r6, #0x0
-	bl sub_8046B30
+	bl sub_8046B30__11FieldObjectiiUsUs
 	ldr r0, [r7, #0x00]
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r0, [r7, #0x00]
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	ldr r0, [r7, #0x00]
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	ldr r2, [r7, #0x00]
 	movs r3, #0x85
 	lsls r3, r3, #0x02
@@ -64167,19 +64167,19 @@ _0814F48C:
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r4, #0x0
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	ldr r0, [r7, #0x00]
 	str r5, [sp, #0x000]
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r4, #0x0
-	bl sub_8046B30
+	bl sub_8046B30__11FieldObjectiiUsUs
 	ldr r0, [r7, #0x00]
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r0, [r7, #0x00]
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	ldr r0, [r7, #0x00]
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -64327,7 +64327,7 @@ _0814F614:
 	movs r1, #0x02
 	movs r2, #0x00
 	movs r3, #0x05
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	movs r0, #0x03
 	bl sub_8150244
 	lsls r0, r0, #0x10
@@ -64341,7 +64341,7 @@ _0814F614:
 	movs r1, #0x02
 	movs r2, #0x00
 	movs r3, #0x05
-	bl sub_8046B30
+	bl sub_8046B30__11FieldObjectiiUsUs
 	movs r1, #0xE8
 	lsls r1, r1, #0x01
 	add r1, r9
@@ -64731,7 +64731,7 @@ _0814F958:
 	adds r0, r0, r2
 	str r0, [r1, #0x18]
 	ldr r0, [r4, #0x00]
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r1, [r4, #0x00]
 	movs r5, #0xA5
 	lsls r5, r5, #0x02
@@ -64742,7 +64742,7 @@ _0814F958:
 	cmp r0, #0xA0
 	bgt _0814F9BE
 	adds r0, r1, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	ldr r0, [sp, #0x01C]
 	movs r1, #0xBF
 	lsls r1, r1, #0x01
@@ -64760,7 +64760,7 @@ _0814F9BE:
 	cmp r0, #0xA0
 	bgt _0814F9E2
 	adds r0, r1, #0x0
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	ldr r3, [sp, #0x01C]
 	movs r6, #0xBF
 	lsls r6, r6, #0x01
@@ -64840,7 +64840,7 @@ _0814FA4A:
 	adds r0, r0, r1
 	str r0, [r5, #0x10]
 	adds r0, r5, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r1, [r7, #0x00]
 	movs r4, #0xA5
 	lsls r4, r4, #0x02
@@ -64851,7 +64851,7 @@ _0814FA4A:
 	cmp r0, #0xA0
 	bgt _0814FA94
 	adds r0, r1, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	movs r2, #0xEB
 	lsls r2, r2, #0x01
 	add r2, r9
@@ -64868,7 +64868,7 @@ _0814FA94:
 	cmp r0, #0xA0
 	bgt _0814FAB6
 	adds r0, r1, #0x0
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	movs r2, #0xEB
 	lsls r2, r2, #0x01
 	add r2, r9
@@ -64940,10 +64940,10 @@ _0814FAFC:
 	bl sub_8047F60
 	ldr r0, [r5, #0x00]
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r0, [r5, #0x00]
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -64987,10 +64987,10 @@ _0814FB8C:
 	beq _0814FC20
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, [r7, #0x00]
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0xE9
 	lsls r1, r1, #0x01
 	add r1, r9
@@ -65439,7 +65439,7 @@ _0814FF58:
 _0814FF7A:
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r0, r6, r2
@@ -65634,10 +65634,10 @@ _081500F0:
 	bl sub_801E68C
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	add sp, #0x008
 	pop {r3}
 	mov r8, r3
@@ -66120,7 +66120,7 @@ sub_815041C:
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -66192,14 +66192,14 @@ sub_81504F4:
 	movs r1, #0x02
 	movs r2, #0x00
 	movs r3, #0x10
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	adds r0, r4, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r2, #0xEE
 	lsls r2, r2, #0x01
 	adds r1, r4, r2
@@ -66249,10 +66249,10 @@ sub_8150590:
 	push {r4, lr}
 	adds r4, r0, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	pop {r4}
 	pop {r0}
 	bx r0

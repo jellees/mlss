@@ -2130,7 +2130,7 @@ _080237A6:
 	adds r0, r1, #0x0
 	movs r1, #0x01
 	movs r2, #0x00
-	bl sub_8045A94
+	bl sub_8045A94__11FieldObjectiiiiiUs
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _08023836
@@ -2145,7 +2145,7 @@ _080237D4: .4byte 0x03001038
 _080237D8:
 	ldr r0, [r4, #0x00]
 	ldr r1, [sp, #0x044]
-	bl sub_80461B4
+	bl sub_80461B4__11FieldObjectPP11FieldObject
 	ldr r0, [r4, #0x00]
 	bl sub_8047B78
 	lsls r0, r0, #0x18
@@ -2186,7 +2186,7 @@ _0802382A:
 	lsls r3, r3, #0x02
 	adds r0, r7, r3
 	ldr r0, [r0, #0x00]
-	bl sub_8046980
+	bl sub_8046980__11FieldObject
 _08023836:
 	movs r4, #0x81
 	lsls r4, r4, #0x02

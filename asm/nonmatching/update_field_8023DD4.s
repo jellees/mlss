@@ -313,7 +313,7 @@ _0802406C:
 	ldr r0, [r6, #0x00]
 	mov r1, r10
 	adds r1, #0x28
-	bl sub_80461B4
+	bl sub_80461B4__11FieldObjectPP11FieldObject
 	ldr r0, [r6, #0x00]
 	bl sub_8047B78
 	lsls r0, r0, #0x18

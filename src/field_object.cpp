@@ -252,9 +252,9 @@ void FieldObject::sub_8040790() {
 // https://decomp.me/scratch/TODO
 // Only the registers of the sprite / size values in the field_48 block differ.
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8040804__11FieldObjectUcii.s\"");
+asm_unified(".include \"asm/nonmatching/sub_8040804__11FieldObjectbii.s\"");
 #else
-void FieldObject::sub_8040804(u8 mode, int animation, int flag) {
+void FieldObject::sub_8040804(bool mode, int animation, int flag) {
     struct struc_839EE60* entry;
     u8 value;
 
@@ -868,12 +868,11 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
             field_238 = other->field_54;
             field_1 = other->field_54;
             if (field_2B5_3) {
-                sub_8046A10(this);
+                sub_8046A10();
             } else if (field_25C >= 0) {
                 field_25C = -1;
                 field_212_13 = 0;
-                field_250 = -1;
-                field_24C = -1;
+                field_24C = field_250 = -1;
                 field_23E = field_240;
             }
         } else if (verticalThis == 1) {
@@ -996,8 +995,8 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
         }
     }
     if (field_24_3 && field_2B5_0 && field_2B6_6) {
-        sub_8046980(this);
-        sub_8046A10(this);
+        sub_8046980();
+        sub_8046A10();
     }
 }
 #endif
@@ -1063,18 +1062,904 @@ void FieldObject::method17() {
     if (field_212_7 != 0) {
         if (--field_2B4 == 0) {
             if (field_20C_25) {
-                sub_804761C(this, 0);
+                sub_804761C(0);
                 field_2B0 += field_212_7 == 1 ? -2 : 2;
                 field_2B4 = field_2B0[0];
             } else {
-                sub_804761C(this, 1);
+                sub_804761C(1);
                 field_2B4 = field_2B0[1];
             }
         }
         if (field_2B4 == -1) {
-            sub_804761C(this, field_212_7 == 1);
+            sub_804761C(field_212_7 == 1);
             field_212_7 = 0;
             sprite->field_12_1 = field_212_14;
         }
     }
+}
+
+// https://decomp.me/scratch/TODO
+// Only register allocation in the 3D velocity branch differs.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8045A94__11FieldObjectiiiiiUs.s\"");
+#else
+int FieldObject::sub_8045A94(int mode, int relative, int targetX, int targetY, int targetZ, u16 speed) {
+    int dx;
+    int dy;
+    int dz;
+    int pixelX;
+    int pixelY;
+    int pixelZ;
+    int result;
+
+    targetX <<= 8;
+    targetY <<= 8;
+    targetZ <<= 8;
+    if (relative == 1) {
+        targetX += x;
+        targetY += y;
+        targetZ += z + height;
+    }
+    field_2BC = x;
+    field_2C0 = y;
+    field_2C4 = z + height;
+    field_2CC = targetX;
+    field_2D0 = targetY;
+    field_2D4 = targetZ;
+    if (field_2BC >> 8 == field_2CC >> 8 && field_2C0 >> 8 == field_2D0 >> 8
+        && (field_20C_14 || field_2C4 >> 8 == targetZ >> 8)) {
+        return 0;
+    }
+
+    dx = field_2CC - field_2BC;
+    dy = field_2C0 - field_2D0;
+    if (!field_20C_14) {
+        dz = field_2D4 - field_2C4;
+    } else {
+        dz = 0;
+    }
+    pixelX = dx / 256;
+    pixelY = dy / 256;
+    pixelZ = dz / 256;
+    if (dx < -0x1000 || dx > 0x1000 || dy < -0x1000 || dy > 0x1000 || dz < -0x1000 || dz > 0x1000) {
+        dx = pixelX;
+        dy = pixelY;
+        dz = pixelZ;
+    }
+    result = sub_81DA690(dy, dx);
+    angle = result / 256 + ((result / 128) & 1);
+    if (!field_20C_14) {
+        result = sub_81DA690(((int (*)(int))dword_3001038)(dx * dx + dy * dy), dz);
+        field_3 = result / 256 + ((result / 128) & 1);
+    }
+
+    if (mode == 1) {
+        u16 value = speed != 0 ? speed : field_23E;
+
+        if (field_20C_14) {
+            int s = (s16)value;
+
+            field_2D8 = (word_8198504[angle] * s) / 0x4000 + (((word_8198504[angle] * s) / 0x2000) & 1);
+            field_2DA =
+                -((word_8198584[angle] * s) / 0x4000 + (((word_8198584[angle] * s) / 0x2000) & 1));
+            field_2DC = 0;
+            field_2B7_0 = 4;
+        } else {
+            int s = (s16)value;
+            int part;
+
+            part = (word_8198504[angle] * s) / 0x4000 + (((word_8198504[angle] * s) / 0x2000) & 1);
+            field_2D8 = (part * word_8198584[field_3]) / 0x4000
+                        + (((part * word_8198584[field_3]) / 0x2000) & 1);
+            part = (word_8198584[angle] * s) / 0x4000 + (((word_8198584[angle] * s) / 0x2000) & 1);
+            field_2DA = -((part * word_8198584[field_3]) / 0x4000
+                          + (((part * word_8198584[field_3]) / 0x2000) & 1));
+            field_2DC =
+                (word_8198504[field_3] * s) / 0x4000 + (((word_8198504[field_3] * s) / 0x2000) & 1);
+            field_2B7_0 = 0;
+        }
+        velocityX = field_2D8;
+        velocityY = field_2DA;
+    } else {
+        s16 v;
+
+        field_2E0 = speed;
+        v = (((int (*)(int))dword_3001038)(pixelX * pixelX + pixelY * pixelY + pixelZ * pixelZ) << 8)
+            / field_2E0;
+        velocityX = (v * word_8198504[angle]) / 0x4000;
+        velocityY = -((word_8198584[angle] * v) / 0x4000);
+    }
+    field_2DE = 0;
+    field_2B5_0 = mode;
+    return 1;
+}
+#endif
+
+// https://decomp.me/scratch/TODO
+// Only register and stack allocation differs (the original keeps `relative` in a register).
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8045F04__11FieldObjectiiiiiiiiUsUsUsUsUsii.s\"");
+#else
+int FieldObject::sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6,
+                             int arg7, int arg8, u16 arg9, u16 arg10, u16 arg11, u16 angle, u16 speed,
+                             int direction, int flags) {
+    int dz;
+
+    if (mode == 4 && angle == 0) {
+        return 0;
+    }
+    centerX <<= 8;
+    centerY <<= 8;
+    centerZ <<= 8;
+    if (relative == 1) {
+        centerX += x;
+        centerY += y;
+        centerZ += z + height;
+    }
+    field_2BC = x;
+    field_2C0 = y;
+    field_2C4 = z + height;
+    if (centerX == field_2BC && centerY == field_2C0 && centerZ == field_2C4) {
+        return 0;
+    }
+    field_2E4 = centerX;
+    field_2E8 = centerY;
+    field_2EC = centerZ;
+    if (direction >= 0) {
+        direction = 1;
+    } else {
+        direction = -1;
+    }
+    field_2F0 = angle * direction << 8;
+    field_2F4 = 0;
+    if (mode == 4) {
+        field_2E0 = speed;
+    } else {
+        if (mode == 3) {
+            int dx;
+            int dy;
+            int radius;
+
+            if (speed == 0) {
+                speed = field_23E;
+            }
+            dx = (field_2E4 - field_2BC) * (256 - arg6) / 256;
+            dy = (field_2E8 - field_2C0) * (256 - arg7) / 256;
+            dz = (field_2EC - field_2C4) * (256 - arg8) / 256;
+            radius = ((int (*)(int))dword_3001038)(dx * dx + dy * dy + dz * dz);
+            // 0x3243 is pi * 0x1000: the time for one turn is the circumference divided by the speed.
+            radius = (radius << 1) * 0x3243;
+            radius = ((int (*)(int, int))((u8*)dword_3001038
+                                          + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(radius, speed);
+            speed = ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                0x10000000, radius);
+        }
+        field_2F8 = speed * direction;
+    }
+    field_2DE = 0;
+    field_2B5_0 = mode;
+    field_2B7_3 = flags;
+    field_2B8_0 = (flags >> 5) & 7;
+    if (!field_20C_14 && field_25C == -1) {
+        dz = field_2C4 - centerZ;
+    } else {
+        dz = 0;
+    }
+    sub_801B5A0(field_1EC, field_2BC - centerX, field_2C0 - centerY, dz, arg6, arg7, arg8, arg9, arg10,
+                arg11);
+    return 1;
+}
+#endif
+
+// https://decomp.me/scratch/TODO
+// Mostly register allocation differs, plus how the packed object index (field_2B7_3 | field_2B8_0 << 5)
+// is computed: the original masks with a shared 7 where this extracts the bitfield with shifts.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80461B4__11FieldObjectPP11FieldObject.s\"");
+#else
+void FieldObject::sub_80461B4(FieldObject** objects) {
+    if (!field_20C_0) {
+        return;
+    }
+    if (field_2B5_0 != 0) {
+        int delta;
+
+        field_2DE++;
+        switch ((u32)field_2B5_0) {
+            case 1:
+                if (!(field_2B7_0 & 1) && field_2CC != field_2BC) {
+                    x += field_2D8;
+                }
+                if (!(field_2B7_0 & 2) && field_2D0 != field_2C0) {
+                    y += field_2DA;
+                }
+                if (!(field_2B7_0 & 4) && field_2D4 != field_2C4 && field_25C == -1) {
+                    height += field_2DC;
+                }
+                break;
+            case 2:
+                x = field_2BC
+                    + ((int (*)(int, int))((u8*)dword_3001038
+                                           + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                        (field_2CC - field_2BC) * field_2DE, field_2E0);
+                y = field_2C0
+                    + ((int (*)(int, int))((u8*)dword_3001038
+                                           + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                        (field_2D0 - field_2C0) * field_2DE, field_2E0);
+                if (!field_20C_14 && field_25C == -1) {
+                    height = field_2C4
+                             + ((int (*)(int, int))((u8*)dword_3001038
+                                                    + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                                 (field_2D4 - field_2C4) * field_2DE, field_2E0)
+                             - previousZ;
+                }
+                break;
+            case 3:
+            case 4:
+            case 5: {
+                int offsetX;
+                int offsetY;
+                int offsetZ;
+                int newAngle;
+
+                if (field_2B5_0 == 4) {
+                    field_2F4 = ((int (*)(int, int))((u8*)dword_3001038
+                                                     + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                        field_2F0 * field_2DE, field_2E0);
+                } else {
+                    field_2F4 += field_2F8;
+                }
+                if (field_2F0 > 0) {
+                    if (field_2F4 > field_2F0) {
+                        field_2F4 = field_2F0;
+                    }
+                } else if (field_2F0 < 0 && field_2F4 < field_2F0) {
+                    field_2F4 = field_2F0;
+                }
+                sub_801B390(field_1EC, field_2F4 / 256, &offsetX, &offsetY, &offsetZ);
+                if ((s8)(field_2B8_0 << 5 | field_2B7_3) >= 0) {
+                    field_2E4 = objects[(s8)(field_2B8_0 << 5 | field_2B7_3)]->x;
+                    field_2E8 = objects[(s8)(field_2B8_0 << 5 | field_2B7_3)]->y;
+                    field_2EC = objects[(s8)(field_2B8_0 << 5 | field_2B7_3)]->z
+                                + objects[(s8)(field_2B8_0 << 5 | field_2B7_3)]->height;
+                }
+                x = field_2E4 + offsetX;
+                y = field_2E8 + offsetY;
+                if (!field_20C_14 && field_25C == -1) {
+                    z = 0;
+                    height = field_2EC + offsetZ;
+                }
+                if (previousX != x || previousY != y) {
+                    velocityX = previousX - x;
+                    velocityY = previousY - y;
+                }
+                if (y == previousY && x == previousX) {
+                    newAngle = -1;
+                } else {
+                    newAngle = sub_81DA690(previousY - y, x - previousX);
+                }
+                if (newAngle != -1) {
+                    angle = newAngle / 256;
+                }
+                break;
+            }
+        }
+        delta = 0;
+        switch ((u32)field_4E_2) {
+            case 1:
+                delta = x - previousX;
+                break;
+            case 2:
+                delta = previousX - x;
+                break;
+            case 3:
+                delta = previousY - y;
+                break;
+        }
+        if (delta != 0) {
+            z += delta;
+            height -= delta;
+            if (height < 0) {
+                height = 0;
+            }
+        }
+    }
+    if (field_2B5_3) {
+        sub_80402C4();
+    }
+}
+#endif
+
+void FieldObject::sub_80465D8() {
+    if (field_20C_0) {
+        switch (field_2B5_0) {
+            case 1: {
+                int velocity1;
+                int velocity2;
+                int velocity3;
+                int axis;
+
+                if (!(field_2B7_0 & 1)
+                    && ((field_2CC >= field_2BC && field_2CC <= x)
+                        || (field_2CC <= field_2BC && field_2CC >= x))) {
+                    x = field_2CC;
+                    field_2B7_0 |= 1;
+                }
+                if (!(field_2B7_0 & 2)
+                    && ((field_2D0 >= field_2C0 && field_2D0 <= y)
+                        || (field_2D0 <= field_2C0 && field_2D0 >= y))) {
+                    y = field_2D0;
+                    field_2B7_0 |= 2;
+                }
+                if (!(field_2B7_0 & 4) && !field_20C_14 && field_25C == -1
+                    && ((field_2D4 >= field_2C4 && field_2D4 <= z + height)
+                        || (field_2D4 <= field_2C4 && field_2D4 >= z + height))) {
+                    height = field_2D4;
+                    z = 0;
+                    field_2B7_0 |= 4;
+                }
+                velocity1 = field_2D8 < 0 ? -field_2D8 : field_2D8;
+                velocity2 = field_2DA < 0 ? -field_2DA : field_2DA;
+                velocity3 = field_2DC < 0 ? -field_2DC : field_2DC;
+                if (velocity1 >= velocity2) {
+                    axis = velocity1 >= velocity3 ? 1 : 4;
+                } else {
+                    axis = velocity2 >= velocity3 ? 2 : 4;
+                }
+                if (field_2B7_0 & axis) {
+                    x = field_2CC;
+                    y = field_2D0;
+                    if (!field_20C_14 && field_25C == -1) {
+                        height = field_2D4 - z;
+                    }
+                    sub_8046980();
+                }
+                break;
+            }
+            case 3:
+            case 5:
+                if (field_2F0 > 0) {
+                    if (field_2F4 >= field_2F0) {
+                        sub_8046980();
+                    }
+                } else if (field_2F0 < 0 && field_2F4 <= field_2F0) {
+                    sub_8046980();
+                }
+                break;
+            case 2:
+            case 4:
+                if (field_2DE >= field_2E0) {
+                    sub_8046980();
+                }
+                break;
+        }
+        if (field_2B5_3 && field_25C == -1) {
+            sub_8046A10();
+        }
+    }
+    if (field_20C_25) {
+        if (field_2B5_4 && sprite->xScale == field_302[0]) {
+            field_2B5_4 = 0;
+        }
+        if (field_2B5_6 && sprite->yScale == field_302[1]) {
+            field_2B5_6 = 0;
+        }
+        //! \bug field_8 and field_A are compared with the xScale/yScale targets (slots 0 and 1) instead
+        //! of their own (slots 2 and 3).
+        if (field_2B6_0 && sprite->field_8 == field_302[0]) {
+            field_2B6_0 = 0;
+        }
+        if (field_2B6_2 && sprite->field_A == field_302[1]) {
+            field_2B6_2 = 0;
+        }
+        if (field_2B6_4 && field_322 + field_32C == field_328) {
+            field_2B6_4 = 0;
+        }
+    }
+}
+
+void FieldObject::sub_8046980() {
+    if (field_2B5_0) {
+        // Round the position to the nearest pixel.
+        x = (x + ((x & 0x80) << 1)) & ~0xFF;
+        y = (y + ((y & 0x80) << 1)) & ~0xFF;
+        if (!field_20C_14) {
+            z = (z + ((z & 0x80) << 1)) & ~0xFF;
+            height = (height + ((height & 0x80) << 1)) & ~0xFF;
+        }
+        field_2E0 = 0;
+        velocityX = 0;
+        velocityY = 0;
+        field_2B5_0 = 0;
+    }
+}
+
+void FieldObject::sub_8046A10() {
+    if (field_2B5_3) {
+        field_25C = -1;
+        field_212_13 = 0;
+        field_24C = field_250 = -1;
+        field_23E = field_240;
+        if (field_268 != -1) {
+            field_266 = field_268;
+            field_268 = -1;
+        }
+        field_2B5_3 = 0;
+    }
+}
+
+int FieldObject::sub_8046A90(int mode, int relative, u16 target, u16 speed) {
+    if (relative == 1) {
+        s16 value = target;
+
+        target = value + sprite->xScale;
+    }
+    field_2FA[0] = sprite->xScale;
+    field_302[0] = target;
+    if (field_2FA[0] == (s16)target) {
+        return 0;
+    }
+    if (mode == 1) {
+        field_30A[0] = field_2FA[0] < (s16)target ? speed : -speed;
+    } else {
+        field_31A[0] = speed;
+    }
+    field_312[0] = 0;
+    field_2B5_4 = mode;
+    return 1;
+}
+
+int FieldObject::sub_8046B30(int mode, int relative, u16 target, u16 speed) {
+    if (relative == 1) {
+        s16 value = target;
+
+        target = value + sprite->yScale;
+    }
+    field_2FA[1] = sprite->yScale;
+    field_302[1] = target;
+    if (field_2FA[1] == (s16)target) {
+        return 0;
+    }
+    if (mode == 1) {
+        field_30A[1] = field_2FA[1] < (s16)target ? speed : -speed;
+    } else {
+        field_31A[1] = speed;
+    }
+    field_312[1] = 0;
+    field_2B5_6 = mode;
+    return 1;
+}
+
+// Not called anywhere.
+int FieldObject::sub_8046BC8(int mode, int relative, u16 target, u16 speed) {
+    if (relative == 1) {
+        s16 value = target;
+
+        target = value + sprite->field_8;
+    }
+    //! \bug Stores the start and target in slot 0 (the xScale slot) instead of slot 2.
+    field_2FA[0] = sprite->field_8;
+    field_302[0] = target;
+    if (field_2FA[2] == field_302[2]) {
+        return 0;
+    }
+    if (mode == 1) {
+        field_30A[2] = field_2FA[2] < field_302[2] ? speed : -speed;
+    } else {
+        field_31A[2] = speed;
+    }
+    field_312[2] = 0;
+    field_2B6_0 = mode;
+    return 1;
+}
+
+// Not called anywhere.
+int FieldObject::sub_8046C78(int mode, int relative, u16 target, u16 speed) {
+    if (relative == 1) {
+        s16 value = target;
+
+        target = value + sprite->field_A;
+    }
+    field_2FA[3] = sprite->field_A;
+    field_302[3] = target;
+    if (field_2FA[3] == (s16)target) {
+        return 0;
+    }
+    if (mode == 1) {
+        field_30A[3] = field_2FA[3] < (s16)target ? speed : -speed;
+    } else {
+        field_31A[3] = speed;
+    }
+    field_312[3] = 0;
+    field_2B6_2 = mode;
+    return 1;
+}
+
+void FieldObject::sub_8046D18() {
+    if (field_20C_25) {
+        if (field_2B5_4 == 1) {
+            field_312[0]++;
+            sprite->xScale += field_30A[0];
+            if (field_30A[0] > 0) {
+                if (sprite->xScale > field_302[0]) {
+                    sprite->xScale = field_302[0];
+                }
+            } else if (sprite->xScale < field_302[0]) {
+                sprite->xScale = field_302[0];
+            }
+        } else if (field_2B5_4 == 2) {
+            field_312[0]++;
+            sprite->xScale =
+                field_2FA[0]
+                + ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                    (field_302[0] - field_2FA[0]) * field_312[0], field_31A[0]);
+        }
+        if (field_2B5_6 == 1) {
+            field_312[1]++;
+            sprite->yScale += field_30A[1];
+            if (field_30A[1] > 0) {
+                if (sprite->yScale > field_302[1]) {
+                    sprite->yScale = field_302[1];
+                }
+            } else if (sprite->yScale < field_302[1]) {
+                sprite->yScale = field_302[1];
+            }
+        } else if (field_2B5_6 == 2) {
+            field_312[1]++;
+            sprite->yScale =
+                field_2FA[1]
+                + ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                    (field_302[1] - field_2FA[1]) * field_312[1], field_31A[1]);
+        }
+        if (field_2B6_0 == 1) {
+            field_312[2]++;
+            sprite->field_8 += field_30A[2];
+            if (field_30A[2] > 0) {
+                if (sprite->field_8 > field_302[2]) {
+                    sprite->field_8 = field_302[2];
+                }
+            } else if (sprite->field_8 < field_302[2]) {
+                sprite->field_8 = field_302[2];
+            }
+        } else if (field_2B6_0 == 2) {
+            field_312[2]++;
+            sprite->field_8 =
+                field_2FA[2]
+                + ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                    (field_302[2] - field_2FA[2]) * field_312[2], field_31A[2]);
+        }
+        if (field_2B6_2 == 1) {
+            field_312[3]++;
+            sprite->field_A += field_30A[3];
+            if (field_30A[3] > 0) {
+                if (sprite->field_A > field_302[3]) {
+                    sprite->field_A = field_302[3];
+                }
+            } else if (sprite->field_A < field_302[3]) {
+                sprite->field_A = field_302[3];
+            }
+        } else if (field_2B6_2 == 2) {
+            field_312[3]++;
+            sprite->field_A =
+                field_2FA[3]
+                + ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                    (field_302[3] - field_2FA[3]) * field_312[3], field_31A[3]);
+        }
+        if (field_2B6_4 == 1) {
+            field_330++;
+            field_32C += field_324;
+            if (field_328 > 0) {
+                if (field_32C > field_328) {
+                    field_32C = field_328;
+                }
+            } else if (field_328 < 0 && field_32C < field_328) {
+                field_32C = field_328;
+            }
+            sprite->field_C = field_322 + field_32C;
+        } else if (field_2B6_4 == 2) {
+            field_330++;
+            field_32C =
+                ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+                    (field_328 - field_322) * field_330, field_332);
+            sprite->field_C = field_322 + field_32C;
+        }
+    }
+}
+
+void FieldObject::sub_8047154(int animation, int arg2) {
+    int base = 0;
+    int flag = 0;
+
+    if (field_214_18) {
+        u8 value;
+
+        if (!field_214_20) {
+            // Only some directions are drawn, the others are mirrored.
+            if (field_214_18 == 1) {
+                base = animation / 4 * 3;
+                animation %= 4;
+                animation *= 2;
+            } else {
+                base = animation / 8 * 5;
+                animation %= 8;
+            }
+        } else if (field_214_18 == 1) {
+            base = animation / 4 * 4;
+            animation %= 4;
+            animation *= 2;
+        } else {
+            base = animation / 8 * 8;
+            animation %= 8;
+        }
+        direction = animation;
+        previousDirection = animation;
+        value = byte_83A05EC[field_214_18 * 16 + field_214_20 * 8 + animation];
+        animation = value & 0x7F;
+        flag = value >> 7;
+    }
+    sub_801E150(sprite, base + animation, arg2, 0, 0);
+    sprite->field_11_6 = flag;
+}
+
+void FieldObject::sub_8047258(int slot) {
+    if (slot == 0) {
+        field_220 = sprite->field_20[1];
+        field_214_11 = sprite->field_11_6;
+        field_214_9 = 1;
+    } else {
+        field_221 = sprite->field_20[1];
+        field_214_12 = sprite->field_11_6;
+        field_214_10 = 1;
+    }
+}
+
+void FieldObject::sub_80472D0(FieldObject* other, bool32 above) {
+    if (other != 0) {
+        field_214_13 = other->field_214_13;
+        if (above) {
+            if (field_214_13 <= 14) {
+                field_214_13++;
+            }
+        } else if (field_214_13 != 0) {
+            field_214_13--;
+        }
+    } else if (above) {
+        field_214_13 = 15;
+    } else {
+        field_214_13 = 0;
+    }
+}
+
+void FieldObject::sub_8047364(u8 type) {
+    field_214_3 = field_214_0;
+    field_214_0 = type;
+    if (field_214_0 > 2) {
+        angle = direction << 5;
+        if (field_214_0 == 3) {
+            sub_801E150(sprite, sprite->field_20[1], 0, 0, 0);
+        }
+    }
+    field_214_6 = 1;
+}
+
+void FieldObject::sub_80473DC() {
+    if (field_214_6) {
+        field_214_0 = field_214_3;
+        if (field_214_0 > 2) {
+            angle = direction << 5;
+        }
+        field_214_6 = 0;
+    }
+    if (field_214_7 && field_21A != field_218) {
+        field_218 = field_21A;
+        sub_8040790();
+    }
+    sub_8040804(field_214_7, field_214_9 ? field_220 : -1, field_214_9 ? (int)field_214_11 : -1);
+    field_214_7 = 0;
+    field_214_9 = 0;
+    method7(1);
+}
+
+void FieldObject::sub_80474D0() {
+    if (field_214_6) {
+        field_214_0 = field_214_3;
+        if (field_214_0 > 2) {
+            angle = direction << 5;
+        }
+        field_214_6 = 0;
+    }
+    if (field_214_8 && field_21C != field_218) {
+        field_218 = field_21C;
+        sub_8040790();
+    }
+    sub_8040804(field_214_8, field_214_10 ? field_221 : -1, field_214_10 ? (int)field_214_12 : -1);
+    field_214_8 = 0;
+    field_214_10 = 0;
+}
+
+void FieldObject::sub_80475A0(int slot) {
+    int bank = (*(word_203FFC4 + slot) >> 10) & 0xF;
+    int value = *(word_203FFC4 + slot) & 0x3FF;
+    u32 i;
+
+    field_21E = (bank + 1) << 12 | value;
+    sprite->field_1E_4 = bank;
+    sprite->field_1C = value;
+    sprite->field_14 = 0;
+    for (i = 0; i < sprite->field_13_4; i++, slot++) {
+        sprite->field_14 |= 1 << slot;
+    }
+}
+
+// https://decomp.me/scratch/TODO
+// The original computes &field_334, &field_26E and &field_216 before the bit-scan loop (as if hoisted
+// out of it) and keeps &field_26C in a register; the pointer locals get closest but allocate
+// differently.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_804761C__11FieldObjecti.s\"");
+#else
+void FieldObject::sub_804761C(int enable) {
+    if (field_222 == 0xFF || field_20C_25 == enable) {
+        return;
+    }
+    field_20C_25 = enable;
+    if (enable) {
+        int value = sprite->field_12_1;
+
+        sub_8021ED8(sprite);
+        sprite->field_12_1 = value;
+        if (field_20C_22) {
+            u8* handle = &field_26E;
+
+            if (*handle != 0xFF) {
+                sub_8116654(field_334, *handle);
+            } else {
+                u16* p = &field_26C;
+
+                if (*p != 0xFFFF) {
+                    int i = 0;
+
+                    while (!((sprite->field_14 >> i) & 1)) {
+                        i++;
+                    }
+                    *handle = sub_8114C1C(field_334, 0xFF, *p, i + 16, 0xFFFF, 0xFFFF);
+                    field_214_22 = 1;
+                }
+            }
+        }
+    } else {
+        if (field_26E != 0xFF) {
+            sub_8116680(field_334, field_26E);
+        }
+        field_23D = enable;
+        sub_8020D40(sprite);
+    }
+}
+#endif
+
+void FieldObject::sub_804776C(int value) {
+    field_20C_0 = value;
+}
+
+void FieldObject::sub_8047784() {
+    field_20C_12 = 1;
+    field_214_24 = 1;
+}
+
+void FieldObject::sub_80477A8(int a, int b) {
+    field_20C_12 = 0;
+    sprite->field_1F_0 = a;
+    sprite->field_1F_2 = b;
+    field_23C = b;
+}
+
+void FieldObject::sub_8047804(u8 index) {
+    u16 value = field_2A8[index];
+
+    field_21C = field_218;
+    field_218 = value;
+    if (field_21C != value) {
+        sub_8040790();
+        sub_8040804(1, -1, -1);
+    }
+    field_214_8 = 1;
+}
+
+void FieldObject::sub_8047858(u8 index) {
+    u16 value = field_2A8[index];
+
+    field_21A = field_218;
+    field_218 = value;
+    if (field_21A != value) {
+        sub_8040790();
+        sub_8040804(1, -1, -1);
+    }
+    field_214_7 = 1;
+}
+
+void FieldObject::sub_80478AC(u8 newDirection) {
+    direction = newDirection;
+    angle = newDirection << 5;
+    previousDirection = direction;
+    previousAngle = angle;
+    method7(0);
+}
+
+void FieldObject::sub_804790C(u8 value) {
+    field_239 = value;
+    sprite->field_20[0] = value;
+}
+
+void FieldObject::sub_8047928() {
+    sub_801E150(sprite, sprite->field_20[1], 0, 0, 0);
+}
+
+void FieldObject::sub_804794C(u16 value) {
+    field_23E = value;
+}
+
+void FieldObject::sub_8047958() {
+    field_2B6_4 = 0;
+}
+
+void FieldObject::sub_804796C() {
+    field_2B6_2 = 0;
+}
+
+void FieldObject::sub_8047980() {
+    field_2B6_0 = 0;
+}
+
+void FieldObject::sub_8047994() {
+    field_2B5_6 = 0;
+}
+
+void FieldObject::sub_80479A8() {
+    field_2B5_4 = 0;
+}
+
+bool FieldObject::sub_80479BC() {
+    return field_2B6_4 != 0;
+}
+
+bool FieldObject::sub_80479DC() {
+    return field_2B6_2 != 0;
+}
+
+bool FieldObject::sub_80479FC() {
+    return field_2B6_0 != 0;
+}
+
+bool FieldObject::sub_8047A1C() {
+    return field_2B5_6 != 0;
+}
+
+bool FieldObject::sub_8047A3C() {
+    return field_2B5_4 != 0;
+}
+
+int FieldObject::sub_8047A5C(int mode, u16 distance, int sign, u16 speed) {
+    if (mode == 2 && distance == 0) {
+        return 0;
+    }
+    field_322 = sprite->field_C;
+    if (sign >= 0) {
+        sign = 1;
+    } else {
+        sign = -1;
+    }
+    field_328 = (sign << 8) * distance;
+    if (mode == 1) {
+        field_324 = speed * sign;
+    } else {
+        field_332 = speed;
+    }
+    field_32C = 0;
+    field_330 = 0;
+    field_2B6_4 = mode;
+    return 1;
+}
+
+bool FieldObject::sub_8047AF4() {
+    return field_2B5_3;
 }

@@ -22,7 +22,7 @@ public:
     s8 field_0;
     u8 field_1;
     u8 angle; // Facing angle 0-255 (direction = angle / 32)
-    u8 pad_3;
+    u8 field_3;
     s16 state; // enum FieldObjectState
     s16 field_6;
     s16 field_8;
@@ -32,19 +32,21 @@ public:
     s32 z; // Height of the floor the object is on
     s32 height; // Height above that floor (the vertical position is z + height)
     u8 pad_1C[0x8];
-    u16 direction : 3; // Facing direction 0-7
-    u16 field_24_3 : 4;
-    u16 field_24_7 : 2;
-    u16 field_24_9 : 1;
-    u16 field_24_10 : 1;
-    u16 field_24_11 : 5;
-    u8 field_26_0 : 1;
-    u8 field_26_1 : 1;
-    u8 field_26_2 : 6;
-    u8 pad_27;
+    u32 direction : 3; // Facing direction 0-7
+    u32 field_24_3 : 4;
+    u32 field_24_7 : 2;
+    u32 field_24_9 : 1;
+    u32 field_24_10 : 1;
+    u32 field_24_11 : 5;
+    u32 field_26_0 : 1;
+    u32 field_26_1 : 1;
+    u32 field_26_2 : 2;
+    u32 field_26_4 : 4;
+    u32 pad_27 : 8;
     u8 field_28;
     s8 field_29;
-    u8 pad_2A[0x2];
+    u8 previousAngle; // method5's copy of angle (0x28 bytes later)
+    u8 pad_2B;
     s16 previousState; // method5's copy of state (0x28 bytes later)
     u8 pad_2E[0x6];
     s32 previousX; // method5 copies the first 0x28 bytes here
@@ -52,16 +54,20 @@ public:
     s32 previousZ;
     s32 previousHeight;
     u8 pad_44[0x8];
-    u16 previousDirection : 3; // method5's copy of direction (0x28 bytes later)
-    u16 field_4C_3 : 4;
-    u16 field_4C_7 : 2;
-    u16 field_4C_9 : 7;
-    u8 pad_4E[0x2];
+    u32 previousDirection : 3; // method5's copy of direction (0x28 bytes later)
+    u32 field_4C_3 : 4;
+    u32 field_4C_7 : 2;
+    u32 field_4C_9 : 7;
+    u32 field_4E_0 : 2;
+    u32 field_4E_2 : 2;
+    u32 field_4E_4 : 4;
+    u32 pad_4F : 8;
     s16 field_50;
     s16 field_52;
     u8 field_54;
     u8 initialDirection; // Starting direction, used by method2
-    u8 pad_56[0x1B6];
+    u8 pad_56[0x196];
+    u8 field_1EC[0x20];
     u32 field_20C_0 : 1;
     u32 field_20C_1 : 4;
     u32 field_20C_5 : 1;
@@ -83,25 +89,32 @@ public:
     u32 field_20C_25 : 1;
     u32 field_20C_26 : 1;
     u32 field_20C_27 : 5;
-    u8 field_210_0 : 1;
-    u8 field_210_1 : 1;
-    u8 field_210_2 : 1;
-    u8 field_210_3 : 1;
-    u8 field_210_4 : 1;
-    u8 field_210_5 : 1;
-    u8 field_210_6 : 1;
-    u8 field_210_7 : 1;
-    u8 field_211_0 : 1;
-    u8 field_211_1 : 7;
-    u16 field_212_0 : 5;
-    u16 field_212_5 : 1;
-    u16 field_212_6 : 1;
-    u16 field_212_7 : 2;
-    u16 field_212_9 : 4;
-    u16 field_212_13 : 1;
-    u16 field_212_14 : 2;
+    u32 field_210_0 : 1;
+    u32 field_210_1 : 1;
+    u32 field_210_2 : 1;
+    u32 field_210_3 : 1;
+    u32 field_210_4 : 1;
+    u32 field_210_5 : 1;
+    u32 field_210_6 : 1;
+    u32 field_210_7 : 1;
+    u32 field_211_0 : 1;
+    u32 field_211_1 : 7;
+    u32 field_212_0 : 5;
+    u32 field_212_5 : 1;
+    u32 field_212_6 : 1;
+    u32 field_212_7 : 2;
+    u32 field_212_9 : 4;
+    u32 field_212_13 : 1;
+    u32 field_212_14 : 2;
     u32 field_214_0 : 3;
-    u32 field_214_3 : 10;
+    u32 field_214_3 : 3;
+    u32 field_214_6 : 1;
+    u32 field_214_7 : 1;
+    u32 field_214_8 : 1;
+    u32 field_214_9 : 1;
+    u32 field_214_10 : 1;
+    u32 field_214_11 : 1;
+    u32 field_214_12 : 1;
     u32 field_214_13 : 4;
     u32 field_214_17 : 1;
     u32 field_214_18 : 2;
@@ -112,9 +125,11 @@ public:
     u32 field_214_24 : 1;
     u32 field_214_25 : 7;
     u16 field_218;
-    u8 pad_21A[0x4];
+    u16 field_21A;
+    u16 field_21C;
     u16 field_21E;
-    u8 pad_220[0x2];
+    u8 field_220;
+    u8 field_221;
     u8 field_222;
     u8 field_223;
     u8 pad_224[0x8];
@@ -163,16 +178,16 @@ public:
     u8 pad_284[0xC];
     void* field_290;
     struct Sprite* sprite;
-    u8 field_298_0 : 1;
-    u8 field_298_1 : 1;
-    u8 field_298_2 : 2;
-    u8 field_298_4 : 2;
-    u8 field_298_6 : 2;
-    u8 field_299_0 : 1;
-    u8 field_299_1 : 1;
-    u8 field_299_2 : 6;
-    u8 pad_29A;
-    u8 field_29B;
+    u32 field_298_0 : 1;
+    u32 field_298_1 : 1;
+    u32 field_298_2 : 2;
+    u32 field_298_4 : 2;
+    u32 field_298_6 : 2;
+    u32 field_299_0 : 1;
+    u32 field_299_1 : 1;
+    u32 field_299_2 : 6;
+    u32 pad_29A : 8;
+    u32 field_29B : 8;
     u8 field_29C;
     u8 pad_29D;
     u16 field_29E;
@@ -183,18 +198,54 @@ public:
     u16* field_2A8;
     u16* field_2AC;
     u8* field_2B0;
-    s8 field_2B4;
-    u8 field_2B5_0 : 3;
-    u8 field_2B5_3 : 1;
-    u8 field_2B5_4 : 4;
-    u8 field_2B6_0 : 6;
-    u8 field_2B6_6 : 1;
-    u8 field_2B6_7 : 1;
-    u8 field_2B7_0 : 3;
-    u8 field_2B7_3 : 5;
-    u8 field_2B8_0 : 3;
-    u8 field_2B8_3 : 5;
-    u8 pad_2B9[0x7B];
+    s32 field_2B4 : 8;
+    u32 field_2B5_0 : 3;
+    u32 field_2B5_3 : 1;
+    u32 field_2B5_4 : 2;
+    u32 field_2B5_6 : 2;
+    u32 field_2B6_0 : 2;
+    u32 field_2B6_2 : 2;
+    u32 field_2B6_4 : 2;
+    u32 field_2B6_6 : 1;
+    u32 field_2B6_7 : 1;
+    u32 field_2B7_0 : 3;
+    u32 field_2B7_3 : 5;
+    u32 field_2B8_0 : 3;
+    u32 field_2B8_3 : 5;
+    u32 field_2B8_8 : 24;
+    s32 field_2BC;
+    s32 field_2C0;
+    s32 field_2C4;
+    u8 pad_2C8[0x4];
+    s32 field_2CC;
+    s32 field_2D0;
+    s32 field_2D4;
+    s16 field_2D8;
+    s16 field_2DA;
+    s16 field_2DC;
+    u16 field_2DE;
+    u16 field_2E0;
+    u8 pad_2E2[0x2];
+    s32 field_2E4;
+    s32 field_2E8;
+    s32 field_2EC;
+    s32 field_2F0;
+    s32 field_2F4;
+    s16 field_2F8;
+    // Four sprite value animations: xScale, yScale, field_8, field_A (sub_8046A90 ...).
+    s16 field_2FA[4]; // start
+    s16 field_302[4]; // target
+    s16 field_30A[4]; // step per frame
+    u16 field_312[4]; // frame counter
+    u16 field_31A[4]; // duration
+    // Fifth animation, of sprite->field_C through a 32-bit offset.
+    s16 field_322; // base
+    s16 field_324; // step per frame
+    u8 pad_326[0x2];
+    s32 field_328; // target offset
+    s32 field_32C; // current offset
+    u16 field_330; // frame counter
+    u16 field_332; // duration
     void* field_334;
     // The vtable pointer follows at 0x338.
 
@@ -208,8 +259,49 @@ public:
     void sub_80418E8(FieldObject** objects);
     struct Coldef* sub_80457E8(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top);
     int sub_80458B0();
+    int sub_8045A94(int mode, int relative, int targetX, int targetY, int targetZ, u16 speed);
+    int sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6, int arg7, int arg8,
+                    u16 arg9, u16 arg10, u16 arg11, u16 angle, u16 speed, int direction, int flags);
+    void sub_80461B4(FieldObject** objects);
+    void sub_80465D8();
+    void sub_8046980();
+    void sub_8046A10();
+    int sub_8046A90(int mode, int relative, u16 target, u16 speed);
+    int sub_8046B30(int mode, int relative, u16 target, u16 speed);
+    int sub_8046BC8(int mode, int relative, u16 target, u16 speed);
+    int sub_8046C78(int mode, int relative, u16 target, u16 speed);
+    void sub_8046D18();
+    void sub_8047154(int animation, int arg2);
+    void sub_8047258(int slot);
+    void sub_80472D0(FieldObject* other, bool32 above);
+    void sub_8047364(u8 type);
+    void sub_80473DC();
+    void sub_80474D0();
+    void sub_80475A0(int slot);
+    void sub_804761C(int enable);
+    void sub_804776C(int value);
+    void sub_8047784();
+    void sub_80477A8(int a, int b);
+    void sub_8047804(u8 index);
+    void sub_8047858(u8 index);
+    void sub_80478AC(u8 newDirection);
+    void sub_804790C(u8 value);
+    void sub_8047928();
+    void sub_804794C(u16 value);
+    void sub_8047958();
+    void sub_804796C();
+    void sub_8047980();
+    void sub_8047994();
+    void sub_80479A8();
+    bool sub_80479BC();
+    bool sub_80479DC();
+    bool sub_80479FC();
+    bool sub_8047A1C();
+    bool sub_8047A3C();
+    int sub_8047A5C(int mode, u16 distance, int sign, u16 speed);
+    bool sub_8047AF4();
     void sub_8040790();
-    void sub_8040804(u8 mode, int animation, int flag);
+    void sub_8040804(bool mode, int animation, int flag);
     virtual ~FieldObject() {
     }
     virtual void method2(u16* arg1, u16* arg2, void* arg3); // 0x080403C4
@@ -249,13 +341,9 @@ public:
 };
 
 extern "C" {
-void sub_804761C(FieldObject*, int);
-void sub_80465D8(FieldObject*);
 void sub_8047EFC(FieldObject*, int, int, int, int);
 void sub_8047EB8(FieldObject*);
 void sub_8047DC8(FieldObject*, int);
-void sub_8046980(FieldObject*);
-void sub_8046A10(FieldObject*);
 }
 
 #endif

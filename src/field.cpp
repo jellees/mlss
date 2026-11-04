@@ -289,7 +289,7 @@ void FieldManager::sub_802563C() {
         if (count != 0) {
             do {
                 if ((*objects)->sprite->field_20[1] == 1 && (*objects)->sprite->field_12_3) {
-                    sub_804761C(*objects, 0);
+                    (*objects)->sub_804761C(0);
                     (*objects)->field_214_0 = 0;
                     sub_801E150((*objects)->sprite, 0, 0, 0, 0);
                     (*objects)->sprite->field_12_1 = 0;
@@ -325,7 +325,7 @@ void FieldManager::sub_8025ACC() {
         FieldObject** objects = &this->objects[start];
         int count = field_10B - start;
         while (count != 0) {
-            sub_80465D8(*objects);
+            (*objects)->sub_80465D8();
             (*objects)->method13();
             (*objects)->method14(&this->objects[0], 0);
             (*objects)->sub_804034C();

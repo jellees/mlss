@@ -403,7 +403,7 @@ _08041CF4:
 	cmp r0, #0x00
 	beq _08041D24
 	adds r0, r4, #0x0
-	bl sub_8046A10
+	bl sub_8046A10__11FieldObject
 	b _08041ECA
 _08041D1C: .4byte 0xFFFFFF00
 _08041D20: .4byte 0x000002B5
@@ -780,9 +780,9 @@ _08041FAA:
 	cmp r0, #0x00
 	beq _08041FDE
 	adds r0, r4, #0x0
-	bl sub_8046980
+	bl sub_8046980__11FieldObject
 	adds r0, r4, #0x0
-	bl sub_8046A10
+	bl sub_8046A10__11FieldObject
 _08041FDE:
 	add sp, #0x054
 	pop {r3, r4, r5}

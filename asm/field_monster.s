@@ -1348,8 +1348,8 @@ _vt.12FieldMonster:
 	.4byte 0, sub_8044630
 	.4byte 0, sub_8047B98
 	.4byte 0, sub_805062C
-	.4byte 0, sub_8047858
-	.4byte 0, sub_8047804
+	.4byte 0, sub_8047858__11FieldObjectUc
+	.4byte 0, sub_8047804__11FieldObjectUc
 
 gVTable_8CDBFC8:
 	.4byte 0, 0
@@ -1370,5 +1370,5 @@ gVTable_8CDBFC8:
 	.4byte 0, sub_8044630
 	.4byte 0, sub_8047B98
 	.4byte 0, method17__11FieldObject
-	.4byte 0, sub_8047858
-	.4byte 0, sub_8047804
+	.4byte 0, sub_8047858__11FieldObjectUc
+	.4byte 0, sub_8047804__11FieldObjectUc
