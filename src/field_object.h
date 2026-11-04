@@ -17,6 +17,12 @@ enum FieldObjectState {
     FIELD_OBJECT_STATE_FALLING,
 };
 
+struct FieldStruct5 {
+    u32 field_0_0 : 29;
+    u32 field_0_29 : 2;
+    u32 field_0_31 : 1;
+};
+
 class FieldObject {
 public:
     s8 field_0;
@@ -31,14 +37,15 @@ public:
     s32 y;
     s32 z; // Height of the floor the object is on
     s32 height; // Height above that floor (the vertical position is z + height)
-    u8 pad_1C[0x8];
+    s32 field_1C; // Sort key (sub_8047C18): z plus the height of the object below (method14)
+    struct FieldStruct5* field_20;
     u32 direction : 3; // Facing direction 0-7
     u32 field_24_3 : 4;
     u32 field_24_7 : 2;
     u32 field_24_9 : 1;
     u32 field_24_10 : 1;
-    u32 field_24_11 : 5;
-    u32 field_26_0 : 1;
+    u32 field_24_11 : 4;
+    u32 field_24_15 : 2;
     u32 field_26_1 : 1;
     u32 field_26_2 : 2;
     u32 field_26_4 : 4;
@@ -279,6 +286,7 @@ public:
     void sub_80474D0();
     void sub_80475A0(int slot);
     void sub_804761C(int enable);
+    void sub_8047DC8(u8 arg);
     void sub_804776C(int value);
     void sub_8047784();
     void sub_80477A8(int a, int b);
@@ -300,6 +308,13 @@ public:
     bool sub_8047A3C();
     int sub_8047A5C(int mode, u16 distance, int sign, u16 speed);
     bool sub_8047AF4();
+    void sub_8047B08(int mode, int animation);
+    void sub_8047B5C(s16 value);
+    bool sub_8047B78();
+    int sub_8047C18(FieldObject* other);
+    void sub_8047D44();
+    void sub_8047D64();
+    void sub_8047D84(u8 arg);
     void sub_8040790();
     void sub_8040804(bool mode, int animation, int flag);
     virtual ~FieldObject() {
@@ -313,12 +328,12 @@ public:
     virtual void method8(u16 cameraX, u16 cameraY, FieldObject** objects); // 0x08040CF4
     virtual void method9(); // 0x08040FA0
     virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects); // 0x08041368
-    virtual void method11();
+    virtual void method11(); // 0x08047CE8
     virtual void method12(FieldObject** others, int count, u8 flag); // 0x08041A2C
-    virtual void method13();
-    virtual void method14(FieldObject** objects, int arg);
-    virtual void method15();
-    virtual void method16();
+    virtual void method13(); // 0x08041FFC
+    virtual void method14(FieldObject** objects, u8 arg); // 0x08047C68
+    virtual void method15(u8 arg); // 0x08044630
+    virtual void method16(int mode); // 0x08047B98
     virtual void method17(); // 0x080459C0
     virtual void method18();
     virtual void method19();
@@ -343,7 +358,6 @@ public:
 extern "C" {
 void sub_8047EFC(FieldObject*, int, int, int, int);
 void sub_8047EB8(FieldObject*);
-void sub_8047DC8(FieldObject*, int);
 }
 
 #endif

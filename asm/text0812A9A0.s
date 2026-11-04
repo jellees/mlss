@@ -30107,7 +30107,7 @@ _0813DAC4:
 	bl sub_804761C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_8044630
+	bl method15__11FieldObjectUc
 	ldr r2, _0813DC04 @ =0x00000217
 	adds r1, r6, r2
 	ldrb r0, [r1, #0x00]

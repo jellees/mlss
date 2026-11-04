@@ -315,7 +315,7 @@ _0802406C:
 	adds r1, #0x28
 	bl sub_80461B4__11FieldObjectPP11FieldObject
 	ldr r0, [r6, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
 	cmp r4, #0x00
@@ -1236,7 +1236,7 @@ _080247AA:
 	beq _08024830
 	adds r0, r4, #0x0
 	adds r1, r3, #0x0
-	bl sub_8047C18
+	bl sub_8047C18__11FieldObjectP11FieldObject
 	cmp r0, #0x00
 	bne _080248B2
 	ldrb r1, [r5, #0x00]

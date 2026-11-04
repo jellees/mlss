@@ -299460,7 +299460,7 @@ _080EFC86:
 	cmp r0, #0x00
 	beq _080EFCB6
 	adds r0, r1, #0x0
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _080EFCB6
@@ -302011,7 +302011,7 @@ sub_80F112C:
 	bne _080F1152
 	ldr r2, [r3, #0x00]
 	adds r0, r4, #0x0
-	bl sub_8047B08
+	bl sub_8047B08__11FieldObjectii
 	adds r2, r5, #0x0
 	adds r2, #0xA0
 	ldrh r1, [r2, #0x00]
@@ -302025,7 +302025,7 @@ _080F1152:
 	movs r0, #0x00
 	ldsh r1, [r3, r0]
 	adds r0, r4, #0x0
-	bl sub_8047B5C
+	bl sub_8047B5C__11FieldObjects
 	b _080F1168
 _080F1162:
 	adds r0, r4, #0x0
@@ -302429,13 +302429,13 @@ _080F1458:
 	b _080F1470
 _080F145E:
 	movs r1, #0x01
-	bl sub_8047D84
+	bl sub_8047D84__11FieldObjectUc
 	b _080F1470
 _080F1466:
-	bl sub_8047D64
+	bl sub_8047D64__11FieldObject
 	b _080F1470
 _080F146C:
-	bl sub_8047D44
+	bl sub_8047D44__11FieldObject
 _080F1470:
 	movs r0, #0x01
 	pop {r1}
@@ -302472,13 +302472,13 @@ _080F14A4:
 	b _080F14BC
 _080F14AA:
 	movs r1, #0x01
-	bl sub_8047D84
+	bl sub_8047D84__11FieldObjectUc
 	b _080F14BC
 _080F14B2:
-	bl sub_8047D64
+	bl sub_8047D64__11FieldObject
 	b _080F14BC
 _080F14B8:
-	bl sub_8047D44
+	bl sub_8047D44__11FieldObject
 _080F14BC:
 	movs r0, #0x01
 	pop {r1}

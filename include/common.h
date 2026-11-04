@@ -394,6 +394,7 @@ struct Coldef* sub_803FBA4(void* map, int x, int y, int* floor, int* ceiling, in
                            bool arg7);
 void sub_8116680(void*, u8);
 u8 sub_8114C1C(void*, u8, u16, u8, u16, u16);
+void sub_8115048(void*, u8, u8);
 void sub_8020D40(struct Sprite*);
 void sub_8019308(int, int, int);
 void sub_801A548(void);
@@ -558,6 +559,7 @@ extern u16 word_839F5A4[]; // Up, Up, Down, Down, Left, Right, Left, Right, B, A
 extern u8 byte_839F5B8[];
 extern struct struc_839EE60* off_839EE60[];
 extern u8 byte_83A05EC[];
+extern u8 byte_83A061C[];
 extern u8 byte_83A0636[];
 extern s8 byte_83A0656[];
 extern struct struc_83A065C stru_83A065C[];

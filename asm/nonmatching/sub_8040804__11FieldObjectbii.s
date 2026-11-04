@@ -228,7 +228,7 @@ _08040966:
 	beq _080409BE
 	adds r0, r6, #0x0
 	movs r1, #0xFF
-	bl sub_8047DC8
+	bl sub_8047DC8__11FieldObjectUc
 _080409BE:
 	adds r0, r6, #0x0
 	bl sub_80415A0__11FieldObject

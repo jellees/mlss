@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_8041FFC
-sub_8041FFC:
+	thumb_func_start method13__11FieldObject
+method13__11FieldObject:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9

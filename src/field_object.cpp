@@ -291,7 +291,7 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
         sub_8021ED8(sprite);
         sprite->field_12_1 = value2;
         if (mode != 0 && field_20C_22) {
-            sub_8047DC8(this, 0xFF);
+            sub_8047DC8(0xFF);
         }
     }
     sub_80415A0();
@@ -1001,9 +1001,9 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
 }
 #endif
 
-asm_unified(".include \"asm/nonmatching/sub_8041FFC.s\"");
+asm_unified(".include \"asm/nonmatching/method13__11FieldObject.s\"");
 
-asm_unified(".include \"asm/nonmatching/sub_8044630.s\"");
+asm_unified(".include \"asm/nonmatching/method15__11FieldObjectUc.s\"");
 
 struct Coldef* FieldObject::sub_80457E8(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top) {
     struct Coldef* coldef = get_coldef_ptr_by_xz(field_290, cellX, cellY);
@@ -1791,13 +1791,21 @@ void FieldObject::sub_80475A0(int slot) {
     }
 }
 
-// https://decomp.me/scratch/TODO
-// The original computes &field_334, &field_26E and &field_216 before the bit-scan loop (as if hoisted
-// out of it) and keeps &field_26C in a register; the pointer locals get closest but allocate
-// differently.
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804761C__11FieldObjecti.s\"");
-#else
+// Defined inline here, so that sub_8040804 calls it while sub_804761C inlines it; the out-of-line
+// copy is emitted at the end of the file (0x08047DC8, still in asm/field_object.s).
+inline void FieldObject::sub_8047DC8(u8 arg) {
+    if (field_26C != 0xFFFF) {
+        int i = 0;
+
+        // Index of the lowest bit set in the sprite's palette slot mask.
+        while (!((sprite->field_14 >> i) & 1)) {
+            i++;
+        }
+        field_26E = sub_8114C1C(field_334, arg, field_26C, i + 16, 0xFFFF, 0xFFFF);
+        field_214_22 = 1;
+    }
+}
+
 void FieldObject::sub_804761C(int enable) {
     if (field_222 == 0xFF || field_20C_25 == enable) {
         return;
@@ -1809,22 +1817,10 @@ void FieldObject::sub_804761C(int enable) {
         sub_8021ED8(sprite);
         sprite->field_12_1 = value;
         if (field_20C_22) {
-            u8* handle = &field_26E;
-
-            if (*handle != 0xFF) {
-                sub_8116654(field_334, *handle);
+            if (field_26E != 0xFF) {
+                sub_8116654(field_334, field_26E);
             } else {
-                u16* p = &field_26C;
-
-                if (*p != 0xFFFF) {
-                    int i = 0;
-
-                    while (!((sprite->field_14 >> i) & 1)) {
-                        i++;
-                    }
-                    *handle = sub_8114C1C(field_334, 0xFF, *p, i + 16, 0xFFFF, 0xFFFF);
-                    field_214_22 = 1;
-                }
+                sub_8047DC8(0xFF);
             }
         }
     } else {
@@ -1835,7 +1831,6 @@ void FieldObject::sub_804761C(int enable) {
         sub_8020D40(sprite);
     }
 }
-#endif
 
 void FieldObject::sub_804776C(int value) {
     field_20C_0 = value;
@@ -1962,4 +1957,93 @@ int FieldObject::sub_8047A5C(int mode, u16 distance, int sign, u16 speed) {
 
 bool FieldObject::sub_8047AF4() {
     return field_2B5_3;
+}
+
+void FieldObject::sub_8047B08(int mode, int animation) {
+    int saved = (s16)field_23E;
+
+    if (mode == 0) {
+        sub_80401F0(animation, -1, -1);
+    } else {
+        sub_80400B0(animation, -1, -1);
+    }
+    field_23E = saved;
+    field_2B5_3 = 1;
+}
+
+void FieldObject::sub_8047B5C(s16 value) {
+    field_268 = field_266;
+    field_266 = value;
+}
+
+bool FieldObject::sub_8047B78() {
+    return field_2B5_0 != 0;
+}
+
+void FieldObject::method16(int mode) {
+    field_212_14 = sprite->field_12_1;
+    field_212_7 = mode;
+    // (duration, value) pairs between two 0xFF terminators, walked backwards in mode 1.
+    field_2B0 = mode == 1 ? byte_83A061C + 0x17 : byte_83A061C + 1;
+    field_2B4 = field_2B0[0];
+    sub_804761C(0);
+}
+
+int FieldObject::sub_8047C18(FieldObject* other) {
+    if (field_1C != other->field_1C) {
+        if ((!field_26_2 && !other->field_26_2)
+            || !(field_20->field_0_29 & other->field_20->field_0_29)) {
+            return field_1C - other->field_1C;
+        }
+    }
+    return 0;
+}
+
+void FieldObject::method14(FieldObject** objects, u8 arg) {
+    FieldObject* other;
+    int top;
+
+    method15(arg);
+    other = NULL;
+    if (field_238 != -1) {
+        other = objects[field_238];
+        if (z >= other->z + other->height + other->field_274) {
+            field_29 = -1;
+            field_1 = 0xFF;
+            field_238 = -1;
+            other = NULL;
+        }
+    }
+    top = z;
+    if (other != NULL) {
+        top += other->height + other->field_274;
+    }
+    field_1C = top;
+}
+
+void FieldObject::method11() {
+    field_0 = -1;
+    field_1 = 0xFF;
+    field_238 = -1;
+    field_24_3 = 0;
+    field_24_7 = 0;
+    field_24_9 = 0;
+    field_24_10 = 0;
+    field_24_11 = 0;
+    field_24_15 = 0;
+}
+
+void FieldObject::sub_8047D44() {
+    sub_8116654(field_334, field_26E);
+}
+
+void FieldObject::sub_8047D64() {
+    sub_8116680(field_334, field_26E);
+}
+
+void FieldObject::sub_8047D84(u8 arg) {
+    sub_8115048(field_334, field_26E, arg);
+    field_20C_22 = 0;
+    field_26E = 0xFF;
+    field_26C = 0xFFFF;
 }

@@ -1619,7 +1619,7 @@ _0802B30C:
 	bge _0802B36E
 	adds r0, r4, #0x0
 	adds r1, r3, #0x0
-	bl sub_8047C18
+	bl sub_8047C18__11FieldObjectP11FieldObject
 	cmp r0, #0x00
 	beq _0802B36E
 	ldrb r0, [r5, #0x00]
@@ -4991,7 +4991,7 @@ sub_802DA10:
 	adds r1, r6, #0x0
 	bl sub_80461B4__11FieldObjectPP11FieldObject
 	ldr r0, [r5, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802DA4A
@@ -6195,7 +6195,7 @@ _0802E358:
 	bne _0802E384
 	adds r0, r4, #0x0
 	adds r1, r2, #0x0
-	bl sub_8047C18
+	bl sub_8047C18__11FieldObjectP11FieldObject
 	cmp r0, #0x00
 	blt _0802E384
 	b _0802E4A8
@@ -7628,7 +7628,7 @@ _0802EE06:
 	adds r0, r5, r1
 	ldr r1, [r0, #0x00]
 	adds r0, r5, #0x0
-	bl sub_8047C18
+	bl sub_8047C18__11FieldObjectP11FieldObject
 	cmp r0, #0x00
 	beq _0802EEAE
 	movs r0, #0xAE
@@ -8497,7 +8497,7 @@ _0802F520:
 	lsls r2, r2, #0x02
 	adds r0, r5, r2
 	ldr r0, [r0, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	movs r1, #0x01
 	ands r1, r0
 	lsls r1, r1, #0x04
@@ -8533,7 +8533,7 @@ _0802F57C:
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
 	ldr r0, [r0, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	movs r2, #0xAE
 	lsls r2, r2, #0x02
 	adds r3, r5, r2
@@ -9355,7 +9355,7 @@ _0802FD98:
 	adds r4, r5, r3
 	ldr r1, [r4, #0x00]
 	adds r0, r2, #0x0
-	bl sub_8047C18
+	bl sub_8047C18__11FieldObjectP11FieldObject
 	cmp r0, #0x00
 	bne _0802FDC8
 	ldr r0, [r6, #0x00]
@@ -9401,7 +9401,7 @@ _0802FDEC:
 	lsls r1, r1, #0x02
 	adds r6, r5, r1
 	ldr r1, [r6, #0x00]
-	bl sub_8047C18
+	bl sub_8047C18__11FieldObjectP11FieldObject
 	cmp r0, #0x00
 	beq _0802FE34
 	ldr r0, [r4, #0x00]
@@ -11849,7 +11849,7 @@ _08031B80:
 _08031B96:
 	mov r4, r10
 	ldr r0, [r4, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _08031BA6
@@ -11859,7 +11859,7 @@ _08031BA6:
 	lsls r0, r0, #0x02
 	adds r6, r7, r0
 	ldr r0, [r6, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #0x01
@@ -20408,7 +20408,7 @@ _0803B01A:
 	ldr r0, [r4, #0x00]
 	bl sub_80465D8__11FieldObject
 	ldr r0, [r4, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	movs r1, #0x01
 	ands r1, r0
 	lsls r1, r1, #0x04
@@ -21023,12 +21023,12 @@ sub_803C5A4:
 	adds r1, r4, #0x0
 	bl sub_80461B4__11FieldObjectPP11FieldObject
 	ldr r0, [r5, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0803C5EE
 	ldr r0, [r7, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0803C5EE

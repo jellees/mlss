@@ -2147,7 +2147,7 @@ _080237D8:
 	ldr r1, [sp, #0x044]
 	bl sub_80461B4__11FieldObjectPP11FieldObject
 	ldr r0, [r4, #0x00]
-	bl sub_8047B78
+	bl sub_8047B78__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802382A
