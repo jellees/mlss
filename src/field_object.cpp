@@ -1054,8 +1054,9 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
 #endif
 
 // https://decomp.me/scratch/TODO
-// Same calls and control flow, but register/stack allocation differs and the original shares the
-// "hit" blocks between the cases (jumping into case 3 and the end of case 7 from the others).
+// Same calls and control flow; mostly register and stack allocation differs (e.g. the original keeps
+// newY in r10), plus the 8-11 shape switches of the "below" checks, which the original compiles as
+// switches but which are much further off when written as one.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/method13__11FieldObject.s\"");
 #else
@@ -1097,6 +1098,8 @@ int FieldObject::method13() {
     int rowBack;
     int rowFront;
     int d;
+    int edge;
+    u8 flag;
     int e;
 
     if (!field_20C_0 || field_214_21 || !field_20C_11) {
@@ -1142,7 +1145,9 @@ int FieldObject::method13() {
                 break;
             }
             switch (step) {
-                case 0: // Back side.
+                case 0: { // Back side.
+                    int cellY;
+                    int last;
                     cellX = previousLeft / 0x1000;
                     cellY = previousBack / 0x1000 - pass;
                     last = (previousRight - 1) / 0x1000;
@@ -1159,12 +1164,14 @@ int FieldObject::method13() {
                                     floor += 0x400;
                                 } else if (cell->tileFlags & field_26_4) {
                                     adjust = 0x1000;
-                                } else if (cellX << 12 > x || (cellX + 1) << 12 <= x) {
+                                } else if (cellX << 12 <= x && (cellX + 1) << 12 > x) {
+                                    if (cell->primaryShape == 4) {
+                                        floor += x & 0xF00;
+                                    } else if (cell->primaryShape == 5) {
+                                        floor += 0x1000 - (x & 0xF00);
+                                    }
+                                } else {
                                     adjust = field_278 / 2;
-                                } else if (cell->primaryShape == 4) {
-                                    floor += x & 0xF00;
-                                } else if (cell->primaryShape == 5) {
-                                    floor = floor + 0x1000 - (x & 0xF00);
                                 }
                             } else if (cell->tileFlags & field_26_4) {
                                 adjust = 0x1000;
@@ -1172,12 +1179,9 @@ int FieldObject::method13() {
                             if ((floor - adjust > previousZ && floor - adjust > bottom)
                                 || (!field_210_1 && floor == previousZ && cell->primaryShape == 1
                                     && cell->floorType == 1)) {
-                                if ((cellY + 1) << 12 > back) {
-                                    newY = ((cellY + 1) << 12) - 0x100 + field_27C;
-                                    moved |= 2;
-                                    field_224 = cell;
-                                    field_24_11 |= 1;
-                                    break;
+                                edge = (cellY + 1) << 12;
+                                if (edge > back) {
+                                    goto hit_back;
                                 }
                             }
                         }
@@ -1189,12 +1193,14 @@ int FieldObject::method13() {
                                         top += 0x400;
                                     } else if (cell->tileFlags & field_26_4) {
                                         adjust = 0x1000;
-                                    } else if (cellX << 12 > x || (cellX + 1) << 12 <= x) {
+                                    } else if (cellX << 12 <= x && (cellX + 1) << 12 > x) {
+                                        if (cell->secondaryShape == 4) {
+                                            top += x & 0xF00;
+                                        } else if (cell->secondaryShape == 5) {
+                                            top += 0x1000 - (x & 0xF00);
+                                        }
+                                    } else {
                                         adjust = field_278 / 2;
-                                    } else if (cell->secondaryShape == 4) {
-                                        top += x & 0xF00;
-                                    } else if (cell->secondaryShape == 5) {
-                                        top = top + 0x1000 - (x & 0xF00);
                                     }
                                 } else if (cell->tileFlags & field_26_4) {
                                     adjust = 0x1000;
@@ -1232,17 +1238,27 @@ int FieldObject::method13() {
                                     }
                                 } else if (field_210_2
                                            || (cell->floorType != 5 && cell->floorType != 7)) {
-                                    if (cell->secondaryShape == 8) {
-                                        rowFront -= 0x800;
-                                    } else if (cell->secondaryShape == 10) {
-                                        colLeft += 0x800;
-                                    } else if (cell->secondaryShape == 11) {
-                                        colRight -= 0x800;
-                                    } else if (pass == 0) {
-                                        goto back_below;
+                                    flag = pass;
+                                    switch (cell->secondaryShape) {
+                                        case 8:
+                                            rowFront -= 0x800;
+                                            flag = TRUE;
+                                            break;
+                                        case 9: // Dead store: only the rows' front edge is used here.
+                                            rowBack += 0x800;
+                                            break;
+                                        case 10:
+                                            colLeft += 0x800;
+                                            flag = TRUE;
+                                            break;
+                                        case 11:
+                                            colRight -= 0x800;
+                                            flag = TRUE;
+                                            break;
                                     }
-                                    if (((colLeft < previousRight && colRight > left)
-                                         || (colRight > previousLeft && colLeft < right))
+                                    if (flag
+                                        && ((colLeft < previousRight && colRight > left)
+                                            || (colRight > previousLeft && colLeft < right))
                                         && rowFront <= previousBack && rowFront > back) {
                                         newY = rowFront - 0x100 + field_27C;
                                         moved |= 2;
@@ -1314,8 +1330,10 @@ int FieldObject::method13() {
                         goto back_loop;
                     }
                     break;
-
-                case 1: // Front side.
+                }
+                case 1: { // Front side.
+                    int cellY;
+                    int last;
                     cellX = previousLeft / 0x1000;
                     cellY = (previousFront - 1) / 0x1000 + pass;
                     last = (previousRight - 1) / 0x1000;
@@ -1332,12 +1350,14 @@ int FieldObject::method13() {
                                     floor += 0x400;
                                 } else if (cell->tileFlags & field_26_4) {
                                     adjust = 0x1000;
-                                } else if (cellX << 12 > x || (cellX + 1) << 12 <= x) {
+                                } else if (cellX << 12 <= x && (cellX + 1) << 12 > x) {
+                                    if (cell->primaryShape == 4) {
+                                        floor += x & 0xF00;
+                                    } else if (cell->primaryShape == 5) {
+                                        floor += 0x1000 - (x & 0xF00);
+                                    }
+                                } else {
                                     adjust = field_278 / 2;
-                                } else if (cell->primaryShape == 4) {
-                                    floor += x & 0xF00;
-                                } else if (cell->primaryShape == 5) {
-                                    floor = floor + 0x1000 - (x & 0xF00);
                                 }
                             } else if (cell->tileFlags & field_26_4) {
                                 adjust = 0x1000;
@@ -1345,12 +1365,9 @@ int FieldObject::method13() {
                             if ((floor - adjust > previousZ && floor - adjust > bottom)
                                 || (!field_210_1 && floor == previousZ && cell->primaryShape == 1
                                     && cell->floorType == 1)) {
-                                if (cellY << 12 < front) {
-                                    newY = (cellY << 12) - 0x100;
-                                    moved |= 2;
-                                    field_224 = cell;
-                                    field_24_11 |= 4;
-                                    break;
+                                edge = cellY << 12;
+                                if (edge < front) {
+                                    goto hit_front;
                                 }
                             }
                         }
@@ -1362,12 +1379,14 @@ int FieldObject::method13() {
                                         top += 0x400;
                                     } else if (cell->tileFlags & field_26_4) {
                                         adjust = 0x1000;
-                                    } else if (cellX << 12 > x || (cellX + 1) << 12 <= x) {
+                                    } else if (cellX << 12 <= x && (cellX + 1) << 12 > x) {
+                                        if (cell->secondaryShape == 4) {
+                                            top += x & 0xF00;
+                                        } else if (cell->secondaryShape == 5) {
+                                            top += 0x1000 - (x & 0xF00);
+                                        }
+                                    } else {
                                         adjust = field_278 / 2;
-                                    } else if (cell->secondaryShape == 4) {
-                                        top += x & 0xF00;
-                                    } else if (cell->secondaryShape == 5) {
-                                        top = top + 0x1000 - (x & 0xF00);
                                     }
                                 } else if (cell->tileFlags & field_26_4) {
                                     adjust = 0x1000;
@@ -1403,17 +1422,24 @@ int FieldObject::method13() {
                                     }
                                 } else if (field_210_2
                                            || (cell->floorType != 5 && cell->floorType != 7)) {
-                                    if (cell->secondaryShape == 9) {
-                                        rowBack += 0x800;
-                                    } else if (cell->secondaryShape == 10) {
-                                        colLeft += 0x800;
-                                    } else if (cell->secondaryShape == 11) {
-                                        colRight -= 0x800;
-                                    } else if (pass == 0) {
-                                        goto front_below;
+                                    flag = pass;
+                                    switch (cell->secondaryShape) {
+                                        case 9:
+                                            rowBack += 0x800;
+                                            flag = TRUE;
+                                            break;
+                                        case 10:
+                                            colLeft += 0x800;
+                                            flag = TRUE;
+                                            break;
+                                        case 11:
+                                            colRight -= 0x800;
+                                            flag = TRUE;
+                                            break;
                                     }
-                                    if (((colLeft < previousRight && colRight > left)
-                                         || (colRight > previousLeft && colLeft < right))
+                                    if (flag
+                                        && ((colLeft < previousRight && colRight > left)
+                                            || (colRight > previousLeft && colLeft < right))
                                         && rowBack >= previousFront && rowBack < front) {
                                         newY = rowBack - 0x100;
                                         moved |= 2;
@@ -1484,8 +1510,10 @@ int FieldObject::method13() {
                         goto front_loop;
                     }
                     break;
-
-                case 2: // Left side.
+                }
+                case 2: { // Left side.
+                    int cellX;
+                    int last;
                     cellX = previousLeft / 0x1000 - pass;
                     cellY = previousBack / 0x1000;
                     last = (previousFront - 1) / 0x1000;
@@ -1502,12 +1530,14 @@ int FieldObject::method13() {
                                     floor += 0x400;
                                 } else if (cell->tileFlags & field_26_4) {
                                     adjust = 0x1000;
-                                } else if (cellY << 12 > y || (cellY + 1) << 12 < (y & ~0xFF)) {
+                                } else if (cellY << 12 <= y && (cellY + 1) << 12 >= (y & ~0xFF)) {
+                                    if (cell->primaryShape == 6) {
+                                        floor += 0x1000 - (y & 0xF00);
+                                    } else if (cell->primaryShape == 4) {
+                                        floor += 0x1000;
+                                    }
+                                } else {
                                     adjust = field_27C;
-                                } else if (cell->primaryShape == 6) {
-                                    floor = floor + 0x1000 - (y & 0xF00);
-                                } else if (cell->primaryShape == 4) {
-                                    floor += 0x1000;
                                 }
                             } else if (cell->tileFlags & field_26_4) {
                                 adjust = 0x1000;
@@ -1515,12 +1545,9 @@ int FieldObject::method13() {
                             if ((floor - adjust > previousZ && floor - adjust > bottom)
                                 || (!field_210_1 && floor == previousZ && cell->primaryShape == 1
                                     && cell->floorType == 1)) {
-                                if ((cellX + 1) << 12 > left) {
-                                    newX = ((cellX + 1) << 12) + field_278 / 2;
-                                    moved |= 1;
-                                    field_224 = cell;
-                                    field_24_11 |= 8;
-                                    break;
+                                edge = (cellX + 1) << 12;
+                                if (edge > left) {
+                                    goto hit_left;
                                 }
                             }
                         }
@@ -1532,12 +1559,14 @@ int FieldObject::method13() {
                                         top += 0x400;
                                     } else if (cell->tileFlags & field_26_4) {
                                         adjust = 0x1000;
-                                    } else if (cellY << 12 > y || (cellY + 1) << 12 < (y & ~0xFF)) {
+                                    } else if (cellY << 12 <= y && (cellY + 1) << 12 >= (y & ~0xFF)) {
+                                        if (cell->secondaryShape == 6) {
+                                            top += 0x1000 - (y & 0xF00);
+                                        } else if (cell->secondaryShape == 4) {
+                                            top += 0x1000;
+                                        }
+                                    } else {
                                         adjust = field_27C;
-                                    } else if (cell->secondaryShape == 6) {
-                                        top = top + 0x1000 - (y & 0xF00);
-                                    } else if (cell->secondaryShape == 4) {
-                                        top += 0x1000;
                                     }
                                 } else if (cell->tileFlags & field_26_4) {
                                     adjust = 0x1000;
@@ -1575,17 +1604,28 @@ int FieldObject::method13() {
                                     }
                                 } else if (field_210_2
                                            || (cell->floorType != 5 && cell->floorType != 7)) {
-                                    if (cell->secondaryShape == 8) {
-                                        rowFront -= 0x800;
-                                    } else if (cell->secondaryShape == 9) {
-                                        rowBack += 0x800;
-                                    } else if (cell->secondaryShape == 11) {
-                                        colRight -= 0x800;
-                                    } else if (pass == 0) {
-                                        goto left_below;
+                                    flag = pass;
+                                    switch (cell->secondaryShape) {
+                                        case 8:
+                                            rowFront -= 0x800;
+                                            flag = TRUE;
+                                            break;
+                                        case 9:
+                                            rowBack += 0x800;
+                                            flag = TRUE;
+                                            break;
+                                        case 10: // Dead store: only the column's right edge is used
+                                                 // here.
+                                            colLeft += 0x800;
+                                            break;
+                                        case 11:
+                                            colRight -= 0x800;
+                                            flag = TRUE;
+                                            break;
                                     }
-                                    if (((rowBack < previousFront && rowFront > back)
-                                         || (rowFront > previousBack && rowBack < front))
+                                    if (flag
+                                        && ((rowBack < previousFront && rowFront > back)
+                                            || (rowFront > previousBack && rowBack < front))
                                         && colRight <= previousLeft && colRight > left) {
                                         newX = colRight + field_278 / 2;
                                         moved |= 1;
@@ -1657,8 +1697,10 @@ int FieldObject::method13() {
                         goto left_loop;
                     }
                     break;
-
-                case 3: // Right side.
+                }
+                case 3: { // Right side.
+                    int cellX;
+                    int last;
                     cellX = (previousRight - 1) / 0x1000 + pass;
                     cellY = previousBack / 0x1000;
                     last = (previousFront - 1) / 0x1000;
@@ -1675,12 +1717,14 @@ int FieldObject::method13() {
                                     floor += 0x400;
                                 } else if (cell->tileFlags & field_26_4) {
                                     adjust = 0x1000;
-                                } else if (cellY << 12 > y || (cellY + 1) << 12 < (y & ~0xFF)) {
+                                } else if (cellY << 12 <= y && (cellY + 1) << 12 >= (y & ~0xFF)) {
+                                    if (cell->primaryShape == 6) {
+                                        floor += 0x1000 - (y & 0xF00);
+                                    } else if (cell->primaryShape == 5) {
+                                        floor += 0x1000;
+                                    }
+                                } else {
                                     adjust = field_27C;
-                                } else if (cell->primaryShape == 6) {
-                                    floor = floor + 0x1000 - (y & 0xF00);
-                                } else if (cell->primaryShape == 5) {
-                                    floor += 0x1000;
                                 }
                             } else if (cell->tileFlags & field_26_4) {
                                 adjust = 0x1000;
@@ -1688,12 +1732,9 @@ int FieldObject::method13() {
                             if ((floor - adjust > previousZ && floor - adjust > bottom)
                                 || (!field_210_1 && floor == previousZ && cell->primaryShape == 1
                                     && cell->floorType == 1)) {
-                                if (cellX << 12 < right) {
-                                    newX = (cellX << 12) - field_278 / 2;
-                                    moved |= 1;
-                                    field_224 = cell;
-                                    field_24_11 |= 2;
-                                    break;
+                                edge = cellX << 12;
+                                if (edge < right) {
+                                    goto hit_right;
                                 }
                             }
                         }
@@ -1705,12 +1746,14 @@ int FieldObject::method13() {
                                         top += 0x400;
                                     } else if (cell->tileFlags & field_26_4) {
                                         adjust = 0x1000;
-                                    } else if (cellY << 12 > y || (cellY + 1) << 12 < (y & ~0xFF)) {
+                                    } else if (cellY << 12 <= y && (cellY + 1) << 12 >= (y & ~0xFF)) {
+                                        if (cell->secondaryShape == 6) {
+                                            top += 0x1000 - (y & 0xF00);
+                                        } else if (cell->secondaryShape == 5) {
+                                            top += 0x1000;
+                                        }
+                                    } else {
                                         adjust = field_27C;
-                                    } else if (cell->secondaryShape == 6) {
-                                        top = top + 0x1000 - (y & 0xF00);
-                                    } else if (cell->secondaryShape == 5) {
-                                        top += 0x1000;
                                     }
                                 } else if (cell->tileFlags & field_26_4) {
                                     adjust = 0x1000;
@@ -1746,17 +1789,24 @@ int FieldObject::method13() {
                                     }
                                 } else if (field_210_2
                                            || (cell->floorType != 5 && cell->floorType != 7)) {
-                                    if (cell->secondaryShape == 8) {
-                                        rowFront -= 0x800;
-                                    } else if (cell->secondaryShape == 9) {
-                                        rowBack += 0x800;
-                                    } else if (cell->secondaryShape == 10) {
-                                        colLeft += 0x800;
-                                    } else if (pass == 0) {
-                                        goto right_below;
+                                    flag = pass;
+                                    switch (cell->secondaryShape) {
+                                        case 8:
+                                            rowFront -= 0x800;
+                                            flag = TRUE;
+                                            break;
+                                        case 9:
+                                            rowBack += 0x800;
+                                            flag = TRUE;
+                                            break;
+                                        case 10:
+                                            colLeft += 0x800;
+                                            flag = TRUE;
+                                            break;
                                     }
-                                    if (((rowBack < previousFront && rowFront > back)
-                                         || (rowFront > previousBack && rowBack < front))
+                                    if (flag
+                                        && ((rowBack < previousFront && rowFront > back)
+                                            || (rowFront > previousBack && rowBack < front))
                                         && colLeft >= previousRight && colLeft < right) {
                                         newX = colLeft - field_278 / 2;
                                         moved |= 1;
@@ -1827,8 +1877,8 @@ int FieldObject::method13() {
                         goto right_loop;
                     }
                     break;
-
-                case 4: // Back-left corner cell.
+                }
+                case 4: { // Back-left corner cell.
                     cellX = previousLeft / 0x1000 - 1;
                     cellY = previousBack / 0x1000 - 1;
                     if ((cellX + 1) << 12 <= left || (cellY + 1) << 12 <= back) {
@@ -1866,8 +1916,8 @@ int FieldObject::method13() {
                         field_24_11 |= 1;
                     }
                     break;
-
-                case 5: // Back-right corner cell.
+                }
+                case 5: { // Back-right corner cell.
                     cellX = (previousRight - 0x100) / 0x1000 + 1;
                     cellY = previousBack / 0x1000 - 1;
                     if (cellX << 12 >= right || (cellY + 1) << 12 <= back) {
@@ -1905,8 +1955,8 @@ int FieldObject::method13() {
                         field_24_11 |= 1;
                     }
                     break;
-
-                case 6: // Front-left corner cell.
+                }
+                case 6: { // Front-left corner cell.
                     cellX = previousLeft / 0x1000 - 1;
                     cellY = (previousFront - 0x100) / 0x1000 + 1;
                     if ((cellX + 1) << 12 <= left || cellY << 12 >= front) {
@@ -1943,8 +1993,8 @@ int FieldObject::method13() {
                         field_24_11 |= 4;
                     }
                     break;
-
-                case 7: // Front-right corner cell.
+                }
+                case 7: { // Front-right corner cell.
                     cellX = (previousRight - 0x100) / 0x1000 + 1;
                     cellY = (previousFront - 0x100) / 0x1000 + 1;
                     if (cellX << 12 >= right || cellY << 12 >= front) {
@@ -1981,6 +2031,32 @@ int FieldObject::method13() {
                         field_24_11 |= 4;
                     }
                     break;
+                }
+
+                hit_back:
+                    newY = edge - 0x100 + field_27C;
+                    moved |= 2;
+                    field_224 = cell;
+                    field_24_11 |= 1;
+                    break;
+                hit_front:
+                    newY = edge - 0x100;
+                    moved |= 2;
+                    field_224 = cell;
+                    field_24_11 |= 4;
+                    break;
+                hit_left:
+                    newX = edge + field_278 / 2;
+                    moved |= 1;
+                    field_224 = cell;
+                    field_24_11 |= 8;
+                    break;
+                hit_right:
+                    newX = edge - field_278 / 2;
+                    moved |= 1;
+                    field_224 = cell;
+                    field_24_11 |= 2;
+                    break;
             }
 
             if (moved & 1) {
@@ -2004,8 +2080,8 @@ int FieldObject::method13() {
 #endif
 
 // https://decomp.me/scratch/TODO
-// Same calls and control flow, but register allocation differs (`this` is r6 in the original) and the
-// duplicated "floor/top window" blocks of the two switches are shared and ordered differently.
+// Same calls and control flow, but register allocation differs (`this` is r6 in the original) and
+// some duplicated blocks of the two switches are shared and ordered differently.
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/method15__11FieldObjectUc.s\"");
 #else
@@ -2016,7 +2092,7 @@ void FieldObject::method15(u8 force) {
     struct Coldef* topCell;
     int bestTop;
     int floorProbe;
-    int topProbe;
+    u8 topProbe;
     int previousBase;
     int previousLimit;
     int current;
@@ -2143,12 +2219,12 @@ void FieldObject::method15(u8 force) {
         }
 
         // Probe 2: the right edge.
-        probeX = x - 0x100 + field_27E / 2;
+        probeX = x + (field_27E / 2 - 0x100);
         probeY = y;
         probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
                             !field_20C_13 || field_210_0, field_20C_11);
         if (probe->primaryShape == 4) {
-            floor = floor + 0x100 - field_27E / 2;
+            floor += 0x100 - field_27E / 2;
         }
         if (floorLimit < floor && topLimit <= floor && bestFloor < floor) {
             bestFloor = floor;
@@ -2162,7 +2238,7 @@ void FieldObject::method15(u8 force) {
         }
         if (field_210_6) {
             if (probe->secondaryShape == 4) {
-                top = top + 0x100 - field_27E / 2;
+                top += 0x100 - field_27E / 2;
             }
             if (floorLimit < top && topLimit < top && bestTop < top) {
                 bestTop = top;
@@ -2196,7 +2272,7 @@ void FieldObject::method15(u8 force) {
                 floor &= ~0xFFF;
             }
         } else if (probe->primaryShape == 6) {
-            floor = floor + 0x100 - field_280;
+            floor += 0x100 - field_280;
         }
         if (floorLimit < floor && topLimit <= floor && bestFloor < floor) {
             bestFloor = floor;
@@ -2214,7 +2290,7 @@ void FieldObject::method15(u8 force) {
                     top &= ~0xFFF;
                 }
             } else if (probe->secondaryShape == 6) {
-                top = top + 0x100 - field_280;
+                top += 0x100 - field_280;
             }
             if (floorLimit < top && topLimit < top && bestTop < top) {
                 bestTop = top;
@@ -2226,7 +2302,7 @@ void FieldObject::method15(u8 force) {
         }
 
         flagsRight = 0;
-        probeX = x - 0x100 + field_27E / 2;
+        probeX = x + (field_27E / 2 - 0x100);
         probeY = y + 0x100 - field_280;
         probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
                             !field_20C_13 || field_210_0, field_20C_11);
@@ -2236,14 +2312,14 @@ void FieldObject::method15(u8 force) {
         }
         adjust = 0;
         if (probe->primaryShape == 4) {
-            floor = floor + 0x100 - field_27E / 2;
+            floor += 0x100 - field_27E / 2;
         } else if (probe->primaryShape == 5) {
-            floor = floor - 0x100 + field_27E / 2;
+            floor += field_27E / 2 - 0x100;
             if (flagsLeft & flagsRight) {
                 adjust = 0x1000;
             }
         } else if (probe->primaryShape == 6) {
-            floor = floor + 0x100 - field_280;
+            floor += 0x100 - field_280;
         } else if (flagsLeft & flagsRight) {
             adjust = -0x1000;
         }
@@ -2257,7 +2333,7 @@ void FieldObject::method15(u8 force) {
         if (field_210_6) {
             adjust = 0;
             if (probe->secondaryShape == 4) {
-                top = top + 0x100 - field_27E / 2;
+                top += 0x100 - field_27E / 2;
             } else if (probe->secondaryShape == 5) {
                 int offset = field_27E / 2 - 0x100;
                 int fraction = top & 0xFFF;
@@ -2269,7 +2345,7 @@ void FieldObject::method15(u8 force) {
                     }
                 }
             } else if (probe->secondaryShape == 6) {
-                top = top + 0x100 - field_280;
+                top += 0x100 - field_280;
             } else if (flagsLeft & flagsRight) {
                 adjust = -0x1000;
             }
@@ -2324,8 +2400,8 @@ void FieldObject::method15(u8 force) {
                             bestTop += 0xFFF;
                             bestTop &= ~0xFFF;
                         } else if (topCell->secondaryShape == 6) {
-                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling, &top,
-                                        1, field_20C_11);
+                            sub_803FBA4(field_290, x + (field_27E / 2 - 0x100), y, &floor, &ceiling,
+                                        &top, 1, field_20C_11);
                             bestTop = top;
                         }
                         break;
@@ -2376,7 +2452,7 @@ void FieldObject::method15(u8 force) {
                                 bestTop &= ~0xFFF;
                             }
                         } else if (topCell->secondaryShape == 6) {
-                            probe = sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor,
+                            probe = sub_803FBA4(field_290, x + (field_27E / 2 - 0x100), y, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (probe->tileFlags & topCell->tileFlags) {
                                 if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
@@ -2405,6 +2481,14 @@ void FieldObject::method15(u8 force) {
             field_230 = topX;
             field_234 = topY;
             coldef = topCell;
+            // The original computes this test without branches, like `(field_20C_13 ^ 1) |
+            // field_210_0`.
+            if (((field_20C_13 ^ 1) | field_210_0) && topCell->tileFlags && topCell->primaryShape != 3
+                && topCell->secondaryShape != 3 && topCell->floorType != 8) {
+                field_26_4 = topCell->tileFlags;
+            } else {
+                field_26_4 = 0;
+            }
         } else {
             if (floorCell->primaryShape - 4 <= 2u) {
                 field_26_2 = floorCell->primaryShape - 3;
@@ -2424,8 +2508,8 @@ void FieldObject::method15(u8 force) {
                             bestFloor += 0xFFF;
                             bestFloor &= ~0xFFF;
                         } else if (floorCell->primaryShape == 6) {
-                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling, &top,
-                                        1, field_20C_11);
+                            sub_803FBA4(field_290, x + (field_27E / 2 - 0x100), y, &floor, &ceiling,
+                                        &top, 1, field_20C_11);
                             bestFloor = floor;
                         }
                         break;
@@ -2468,8 +2552,8 @@ void FieldObject::method15(u8 force) {
                                 bestFloor &= ~0xFFF;
                             }
                         } else if (floorCell->primaryShape == 6) {
-                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling, &top,
-                                        1, field_20C_11);
+                            sub_803FBA4(field_290, x + (field_27E / 2 - 0x100), y, &floor, &ceiling,
+                                        &top, 1, field_20C_11);
                             bestFloor = floor;
                         }
                         break;
@@ -2493,13 +2577,13 @@ void FieldObject::method15(u8 force) {
             field_230 = floorX;
             field_234 = floorY;
             coldef = floorCell;
-        }
-
-        if ((!field_20C_13 || field_210_0) && coldef->tileFlags && coldef->primaryShape != 3
-            && coldef->secondaryShape != 3 && coldef->floorType != 8) {
-            field_26_4 = coldef->tileFlags;
-        } else {
-            field_26_4 = 0;
+            if (((field_20C_13 ^ 1) | field_210_0) && floorCell->tileFlags
+                && floorCell->primaryShape != 3 && floorCell->secondaryShape != 3
+                && floorCell->floorType != 8) {
+                field_26_4 = floorCell->tileFlags;
+            } else {
+                field_26_4 = 0;
+            }
         }
         if (field_25C >= 0) {
             field_250 += previousZ - z;
