@@ -730,6 +730,53 @@ void FieldObject::sub_80418E8(FieldObject** objects) {
     }
 }
 
+// Inline members. Earlier functions and other files call them; later ones inline them (sub_8047EB8 in
+// method12 and sub_8046A10, sub_8047E7C in sub_80461B4). Their out-of-line copies are emitted at the
+// end of the file in reverse order of definition (0x08047DC8-0x08047FDC), which fixes this order:
+// sub_8047F60, sub_8047EFC, sub_8047EB8, sub_8047E7C, sub_8047E50, sub_8047DC8.
+inline void FieldObject::sub_8047F60(int newX, int newY, int newHeight, int savePrevious,
+                                     int relative) {
+    if (relative == 0) {
+        x = newX;
+        y = newY;
+        height = newHeight;
+    } else {
+        x += newX;
+        y += newY;
+        height += z + newHeight;
+    }
+    z = 0;
+    if (savePrevious) {
+        previousX = x;
+        previousY = y;
+        previousZ = 0;
+        previousHeight = height;
+        if (field_290 != NULL) {
+            method15(1);
+        }
+    }
+    field_214_24 = 1;
+}
+
+inline void FieldObject::sub_8047EFC(u16 speed, u16 arg2, s16 arg3, s16 arg4) {
+    field_23E = speed;
+    field_260 = speed;
+    field_262 = arg2;
+    field_264 = arg3;
+    field_266 = arg4;
+    field_254 = 0;
+    field_25C = -1;
+    field_24C = -1;
+    field_250 = -1;
+}
+
+inline void FieldObject::sub_8047EB8() {
+    field_25C = -1;
+    field_212_13 = 0;
+    field_24C = field_250 = -1;
+    field_23E = field_240;
+}
+
 // https://decomp.me/scratch/TODO
 // Mostly register and stack-slot allocation differs (e.g. `this` is r4 in the original); in this
 // version two identical "landing" blocks also get merged where the original keeps them apart.
@@ -871,10 +918,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
             if (field_2B5_3) {
                 sub_8046A10();
             } else if (field_25C >= 0) {
-                field_25C = -1;
-                field_212_13 = 0;
-                field_24C = field_250 = -1;
-                field_23E = field_240;
+                sub_8047EB8();
             }
         } else if (verticalThis == 1) {
             // Hitting the other object from below.
@@ -1252,6 +1296,13 @@ int FieldObject::sub_8045F04(int mode, int relative, int centerX, int centerY, i
 }
 #endif
 
+inline int FieldObject::sub_8047E7C() {
+    if (y == previousY && x == previousX) {
+        return -1;
+    }
+    return sub_81DA690(previousY - y, x - previousX);
+}
+
 // https://decomp.me/scratch/TODO
 // Mostly register allocation differs, plus how the packed object index (field_2B7_3 | field_2B8_0 << 5)
 // is computed: the original masks with a shared 7 where this extracts the bitfield with shifts.
@@ -1334,11 +1385,7 @@ void FieldObject::sub_80461B4(FieldObject** objects) {
                     velocityX = previousX - x;
                     velocityY = previousY - y;
                 }
-                if (y == previousY && x == previousX) {
-                    newAngle = -1;
-                } else {
-                    newAngle = sub_81DA690(previousY - y, x - previousX);
-                }
+                newAngle = sub_8047E7C();
                 if (newAngle != -1) {
                     angle = newAngle / 256;
                 }
@@ -1477,10 +1524,7 @@ void FieldObject::sub_8046980() {
 
 void FieldObject::sub_8046A10() {
     if (field_2B5_3) {
-        field_25C = -1;
-        field_212_13 = 0;
-        field_24C = field_250 = -1;
-        field_23E = field_240;
+        sub_8047EB8();
         if (field_268 != -1) {
             field_266 = field_268;
             field_268 = -1;
@@ -1790,59 +1834,6 @@ void FieldObject::sub_80475A0(int slot) {
     for (i = 0; i < sprite->field_13_4; i++, slot++) {
         sprite->field_14 |= 1 << slot;
     }
-}
-
-// The inline members below are only called from other files (or before their definition), so they
-// only appear as the out-of-line copies at the end of the file, in reverse order
-// (0x08047E50-0x08047FDC).
-inline void FieldObject::sub_8047F60(int newX, int newY, int newHeight, int savePrevious,
-                                     int relative) {
-    if (relative == 0) {
-        x = newX;
-        y = newY;
-        height = newHeight;
-    } else {
-        x += newX;
-        y += newY;
-        height += z + newHeight;
-    }
-    z = 0;
-    if (savePrevious) {
-        previousX = x;
-        previousY = y;
-        previousZ = 0;
-        previousHeight = height;
-        if (field_290 != NULL) {
-            method15(1);
-        }
-    }
-    field_214_24 = 1;
-}
-
-inline void FieldObject::sub_8047EFC(u16 speed, u16 arg2, s16 arg3, s16 arg4) {
-    field_23E = speed;
-    field_260 = speed;
-    field_262 = arg2;
-    field_264 = arg3;
-    field_266 = arg4;
-    field_254 = 0;
-    field_25C = -1;
-    field_24C = -1;
-    field_250 = -1;
-}
-
-inline void FieldObject::sub_8047EB8() {
-    field_25C = -1;
-    field_212_13 = 0;
-    field_24C = field_250 = -1;
-    field_23E = field_240;
-}
-
-inline int FieldObject::sub_8047E7C() {
-    if (y == previousY && x == previousX) {
-        return -1;
-    }
-    return sub_81DA690(previousY - y, x - previousX);
 }
 
 inline void FieldObject::sub_8047E50(u16 value) {
