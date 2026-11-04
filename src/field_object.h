@@ -18,12 +18,6 @@ enum FieldObjectState {
     FIELD_OBJECT_STATE_FALLING,
 };
 
-struct FieldStruct5 {
-    u32 field_0_0 : 29;
-    u32 field_0_29 : 2;
-    u32 field_0_31 : 1;
-};
-
 class FieldObject {
 public:
     s8 field_0;
@@ -39,7 +33,7 @@ public:
     s32 z; // Height of the floor the object is on
     s32 height; // Height above that floor (the vertical position is z + height)
     s32 field_1C; // Sort key (sub_8047C18): z plus the height of the object below (method14)
-    struct FieldStruct5* field_20;
+    struct Coldef* coldef; // Collision cell the object stands on (method15)
     u32 direction : 3; // Facing direction 0-7
     u32 field_24_3 : 4;
     u32 field_24_7 : 2;
@@ -49,7 +43,8 @@ public:
     u32 field_24_15 : 2;
     u32 field_26_1 : 1;
     u32 field_26_2 : 2;
-    u32 field_26_4 : 4;
+    u32 field_26_4 : 2;
+    u32 field_26_6 : 2;
     u32 pad_27 : 8;
     u8 field_28;
     s8 field_29;
@@ -140,7 +135,8 @@ public:
     u8 field_221;
     u8 field_222;
     u8 field_223;
-    u8 pad_224[0x8];
+    struct Coldef* field_224; // Last wall cell hit (method13)
+    u8 pad_228[0x4];
     u32 field_22C_0 : 10;
     u32 field_22C_10 : 12;
     u32 field_22C_22 : 10;
@@ -265,7 +261,7 @@ public:
     void sub_80415A0();
     void sub_804173C(int set, u8 size1, u8 size2, u8 size3);
     void sub_80418E8(FieldObject** objects);
-    struct Coldef* sub_80457E8(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top);
+    struct Coldef* sub_80457E8(int cellX, int cellY, int* floor, int* ceiling, int* top);
     int sub_80458B0();
     int sub_8045A94(int mode, int relative, int targetX, int targetY, int targetZ, u16 speed);
     int sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6, int arg7, int arg8,
@@ -347,7 +343,7 @@ public:
     virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects); // 0x08041368
     virtual void method11(); // 0x08047CE8
     virtual void method12(FieldObject** others, int count, u8 flag); // 0x08041A2C
-    virtual void method13(); // 0x08041FFC
+    virtual int method13(); // 0x08041FFC
     virtual void method14(FieldObject** objects, u8 arg); // 0x08047C68
     virtual void method15(u8 arg); // 0x08044630
     virtual void method16(int mode); // 0x08047B98

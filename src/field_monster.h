@@ -28,7 +28,7 @@ public:
     virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects); // 0x080505F4
     virtual void method11();                                   // 0x080505C4
     virtual void method12(FieldObject** others, int count, u8 flag); // 0x08050584
-    virtual void method13();                                   // 0x08050554
+    virtual int method13();                                   // 0x08050554
     virtual void method14(FieldObject** objects, u8 arg);      // 0x08050518
     virtual void method17();                                   // 0x0805062C
 };

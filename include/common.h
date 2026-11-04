@@ -564,6 +564,7 @@ extern u8 byte_83A0636[];
 extern s8 byte_83A0656[];
 extern struct struc_83A065C stru_83A065C[];
 extern u8* off_83A069C[];
+extern s8 byte_83A06C0[8][4];
 extern s16 word_83A06E0[][2];
 extern s16 word_8198504[];
 extern s16 word_8198584[];

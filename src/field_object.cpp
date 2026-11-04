@@ -731,9 +731,9 @@ void FieldObject::sub_80418E8(FieldObject** objects) {
 }
 
 // Inline members. Earlier functions and other files call them; later ones inline them (sub_8047EB8 in
-// method12 and sub_8046A10, sub_8047E7C in sub_80461B4). Their out-of-line copies are emitted at the
-// end of the file in reverse order of definition (0x08047DC8-0x08047FDC), which fixes this order:
-// sub_8047F60, sub_8047EFC, sub_8047EB8, sub_8047E7C, sub_8047E50, sub_8047DC8.
+// method12 and sub_8046A10, sub_8047E7C in method13 and sub_80461B4). Their out-of-line copies are
+// emitted at the end of the file in reverse order of definition (0x08047DC8-0x08047FDC), which fixes
+// this order: sub_8047F60, sub_8047EFC, sub_8047EB8, sub_8047E7C, sub_8047E50, sub_8047DC8.
 inline void FieldObject::sub_8047F60(int newX, int newY, int newHeight, int savePrevious,
                                      int relative) {
     if (relative == 0) {
@@ -775,6 +775,13 @@ inline void FieldObject::sub_8047EB8() {
     field_212_13 = 0;
     field_24C = field_250 = -1;
     field_23E = field_240;
+}
+
+inline int FieldObject::sub_8047E7C() {
+    if (y == previousY && x == previousX) {
+        return -1;
+    }
+    return sub_81DA690(previousY - y, x - previousX);
 }
 
 // https://decomp.me/scratch/TODO
@@ -1046,11 +1053,1475 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
 }
 #endif
 
+// https://decomp.me/scratch/TODO
+// Same calls and control flow, but register/stack allocation differs and the original shares the
+// "hit" blocks between the cases (jumping into case 3 and the end of case 7 from the others).
+#ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/method13__11FieldObject.s\"");
+#else
+// Wall collision: moves the object back out of the collision cells it walked into since the previous
+// frame. The sides of the bounding box are checked in the order given by byte_83A06C0 for the movement
+// direction (0 back, 1 front, 2 left, 3 right, 4-7 the corner cells), in two passes: the cells the box
+// overlapped before moving, then one cell further. Returns the sides that were hit (field_24_11:
+// 1 back, 2 right, 4 front, 8 left).
+int FieldObject::method13() {
+    int moveAngle;
+    int direction;
+    int previousLeft;
+    int previousRight;
+    int previousBack;
+    int previousFront;
+    int previousTop;
+    int left;
+    int right;
+    int back;
+    int front;
+    int bottom;
+    int topEdge;
+    int pass;
+    const s8* steps;
+    int step;
+    int newX;
+    int newY;
+    int moved;
+    int cellX;
+    int cellY;
+    int last;
+    struct Coldef* cell;
+    int floor;
+    int ceiling;
+    int top;
+    int adjust;
+    int colLeft;
+    int colRight;
+    int rowBack;
+    int rowFront;
+    int d;
+    int e;
 
+    if (!field_20C_0 || field_214_21 || !field_20C_11) {
+        return field_24_11;
+    }
+    if (x == previousX && y == previousY) {
+        return field_24_11;
+    }
+    moveAngle = sub_8047E7C();
+    if (moveAngle == -1) {
+        return field_24_11;
+    }
+
+    previousLeft = previousX - field_278 / 2;
+    previousRight = previousLeft + field_278;
+    previousBack = previousY + 0x100 - field_27C;
+    previousFront = previousY + 0x100;
+    previousTop = previousZ + previousHeight + field_27A;
+    left = x - field_278 / 2;
+    right = left + field_278;
+    back = y + 0x100 - field_27C;
+    front = back + field_27C;
+    bottom = z;
+    if (!field_20C_13) {
+        bottom += height;
+    }
+    topEdge = bottom + field_27A;
+    field_224 = NULL;
+
+    direction = moveAngle >> 13;
+    if (moveAngle & 0x3FFF) {
+        direction |= 1;
+    }
+
+    for (pass = 0; pass < 2; pass++) {
+        steps = byte_83A06C0[direction];
+        do {
+            newX = x;
+            newY = y;
+            moved = 0;
+            step = *steps++;
+            if (step > 3 && (pass == 0 || field_24_11)) {
+                break;
+            }
+            switch (step) {
+                case 0: // Back side.
+                    cellX = previousLeft / 0x1000;
+                    cellY = previousBack / 0x1000 - pass;
+                    last = (previousRight - 1) / 0x1000;
+                    if (cellX > last) {
+                        break;
+                    }
+                back_loop:
+                    {
+                        cell = sub_80457E8(cellX, cellY, &floor, &ceiling, &top);
+                        if (pass != 0) {
+                            adjust = 0;
+                            if (cell->primaryShape > 3) {
+                                if (field_20C_13 && !field_210_0) {
+                                    floor += 0x400;
+                                } else if (cell->tileFlags & field_26_4) {
+                                    adjust = 0x1000;
+                                } else if (cellX << 12 > x || (cellX + 1) << 12 <= x) {
+                                    adjust = field_278 / 2;
+                                } else if (cell->primaryShape == 4) {
+                                    floor += x & 0xF00;
+                                } else if (cell->primaryShape == 5) {
+                                    floor = floor + 0x1000 - (x & 0xF00);
+                                }
+                            } else if (cell->tileFlags & field_26_4) {
+                                adjust = 0x1000;
+                            }
+                            if ((floor - adjust > previousZ && floor - adjust > bottom)
+                                || (!field_210_1 && floor == previousZ && cell->primaryShape == 1
+                                    && cell->floorType == 1)) {
+                                if ((cellY + 1) << 12 > back) {
+                                    newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                                    moved |= 2;
+                                    field_224 = cell;
+                                    field_24_11 |= 1;
+                                    break;
+                                }
+                            }
+                        }
+                        if (field_210_6) {
+                            adjust = 0;
+                            if (pass != 0) {
+                                if (cell->secondaryShape - 4 <= 2u) {
+                                    if (field_20C_13 && !field_210_0) {
+                                        top += 0x400;
+                                    } else if (cell->tileFlags & field_26_4) {
+                                        adjust = 0x1000;
+                                    } else if (cellX << 12 > x || (cellX + 1) << 12 <= x) {
+                                        adjust = field_278 / 2;
+                                    } else if (cell->secondaryShape == 4) {
+                                        top += x & 0xF00;
+                                    } else if (cell->secondaryShape == 5) {
+                                        top = top + 0x1000 - (x & 0xF00);
+                                    }
+                                } else if (cell->tileFlags & field_26_4) {
+                                    adjust = 0x1000;
+                                }
+                            }
+                            if ((pass != 0 || cell->secondaryShape > 7)
+                                && ((ceiling >= 0 && ceiling < topEdge && top - adjust > bottom
+                                     && ceiling < previousTop && top - adjust > previousZ)
+                                    || (!field_210_1 && top == previousZ && cell->floorType == 1
+                                        && cell->secondaryShape == 1))) {
+                                colLeft = cellX << 12;
+                                colRight = (cellX + 1) << 12;
+                                rowFront = (cellY + 1) << 12;
+                                if (cell->secondaryShape == 14 && cellX == previousLeft / 0x1000) {
+                                    d = left - colLeft;
+                                    if (rowFront - back - d > 0) {
+                                        rowBack = rowFront - 0x1000;
+                                        e = back - rowBack;
+                                        newX = d + (0x1000 - e - d) / 2 + colLeft + field_278 / 2;
+                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100 + field_27C;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 1;
+                                    }
+                                } else if (cell->secondaryShape == 12 && cellX == last) {
+                                    if (rowFront - back - (colRight - right) > 0) {
+                                        rowBack = rowFront - 0x1000;
+                                        d = right - colLeft;
+                                        e = back - rowBack;
+                                        newX = e + (d - e) / 2 + colLeft - field_278 / 2;
+                                        newY = d + (e - d) / 2 + rowBack - 0x100 + field_27C;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 1;
+                                    }
+                                } else if (field_210_2
+                                           || (cell->floorType != 5 && cell->floorType != 7)) {
+                                    if (cell->secondaryShape == 8) {
+                                        rowFront -= 0x800;
+                                    } else if (cell->secondaryShape == 10) {
+                                        colLeft += 0x800;
+                                    } else if (cell->secondaryShape == 11) {
+                                        colRight -= 0x800;
+                                    } else if (pass == 0) {
+                                        goto back_below;
+                                    }
+                                    if (((colLeft < previousRight && colRight > left)
+                                         || (colRight > previousLeft && colLeft < right))
+                                        && rowFront <= previousBack && rowFront > back) {
+                                        newY = rowFront - 0x100 + field_27C;
+                                        moved |= 2;
+                                        field_224 = cell;
+                                        field_24_11 |= 1;
+                                    }
+                                }
+                            }
+                        }
+                    back_below:
+                        if (field_20C_13 && floor < previousZ
+                            && !(field_210_0 && (cell->tileFlags & field_26_4))) {
+                            if (ceiling == -1 || top != previousZ) {
+                                if ((cellY + 1) << 12 > back) {
+                                    newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                                    moved |= 2;
+                                    field_224 = cell;
+                                    field_24_11 |= 1;
+                                    break;
+                                }
+                            } else if (field_210_6) {
+                                colLeft = cellX << 12;
+                                colRight = (cellX + 1) << 12;
+                                rowFront = (cellY + 1) << 12;
+                                if (cell->secondaryShape == 13 && cellX == previousLeft / 0x1000) {
+                                    d = left - colLeft;
+                                    if (rowFront - back - d > 0) {
+                                        rowBack = rowFront - 0x1000;
+                                        e = back - rowBack;
+                                        newX = d + (0x1000 - e - d) / 2 + colLeft + field_278 / 2;
+                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100 + field_27C;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 1;
+                                    }
+                                } else if (cell->secondaryShape == 15 && cellX == last) {
+                                    if (rowFront - back - (colRight - right) > 0) {
+                                        rowBack = rowFront - 0x1000;
+                                        d = right - colLeft;
+                                        e = back - rowBack;
+                                        newX = e + (d - e) / 2 + colLeft - field_278 / 2;
+                                        newY = d + (e - d) / 2 + rowBack - 0x100 + field_27C;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 1;
+                                    }
+                                } else if (cell->secondaryShape >= 9 && cell->secondaryShape <= 11) {
+                                    if (cell->secondaryShape == 9) {
+                                        rowFront -= 0x800;
+                                    } else if (cell->secondaryShape == 10) {
+                                        colRight -= 0x800;
+                                    } else {
+                                        colLeft += 0x800;
+                                    }
+                                    if (((colLeft < previousRight && colRight > left)
+                                         || (colRight > previousLeft && colLeft < right))
+                                        && rowFront <= previousBack && rowFront > back) {
+                                        newY = rowFront - 0x100 + field_27C;
+                                        moved |= 2;
+                                        field_224 = cell;
+                                        field_24_11 |= 1;
+                                    }
+                                }
+                            }
+                        }
+                        cellX++;
+                    }
+                    if (cellX <= last) {
+                        goto back_loop;
+                    }
+                    break;
+
+                case 1: // Front side.
+                    cellX = previousLeft / 0x1000;
+                    cellY = (previousFront - 1) / 0x1000 + pass;
+                    last = (previousRight - 1) / 0x1000;
+                    if (cellX > last) {
+                        break;
+                    }
+                front_loop:
+                    {
+                        cell = sub_80457E8(cellX, cellY, &floor, &ceiling, &top);
+                        if (pass != 0) {
+                            adjust = 0;
+                            if (cell->primaryShape > 3) {
+                                if (field_20C_13 && !field_210_0) {
+                                    floor += 0x400;
+                                } else if (cell->tileFlags & field_26_4) {
+                                    adjust = 0x1000;
+                                } else if (cellX << 12 > x || (cellX + 1) << 12 <= x) {
+                                    adjust = field_278 / 2;
+                                } else if (cell->primaryShape == 4) {
+                                    floor += x & 0xF00;
+                                } else if (cell->primaryShape == 5) {
+                                    floor = floor + 0x1000 - (x & 0xF00);
+                                }
+                            } else if (cell->tileFlags & field_26_4) {
+                                adjust = 0x1000;
+                            }
+                            if ((floor - adjust > previousZ && floor - adjust > bottom)
+                                || (!field_210_1 && floor == previousZ && cell->primaryShape == 1
+                                    && cell->floorType == 1)) {
+                                if (cellY << 12 < front) {
+                                    newY = (cellY << 12) - 0x100;
+                                    moved |= 2;
+                                    field_224 = cell;
+                                    field_24_11 |= 4;
+                                    break;
+                                }
+                            }
+                        }
+                        if (field_210_6) {
+                            adjust = 0;
+                            if (pass != 0) {
+                                if (cell->secondaryShape - 4 <= 2u) {
+                                    if (field_20C_13 && !field_210_0) {
+                                        top += 0x400;
+                                    } else if (cell->tileFlags & field_26_4) {
+                                        adjust = 0x1000;
+                                    } else if (cellX << 12 > x || (cellX + 1) << 12 <= x) {
+                                        adjust = field_278 / 2;
+                                    } else if (cell->secondaryShape == 4) {
+                                        top += x & 0xF00;
+                                    } else if (cell->secondaryShape == 5) {
+                                        top = top + 0x1000 - (x & 0xF00);
+                                    }
+                                } else if (cell->tileFlags & field_26_4) {
+                                    adjust = 0x1000;
+                                }
+                            }
+                            if ((pass != 0 || cell->secondaryShape > 7)
+                                && ((ceiling >= 0 && ceiling < topEdge && top - adjust > bottom
+                                     && ceiling < previousTop && top - adjust > previousZ)
+                                    || (!field_210_1 && top == previousZ && cell->floorType == 1
+                                        && cell->secondaryShape == 1))) {
+                                colLeft = cellX << 12;
+                                colRight = (cellX + 1) << 12;
+                                rowBack = cellY << 12;
+                                if (cell->secondaryShape == 15 && cellX == previousLeft / 0x1000) {
+                                    e = front - rowBack;
+                                    d = left - colLeft;
+                                    if (e - d > 0) {
+                                        newX = (d - e) / 2 + e + colLeft + field_278 / 2;
+                                        newY = d + (e - d) / 2 + rowBack - 0x100;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 4;
+                                    }
+                                } else if (cell->secondaryShape == 13 && cellX == last) {
+                                    e = front - rowBack;
+                                    if (e - (colRight - right) > 0) {
+                                        d = right - colLeft;
+                                        newX = d + (0x1000 - e - d) / 2 + colLeft - field_278 / 2;
+                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 4;
+                                    }
+                                } else if (field_210_2
+                                           || (cell->floorType != 5 && cell->floorType != 7)) {
+                                    if (cell->secondaryShape == 9) {
+                                        rowBack += 0x800;
+                                    } else if (cell->secondaryShape == 10) {
+                                        colLeft += 0x800;
+                                    } else if (cell->secondaryShape == 11) {
+                                        colRight -= 0x800;
+                                    } else if (pass == 0) {
+                                        goto front_below;
+                                    }
+                                    if (((colLeft < previousRight && colRight > left)
+                                         || (colRight > previousLeft && colLeft < right))
+                                        && rowBack >= previousFront && rowBack < front) {
+                                        newY = rowBack - 0x100;
+                                        moved |= 2;
+                                        field_224 = cell;
+                                        field_24_11 |= 4;
+                                    }
+                                }
+                            }
+                        }
+                    front_below:
+                        if (field_20C_13 && floor < previousZ
+                            && !(field_210_0 && (cell->tileFlags & field_26_4))) {
+                            if (ceiling == -1 || top != previousZ) {
+                                if (cellY << 12 < front) {
+                                    newY = (cellY << 12) - 0x100;
+                                    moved |= 2;
+                                    field_224 = cell;
+                                    field_24_11 |= 4;
+                                    break;
+                                }
+                            } else if (field_210_6) {
+                                colLeft = cellX << 12;
+                                colRight = (cellX + 1) << 12;
+                                rowBack = cellY << 12;
+                                if (cell->secondaryShape == 12 && cellX == previousLeft / 0x1000) {
+                                    e = front - rowBack;
+                                    d = left - colLeft;
+                                    if (e - d > 0) {
+                                        newX = (d - e) / 2 + e + colLeft + field_278 / 2;
+                                        newY = d + (e - d) / 2 + rowBack - 0x100;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 4;
+                                    }
+                                } else if (cell->secondaryShape == 14 && cellX == last) {
+                                    e = front - rowBack;
+                                    if (e - (colRight - right) > 0) {
+                                        d = right - colLeft;
+                                        newX = d + (0x1000 - e - d) / 2 + colLeft - field_278 / 2;
+                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 4;
+                                    }
+                                } else if (cell->secondaryShape == 8 || cell->secondaryShape == 10
+                                           || cell->secondaryShape == 11) {
+                                    if (cell->secondaryShape == 8) {
+                                        rowBack += 0x800;
+                                    } else if (cell->secondaryShape == 10) {
+                                        colRight -= 0x800;
+                                    } else {
+                                        colLeft += 0x800;
+                                    }
+                                    if (((colLeft < previousRight && colRight > left)
+                                         || (colRight > previousLeft && colLeft < right))
+                                        && rowBack >= previousFront && rowBack < front) {
+                                        newY = rowBack - 0x100;
+                                        moved |= 2;
+                                        field_224 = cell;
+                                        field_24_11 |= 4;
+                                    }
+                                }
+                            }
+                        }
+                        cellX++;
+                    }
+                    if (cellX <= last) {
+                        goto front_loop;
+                    }
+                    break;
+
+                case 2: // Left side.
+                    cellX = previousLeft / 0x1000 - pass;
+                    cellY = previousBack / 0x1000;
+                    last = (previousFront - 1) / 0x1000;
+                    if (cellY > last) {
+                        break;
+                    }
+                left_loop:
+                    {
+                        cell = sub_80457E8(cellX, cellY, &floor, &ceiling, &top);
+                        if (pass != 0) {
+                            adjust = 0;
+                            if (cell->primaryShape > 3) {
+                                if (field_20C_13 && !field_210_0) {
+                                    floor += 0x400;
+                                } else if (cell->tileFlags & field_26_4) {
+                                    adjust = 0x1000;
+                                } else if (cellY << 12 > y || (cellY + 1) << 12 < (y & ~0xFF)) {
+                                    adjust = field_27C;
+                                } else if (cell->primaryShape == 6) {
+                                    floor = floor + 0x1000 - (y & 0xF00);
+                                } else if (cell->primaryShape == 4) {
+                                    floor += 0x1000;
+                                }
+                            } else if (cell->tileFlags & field_26_4) {
+                                adjust = 0x1000;
+                            }
+                            if ((floor - adjust > previousZ && floor - adjust > bottom)
+                                || (!field_210_1 && floor == previousZ && cell->primaryShape == 1
+                                    && cell->floorType == 1)) {
+                                if ((cellX + 1) << 12 > left) {
+                                    newX = ((cellX + 1) << 12) + field_278 / 2;
+                                    moved |= 1;
+                                    field_224 = cell;
+                                    field_24_11 |= 8;
+                                    break;
+                                }
+                            }
+                        }
+                        if (field_210_6) {
+                            adjust = 0;
+                            if (pass != 0) {
+                                if (cell->secondaryShape - 4 <= 2u) {
+                                    if (field_20C_13 && !field_210_0) {
+                                        top += 0x400;
+                                    } else if (cell->tileFlags & field_26_4) {
+                                        adjust = 0x1000;
+                                    } else if (cellY << 12 > y || (cellY + 1) << 12 < (y & ~0xFF)) {
+                                        adjust = field_27C;
+                                    } else if (cell->secondaryShape == 6) {
+                                        top = top + 0x1000 - (y & 0xF00);
+                                    } else if (cell->secondaryShape == 4) {
+                                        top += 0x1000;
+                                    }
+                                } else if (cell->tileFlags & field_26_4) {
+                                    adjust = 0x1000;
+                                }
+                            }
+                            if ((pass != 0 || cell->secondaryShape > 7)
+                                && ((ceiling >= 0 && ceiling < topEdge && top - adjust > bottom
+                                     && ceiling < previousTop && top - adjust > previousZ)
+                                    || (!field_210_1 && top == previousZ && cell->floorType == 1
+                                        && cell->secondaryShape == 1))) {
+                                rowBack = cellY << 12;
+                                rowFront = (cellY + 1) << 12;
+                                colRight = (cellX + 1) << 12;
+                                if (cell->secondaryShape == 14 && cellY == previousBack / 0x1000) {
+                                    d = back - rowBack;
+                                    if (colRight - left - d > 0) {
+                                        colLeft = colRight - 0x1000;
+                                        e = left - colLeft;
+                                        newX = e + (0x1000 - d - e) / 2 + field_278 / 2 + colLeft;
+                                        newY = d + (0x1000 - e - d) / 2 - 0x100 + field_27C + rowBack;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 8;
+                                    }
+                                } else if (cell->secondaryShape == 15 && cellY == last) {
+                                    if (colRight - left - (rowFront - front) > 0) {
+                                        colLeft = colRight - 0x1000;
+                                        e = left - colLeft;
+                                        d = front - rowBack;
+                                        newX = d + (e - d) / 2 + colLeft + field_278 / 2;
+                                        newY = e + (d - e) / 2 + rowBack - 0x100;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 8;
+                                    }
+                                } else if (field_210_2
+                                           || (cell->floorType != 5 && cell->floorType != 7)) {
+                                    if (cell->secondaryShape == 8) {
+                                        rowFront -= 0x800;
+                                    } else if (cell->secondaryShape == 9) {
+                                        rowBack += 0x800;
+                                    } else if (cell->secondaryShape == 11) {
+                                        colRight -= 0x800;
+                                    } else if (pass == 0) {
+                                        goto left_below;
+                                    }
+                                    if (((rowBack < previousFront && rowFront > back)
+                                         || (rowFront > previousBack && rowBack < front))
+                                        && colRight <= previousLeft && colRight > left) {
+                                        newX = colRight + field_278 / 2;
+                                        moved |= 1;
+                                        field_224 = cell;
+                                        field_24_11 |= 8;
+                                    }
+                                }
+                            }
+                        }
+                    left_below:
+                        if (field_20C_13 && floor < previousZ
+                            && !(field_210_0 && (cell->tileFlags & field_26_4))) {
+                            if (ceiling == -1 || top != previousZ) {
+                                if ((cellX + 1) << 12 > left) {
+                                    newX = ((cellX + 1) << 12) + field_278 / 2;
+                                    moved |= 1;
+                                    field_224 = cell;
+                                    field_24_11 |= 8;
+                                    break;
+                                }
+                            } else if (field_210_6) {
+                                rowBack = cellY << 12;
+                                rowFront = (cellY + 1) << 12;
+                                colRight = (cellX + 1) << 12;
+                                if (cell->secondaryShape == 13 && cellY == previousBack / 0x1000) {
+                                    d = back - rowBack;
+                                    if (colRight - left - d > 0) {
+                                        colLeft = colRight - 0x1000;
+                                        e = left - colLeft;
+                                        newX = e + (0x1000 - d - e) / 2 + field_278 / 2 + colLeft;
+                                        newY = d + (0x1000 - e - d) / 2 - 0x100 + field_27C + rowBack;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 8;
+                                    }
+                                } else if (cell->secondaryShape == 12 && cellY == last) {
+                                    if (colRight - left - (rowFront - front) > 0) {
+                                        colLeft = colRight - 0x1000;
+                                        e = left - colLeft;
+                                        d = front - rowBack;
+                                        newX = d + (e - d) / 2 + colLeft + field_278 / 2;
+                                        newY = e + (d - e) / 2 + rowBack - 0x100;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 8;
+                                    }
+                                } else if (cell->secondaryShape >= 8 && cell->secondaryShape <= 10) {
+                                    if (cell->secondaryShape == 8) {
+                                        rowBack += 0x800;
+                                    } else if (cell->secondaryShape == 9) {
+                                        rowFront -= 0x800;
+                                    } else {
+                                        colRight -= 0x800;
+                                    }
+                                    if (((rowBack < previousFront && rowFront > back)
+                                         || (rowFront > previousBack && rowBack < front))
+                                        && colRight <= previousLeft && colRight > left) {
+                                        newX = colRight + field_278 / 2;
+                                        moved |= 1;
+                                        field_224 = cell;
+                                        field_24_11 |= 8;
+                                    }
+                                }
+                            }
+                        }
+                        cellY++;
+                    }
+                    if (cellY <= last) {
+                        goto left_loop;
+                    }
+                    break;
+
+                case 3: // Right side.
+                    cellX = (previousRight - 1) / 0x1000 + pass;
+                    cellY = previousBack / 0x1000;
+                    last = (previousFront - 1) / 0x1000;
+                    if (cellY > last) {
+                        break;
+                    }
+                right_loop:
+                    {
+                        cell = sub_80457E8(cellX, cellY, &floor, &ceiling, &top);
+                        if (pass != 0) {
+                            adjust = 0;
+                            if (cell->primaryShape > 3) {
+                                if (field_20C_13 && !field_210_0) {
+                                    floor += 0x400;
+                                } else if (cell->tileFlags & field_26_4) {
+                                    adjust = 0x1000;
+                                } else if (cellY << 12 > y || (cellY + 1) << 12 < (y & ~0xFF)) {
+                                    adjust = field_27C;
+                                } else if (cell->primaryShape == 6) {
+                                    floor = floor + 0x1000 - (y & 0xF00);
+                                } else if (cell->primaryShape == 5) {
+                                    floor += 0x1000;
+                                }
+                            } else if (cell->tileFlags & field_26_4) {
+                                adjust = 0x1000;
+                            }
+                            if ((floor - adjust > previousZ && floor - adjust > bottom)
+                                || (!field_210_1 && floor == previousZ && cell->primaryShape == 1
+                                    && cell->floorType == 1)) {
+                                if (cellX << 12 < right) {
+                                    newX = (cellX << 12) - field_278 / 2;
+                                    moved |= 1;
+                                    field_224 = cell;
+                                    field_24_11 |= 2;
+                                    break;
+                                }
+                            }
+                        }
+                        if (field_210_6) {
+                            adjust = 0;
+                            if (pass != 0) {
+                                if (cell->secondaryShape - 4 <= 2u) {
+                                    if (field_20C_13 && !field_210_0) {
+                                        top += 0x400;
+                                    } else if (cell->tileFlags & field_26_4) {
+                                        adjust = 0x1000;
+                                    } else if (cellY << 12 > y || (cellY + 1) << 12 < (y & ~0xFF)) {
+                                        adjust = field_27C;
+                                    } else if (cell->secondaryShape == 6) {
+                                        top = top + 0x1000 - (y & 0xF00);
+                                    } else if (cell->secondaryShape == 5) {
+                                        top += 0x1000;
+                                    }
+                                } else if (cell->tileFlags & field_26_4) {
+                                    adjust = 0x1000;
+                                }
+                            }
+                            if ((pass != 0 || cell->secondaryShape > 7)
+                                && ((ceiling >= 0 && ceiling < topEdge && top - adjust > bottom
+                                     && ceiling < previousTop && top - adjust > previousZ)
+                                    || (!field_210_1 && top == previousZ && cell->floorType == 1
+                                        && cell->secondaryShape == 1))) {
+                                rowBack = cellY << 12;
+                                rowFront = (cellY + 1) << 12;
+                                colLeft = cellX << 12;
+                                if (cell->secondaryShape == 12 && cellY == previousBack / 0x1000) {
+                                    d = right - colLeft;
+                                    e = back - rowBack;
+                                    if (d - e > 0) {
+                                        newX = e + (d - e) / 2 + colLeft - field_278 / 2;
+                                        newY = d + (e - d) / 2 + rowBack - 0x100 + field_27C;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 2;
+                                    }
+                                } else if (cell->secondaryShape == 13 && cellY == last) {
+                                    d = right - colLeft;
+                                    if (d - (rowFront - front) > 0) {
+                                        e = front - rowBack;
+                                        newX = d + (0x1000 - e - d) / 2 + colLeft - field_278 / 2;
+                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 2;
+                                    }
+                                } else if (field_210_2
+                                           || (cell->floorType != 5 && cell->floorType != 7)) {
+                                    if (cell->secondaryShape == 8) {
+                                        rowFront -= 0x800;
+                                    } else if (cell->secondaryShape == 9) {
+                                        rowBack += 0x800;
+                                    } else if (cell->secondaryShape == 10) {
+                                        colLeft += 0x800;
+                                    } else if (pass == 0) {
+                                        goto right_below;
+                                    }
+                                    if (((rowBack < previousFront && rowFront > back)
+                                         || (rowFront > previousBack && rowBack < front))
+                                        && colLeft >= previousRight && colLeft < right) {
+                                        newX = colLeft - field_278 / 2;
+                                        moved |= 1;
+                                        field_224 = cell;
+                                        field_24_11 |= 2;
+                                    }
+                                }
+                            }
+                        }
+                    right_below:
+                        if (field_20C_13 && floor < previousZ
+                            && !(field_210_0 && (cell->tileFlags & field_26_4))) {
+                            if (ceiling == -1 || top != previousZ) {
+                                if (cellX << 12 < right) {
+                                    newX = (cellX << 12) - field_278 / 2;
+                                    moved |= 1;
+                                    field_224 = cell;
+                                    field_24_11 |= 2;
+                                    break;
+                                }
+                            } else if (field_210_6) {
+                                rowBack = cellY << 12;
+                                rowFront = (cellY + 1) << 12;
+                                colLeft = cellX << 12;
+                                if (cell->secondaryShape == 15 && cellY == previousBack / 0x1000) {
+                                    d = right - colLeft;
+                                    e = back - rowBack;
+                                    if (d - e > 0) {
+                                        newX = e + (d - e) / 2 + colLeft - field_278 / 2;
+                                        newY = d + (e - d) / 2 + rowBack - 0x100 + field_27C;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 2;
+                                    }
+                                } else if (cell->secondaryShape == 14 && cellY == last) {
+                                    d = right - colLeft;
+                                    if (d - (rowFront - front) > 0) {
+                                        e = front - rowBack;
+                                        newX = d + (0x1000 - e - d) / 2 + colLeft - field_278 / 2;
+                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100;
+                                        moved = 3;
+                                        field_224 = cell;
+                                        field_24_11 |= 2;
+                                    }
+                                } else if (cell->secondaryShape == 8 || cell->secondaryShape == 9
+                                           || cell->secondaryShape == 11) {
+                                    if (cell->secondaryShape == 8) {
+                                        rowBack += 0x800;
+                                    } else if (cell->secondaryShape == 9) {
+                                        rowFront -= 0x800;
+                                    } else {
+                                        colLeft += 0x800;
+                                    }
+                                    if (((rowBack < previousFront && rowFront > back)
+                                         || (rowFront > previousBack && rowBack < front))
+                                        && colLeft >= previousRight && colLeft < right) {
+                                        newX = colLeft - field_278 / 2;
+                                        moved |= 1;
+                                        field_224 = cell;
+                                        field_24_11 |= 2;
+                                    }
+                                }
+                            }
+                        }
+                        cellY++;
+                    }
+                    if (cellY <= last) {
+                        goto right_loop;
+                    }
+                    break;
+
+                case 4: // Back-left corner cell.
+                    cellX = previousLeft / 0x1000 - 1;
+                    cellY = previousBack / 0x1000 - 1;
+                    if ((cellX + 1) << 12 <= left || (cellY + 1) << 12 <= back) {
+                        break;
+                    }
+                    cell = sub_80457E8(cellX, cellY, &floor, &ceiling, &top);
+                    adjust = 0;
+                    if (cell->primaryShape > 3 && field_20C_13 && !field_210_0) {
+                        floor += 0x400;
+                    } else if (cell->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    }
+                    if (floor - adjust > previousZ && floor - adjust > bottom
+                        && (cellY + 1) << 12 > back) {
+                        newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                        moved |= 2;
+                        field_224 = cell;
+                        field_24_11 |= 1;
+                        break;
+                    }
+                    if (!field_210_6) {
+                        break;
+                    }
+                    adjust = 0;
+                    if (cell->secondaryShape - 4 <= 2u && field_20C_13 && !field_210_0) {
+                        top += 0x400;
+                    } else if (cell->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    }
+                    if (ceiling >= 0 && ceiling < previousTop && top - adjust > previousZ
+                        && ceiling < topEdge && top - adjust > bottom && (cellY + 1) << 12 > back) {
+                        newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                        moved |= 2;
+                        field_224 = cell;
+                        field_24_11 |= 1;
+                    }
+                    break;
+
+                case 5: // Back-right corner cell.
+                    cellX = (previousRight - 0x100) / 0x1000 + 1;
+                    cellY = previousBack / 0x1000 - 1;
+                    if (cellX << 12 >= right || (cellY + 1) << 12 <= back) {
+                        break;
+                    }
+                    cell = sub_80457E8(cellX, cellY, &floor, &ceiling, &top);
+                    adjust = 0;
+                    if (cell->primaryShape > 3 && field_20C_13 && !field_210_0) {
+                        floor += 0x400;
+                    } else if (cell->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    }
+                    if (floor - adjust > previousZ && floor - adjust > bottom
+                        && (cellY + 1) << 12 > back) {
+                        newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                        moved |= 2;
+                        field_224 = cell;
+                        field_24_11 |= 1;
+                        break;
+                    }
+                    if (!field_210_6) {
+                        break;
+                    }
+                    adjust = 0;
+                    if (cell->secondaryShape - 4 <= 2u && field_20C_13 && !field_210_0) {
+                        top += 0x400;
+                    } else if (cell->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    }
+                    if (ceiling >= 0 && ceiling < previousTop && top - adjust > previousZ
+                        && ceiling < topEdge && top - adjust > bottom && (cellY + 1) << 12 > back) {
+                        newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                        moved |= 2;
+                        field_224 = cell;
+                        field_24_11 |= 1;
+                    }
+                    break;
+
+                case 6: // Front-left corner cell.
+                    cellX = previousLeft / 0x1000 - 1;
+                    cellY = (previousFront - 0x100) / 0x1000 + 1;
+                    if ((cellX + 1) << 12 <= left || cellY << 12 >= front) {
+                        break;
+                    }
+                    cell = sub_80457E8(cellX, cellY, &floor, &ceiling, &top);
+                    adjust = 0;
+                    if (cell->primaryShape > 3 && field_20C_13 && !field_210_0) {
+                        floor += 0x400;
+                    } else if (cell->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    }
+                    if (floor - adjust > previousZ && floor - adjust > bottom && cellY << 12 < front) {
+                        newY = (cellY << 12) - 0x100;
+                        moved |= 2;
+                        field_224 = cell;
+                        field_24_11 |= 4;
+                        break;
+                    }
+                    if (!field_210_6) {
+                        break;
+                    }
+                    adjust = 0;
+                    if (cell->secondaryShape - 4 <= 2u && field_20C_13 && !field_210_0) {
+                        top += 0x400;
+                    } else if (cell->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    }
+                    if (ceiling >= 0 && ceiling < previousTop && top - adjust > previousZ
+                        && ceiling < topEdge && top - adjust > bottom && cellY << 12 < front) {
+                        newY = (cellY << 12) - 0x100;
+                        moved |= 2;
+                        field_224 = cell;
+                        field_24_11 |= 4;
+                    }
+                    break;
+
+                case 7: // Front-right corner cell.
+                    cellX = (previousRight - 0x100) / 0x1000 + 1;
+                    cellY = (previousFront - 0x100) / 0x1000 + 1;
+                    if (cellX << 12 >= right || cellY << 12 >= front) {
+                        break;
+                    }
+                    cell = sub_80457E8(cellX, cellY, &floor, &ceiling, &top);
+                    adjust = 0;
+                    if (cell->primaryShape > 3 && field_20C_13 && !field_210_0) {
+                        floor += 0x400;
+                    } else if (cell->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    }
+                    if (floor - adjust > previousZ && floor - adjust > bottom && cellY << 12 < front) {
+                        newY = (cellY << 12) - 0x100;
+                        moved |= 2;
+                        field_224 = cell;
+                        field_24_11 |= 4;
+                        break;
+                    }
+                    if (!field_210_6) {
+                        break;
+                    }
+                    adjust = 0;
+                    if (cell->secondaryShape - 4 <= 2u && field_20C_13 && !field_210_0) {
+                        top += 0x400;
+                    } else if (cell->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    }
+                    if (ceiling >= 0 && ceiling < previousTop && top - adjust > previousZ
+                        && ceiling < topEdge && top - adjust > bottom && cellY << 12 < front) {
+                        newY = (cellY << 12) - 0x100;
+                        moved |= 2;
+                        field_224 = cell;
+                        field_24_11 |= 4;
+                    }
+                    break;
+            }
+
+            if (moved & 1) {
+                x = newX;
+                left = x - field_278 / 2;
+                right = left + field_278;
+            }
+            if (moved & 2) {
+                y = newY;
+                back = y + 0x100 - field_27C;
+                front = back + field_27C;
+            }
+        } while (*steps != -1);
+    }
+
+    if (field_24_11 && field_2B5_0 && field_2B6_7) {
+        sub_8046980();
+    }
+    return field_24_11;
+}
+#endif
+
+// https://decomp.me/scratch/TODO
+// Same calls and control flow, but register allocation differs (`this` is r6 in the original) and the
+// duplicated "floor/top window" blocks of the two switches are shared and ordered differently.
+#ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/method15__11FieldObjectUc.s\"");
+#else
+// Finds the floor (and the secondary surface) under the object by probing the collision map at
+// five points around it, then puts the object on the best one.
+void FieldObject::method15(u8 force) {
+    int landed;
+    struct Coldef* topCell;
+    int bestTop;
+    int floorProbe;
+    int topProbe;
+    int previousBase;
+    int previousLimit;
+    int current;
+    int floor;
+    int ceiling;
+    int top;
+    struct Coldef* probe;
+    int floorLimit;
+    int topLimit;
+    int bestFloor;
+    int floorX;
+    int floorY;
+    struct Coldef* floorCell;
+    int topX;
+    int topY;
+    int probeX;
+    int probeY;
+    struct Coldef* below;
+    int flagsLeft;
+    int flagsRight;
+    int adjust;
+    int result;
+    int tolerance;
+    int useTop;
+    int newHeight;
 
-struct Coldef* FieldObject::sub_80457E8(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top) {
+    if (force == 0) {
+        if (!field_20C_0 || field_214_21) {
+            return;
+        }
+        if (field_20C_13 && !field_210_0) {
+            int cellFloor;
+            int cellCeiling;
+            int cellTop;
+
+            if (x == previousX && y == previousY && z == previousZ && height == previousHeight) {
+                return;
+            }
+            coldef = sub_803FBA4(field_290, x, y, &cellFloor, &cellCeiling, &cellTop, 0, field_20C_11);
+            field_26_1 = cellTop != -1 && z + height >= cellTop;
+            field_230 = x;
+            field_234 = y;
+            if (field_26_1) {
+                height = z + height - cellTop;
+                z = cellTop;
+            } else {
+                height = z + height - cellFloor;
+                z = cellFloor;
+            }
+            field_26_4 = 0;
+            return;
+        }
+    }
+
+    if (x != previousX || y != previousY || z != previousZ || height != previousHeight || force != 0) {
+        landed = 0;
+        topCell = NULL;
+        bestTop = 0;
+        floorProbe = 0;
+        topProbe = 0;
+        previousBase = previousZ + previousHeight;
+        previousLimit = previousBase + field_27A;
+        current = z + height;
+
+        // Probe 0: the center.
+        probe = sub_803FBA4(field_290, x, y, &floor, &ceiling, &top, !field_20C_13 || field_210_0,
+                            field_20C_11);
+        floorLimit = floor;
+        if (probe->primaryShape > 3) {
+            floorLimit += 0x1000;
+        }
+        if (field_210_6) {
+            topLimit = top;
+            if (top >= 0 && probe->secondaryShape > 3 && probe->secondaryShape <= 6) {
+                topLimit += 0x1000;
+            }
+        } else {
+            top = -1;
+            topLimit = -1;
+        }
+        bestFloor = floor;
+        floorX = x;
+        floorY = y;
+        floorCell = probe;
+        if (bestTop < top) {
+            bestTop = top;
+            topX = x;
+            topY = y;
+            topCell = probe;
+        }
+
+        // Probe 1: the left edge.
+        probeX = x - field_27E / 2;
+        probeY = y;
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
+                            !field_20C_13 || field_210_0, field_20C_11);
+        if (probe->primaryShape == 5) {
+            floor -= field_27E / 2;
+        }
+        if (floorLimit < floor && topLimit <= floor && bestFloor < floor) {
+            bestFloor = floor;
+            floorX = probeX;
+            floorY = probeY;
+            floorCell = probe;
+            floorProbe = 1;
+            if (probe->primaryShape > 3) {
+                floorLimit = bestFloor + 0x1000;
+            }
+        }
+        if (field_210_6) {
+            if (probe->secondaryShape == 5) {
+                top -= field_27E / 2;
+            }
+            if (floorLimit < top && topLimit < top && bestTop < top) {
+                bestTop = top;
+                topX = probeX;
+                topY = probeY;
+                topCell = probe;
+                topProbe = 1;
+                if (probe->secondaryShape - 4 <= 2u) {
+                    topLimit = bestTop + 0x1000;
+                }
+            }
+        }
+
+        // Probe 2: the right edge.
+        probeX = x - 0x100 + field_27E / 2;
+        probeY = y;
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
+                            !field_20C_13 || field_210_0, field_20C_11);
+        if (probe->primaryShape == 4) {
+            floor = floor + 0x100 - field_27E / 2;
+        }
+        if (floorLimit < floor && topLimit <= floor && bestFloor < floor) {
+            bestFloor = floor;
+            floorX = probeX;
+            floorY = probeY;
+            floorCell = probe;
+            floorProbe = 2;
+            if (probe->primaryShape > 3) {
+                floorLimit = bestFloor + 0x1000;
+            }
+        }
+        if (field_210_6) {
+            if (probe->secondaryShape == 4) {
+                top = top + 0x100 - field_27E / 2;
+            }
+            if (floorLimit < top && topLimit < top && bestTop < top) {
+                bestTop = top;
+                topX = probeX;
+                topY = probeY;
+                topCell = probe;
+                topProbe = 2;
+                if (probe->secondaryShape - 4 <= 2u) {
+                    topLimit = bestTop + 0x1000;
+                }
+            }
+        }
+
+        // Probes 3 and 4: the back corners.
+        below = get_coldef_ptr_by_xz(field_290, (x & ~0xFFF) / 0x1000,
+                                     ((y + 0x100 - field_280) & ~0xFFF) / 0x1000);
+        flagsLeft = 0;
+        probeX = x - field_27E / 2;
+        probeY = y + 0x100 - field_280;
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
+                            !field_20C_13 || field_210_0, field_20C_11);
+        if (probe->tileFlags
+            && !(probe->primaryShape == 3 && probe->floorType == 8 && probe->secondaryShape == 3)) {
+            flagsLeft = probe->tileFlags;
+        }
+        if (probe->primaryShape == 5) {
+            floor -= field_27E / 2;
+        } else if (probe->primaryShape == 4) {
+            floor += field_27E / 2;
+            if (below->primaryShape != 4 && below->secondaryShape != 4) {
+                floor &= ~0xFFF;
+            }
+        } else if (probe->primaryShape == 6) {
+            floor = floor + 0x100 - field_280;
+        }
+        if (floorLimit < floor && topLimit <= floor && bestFloor < floor) {
+            bestFloor = floor;
+            floorX = probeX;
+            floorY = probeY;
+            floorCell = probe;
+            floorProbe = 3;
+        }
+        if (field_210_6) {
+            if (probe->secondaryShape == 5) {
+                top -= field_27E / 2;
+            } else if (probe->secondaryShape == 4) {
+                top += field_27E / 2;
+                if (below->primaryShape != 4 && below->secondaryShape != 4) {
+                    top &= ~0xFFF;
+                }
+            } else if (probe->secondaryShape == 6) {
+                top = top + 0x100 - field_280;
+            }
+            if (floorLimit < top && topLimit < top && bestTop < top) {
+                bestTop = top;
+                topX = probeX;
+                topY = probeY;
+                topCell = probe;
+                topProbe = 3;
+            }
+        }
+
+        flagsRight = 0;
+        probeX = x - 0x100 + field_27E / 2;
+        probeY = y + 0x100 - field_280;
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
+                            !field_20C_13 || field_210_0, field_20C_11);
+        if (probe->tileFlags
+            && !(probe->primaryShape == 3 && probe->floorType == 8 && probe->secondaryShape == 3)) {
+            flagsRight = probe->tileFlags;
+        }
+        adjust = 0;
+        if (probe->primaryShape == 4) {
+            floor = floor + 0x100 - field_27E / 2;
+        } else if (probe->primaryShape == 5) {
+            floor = floor - 0x100 + field_27E / 2;
+            if (flagsLeft & flagsRight) {
+                adjust = 0x1000;
+            }
+        } else if (probe->primaryShape == 6) {
+            floor = floor + 0x100 - field_280;
+        } else if (flagsLeft & flagsRight) {
+            adjust = -0x1000;
+        }
+        if (floorLimit < floor && topLimit <= floor && bestFloor < floor + adjust) {
+            bestFloor = floor;
+            floorX = probeX;
+            floorY = probeY;
+            floorCell = probe;
+            floorProbe = 4;
+        }
+        if (field_210_6) {
+            adjust = 0;
+            if (probe->secondaryShape == 4) {
+                top = top + 0x100 - field_27E / 2;
+            } else if (probe->secondaryShape == 5) {
+                int offset = field_27E / 2 - 0x100;
+                int fraction = top & 0xFFF;
+
+                if (fraction != 0 && 0x1000 - fraction > offset) {
+                    top += offset;
+                    if (flagsLeft & flagsRight) {
+                        adjust = 0x1000;
+                    }
+                }
+            } else if (probe->secondaryShape == 6) {
+                top = top + 0x100 - field_280;
+            } else if (flagsLeft & flagsRight) {
+                adjust = -0x1000;
+            }
+            if (floorLimit < top && topLimit < top && bestTop < top + adjust) {
+                bestTop = top;
+                topX = probeX;
+                topY = probeY;
+                topCell = probe;
+                topProbe = 4;
+            }
+        }
+
+        // Only step up onto a higher surface when coming from below it.
+        result = current;
+        if (current < previousBase) {
+            if (bestTop > 0 && previousLimit > bestTop && current < bestTop) {
+                result = bestTop;
+            } else if (current < bestFloor) {
+                result = bestFloor;
+            }
+        }
+
+        tolerance = 0;
+        if (topCell->tileFlags & field_26_4) {
+            tolerance = (s16)field_23E;
+        }
+        useTop = FALSE;
+        if (bestTop > 0) {
+            if (bestFloor >= bestTop) {
+                useTop = bestFloor > result;
+            } else if (bestTop <= result + tolerance) {
+                useTop = TRUE;
+            }
+        }
+
+        if (useTop) {
+            if (topCell->secondaryShape - 4 <= 2u) {
+                field_26_2 = topCell->secondaryShape - 3;
+                switch (topProbe) {
+                    case 1:
+                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                            bestTop += 0xFFF;
+                            bestTop &= ~0xFFF;
+                        } else if (topCell->secondaryShape == 6) {
+                            sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top,
+                                        topProbe, field_20C_11);
+                            bestTop = top;
+                        }
+                        break;
+                    case 2:
+                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                            bestTop += 0xFFF;
+                            bestTop &= ~0xFFF;
+                        } else if (topCell->secondaryShape == 6) {
+                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling, &top,
+                                        1, field_20C_11);
+                            bestTop = top;
+                        }
+                        break;
+                    case 3:
+                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, y + 0x100 - field_280, &floor, &ceiling,
+                                                &top, 1, field_20C_11);
+                            if (probe->tileFlags & topCell->tileFlags) {
+                                if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
+                                    bestTop = top;
+                                } else {
+                                    bestTop = floor;
+                                }
+                            } else {
+                                if (topCell->secondaryShape == 5) {
+                                    bestTop += 0xFFF;
+                                }
+                                bestTop &= ~0xFFF;
+                            }
+                        } else if (topCell->secondaryShape == 6) {
+                            probe = sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top,
+                                                1, field_20C_11);
+                            if (probe->tileFlags & topCell->tileFlags) {
+                                if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
+                                    bestTop = top;
+                                } else {
+                                    bestTop = floor;
+                                }
+                            } else {
+                                bestTop &= ~0xFFF;
+                            }
+                        }
+                        break;
+                    case 4:
+                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, y + 0x100 - field_280, &floor, &ceiling,
+                                                &top, 1, field_20C_11);
+                            if (probe->tileFlags & topCell->tileFlags) {
+                                if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
+                                    bestTop = top;
+                                } else {
+                                    bestTop = floor;
+                                }
+                            } else {
+                                if (topCell->secondaryShape == 4) {
+                                    bestTop += 0xFFF;
+                                }
+                                bestTop &= ~0xFFF;
+                            }
+                        } else if (topCell->secondaryShape == 6) {
+                            probe = sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (probe->tileFlags & topCell->tileFlags) {
+                                if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
+                                    bestTop = top;
+                                } else {
+                                    bestTop = floor;
+                                }
+                            } else {
+                                bestTop &= ~0xFFF;
+                            }
+                        }
+                        break;
+                }
+            } else {
+                field_26_2 = 0;
+            }
+
+            newHeight = result - bestTop;
+            if (force == 0 && height == 0 && newHeight <= (s16)field_23E + 0x100
+                && (field_20C_11 || (previousHeight == 0 && (topCell->tileFlags & field_26_4)))) {
+                newHeight = 0;
+            }
+            height = newHeight;
+            z = bestTop;
+            field_26_1 = 1;
+            field_230 = topX;
+            field_234 = topY;
+            coldef = topCell;
+        } else {
+            if (floorCell->primaryShape - 4 <= 2u) {
+                field_26_2 = floorCell->primaryShape - 3;
+                switch (floorProbe) {
+                    case 1:
+                        if ((u8)(floorCell->primaryShape - 4) <= 1) {
+                            bestFloor += 0xFFF;
+                            bestFloor &= ~0xFFF;
+                        } else if (floorCell->primaryShape == 6) {
+                            sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top,
+                                        floorProbe, field_20C_11);
+                            bestFloor = floor;
+                        }
+                        break;
+                    case 2:
+                        if ((u8)(floorCell->primaryShape - 4) <= 1) {
+                            bestFloor += 0xFFF;
+                            bestFloor &= ~0xFFF;
+                        } else if (floorCell->primaryShape == 6) {
+                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling, &top,
+                                        1, field_20C_11);
+                            bestFloor = floor;
+                        }
+                        break;
+                    case 3:
+                        if ((u8)(floorCell->primaryShape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, y + 0x100 - field_280, &floor, &ceiling,
+                                                &top, 1, field_20C_11);
+                            if (probe->tileFlags & floorCell->tileFlags) {
+                                if (floor < bestFloor - 0x1000 || floor >= bestFloor + 0x1000) {
+                                    bestFloor = top;
+                                } else {
+                                    bestFloor = floor;
+                                }
+                            } else {
+                                if (floorCell->primaryShape == 5) {
+                                    bestFloor += 0xFFF;
+                                }
+                                bestFloor &= ~0xFFF;
+                            }
+                        } else if (floorCell->primaryShape == 6) {
+                            sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top, 1,
+                                        field_20C_11);
+                            bestFloor = floor;
+                        }
+                        break;
+                    case 4:
+                        if ((u8)(floorCell->primaryShape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, y + 0x100 - field_280, &floor, &ceiling,
+                                                &top, 1, field_20C_11);
+                            if (probe->tileFlags & floorCell->tileFlags) {
+                                if (floor < bestFloor - 0x1000 || floor >= bestFloor + 0x1000) {
+                                    bestFloor = top;
+                                } else {
+                                    bestFloor = floor;
+                                }
+                            } else {
+                                if (floorCell->primaryShape == 4) {
+                                    bestFloor += 0xFFF;
+                                }
+                                bestFloor &= ~0xFFF;
+                            }
+                        } else if (floorCell->primaryShape == 6) {
+                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling, &top,
+                                        1, field_20C_11);
+                            bestFloor = floor;
+                        }
+                        break;
+                }
+            } else {
+                field_26_2 = 0;
+            }
+
+            newHeight = result - bestFloor;
+            if (force == 0 && height == 0 && newHeight <= (s16)field_23E + 0x100
+                && (field_20C_11 || (previousHeight == 0 && (floorCell->tileFlags & field_26_4)))) {
+                newHeight = 0;
+            }
+            height = newHeight;
+            z = bestFloor;
+            if (z + height < 0) {
+                height = 0;
+                z = 0;
+            }
+            field_26_1 = 0;
+            field_230 = floorX;
+            field_234 = floorY;
+            coldef = floorCell;
+        }
+
+        if ((!field_20C_13 || field_210_0) && coldef->tileFlags && coldef->primaryShape != 3
+            && coldef->secondaryShape != 3 && coldef->floorType != 8) {
+            field_26_4 = coldef->tileFlags;
+        } else {
+            field_26_4 = 0;
+        }
+        if (field_25C >= 0) {
+            field_250 += previousZ - z;
+        }
+        if (landed) {
+            field_24_15 = 1;
+        } else if (height == 0) {
+            field_24_15 = 2;
+        }
+    }
+
+    if (height > 0 && field_25C == -1 && field_20C_14 && (s8)field_1 == field_25C && force == 0) {
+        if (height <= (s16)field_23E && field_26_4) {
+            height = 0;
+        } else {
+            sub_80401F0(0, -1, (s16)field_23E);
+        }
+    }
+}
+#endif
+
+struct Coldef* FieldObject::sub_80457E8(int cellX, int cellY, int* floor, int* ceiling, int* top) {
     struct Coldef* coldef = get_coldef_ptr_by_xz(field_290, cellX, cellY);
     int level;
 
@@ -1295,13 +2766,6 @@ int FieldObject::sub_8045F04(int mode, int relative, int centerX, int centerY, i
     return 1;
 }
 #endif
-
-inline int FieldObject::sub_8047E7C() {
-    if (y == previousY && x == previousX) {
-        return -1;
-    }
-    return sub_81DA690(previousY - y, x - previousX);
-}
 
 // https://decomp.me/scratch/TODO
 // Mostly register allocation differs, plus how the packed object index (field_2B7_3 | field_2B8_0 << 5)
@@ -2042,8 +3506,7 @@ void FieldObject::method16(int mode) {
 
 int FieldObject::sub_8047C18(FieldObject* other) {
     if (field_1C != other->field_1C) {
-        if ((!field_26_2 && !other->field_26_2)
-            || !(field_20->field_0_29 & other->field_20->field_0_29)) {
+        if ((!field_26_2 && !other->field_26_2) || !(coldef->tileFlags & other->coldef->tileFlags)) {
             return field_1C - other->field_1C;
         }
     }
