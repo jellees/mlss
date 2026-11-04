@@ -1,3 +1,4 @@
+#pragma implementation "field_object.h"
 #include "global.h"
 #include "common.h"
 #include "field_object.h"
@@ -29,7 +30,7 @@ FieldObject::FieldObject(int room, int index) {
     field_26C = 0xFFFF;
     field_26E = 0xFF;
     field_268 = -1;
-    sub_8047EFC(this, 0x200, 0x200, 0x52C, 0x75);
+    sub_8047EFC(0x200, 0x200, 0x52C, 0x75);
     if (room != -1) {
         init_fobj_with_data_80FB128(room, index, this);
     }
@@ -120,13 +121,13 @@ void FieldObject::sub_80402C4() {
         field_258 -= field_248;
         if (field_20C_13 == 0) {
             if (height <= 0) {
-                sub_8047EB8(this);
+                sub_8047EB8();
                 height = 0;
             } else {
                 field_25C++;
             }
         } else if (z + height <= field_24C) {
-            sub_8047EB8(this);
+            sub_8047EB8();
             if (z + height < 0) {
                 height = -z;
             }
@@ -1791,8 +1792,67 @@ void FieldObject::sub_80475A0(int slot) {
     }
 }
 
+// The inline members below are only called from other files (or before their definition), so they
+// only appear as the out-of-line copies at the end of the file, in reverse order
+// (0x08047E50-0x08047FDC).
+inline void FieldObject::sub_8047F60(int newX, int newY, int newHeight, int savePrevious,
+                                     int relative) {
+    if (relative == 0) {
+        x = newX;
+        y = newY;
+        height = newHeight;
+    } else {
+        x += newX;
+        y += newY;
+        height += z + newHeight;
+    }
+    z = 0;
+    if (savePrevious) {
+        previousX = x;
+        previousY = y;
+        previousZ = 0;
+        previousHeight = height;
+        if (field_290 != NULL) {
+            method15(1);
+        }
+    }
+    field_214_24 = 1;
+}
+
+inline void FieldObject::sub_8047EFC(u16 speed, u16 arg2, s16 arg3, s16 arg4) {
+    field_23E = speed;
+    field_260 = speed;
+    field_262 = arg2;
+    field_264 = arg3;
+    field_266 = arg4;
+    field_254 = 0;
+    field_25C = -1;
+    field_24C = -1;
+    field_250 = -1;
+}
+
+inline void FieldObject::sub_8047EB8() {
+    field_25C = -1;
+    field_212_13 = 0;
+    field_24C = field_250 = -1;
+    field_23E = field_240;
+}
+
+inline int FieldObject::sub_8047E7C() {
+    if (y == previousY && x == previousX) {
+        return -1;
+    }
+    return sub_81DA690(previousY - y, x - previousX);
+}
+
+inline void FieldObject::sub_8047E50(u16 value) {
+    field_26C = value;
+    field_20C_22 = 1;
+    sub_8047DC8(field_26E);
+}
+
 // Defined inline here, so that sub_8040804 calls it while sub_804761C inlines it; the out-of-line
-// copy is emitted at the end of the file (0x08047DC8, still in asm/field_object.s).
+// copy is emitted at the end of the file (0x08047DC8).
 inline void FieldObject::sub_8047DC8(u8 arg) {
     if (field_26C != 0xFFFF) {
         int i = 0;
@@ -1848,7 +1908,7 @@ void FieldObject::sub_80477A8(int a, int b) {
     field_23C = b;
 }
 
-void FieldObject::sub_8047804(u8 index) {
+void FieldObject::method19(u8 index) {
     u16 value = field_2A8[index];
 
     field_21C = field_218;
@@ -1860,7 +1920,7 @@ void FieldObject::sub_8047804(u8 index) {
     field_214_8 = 1;
 }
 
-void FieldObject::sub_8047858(u8 index) {
+void FieldObject::method18(u8 index) {
     u16 value = field_2A8[index];
 
     field_21A = field_218;

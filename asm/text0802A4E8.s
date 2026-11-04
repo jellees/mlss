@@ -7023,7 +7023,7 @@ _0802E9B4:
 	str r4, [sp, #0x000]
 	movs r4, #0x00
 	str r4, [sp, #0x004]
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r0, [r7, #0x00]
 	movs r1, #0x01
 	str r1, [sp, #0x000]
@@ -7031,7 +7031,7 @@ _0802E9B4:
 	adds r1, r5, #0x0
 	adds r2, r6, #0x0
 	mov r3, r8
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 _0802E9E4:
 	mov r4, r9
 	adds r4, #0xF8

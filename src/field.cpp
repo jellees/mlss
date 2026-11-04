@@ -709,9 +709,9 @@ void FieldManager::make_field_objects_80267C0(int room) {
                 FieldPlayerCharacter* player = new (1, "FPC", 1) FieldPlayerCharacter(room, i);
 
                 if (field_FA_10) {
-                    sub_8047EFC(player, 0x100, 0x100, 0xD2, 13);
+                    player->sub_8047EFC(0x100, 0x100, 0xD2, 13);
                 } else {
-                    sub_8047EFC(player, 0x200, 0x200, 0x52C, 0x75);
+                    player->sub_8047EFC(0x200, 0x200, 0x52C, 0x75);
                 }
                 player->field_368 = &field_20C[i];
                 objects[i] = player;

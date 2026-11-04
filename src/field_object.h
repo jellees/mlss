@@ -1,10 +1,11 @@
 #ifndef FIELD_OBJECT_H
 #define FIELD_OBJECT_H
 
-// Objects on the field (Mario, Luigi, NPCs, ...). The class hierarchy is implemented in asm
-// (base class vtable 0x08CDBDE8); FieldObject's own file is asm/field_object.s (0x0803FEB8-0x08048064),
-// ending with its inline virtual members in reverse slot order (19 ... 1 = ~FieldObject). Interface-only,
-// so that no file emits its vtable or inline members.
+// Objects on the field (Mario, Luigi, NPCs, ...). FieldObject is implemented in src/field_object.cpp
+// (0x0803FEB8-0x08048064), which has `#pragma implementation` for this header: it emits the vtable
+// (0x08CDBDE8) and the out-of-line copies of the inline members at the end of its .text. g++ emits those
+// in reverse order of definition: the inline members defined in field_object.cpp (sub_8047DC8 first),
+// then the ones defined in this class (method4, ~FieldObject).
 #pragma interface
 
 // FieldObject::state. The base class only sets the generic values below (sub_804034C, from the physics);
@@ -162,7 +163,7 @@ public:
     s32 field_254;
     s32 field_258;
     s32 field_25C;
-    u8 pad_260[0x2];
+    u16 field_260;
     u16 field_262;
     s16 field_264;
     s16 field_266;
@@ -290,8 +291,6 @@ public:
     void sub_804776C(int value);
     void sub_8047784();
     void sub_80477A8(int a, int b);
-    void sub_8047804(u8 index);
-    void sub_8047858(u8 index);
     void sub_80478AC(u8 newDirection);
     void sub_804790C(u8 value);
     void sub_8047928();
@@ -308,6 +307,12 @@ public:
     bool sub_8047A3C();
     int sub_8047A5C(int mode, u16 distance, int sign, u16 speed);
     bool sub_8047AF4();
+
+    void sub_8047E50(u16 value);
+    int sub_8047E7C();
+    void sub_8047EB8();
+    void sub_8047EFC(u16 speed, u16 arg2, s16 arg3, s16 arg4);
+    void sub_8047F60(int newX, int newY, int newHeight, int savePrevious, int relative);
     void sub_8047B08(int mode, int animation);
     void sub_8047B5C(s16 value);
     bool sub_8047B78();
@@ -321,7 +326,19 @@ public:
     }
     virtual void method2(u16* arg1, u16* arg2, void* arg3); // 0x080403C4
     virtual void method3(); // 0x080409F4
-    virtual void method4();
+    virtual void method4() { // 0x08047FDC
+        if (field_222 != 0xFF) {
+            int value;
+
+            field_20C_25 = 1;
+            value = sprite->field_12_1;
+            sub_8021ED8(sprite);
+            sprite->field_12_1 = value;
+            if (field_20C_22) {
+                sub_8047DC8(0xFF);
+            }
+        }
+    }
     virtual void method5(); // 0x08040020
     virtual void method6(int arg); // 0x08040AE0
     virtual void method7(u8 force); // 0x08040C50
@@ -335,29 +352,8 @@ public:
     virtual void method15(u8 arg); // 0x08044630
     virtual void method16(int mode); // 0x08047B98
     virtual void method17(); // 0x080459C0
-    virtual void method18();
-    virtual void method19();
+    virtual void method18(u8 index); // 0x08047858
+    virtual void method19(u8 index); // 0x08047804
 };
-
-// "FSPL"
-class FieldObjectSubclass2 : public FieldObject {
-public:
-    FieldObjectSubclass2(int room, int index);
-};
-
-// "FBLK" (from the room's object list) and "SBLK" (created by sub_8026C78 through a second ctor,
-// sub_8050940): both store vtable 0x08CDC068. Implemented in asm/field_object_subclass3.s
-// (0x080508A8-0x0805139C), which ends with its inline override of slot 4 (0x08051368).
-class FieldObjectSubclass3 : public FieldObject {
-public:
-    u8 pad_33C[0x14];
-
-    FieldObjectSubclass3(int room, int index);
-};
-
-extern "C" {
-void sub_8047EFC(FieldObject*, int, int, int, int);
-void sub_8047EB8(FieldObject*);
-}
 
 #endif

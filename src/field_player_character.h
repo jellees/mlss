@@ -41,8 +41,8 @@ class FieldPlayerCharacter : public FieldObject {
     virtual void method11();                                               // 0x0804A4C8
     virtual void method12(FieldObject** others, int count, u8 flag); // 0x0804A5D4
     virtual void method13();                                               // 0x0804FBDC
-    virtual void method18(); // 0x0804FDF4 (inline: emitted at the file end)
-    virtual void method19(); // 0x0804FD80 (inline: emitted at the file end)
+    virtual void method18(u8 index); // 0x0804FDF4 (inline: emitted at the file end)
+    virtual void method19(u8 index); // 0x0804FD80 (inline: emitted at the file end)
 };
 
 // "FPSB" (FieldManager::field_A8). A plain class without virtual functions.

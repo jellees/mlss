@@ -2035,7 +2035,7 @@ _080236F0:
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
 	ldr r0, [r4, #0x00]
-	bl sub_8047EB8
+	bl sub_8047EB8__11FieldObject
 	ldr r4, [r4, #0x00]
 	ldr r0, [r4, #0x18]
 	cmp r0, #0x00
@@ -2054,7 +2054,7 @@ _0802370E:
 	lsls r2, r2, #0x02
 	adds r4, r7, r2
 	ldr r0, [r4, #0x00]
-	bl sub_8047EB8
+	bl sub_8047EB8__11FieldObject
 	ldr r4, [r4, #0x00]
 	ldr r0, [r4, #0x18]
 	cmp r0, #0x00

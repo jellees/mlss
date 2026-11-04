@@ -302106,7 +302106,7 @@ sub_80F11D0:
 	movs r0, #0x00
 	str r0, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r2, [r4, #0x14]
 	adds r0, r2, #0x0
 	adds r0, #0xF8
@@ -302175,7 +302175,7 @@ _080F1266:
 	ldr r0, [r4, #0x18]
 	str r0, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	movs r3, #0x00
 	ldr r2, [r6, #0x14]
 	adds r0, r2, #0x0
@@ -302450,7 +302450,7 @@ sub_80F1478:
 	adds r1, r1, r0
 	ldr r0, [r1, #0x28]
 	ldrh r1, [r2, #0x00]
-	bl sub_8047E50
+	bl sub_8047E50__11FieldObjectUs
 	movs r0, #0x01
 	pop {r1}
 	bx r1
@@ -302489,7 +302489,7 @@ sub_80F14C4:
 	push {lr}
 	adds r0, r1, #0x0
 	ldrh r1, [r3, #0x00]
-	bl sub_8047E50
+	bl sub_8047E50__11FieldObjectUs
 	movs r0, #0x01
 	pop {r1}
 	bx r1
@@ -318973,7 +318973,7 @@ _080FB1B2:
 	str r0, [sp, #0x004]
 	mov r0, r10
 	adds r1, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldrb r0, [r7, #0x10]
 	movs r6, #0x01
 	movs r1, #0x83

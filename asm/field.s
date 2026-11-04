@@ -2917,7 +2917,7 @@ _080283AE:
 	mov r0, r12
 	str r0, [sp, #0x004]
 	mov r0, r8
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldrb r1, [r7, #0x00]
 	lsrs r1, r1, #0x05
 	mov r3, r8

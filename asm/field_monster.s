@@ -1089,7 +1089,7 @@ _080506CA:
 sub_80506D0:
 	push {r4, lr}
 	adds r4, r0, #0x0
-	bl sub_8047FDC
+	bl method4__11FieldObject
 	movs r0, #0xD1
 	lsls r0, r0, #0x02
 	adds r4, r4, r0
@@ -1348,15 +1348,15 @@ _vt.12FieldMonster:
 	.4byte 0, method15__11FieldObjectUc
 	.4byte 0, method16__11FieldObjecti
 	.4byte 0, sub_805062C
-	.4byte 0, sub_8047858__11FieldObjectUc
-	.4byte 0, sub_8047804__11FieldObjectUc
+	.4byte 0, method18__11FieldObjectUc
+	.4byte 0, method19__11FieldObjectUc
 
 gVTable_8CDBFC8:
 	.4byte 0, 0
 	.4byte 0, sub_81DD5D4
 	.4byte 0, method2__11FieldObjectPUsT1Pv
 	.4byte 0, method3__11FieldObject
-	.4byte 0, sub_8047FDC
+	.4byte 0, method4__11FieldObject
 	.4byte 0, method5__11FieldObject
 	.4byte 0, method6__11FieldObjecti
 	.4byte 0, method7__11FieldObjectUc
@@ -1370,5 +1370,5 @@ gVTable_8CDBFC8:
 	.4byte 0, method15__11FieldObjectUc
 	.4byte 0, method16__11FieldObjecti
 	.4byte 0, method17__11FieldObject
-	.4byte 0, sub_8047858__11FieldObjectUc
-	.4byte 0, sub_8047804__11FieldObjectUc
+	.4byte 0, method18__11FieldObjectUc
+	.4byte 0, method19__11FieldObjectUc

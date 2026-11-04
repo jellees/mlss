@@ -159,7 +159,7 @@ _080509D2:
 	adds r0, r7, #0x0
 	adds r1, r6, #0x0
 	adds r2, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r1, _08050AF0 @ =0x0000020F
 	adds r6, r7, r1
 	ldrb r0, [r6, #0x00]

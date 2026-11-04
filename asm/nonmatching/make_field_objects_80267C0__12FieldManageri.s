@@ -132,7 +132,7 @@ _08026888:
 	adds r0, r4, #0x0
 	adds r1, r2, #0x0
 	movs r3, #0xD2
-	bl sub_8047EFC
+	bl sub_8047EFC__11FieldObjectUsUsss
 	b _080268DA
 _080268C4: .4byte 0x081E2620
 _080268C8:
@@ -143,7 +143,7 @@ _080268C8:
 	str r0, [sp, #0x000]
 	adds r0, r4, #0x0
 	adds r1, r2, #0x0
-	bl sub_8047EFC
+	bl sub_8047EFC__11FieldObjectUsUsss
 _080268DA:
 	movs r2, #0xDA
 	lsls r2, r2, #0x02

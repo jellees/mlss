@@ -4396,7 +4396,7 @@ _0804A98C:
 	b _0804AEC4
 _0804A99A:
 	adds r0, r7, #0x0
-	bl sub_8047EB8
+	bl sub_8047EB8__11FieldObject
 	b _0804AEC4
 _0804A9A2:
 	ldr r0, [sp, #0x058]
@@ -13938,7 +13938,7 @@ _0804FDC4:
 	strb r1, [r2, #0x00]
 	adds r0, r4, #0x0
 	adds r1, r7, #0x0
-	bl sub_8047804__11FieldObjectUc
+	bl method19__11FieldObjectUc
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
@@ -13997,7 +13997,7 @@ _0804FE38:
 	strb r1, [r2, #0x00]
 	adds r0, r4, #0x0
 	adds r1, r7, #0x0
-	bl sub_8047858__11FieldObjectUc
+	bl method18__11FieldObjectUc
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
