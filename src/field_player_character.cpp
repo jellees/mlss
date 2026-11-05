@@ -887,7 +887,407 @@ void FieldPlayerCharacter::method11() {
 }
 #endif
 
+// The IWRAM copy of the division routine (loc_819832C), as in FieldObject.
+#define IWRAM_DIV(a, b) (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(a, b))
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/method12__20FieldPlayerCharacterPP11FieldObjectiUc.s\"");
+#else
+// Like FieldObject::method12 (collisions with the other objects), with a second pass into a FieldMonster's
+// FMCH, the closest object below in field_238, landing only on objects with field_20C_23, and a "squeeze"
+// mode (1: this object is above the other, 2: below) that scales the boxes by the height overlap.
+void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
+    int left;
+    int top;
+    int bottom;
+    u16 heightAbove;
+    int n;
+
+    if (!field_20C_0 || field_214_21 || !(field_20C_6 | field_20C_8)) {
+        return;
+    }
+    left = x - field_272 / 2;
+    top = y;
+    bottom = z;
+    if (height > 0 || (height < 0 && previousHeight < 0)) {
+        bottom += height;
+    }
+    if (field_238 != -1) {
+        heightAbove = (z + height) - (others[field_238]->z + others[field_238]->height);
+    } else {
+        heightAbove = 0;
+    }
+    n = field_20C_8 ? count : 2;
+    for (; n != 0; n--, others++) {
+        FieldObject* other = *others;
+        int pass;
+
+        if (field_54 == other->field_54) {
+            continue;
+        }
+        if (flag && !other->field_210_5) {
+            continue;
+        }
+        for (pass = 0; pass <= 1; pass++) {
+            int pushThis;
+            int pushOther;
+            int otherWidth;
+            int otherDepth;
+            int otherOffset;
+            int width;
+            int depth;
+            int offset;
+            int otherLeft;
+            int thisLeft;
+            int otherTop;
+            int thisTop;
+            int otherBottom;
+            int overlap;
+            int sideThis;
+            int sideOther;
+            int verticalThis;
+            int verticalOther;
+            int mode;
+
+            if (!other->field_20C_0) {
+                goto next;
+            }
+            if (other->field_214_21 && other->field_54 != field_29) {
+                goto next;
+            }
+            if (other->field_29 == field_54) {
+                goto next;
+            }
+            if (other->field_20C_19 == 0) {
+                pushThis = field_20C_6 & other->field_20C_5;
+                pushOther = field_20C_5 & other->field_20C_6;
+            } else {
+                pushThis = field_20C_8 & other->field_20C_5;
+                pushOther = field_20C_9 & other->field_20C_6;
+            }
+            if (!pushThis) {
+                goto next;
+            }
+
+            otherWidth = other->field_272;
+            otherLeft = other->x - otherWidth / 2;
+            width = field_272;
+            thisLeft = left;
+            if (otherLeft < thisLeft) {
+                overlap = otherLeft + otherWidth - thisLeft;
+            } else {
+                overlap = thisLeft + width - otherLeft;
+            }
+            if (overlap <= 0) {
+                goto next;
+            }
+            otherOffset = other->field_270;
+            otherDepth = other->field_276;
+            otherTop = other->y + otherOffset;
+            offset = field_270;
+            depth = field_276;
+            thisTop = top + offset;
+            if (otherTop > thisTop) {
+                overlap = thisTop - (otherTop - otherDepth);
+            } else {
+                overlap = otherTop - (thisTop - depth);
+            }
+            if (overlap <= 0) {
+                goto next;
+            }
+
+            otherBottom = other->z;
+            if (other->height > 0 || (other->height < 0 && other->previousHeight < 0)) {
+                otherBottom += other->height;
+            }
+            if (otherBottom <= bottom) {
+                int otherTopZ = otherBottom + other->field_274;
+
+                overlap = otherTopZ - bottom;
+                if (overlap <= 0) {
+                    if (otherTopZ >= z && (field_238 == -1 || -overlap < (s16)heightAbove)) {
+                        heightAbove = -overlap;
+                        field_238 = other->field_54;
+                    }
+                    if (overlap < 0) {
+                        goto next;
+                    }
+                }
+            } else {
+                overlap = bottom + field_274 - otherBottom;
+                if (overlap < 0) {
+                    goto next;
+                }
+            }
+
+            sideThis = 0;
+            sideOther = 0;
+            verticalThis = 0;
+            verticalOther = 0;
+            if (field_29 == other->field_54) {
+                verticalThis = 2;
+                verticalOther = 1;
+            } else {
+                int previousBottom = previousZ + previousHeight;
+
+                if (previousBottom + field_274 <= otherBottom) {
+                    verticalThis = 1;
+                    verticalOther = 2;
+                } else if (previousBottom >= otherBottom + other->field_274) {
+                    verticalThis = 2;
+                    verticalOther = 1;
+                }
+            }
+
+            if (other->field_20C_23 && verticalThis == 2) {
+                // Landing on top of the other object.
+                if (field_29 != other->field_54) {
+                    height = (height + overlap) & ~0xFF;
+                }
+                field_238 = other->field_54;
+                field_1 = other->field_54;
+                heightAbove = 0;
+                if (field_2B5_3) {
+                    sub_8046A10();
+                } else if (airFrames >= 0) {
+                    land();
+                }
+            } else if (verticalThis == 1) {
+                // Hitting the other object from below.
+                if (field_4C_7 != 1 && other->field_29 != field_54) {
+                    height -= overlap;
+                    if (airFrames >= 0 && velocityZ > 0) {
+                        velocityZ = -velocityZ;
+                    }
+                }
+            } else {
+                int previousX;
+                int otherPreviousX;
+                int previousY;
+                int otherPreviousY;
+
+                mode = 0;
+                if (!other->field_20C_23) {
+                    if (otherBottom <= bottom && previousHeight > 0) {
+                        otherWidth = IWRAM_DIV(otherWidth * overlap, other->field_274);
+                        otherLeft = other->x - otherWidth / 2;
+                        otherDepth = IWRAM_DIV(otherDepth * overlap, other->field_274);
+                        otherOffset = IWRAM_DIV(otherOffset * overlap, other->field_274);
+                        otherTop = other->y + otherOffset;
+                        mode = 1;
+                    } else if (verticalThis == 0 && bottom <= otherBottom && other->previousHeight > 0) {
+                        width = IWRAM_DIV(width * overlap, field_274);
+                        thisLeft = x - width / 2;
+                        depth = IWRAM_DIV(depth * overlap, field_274);
+                        offset = IWRAM_DIV(offset * overlap, field_274);
+                        thisTop = y + offset;
+                        mode = 2;
+                    }
+                    if (mode != 0) {
+                        if (otherLeft < thisLeft) {
+                            overlap = otherLeft + otherWidth - thisLeft;
+                        } else {
+                            overlap = thisLeft + width - otherLeft;
+                        }
+                        if (overlap <= 0) {
+                            goto next;
+                        }
+                        if (otherTop > thisTop) {
+                            overlap = thisTop - (otherTop - otherDepth);
+                        } else {
+                            overlap = otherTop - (thisTop - depth);
+                        }
+                        if (overlap <= 0) {
+                            goto next;
+                        }
+                    }
+                }
+
+                previousX = this->previousX;
+                otherPreviousX = other->previousX;
+                previousY = this->previousY;
+                otherPreviousY = other->previousY;
+                if (previousX == otherPreviousX && previousY == otherPreviousY) {
+                    if (direction <= 1) {
+                        sideThis = 1;
+                        sideOther = 4;
+                    } else if (direction <= 2) {
+                        sideThis = 8;
+                        sideOther = 2;
+                    } else if (direction <= 5) {
+                        sideThis = 4;
+                        sideOther = 1;
+                    } else if (direction <= 6) {
+                        sideThis = 2;
+                        sideOther = 8;
+                    } else {
+                        sideThis = 1;
+                        sideOther = 4;
+                    }
+                } else {
+                    int previousDepth = depth;
+                    int otherPreviousDepth = otherDepth;
+                    int previousOffset = offset;
+                    int otherPreviousOffset = otherOffset;
+                    int previousTop;
+                    int otherPreviousTop;
+
+                    if (mode == 1) {
+                        int scale = other->previousZ + other->previousHeight + other->field_274
+                                    - (this->previousZ + this->previousHeight);
+
+                        otherPreviousDepth = IWRAM_DIV(other->field_276 * scale, other->field_274);
+                        otherPreviousOffset = IWRAM_DIV(other->field_270 * scale, other->field_274);
+                    } else if (mode == 2) {
+                        int scale = this->previousZ + this->previousHeight + field_274
+                                    - (other->previousZ + other->previousHeight);
+
+                        previousDepth = IWRAM_DIV(field_276 * scale, field_274);
+                        previousOffset = IWRAM_DIV(field_270 * scale, field_274);
+                    }
+                    previousTop = previousY + previousOffset;
+                    otherPreviousTop = otherPreviousY + otherPreviousOffset;
+                    if (previousTop - previousDepth < otherPreviousTop
+                        && previousTop > otherPreviousTop - otherPreviousDepth) {
+                        if (this->previousX < other->previousX) {
+                            sideThis = 2;
+                            sideOther = 8;
+                        } else {
+                            sideThis = 8;
+                            sideOther = 2;
+                        }
+                    } else if (this->previousY > other->previousY) {
+                        sideThis = 1;
+                        sideOther = 4;
+                    } else {
+                        sideThis = 4;
+                        sideOther = 1;
+                    }
+                }
+
+                if (sideThis == 8) {
+                    if (x < this->previousX || (mode == 1 && this->previousHeight > 0)) {
+                        int limit;
+                        int base;
+                        int newX;
+
+                        if (pushOther || (field_20C_14 && (height > 0 || this->previousHeight > 0))) {
+                            limit = other->x + ((other->field_272 + field_272) >> 1);
+                            base = other->x;
+                        } else {
+                            limit = this->previousX;
+                            base = other->x;
+                        }
+                        newX = base + (otherWidth + width) / 2;
+                        if (newX > limit) {
+                            newX = limit;
+                        }
+                        if (newX > x) {
+                            x = newX;
+                        }
+                    }
+                } else if (sideThis == 2) {
+                    if (x > this->previousX || (mode == 1 && this->previousHeight > 0)) {
+                        int limit;
+                        int base;
+                        int newX;
+
+                        if (pushOther || (field_20C_14 && (height > 0 || this->previousHeight > 0))) {
+                            limit = other->x - ((other->field_272 + field_272) >> 1);
+                            base = other->x;
+                        } else {
+                            limit = this->previousX;
+                            base = other->x;
+                        }
+                        newX = base - (otherWidth + width) / 2;
+                        if (newX < limit) {
+                            newX = limit;
+                        }
+                        if (newX < x) {
+                            x = newX;
+                        }
+                    }
+                } else if (sideThis == 1) {
+                    if (y < this->previousY || (mode == 1 && this->previousHeight > 0)) {
+                        int limit;
+                        int base;
+                        int newY;
+
+                        if (pushOther || (field_20C_14 && (height > 0 || this->previousHeight > 0))) {
+                            limit = other->y + (other->field_270 + field_276 - field_270);
+                            base = other->y;
+                        } else {
+                            limit = this->previousY;
+                            base = other->y;
+                        }
+                        newY = base + (otherOffset + depth - offset);
+                        if (newY > limit) {
+                            newY = limit;
+                        }
+                        if (newY > y) {
+                            y = newY;
+                        }
+                    }
+                } else if (y > this->previousY || (mode == 1 && this->previousHeight > 0)) {
+                    int limit;
+                    int base;
+                    int newY;
+
+                    if (pushOther || (field_20C_14 && (height > 0 || this->previousHeight > 0))) {
+                        limit = other->y + (other->field_270 - other->field_276 - field_270);
+                        base = other->y;
+                    } else {
+                        limit = this->previousY;
+                        base = other->y;
+                    }
+                    newY = base + (otherOffset - otherDepth - offset);
+                    if (newY < limit) {
+                        newY = limit;
+                    }
+                    if (newY < y) {
+                        y = newY;
+                    }
+                }
+            }
+
+            if (pushThis) {
+                field_24_3 |= sideThis;
+                field_24_7 |= verticalThis;
+                if (field_0 == -1) {
+                    field_0 = other->field_54;
+                }
+                if (other->field_20C_19 == 0) {
+                    field_24_9 = 1;
+                } else {
+                    field_24_10 = 1;
+                }
+            }
+            if (pushOther) {
+                other->field_24_3 |= sideOther;
+                other->field_24_7 |= verticalOther;
+                //! \bug Probably meant to set other->field_0, like the block above does for this object.
+                if (field_0 == -1) {
+                    field_0 = other->field_54;
+                }
+                other->field_24_9 = 1;
+            }
+        next:
+            if (other->field_20C_19 == 3 && ((FieldMonster*)other)->field_344 != NULL
+                && ((FieldMonster*)other)->field_344->field_20C_0) {
+                other = ((FieldMonster*)other)->field_344;
+            } else {
+                break;
+            }
+        }
+    }
+    if (field_24_3 && field_2B5_0 && field_2B6_6) {
+        sub_8046980();
+        sub_8046A10();
+    }
+}
+#endif
+
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804B028__20FieldPlayerCharacterP11FieldObject.s\"");
