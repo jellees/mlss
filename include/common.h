@@ -576,6 +576,7 @@ extern u8 byte_83A0A2E[];
 extern u8 byte_83A0A38[8][4]; // FieldPlayerCharacter::sub_804FC30, indexed by [angle / 32][field_26_2]
 extern u16 word_83A0C5A[]; // FieldPlayerShotBullet animations, indexed by type - 2
 extern u16 word_83A0C60[]; // FieldPlayerShotBullet tables, indexed by type - 2
+extern s8 byte_83A0CD6[8][4]; // FieldPlayerShotBullet::sub_804EA68: sides to check per direction, ended by -1
 extern s16 word_83A0C66[];
 extern u8 byte_83A0C6C[];
 extern s16 word_83A0C70[];

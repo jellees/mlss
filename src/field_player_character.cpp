@@ -635,7 +635,8 @@ void FieldPlayerCharacter::sub_8049C38(FieldObject** objects, int count) {
     for (i = 0; i < count; i++, objects++) {
         FieldObject* other = *objects;
 
-        if (field_54 == other->field_54 || other->field_214_21 || !other->field_20C_12 || !other->field_20C_25) {
+        if (field_54 == other->field_54 || other->field_214_21 || !other->field_20C_12
+            || !other->field_20C_25) {
             continue;
         }
         if (field_6 - field_282 / 2 >= other->field_6 + other->field_282 / 2
@@ -646,7 +647,8 @@ void FieldPlayerCharacter::sub_8049C38(FieldObject** objects, int count) {
             || sprite->yPosition <= other->sprite->yPosition - other->field_283) {
             continue;
         }
-        if (!((y / 256 < other->y / 256 && z + height < other->z + other->height + other->field_274) || field_352_6)) {
+        if (!((y / 256 < other->y / 256 && z + height < other->z + other->height + other->field_274)
+              || field_352_6)) {
             if (sprite->yPosition - 16 < other->sprite->yPosition
                 && sprite->field_1F_2 > other->sprite->field_1F_2) {
                 sprite->field_1F_2 = other->sprite->field_1F_2;
@@ -694,8 +696,8 @@ void FieldPlayerCharacter::sub_8049C38(FieldObject** objects, int count) {
     }
 }
 
-// Returns the box of data that contains this player character, if any. Each box is 11 bytes: x, y, width,
-// depth (16-pixel units), z, height (8-pixel units; 0x7F = 0xFF) and a type.
+// Returns the box of data that contains this player character, if any. Each box is 11 bytes: x, y,
+// width, depth (16-pixel units), z, height (8-pixel units; 0x7F = 0xFF) and a type.
 u8* FieldPlayerCharacter::sub_8049FF4(u8* data) {
     if (field_20C_0 && field_20C_24) {
         int px = x / 256;
@@ -740,8 +742,8 @@ u8* FieldPlayerCharacter::sub_8049FF4(u8* data) {
 asm_unified(".include \"asm/nonmatching/sub_804A124__20FieldPlayerCharacterP12FieldStruct6PiT2bT4.s\"");
 #else
 // Finds the cell rectangle in entries that this player character stands in.
-struct FieldStruct6* FieldPlayerCharacter::sub_804A124(struct FieldStruct6* entries, int* outX, int* outY,
-                                                       bool grounded, bool filtered) {
+struct FieldStruct6* FieldPlayerCharacter::sub_804A124(struct FieldStruct6* entries, int* outX,
+                                                       int* outY, bool grounded, bool filtered) {
     int left;
     int right;
     int top;
@@ -825,8 +827,8 @@ struct FieldStruct6* FieldPlayerCharacter::sub_804A124(struct FieldStruct6* entr
         directions = &byte_83A0A2E[direction];
     }
     while (TRUE) {
-        if (left >= entries->left && right <= entries->right && top >= entries->top && bottom <= entries->bottom
-            && field_26_1 == entries->layer) {
+        if (left >= entries->left && right <= entries->right && top >= entries->top
+            && bottom <= entries->bottom && field_26_1 == entries->layer) {
             if (!filtered) {
                 *outX = x - (entries->left << 12);
                 *outY = y - (entries->top << 12);
@@ -1015,7 +1017,8 @@ bool FieldPlayerCharacter::sub_804B25C(FieldObject* other) {
     int edge;
     int overlap;
 
-    if (!other->field_20C_0 || other->field_214_21 || !other->field_20C_5 || (s8)field_1 == other->field_54) {
+    if (!other->field_20C_0 || other->field_214_21 || !other->field_20C_5
+        || (s8)field_1 == other->field_54) {
         return FALSE;
     }
     width = field_272;
@@ -1063,7 +1066,8 @@ bool FieldPlayerCharacter::sub_804D0EC() {
         if (get_coldef_ptr_by_xz(field_290, previousX / 4096, previousY / 4096)->floorType == 3) {
             return TRUE;
         }
-        if (get_coldef_ptr_by_xz(field_290, previousX / 4096, (previousY - field_27C) / 4096)->floorType == 3) {
+        if (get_coldef_ptr_by_xz(field_290, previousX / 4096, (previousY - field_27C) / 4096)->floorType
+            == 3) {
             return TRUE;
         }
     }
@@ -1397,7 +1401,8 @@ u8* FieldPlayerShotBullet::sub_804E5C4(u8* data) {
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804E6E0__21FieldPlayerShotBulletPP11FieldObjecti.s\"");
 #else
-// Checks this object's box against the objects (and a FieldMonster's FMCH) and reports hits to the owner.
+// Checks this object's box against the objects (and a FieldMonster's FMCH) and reports hits to the
+// owner.
 void FieldPlayerShotBullet::sub_804E6E0(FieldObject** objects, int count) {
     int left = x - (hitWidth >> 1);
     int top = y;
@@ -1537,7 +1542,540 @@ void FieldPlayerShotBullet::sub_804E6E0(FieldObject** objects, int count) {
 }
 #endif
 
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804EA68__21FieldPlayerShotBullet.s\"");
+#else
+// Moves this shot out of the walls it ran into since the previous frame, one side at a time (the sides
+// moving in the shot's direction, from byte_83A0CD6). Pass 2 looks one cell further and also checks the
+// corners when no wall was hit. Slopes (shapes 12-15) slide it diagonally. Returns the sides hit.
+u8 FieldPlayerShotBullet::sub_804EA68() {
+    int previousLeft;
+    int previousRight;
+    int previousTop;
+    int previousBottom;
+    int left;
+    int right;
+    int top;
+    int bottom;
+    int low;
+    int high;
+    int dir;
+    int pass;
+    s8* sides;
+    int newX;
+    int newY;
+    int flags;
+    int floor;
+    int ceiling;
+    int objectTop;
+    struct Coldef* coldef;
+
+    if (pushes) {
+        previousLeft = previousX - (boxWidth / 2);
+        previousRight = previousLeft + boxWidth;
+        previousTop = previousY - (boxDepth - 0x100);
+        previousBottom = previousY + 0x100;
+        left = x - (boxWidth / 2);
+        right = left + boxWidth;
+        top = y - (boxDepth - 0x100);
+        bottom = top + boxDepth;
+        low = z + height;
+        high = low + boxHeight;
+        dir = direction;
+        for (pass = 0; pass < 2; pass++) {
+            sides = byte_83A0CD6[dir];
+            do {
+                int side;
+
+                newX = x;
+                newY = y;
+                flags = 0;
+                side = *sides++;
+                if (side > 3 && (pass == 0 || wallSides != 0)) {
+                    break;
+                }
+                switch (side) {
+                    case 0: { // Top edge
+                        int cellX = previousLeft / 4096;
+                        int cellY = previousTop / 4096 - pass;
+                        int last = (previousRight - 0x100) / 4096;
+
+                        for (; cellX <= last; cellX++) {
+                            int cellLeft;
+                            int cellRight;
+                            int cellBottom;
+                            int solid;
+
+                            coldef = sub_804FA30(cellX, cellY, &floor, &ceiling, &objectTop);
+                            if (pass != 0 && floor > previousZ && floor > low
+                                && (cellY + 1) << 12 > top) {
+                                newY = ((cellY + 1) << 12) - 0x100 + boxDepth;
+                                flags |= 2;
+                                wallSides |= 1;
+                                goto apply;
+                            }
+                            if (pass == 0 && coldef->secondaryShape <= 7) {
+                                continue;
+                            }
+                            if (ceiling < 0 || ceiling >= high || objectTop <= low
+                                || ceiling >= previousZ + previousHeight + boxHeight
+                                || objectTop <= previousZ) {
+                                continue;
+                            }
+                            cellLeft = cellX << 12;
+                            cellRight = (cellX + 1) << 12;
+                            cellBottom = (cellY + 1) << 12;
+                            if (coldef->secondaryShape == 14 && cellX == previousLeft / 4096) {
+                                int cellTop;
+
+                                if ((cellBottom - top) - (left - cellLeft) <= 0) {
+                                    continue;
+                                }
+                                cellTop = cellBottom - 0x1000;
+                                newX = (left - cellLeft)
+                                       + (0x1000 - (top - cellTop) - (left - cellLeft)) / 2 + cellLeft
+                                       + (boxWidth / 2);
+                                newX &= ~0xFF;
+                                newY = ((top - cellTop)
+                                        + (0x1000 - (left - cellLeft) - (top - cellTop)) / 2 + cellTop
+                                        - 0x100 + boxDepth)
+                                       & ~0xFF;
+                                flags = 3;
+                                wallSides |= 1;
+                            } else if (coldef->secondaryShape == 12 && cellX == last) {
+                                int cellTop;
+
+                                if ((cellBottom - top) - (cellRight - right) <= 0) {
+                                    continue;
+                                }
+                                cellTop = cellBottom - 0x1000;
+                                newX = (top - cellTop) + ((right - cellLeft) - (top - cellTop)) / 2
+                                       + cellLeft - (boxWidth / 2);
+                                newX &= ~0xFF;
+                                newY = ((right - cellLeft) + ((top - cellTop) - (right - cellLeft)) / 2
+                                        + cellTop - 0x100 + boxDepth)
+                                       & ~0xFF;
+                                flags = 3;
+                                wallSides |= 1;
+                            } else {
+                                if (coldef->floorType == 6 || coldef->floorType == 7) {
+                                    continue;
+                                }
+                                solid = pass;
+                                switch (coldef->secondaryShape) {
+                                    case 8:
+                                        cellBottom -= 0x800;
+                                        solid = TRUE;
+                                        break;
+                                    case 9:
+                                        break;
+                                    case 10:
+                                        cellLeft += 0x800;
+                                        solid = TRUE;
+                                        break;
+                                    case 11:
+                                        cellRight -= 0x800;
+                                        solid = TRUE;
+                                        break;
+                                }
+                                if (!solid) {
+                                    continue;
+                                }
+                                if (!((cellLeft < previousRight && cellRight > left)
+                                      || (cellRight > previousLeft && cellLeft < right))) {
+                                    continue;
+                                }
+                                if (cellBottom > previousTop || cellBottom <= top) {
+                                    continue;
+                                }
+                                newY = cellBottom - 0x100 + boxDepth;
+                                flags |= 2;
+                                wallSides |= 1;
+                            }
+                        }
+                        break;
+                    }
+                    case 1: { // Bottom edge
+                        int cellX = previousLeft / 4096;
+                        int cellY = (previousBottom - 0x100) / 4096 + pass;
+                        int last = (previousRight - 0x100) / 4096;
+
+                        for (; cellX <= last; cellX++) {
+                            int cellLeft;
+                            int cellRight;
+                            int cellTop;
+                            int solid;
+
+                            coldef = sub_804FA30(cellX, cellY, &floor, &ceiling, &objectTop);
+                            if (pass != 0 && floor > previousZ && floor > low && cellY << 12 < bottom) {
+                                newY = (cellY << 12) - 0x100;
+                                flags |= 2;
+                                wallSides |= 4;
+                                goto apply;
+                            }
+                            if (pass == 0 && coldef->secondaryShape <= 7) {
+                                continue;
+                            }
+                            if (ceiling < 0 || ceiling >= high || objectTop <= low
+                                || ceiling >= previousZ + previousHeight + boxHeight
+                                || objectTop <= previousZ) {
+                                continue;
+                            }
+                            cellLeft = cellX << 12;
+                            cellRight = (cellX + 1) << 12;
+                            cellTop = cellY << 12;
+                            if (coldef->secondaryShape == 15 && cellX == previousLeft / 4096) {
+                                if ((bottom - cellTop) - (left - cellLeft) <= 0) {
+                                    continue;
+                                }
+                                newX = (bottom - cellTop) + ((left - cellLeft) - (bottom - cellTop)) / 2
+                                       + cellLeft + (boxWidth / 2);
+                                newX &= ~0xFF;
+                                newY = ((left - cellLeft) + ((bottom - cellTop) - (left - cellLeft)) / 2
+                                        + cellTop - 0x100)
+                                       & ~0xFF;
+                                flags = 3;
+                                wallSides |= 4;
+                            } else if (coldef->secondaryShape == 13 && cellX == last) {
+                                if ((bottom - cellTop) - (cellRight - right) <= 0) {
+                                    continue;
+                                }
+                                newX = (right - cellLeft)
+                                       + (0x1000 - (bottom - cellTop) - (right - cellLeft)) / 2
+                                       + cellLeft - (boxWidth / 2);
+                                newX &= ~0xFF;
+                                newY = ((bottom - cellTop)
+                                        + (0x1000 - (right - cellLeft) - (bottom - cellTop)) / 2
+                                        + cellTop - 0x100)
+                                       & ~0xFF;
+                                flags = 3;
+                                wallSides |= 4;
+                            } else {
+                                if (coldef->floorType == 6 || coldef->floorType == 7) {
+                                    continue;
+                                }
+                                solid = pass;
+                                switch (coldef->secondaryShape) {
+                                    case 8:
+                                        break;
+                                    case 9:
+                                        cellTop += 0x800;
+                                        solid = TRUE;
+                                        break;
+                                    case 10:
+                                        cellLeft += 0x800;
+                                        solid = TRUE;
+                                        break;
+                                    case 11:
+                                        cellRight -= 0x800;
+                                        solid = TRUE;
+                                        break;
+                                }
+                                if (!solid) {
+                                    continue;
+                                }
+                                if (!((cellLeft < previousRight && cellRight > left)
+                                      || (cellRight > previousLeft && cellLeft < right))) {
+                                    continue;
+                                }
+                                if (cellTop < previousBottom || cellTop >= bottom) {
+                                    continue;
+                                }
+                                newY = cellTop - 0x100;
+                                flags |= 2;
+                                wallSides |= 4;
+                            }
+                        }
+                        break;
+                    }
+                    case 2: { // Left edge
+                        int cellX = previousLeft / 4096 - pass;
+                        int cellY = previousTop / 4096;
+                        int last = (previousBottom - 0x100) / 4096;
+
+                        for (; cellY <= last; cellY++) {
+                            int cellLeft;
+                            int cellRight;
+                            int cellTop;
+                            int cellBottom;
+                            int solid;
+
+                            coldef = sub_804FA30(cellX, cellY, &floor, &ceiling, &objectTop);
+                            if (pass != 0 && floor > previousZ && floor > low
+                                && (cellX + 1) << 12 > left) {
+                                newX = ((cellX + 1) << 12) + (boxWidth / 2);
+                                flags |= 1;
+                                wallSides |= 8;
+                                goto apply;
+                            }
+                            if (pass == 0 && coldef->secondaryShape <= 7) {
+                                continue;
+                            }
+                            if (ceiling < 0 || ceiling >= high || objectTop <= low
+                                || ceiling >= previousZ + previousHeight + boxHeight
+                                || objectTop <= previousZ) {
+                                continue;
+                            }
+                            cellTop = cellY << 12;
+                            cellBottom = (cellY + 1) << 12;
+                            cellRight = (cellX + 1) << 12;
+                            if (coldef->secondaryShape == 14 && cellY == previousTop / 4096) {
+                                if ((cellRight - left) - (top - cellTop) <= 0) {
+                                    continue;
+                                }
+                                cellLeft = cellRight - 0x1000;
+                                newX = (left - cellLeft)
+                                       + (0x1000 - (top - cellTop) - (left - cellLeft)) / 2
+                                       + (boxWidth / 2) + cellLeft;
+                                newX &= ~0xFF;
+                                newY = (top - cellTop)
+                                       + (0x1000 - (left - cellLeft) - (top - cellTop)) / 2 - 0x100
+                                       + boxDepth + cellTop;
+                                newY &= ~0xFF;
+                                flags = 3;
+                                wallSides |= 8;
+                            } else if (coldef->secondaryShape == 15 && cellY == last) {
+                                if ((cellRight - left) - (cellBottom - bottom) <= 0) {
+                                    continue;
+                                }
+                                cellLeft = cellRight - 0x1000;
+                                newX = (bottom - cellTop) + ((left - cellLeft) - (bottom - cellTop)) / 2
+                                       + cellLeft + (boxWidth / 2);
+                                newX &= ~0xFF;
+                                newY = ((left - cellLeft) + ((bottom - cellTop) - (left - cellLeft)) / 2
+                                        + cellTop - 0x100)
+                                       & ~0xFF;
+                                flags = 3;
+                                wallSides |= 8;
+                            } else {
+                                if (coldef->floorType == 6 || coldef->floorType == 7) {
+                                    continue;
+                                }
+                                solid = pass;
+                                switch (coldef->secondaryShape) {
+                                    case 8:
+                                        cellBottom -= 0x800;
+                                        solid = TRUE;
+                                        break;
+                                    case 9:
+                                        cellTop += 0x800;
+                                        solid = TRUE;
+                                        break;
+                                    case 10:
+                                        break;
+                                    case 11:
+                                        cellRight -= 0x800;
+                                        solid = TRUE;
+                                        break;
+                                }
+                                if (!solid) {
+                                    continue;
+                                }
+                                if (!((cellTop < previousBottom && cellBottom > top)
+                                      || (cellBottom > previousTop && cellTop < bottom))) {
+                                    continue;
+                                }
+                                if (cellRight > previousLeft || cellRight <= left) {
+                                    continue;
+                                }
+                                newX = cellRight + (boxWidth / 2);
+                                flags |= 1;
+                                wallSides |= 8;
+                            }
+                        }
+                        break;
+                    }
+                    case 3: { // Right edge
+                        int cellX = (previousRight - 0x100) / 4096 + pass;
+                        int cellY = previousTop / 4096;
+                        int last = (previousBottom - 0x100) / 4096;
+
+                        for (; cellY <= last; cellY++) {
+                            int cellLeft;
+                            int cellTop;
+                            int cellBottom;
+                            int solid;
+
+                            coldef = sub_804FA30(cellX, cellY, &floor, &ceiling, &objectTop);
+                            if (pass != 0 && floor > previousZ && floor > low && cellX << 12 < right) {
+                                newX = (cellX << 12) - (boxWidth / 2);
+                                flags |= 1;
+                                wallSides |= 2;
+                                goto apply;
+                            }
+                            if (pass == 0 && coldef->secondaryShape <= 7) {
+                                continue;
+                            }
+                            if (ceiling < 0 || ceiling >= high || objectTop <= low
+                                || ceiling >= previousZ + previousHeight + boxHeight
+                                || objectTop <= previousZ) {
+                                continue;
+                            }
+                            cellTop = cellY << 12;
+                            cellBottom = (cellY + 1) << 12;
+                            cellLeft = cellX << 12;
+                            if (coldef->secondaryShape == 12 && cellY == previousTop / 4096) {
+                                if ((right - cellLeft) - (top - cellTop) <= 0) {
+                                    continue;
+                                }
+                                newX = (top - cellTop) + ((right - cellLeft) - (top - cellTop)) / 2
+                                       + cellLeft - (boxWidth / 2);
+                                newX &= ~0xFF;
+                                newY = ((right - cellLeft) + ((top - cellTop) - (right - cellLeft)) / 2
+                                        + cellTop - 0x100 + boxDepth)
+                                       & ~0xFF;
+                                flags = 3;
+                                wallSides |= 2;
+                            } else if (coldef->secondaryShape == 13 && cellY == last) {
+                                if ((right - cellLeft) - (cellBottom - bottom) <= 0) {
+                                    continue;
+                                }
+                                newX = (right - cellLeft)
+                                       + (0x1000 - (bottom - cellTop) - (right - cellLeft)) / 2
+                                       + cellLeft - (boxWidth / 2);
+                                newX &= ~0xFF;
+                                newY = ((bottom - cellTop)
+                                        + (0x1000 - (right - cellLeft) - (bottom - cellTop)) / 2
+                                        + cellTop - 0x100)
+                                       & ~0xFF;
+                                flags = 3;
+                                wallSides |= 2;
+                            } else {
+                                if (coldef->floorType == 6 || coldef->floorType == 7) {
+                                    continue;
+                                }
+                                solid = pass;
+                                switch (coldef->secondaryShape) {
+                                    case 8:
+                                        cellBottom -= 0x800;
+                                        solid = TRUE;
+                                        break;
+                                    case 9:
+                                        cellTop += 0x800;
+                                        solid = TRUE;
+                                        break;
+                                    case 10:
+                                        cellLeft += 0x800;
+                                        solid = TRUE;
+                                        break;
+                                }
+                                if (!solid) {
+                                    continue;
+                                }
+                                if (!((cellTop < previousBottom && cellBottom > top)
+                                      || (cellBottom > previousTop && cellTop < bottom))) {
+                                    continue;
+                                }
+                                if (cellLeft < previousRight || cellLeft >= right) {
+                                    continue;
+                                }
+                                newX = cellLeft - (boxWidth / 2);
+                                flags |= 1;
+                                wallSides |= 2;
+                            }
+                        }
+                        break;
+                    }
+                    case 4: { // Top left corner
+                        int cellX = previousLeft / 4096 - 1;
+                        int cellY = previousTop / 4096 - 1;
+
+                        if ((cellX + 1) << 12 > left && (cellY + 1) << 12 > top) {
+                            sub_804FA30(cellX, cellY, &floor, &ceiling, &objectTop);
+                            if (floor > previousZ && floor > low) {
+                                newY = ((cellY + 1) << 12) - 0x100 + boxDepth;
+                                flags |= 2;
+                                wallSides |= 1;
+                            } else if (ceiling >= 0 && ceiling < previousZ + previousHeight + boxHeight
+                                       && objectTop > previousZ && ceiling < high && objectTop > low
+                                       && (cellY + 1) << 12 > top) {
+                                newY = ((cellY + 1) << 12) - 0x100 + boxDepth;
+                                flags |= 2;
+                                wallSides |= 1;
+                            }
+                        }
+                        break;
+                    }
+                    case 5: { // Top right corner
+                        int cellX = (previousRight - 0x100) / 4096 + 1;
+                        int cellY = previousTop / 4096 - 1;
+
+                        if (cellX << 12 < right && (cellY + 1) << 12 > top) {
+                            sub_804FA30(cellX, cellY, &floor, &ceiling, &objectTop);
+                            if (floor > previousZ && floor > low) {
+                                newY = ((cellY + 1) << 12) - 0x100 + boxDepth;
+                                flags |= 2;
+                                wallSides |= 1;
+                            } else if (ceiling >= 0 && ceiling < previousZ + previousHeight + boxHeight
+                                       && objectTop > previousZ && ceiling < high && objectTop > low
+                                       && (cellY + 1) << 12 > top) {
+                                newY = ((cellY + 1) << 12) - 0x100 + boxDepth;
+                                flags |= 2;
+                                wallSides |= 1;
+                            }
+                        }
+                        break;
+                    }
+                    case 6: { // Bottom left corner
+                        int cellX = previousLeft / 4096 - 1;
+                        int cellY = (previousBottom - 0x100) / 4096 + 1;
+
+                        if ((cellX + 1) << 12 > left && cellY << 12 < bottom) {
+                            sub_804FA30(cellX, cellY, &floor, &ceiling, &objectTop);
+                            if (floor > previousZ && floor > low) {
+                                newY = (cellY << 12) - 0x100;
+                                flags |= 2;
+                                wallSides |= 4;
+                            } else if (ceiling >= 0 && ceiling < previousZ + previousHeight + boxHeight
+                                       && objectTop > previousZ && ceiling < high && objectTop > low
+                                       && cellY << 12 < bottom) {
+                                newY = (cellY << 12) - 0x100;
+                                flags |= 2;
+                                wallSides |= 4;
+                            }
+                        }
+                        break;
+                    }
+                    case 7: { // Bottom right corner
+                        int cellX = (previousRight - 0x100) / 4096 + 1;
+                        int cellY = (previousBottom - 0x100) / 4096 + 1;
+
+                        if (cellX << 12 < right && cellY << 12 < bottom) {
+                            sub_804FA30(cellX, cellY, &floor, &ceiling, &objectTop);
+                            if (floor > previousZ && floor > low) {
+                                newY = (cellY << 12) - 0x100;
+                                flags |= 2;
+                                wallSides |= 4;
+                            } else if (ceiling >= 0 && ceiling < previousZ + previousHeight + boxHeight
+                                       && objectTop > previousZ && ceiling < high && objectTop > low
+                                       && cellY << 12 < bottom) {
+                                newY = (cellY << 12) - 0x100;
+                                flags |= 2;
+                                wallSides |= 4;
+                            }
+                        }
+                        break;
+                    }
+                }
+            apply:
+                if (flags & 1) {
+                    x = newX;
+                    left = newX - (boxWidth / 2);
+                    right = left + boxWidth;
+                }
+                if (flags & 2) {
+                    y = newY;
+                    top = 0x100 + newY - boxDepth;
+                    bottom = top + boxDepth;
+                }
+            } while (*sides != -1);
+        }
+    }
+    return wallSides;
+}
+#endif
+
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804F904__21FieldPlayerShotBullet.s\"");
@@ -1569,7 +2107,8 @@ void FieldPlayerShotBullet::sub_804F904() {
     if (highestTop < objectTop) {
         highestTop = objectTop;
     }
-    sub_803FBA4(map, x - 0x100 + (boxWidth >> 1), y + 0x100 - boxDepth, &floor, &ceiling, &objectTop, FALSE, TRUE);
+    sub_803FBA4(map, x - 0x100 + (boxWidth >> 1), y + 0x100 - boxDepth, &floor, &ceiling, &objectTop,
+                FALSE, TRUE);
     if (ceiling >= 0 && lowestCeiling > ceiling) {
         lowestCeiling = ceiling;
     }
@@ -1605,7 +2144,8 @@ void FieldPlayerShotBullet::sub_804F904() {
 }
 #endif
 
-struct Coldef* FieldPlayerShotBullet::sub_804FA30(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top) {
+struct Coldef* FieldPlayerShotBullet::sub_804FA30(int cellX, int cellY, int* floor, int* ceiling,
+                                                  int* top) {
     struct Coldef* coldef = get_coldef_ptr_by_xz(map, cellX, cellY);
 
     *floor = (coldef->primaryHeight << 11) << coldef->heightScale;
@@ -1706,4 +2246,3 @@ void FieldPlayerCharacter::sub_804FD3C() {
     sub_8049000(field_54 == 0 ? 0x103E : 0x1053);
     field_35A_2 = 1;
 }
-

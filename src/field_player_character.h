@@ -261,7 +261,7 @@ class FieldPlayerShotBullet {
     void sub_804E6E0(FieldObject** objects, int count);                                   // 0x0804E6E0
     u8 sub_804EA68();                                                                     // 0x0804EA68
     void sub_804F904();                                                                   // 0x0804F904
-    struct Coldef* sub_804FA30(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top); // 0x0804FA30
+    struct Coldef* sub_804FA30(int cellX, int cellY, int* floor, int* ceiling, int* top); // 0x0804FA30
     void sub_804FA94(s16 cameraX, s16 cameraY);                                           // 0x0804FA94
     void sub_804FAF8();                                                                   // 0x0804FAF8
     void sub_804FB14();                                                                   // 0x0804FB14

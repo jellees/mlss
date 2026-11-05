@@ -150,7 +150,7 @@ _0804EB7C:
 	adds r1, r5, #0x0
 	ldr r2, [sp, #0x04C]
 	add r3, sp, #0x008
-	bl sub_804FA30__21FieldPlayerShotBulletssPiN23
+	bl sub_804FA30__21FieldPlayerShotBulletiiPiN23
 	mov r8, r0
 	ldr r7, [sp, #0x040]
 	cmp r7, #0x00
@@ -492,7 +492,7 @@ _0804EE02:
 	adds r1, r5, #0x0
 	ldr r2, [sp, #0x054]
 	add r3, sp, #0x008
-	bl sub_804FA30__21FieldPlayerShotBulletssPiN23
+	bl sub_804FA30__21FieldPlayerShotBulletiiPiN23
 	mov r8, r0
 	ldr r7, [sp, #0x040]
 	cmp r7, #0x00
@@ -818,7 +818,7 @@ _0804F064:
 	ldr r1, [sp, #0x05C]
 	adds r2, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_804FA30__21FieldPlayerShotBulletssPiN23
+	bl sub_804FA30__21FieldPlayerShotBulletiiPiN23
 	mov r8, r0
 	ldr r0, [sp, #0x040]
 	cmp r0, #0x00
@@ -1147,7 +1147,7 @@ _0804F2D0:
 	ldr r1, [sp, #0x064]
 	adds r2, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_804FA30__21FieldPlayerShotBulletssPiN23
+	bl sub_804FA30__21FieldPlayerShotBulletiiPiN23
 	mov r8, r0
 	ldr r4, [sp, #0x040]
 	cmp r4, #0x00
@@ -1465,7 +1465,7 @@ _0804F522:
 	adds r0, r6, #0x0
 	adds r2, r4, #0x0
 	add r3, sp, #0x008
-	bl sub_804FA30__21FieldPlayerShotBulletssPiN23
+	bl sub_804FA30__21FieldPlayerShotBulletiiPiN23
 	ldr r1, [sp, #0x008]
 	ldr r0, [r6, #0x20]
 	cmp r1, r0
@@ -1578,7 +1578,7 @@ _0804F5F4:
 	adds r0, r6, #0x0
 	adds r2, r4, #0x0
 	add r3, sp, #0x008
-	bl sub_804FA30__21FieldPlayerShotBulletssPiN23
+	bl sub_804FA30__21FieldPlayerShotBulletiiPiN23
 	ldr r1, [sp, #0x008]
 	ldr r0, [r6, #0x20]
 	cmp r1, r0
@@ -1690,7 +1690,7 @@ _0804F6C8:
 	str r0, [sp, #0x004]
 	adds r0, r6, #0x0
 	add r3, sp, #0x008
-	bl sub_804FA30__21FieldPlayerShotBulletssPiN23
+	bl sub_804FA30__21FieldPlayerShotBulletiiPiN23
 	ldr r1, [sp, #0x008]
 	ldr r0, [r6, #0x20]
 	cmp r1, r0
@@ -1786,7 +1786,7 @@ _0804F76A:
 	str r0, [sp, #0x004]
 	adds r0, r6, #0x0
 	add r3, sp, #0x008
-	bl sub_804FA30__21FieldPlayerShotBulletssPiN23
+	bl sub_804FA30__21FieldPlayerShotBulletiiPiN23
 	ldr r1, [sp, #0x008]
 	ldr r0, [r6, #0x20]
 	cmp r1, r0
