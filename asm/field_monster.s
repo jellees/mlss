@@ -44,7 +44,7 @@ _0804FEA8:
 	cmp r0, #0x00
 	bne _0804FEB8
 	adds r0, r2, #0x0
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 _0804FEB8:
 	pop {r4}
 	pop {r0}
@@ -254,7 +254,7 @@ _08050042:
 	adds r0, r5, #0x0
 	movs r1, #0x40
 	movs r2, #0x20
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	pop {r4, r5}
 	pop {r0}
 	bx r0

@@ -542,7 +542,7 @@ _080465B2:
 	cmp r0, #0x00
 	beq _080465C6
 	adds r0, r5, #0x0
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 _080465C6:
 	add sp, #0x010
 	pop {r3, r4}

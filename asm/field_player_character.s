@@ -1577,7 +1577,7 @@ _0804929C:
 	negs r4, r4
 	adds r0, r5, #0x0
 	adds r3, r4, #0x0
-	bl sub_80401F0__11FieldObjectiii
+	bl startAirborne__11FieldObjectiii
 	ldr r0, _080492D8 @ =0x00000355
 	adds r1, r5, r0
 	movs r0, #0x01
@@ -4396,7 +4396,7 @@ _0804A98C:
 	b _0804AEC4
 _0804A99A:
 	adds r0, r7, #0x0
-	bl sub_8047EB8__11FieldObject
+	bl land__11FieldObject
 	b _0804AEC4
 _0804A9A2:
 	ldr r0, [sp, #0x058]
@@ -8180,7 +8180,7 @@ _0804C65C:
 	ldsh r3, [r0, r4]
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_80401F0__11FieldObjectiii
+	bl startAirborne__11FieldObjectiii
 _0804C670:
 	ldr r5, [sp, #0x034]
 	cmp r5, #0x00

@@ -4742,7 +4742,7 @@ _0802D6B4:
 	adds r3, r0, r6
 	movs r6, #0x00
 	ldsh r3, [r3, r6]
-	bl sub_80401F0__11FieldObjectiii
+	bl startAirborne__11FieldObjectiii
 	ldr r1, [r4, #0x00]
 	movs r0, #0x02
 	strh r0, [r1, #0x04]
@@ -10270,7 +10270,7 @@ _080305FE:
 	mov r12, r6
 	adds r0, r4, #0x0
 	mov r3, r12
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r2, [r5, #0x00]
 	mov r6, r8
 	ldr r0, [r6, #0x00]
@@ -10766,7 +10766,7 @@ _080312EE:
 	mov r0, r12
 	mov r1, r9
 	mov r3, r8
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r2, [r5, #0x00]
 	ldr r0, [r7, #0x00]
 	ldr r3, [r0, #0x0C]
@@ -10953,7 +10953,7 @@ sub_80313C0:
 	movs r4, #0x00
 	ldsh r3, [r1, r4]
 	movs r1, #0x10
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r4, [r5, #0x00]
 	movs r5, #0xA5
 	lsls r5, r5, #0x02
@@ -11539,7 +11539,7 @@ _0803193E:
 	bl _080324FC
 _08031942:
 	adds r0, r1, #0x0
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 	ldr r4, _08031A60 @ =0x0000020A
 	adds r0, r7, r4
 	ldrb r1, [r0, #0x00]
@@ -11549,7 +11549,7 @@ _08031942:
 	beq _0803195E
 	mov r1, r10
 	ldr r0, [r1, #0x00]
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 _0803195E:
 	ldr r2, _08031A64 @ =0x00000209
 	adds r0, r7, r2
@@ -12477,7 +12477,7 @@ _0803265A:
 	mov r12, r6
 	adds r0, r4, #0x0
 	mov r3, r12
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r2, [r5, #0x00]
 	mov r6, r8
 	ldr r0, [r6, #0x00]
@@ -13637,7 +13637,7 @@ sub_80339B8:
 	ldsh r3, [r3, r1]
 	mov r9, r3
 	movs r1, #0x10
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r0, [r5, #0x00]
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
@@ -14006,7 +14006,7 @@ _08033E0C:
 	adds r0, r2, #0x0
 	movs r1, #0x30
 	adds r2, r4, #0x0
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 _08033E20:
 	add sp, #0x014
 	pop {r3, r4, r5}
@@ -14112,7 +14112,7 @@ _08033EC0:
 	adds r0, r4, #0x0
 	mov r1, r9
 	mov r3, r12
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r2, [r5, #0x00]
 	ldr r0, [r7, #0x00]
 	ldr r3, [r0, #0x0C]
@@ -14586,7 +14586,7 @@ _080348E4:
 	adds r0, r5, #0x0
 	movs r1, #0x18
 	movs r2, #0x75
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	adds r0, r5, #0x0
 	bl sub_80496B4
 	movs r3, #0xDB
@@ -14893,7 +14893,7 @@ _08034B4C:
 	mov r12, r3
 	adds r0, r4, #0x0
 	mov r1, r10
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r2, [r5, #0x00]
 	ldr r0, [r6, #0x00]
 	ldr r3, [r0, #0x0C]
@@ -15072,7 +15072,7 @@ sub_8034FE8:
 	movs r7, #0x00
 	ldsh r3, [r1, r7]
 	movs r1, #0x04
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r4, [r4, #0x00]
 	movs r1, #0x93
 	lsls r1, r1, #0x02
@@ -15610,7 +15610,7 @@ _08035AF8:
 	ldsh r3, [r0, r1]
 	adds r0, r6, #0x0
 	movs r1, #0x10
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r3, r6, r2
@@ -15872,7 +15872,7 @@ _08035D20:
 	adds r0, r4, #0x0
 	adds r1, r2, #0x0
 	adds r2, r5, #0x0
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r2, [r6, #0x00]
 	mov r1, r9
 	ldr r0, [r1, #0x00]
@@ -15962,7 +15962,7 @@ _08035DD0:
 	blt _08035E26
 _08035DE4:
 	adds r0, r2, #0x0
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 	ldr r0, [r5, #0x00]
 	mov r4, r9
 	adds r4, #0x28
@@ -15972,7 +15972,7 @@ _08035DE4:
 	lsls r7, r7, #0x02
 	add r7, r9
 	ldr r0, [r7, #0x00]
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 	ldr r0, _08035EB0 @ =0x0000020A
 	add r0, r9
 	ldrb r1, [r0, #0x00]
@@ -15982,12 +15982,12 @@ _08035DE4:
 	cmp r0, #0x00
 	beq _08035E26
 	ldr r0, [r5, #0x00]
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 	ldr r0, [r5, #0x00]
 	adds r1, r6, #0x0
 	bl sub_80461B4__11FieldObjectPP11FieldObject
 	ldr r0, [r7, #0x00]
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 _08035E26:
 	movs r4, #0x80
 	lsls r4, r4, #0x02
@@ -16186,7 +16186,7 @@ _080363F8:
 	bne _08036452
 _08036414:
 	adds r0, r7, #0x0
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 	ldr r0, _0803647C @ =0x0000020A
 	add r0, r9
 	ldrb r1, [r0, #0x00]
@@ -16195,7 +16195,7 @@ _08036414:
 	cmp r0, #0x00
 	beq _0803642E
 	adds r0, r7, #0x0
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 _0803642E:
 	ldr r0, _08036480 @ =0x00000209
 	add r0, r9
@@ -18554,7 +18554,7 @@ _080391CA:
 	mov r8, r5
 	adds r0, r4, #0x0
 	mov r3, r8
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r0, [r6, #0x00]
 	movs r5, #0xA5
 	lsls r5, r5, #0x02
@@ -22215,7 +22215,7 @@ _0803DAC8:
 	lsls r1, r1, #0x02
 	adds r4, r7, r1
 	ldr r0, [r4, #0x00]
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 	ldr r0, [r4, #0x00]
 	adds r5, r7, #0x0
 	adds r5, #0x28
@@ -22227,7 +22227,7 @@ _0803DAC8:
 	lsls r2, r2, #0x02
 	adds r4, r7, r2
 	ldr r0, [r4, #0x00]
-	bl sub_80402C4__11FieldObject
+	bl updateAirborne__11FieldObject
 	ldr r0, [r4, #0x00]
 	adds r1, r5, #0x0
 	movs r2, #0x00
@@ -22504,7 +22504,7 @@ _0803DDC2:
 	adds r0, r4, #0x0
 	movs r1, #0x18
 	movs r2, #0x75
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	movs r2, #0xCE
 	lsls r2, r2, #0x02
 	adds r0, r4, r2
@@ -22591,7 +22591,7 @@ sub_803DE2C:
 	ldsh r3, [r1, r2]
 	movs r1, #0x18
 	movs r2, #0x75
-	bl sub_80400B0__11FieldObjectiii
+	bl jumpToHeight__11FieldObjectiii
 	ldr r0, [r5, #0x00]
 	movs r3, #0xCE
 	lsls r3, r3, #0x02

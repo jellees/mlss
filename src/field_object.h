@@ -153,17 +153,17 @@ public:
     s16 velocityX;
     s16 velocityY;
     u8 pad_246[0x2];
-    s32 field_248;
-    s32 field_24C;
-    s32 field_250;
-    s32 field_254;
-    s32 field_258;
-    s32 field_25C;
+    s32 gravity;
+    s32 airStartZ;
+    s32 airStartHeight;
+    s32 jumpVelocity;
+    s32 velocityZ;
+    s32 airFrames;
     u16 field_260;
     u16 field_262;
-    s16 field_264;
-    s16 field_266;
-    s16 field_268;
+    s16 defaultJumpVelocity;
+    s16 defaultGravity;
+    s16 savedDefaultGravity;
     u8 pad_26A[0x2];
     u16 field_26C;
     u8 field_26E;
@@ -254,9 +254,9 @@ public:
     // The vtable pointer follows at 0x338.
 
     FieldObject(int room, int index);
-    void sub_80400B0(int arg1, int arg2, int arg3);
-    void sub_80401F0(int arg1, int arg2, int arg3);
-    void sub_80402C4();
+    void jumpToHeight(int jumpHeight = -1, int gravity = -1, int arg3 = -1);
+    void startAirborne(int jumpVelocity = -1, int gravity = -1, int arg3 = -1);
+    void updateAirborne();
     void sub_804034C();
     void sub_80415A0();
     void sub_804173C(int set, u8 size1, u8 size2, u8 size3);
@@ -306,10 +306,10 @@ public:
 
     void sub_8047E50(u16 value);
     int sub_8047E7C();
-    void sub_8047EB8();
+    void land();
     void sub_8047EFC(u16 speed, u16 arg2, s16 arg3, s16 arg4);
     void sub_8047F60(int newX, int newY, int newHeight, int savePrevious, int relative);
-    void sub_8047B08(int mode, int animation);
+    void sub_8047B08(int mode, int velocityOrHeight);
     void sub_8047B5C(s16 value);
     bool sub_8047B78();
     int sub_8047C18(FieldObject* other);

@@ -29,7 +29,7 @@ FieldObject::FieldObject(int room, int index) {
     field_23D = 0;
     field_26C = 0xFFFF;
     field_26E = 0xFF;
-    field_268 = -1;
+    savedDefaultGravity = -1;
     sub_8047EFC(0x200, 0x200, 0x52C, 0x75);
     if (room != -1) {
         init_fobj_with_data_80FB128(room, index, this);
@@ -59,38 +59,38 @@ void FieldObject::method5() {
     }
 }
 
-void FieldObject::sub_80400B0(int arg1, int arg2, int arg3) {
+void FieldObject::jumpToHeight(int jumpHeight, int gravity, int arg3) {
     int speed;
     int distance;
 
-    field_248 = arg2 == -1 ? field_266 : arg2;
-    if (arg1 == -1) {
-        field_254 = field_258 = field_264;
-    } else if (arg1 == 0) {
-        field_254 = field_258 = 0;
-    } else if (arg1 == 30) {
-        field_254 = field_258 = 0x52C;
+    this->gravity = gravity == -1 ? defaultGravity : gravity;
+    if (jumpHeight == -1) {
+        jumpVelocity = velocityZ = defaultJumpVelocity;
+    } else if (jumpHeight == 0) {
+        jumpVelocity = velocityZ = 0;
+    } else if (jumpHeight == 30) {
+        jumpVelocity = velocityZ = 0x52C;
     } else {
-        arg1 <<= 8;
+        jumpHeight <<= 8;
         speed = 0;
         distance = 0;
         do {
-            speed += field_248;
+            speed += this->gravity;
             distance += speed;
-        } while (distance < arg1);
-        distance -= arg1;
+        } while (distance < jumpHeight);
+        distance -= jumpHeight;
         if (distance > 0) {
             distance <<= 8;
             distance /= speed;
-            speed -= field_248 * distance / 256;
+            speed -= this->gravity * distance / 256;
         }
-        field_254 = speed;
-        field_258 = speed;
+        jumpVelocity = speed;
+        velocityZ = speed;
     }
-    field_212_13 = field_258 > 0;
-    field_25C = 0;
-    field_24C = z + height;
-    field_250 = height;
+    field_212_13 = velocityZ > 0;
+    airFrames = 0;
+    airStartZ = z + height;
+    airStartHeight = height;
     field_240 = field_23E;
     if (arg3 == -1) {
         field_23E = field_262;
@@ -99,47 +99,49 @@ void FieldObject::sub_80400B0(int arg1, int arg2, int arg3) {
     }
 }
 
-void FieldObject::sub_80401F0(int arg1, int arg2, int arg3) {
-    field_248 = arg2 == -1 ? field_266 : arg2;
-    field_254 = arg1 == -1 ? field_264 : arg1;
-    field_258 = field_254;
-    field_25C = 0;
-    field_24C = z + height;
-    field_250 = height;
+void FieldObject::startAirborne(int jumpVelocity, int gravity, int arg3) {
+    this->gravity = gravity == -1 ? defaultGravity : gravity;
+    this->jumpVelocity = jumpVelocity == -1 ? defaultJumpVelocity : jumpVelocity;
+    velocityZ = this->jumpVelocity;
+    airFrames = 0;
+    airStartZ = z + height;
+    airStartHeight = height;
     field_240 = field_23E;
     if (arg3 == -1) {
         field_23E = field_262;
     } else {
         field_23E = arg3;
     }
-    field_212_13 = field_258 > 0;
+    field_212_13 = velocityZ > 0;
 }
 
-void FieldObject::sub_80402C4() {
-    if (field_25C >= 0) {
-        height += field_258;
-        field_258 -= field_248;
-        if (field_20C_13 == 0) {
+void FieldObject::updateAirborne() {
+    if (airFrames >= 0) {
+        height += velocityZ;
+        velocityZ -= gravity;
+        if (!field_20C_13) {
             if (height <= 0) {
-                sub_8047EB8();
+                land();
                 height = 0;
             } else {
-                field_25C++;
-            }
-        } else if (z + height <= field_24C) {
-            sub_8047EB8();
-            if (z + height < 0) {
-                height = -z;
+                airFrames++;
             }
         } else {
-            field_25C++;
+            if (z + height <= airStartZ) {
+                land();
+                if (z + height < 0) {
+                    height = -z;
+                }
+            } else {
+                airFrames++;
+            }
         }
     }
 }
 
 void FieldObject::sub_804034C() {
     if (field_20C_0 && field_214_21 == 0) {
-        if (field_25C >= 0) {
+        if (airFrames >= 0) {
             if (z + height >= previousZ + previousHeight) {
                 state = FIELD_OBJECT_STATE_RISING;
             } else {
@@ -694,8 +696,8 @@ void FieldObject::sub_80418E8(FieldObject** objects) {
     int otherTop;
     int overlap;
 
-    if (field_20C_0 && field_214_21 == 0 && field_29 != -1 && field_20C_14 && field_25C <= 0
-        && z + height <= previousZ + previousHeight && field_258 <= 0) {
+    if (field_20C_0 && field_214_21 == 0 && field_29 != -1 && field_20C_14 && airFrames <= 0
+        && z + height <= previousZ + previousHeight && velocityZ <= 0) {
         other = objects[field_29];
         if (other->field_20C_0) {
             x += other->x - other->previousX;
@@ -723,17 +725,17 @@ void FieldObject::sub_80418E8(FieldObject** objects) {
                 }
                 if (overlap > 0 && (s8)field_1 == -1) {
                     field_1 = field_29;
-                    field_25C = -1;
+                    airFrames = -1;
                 }
             }
         }
     }
 }
 
-// Inline members. Earlier functions and other files call them; later ones inline them (sub_8047EB8 in
+// Inline members. Earlier functions and other files call them; later ones inline them (land in
 // method12 and sub_8046A10, sub_8047E7C in method13 and sub_80461B4). Their out-of-line copies are
 // emitted at the end of the file in reverse order of definition (0x08047DC8-0x08047FDC), which fixes
-// this order: sub_8047F60, sub_8047EFC, sub_8047EB8, sub_8047E7C, sub_8047E50, sub_8047DC8.
+// this order: sub_8047F60, sub_8047EFC, land, sub_8047E7C, sub_8047E50, sub_8047DC8.
 inline void FieldObject::sub_8047F60(int newX, int newY, int newHeight, int savePrevious,
                                      int relative) {
     if (relative == 0) {
@@ -762,18 +764,18 @@ inline void FieldObject::sub_8047EFC(u16 speed, u16 arg2, s16 arg3, s16 arg4) {
     field_23E = speed;
     field_260 = speed;
     field_262 = arg2;
-    field_264 = arg3;
-    field_266 = arg4;
-    field_254 = 0;
-    field_25C = -1;
-    field_24C = -1;
-    field_250 = -1;
+    defaultJumpVelocity = arg3;
+    defaultGravity = arg4;
+    jumpVelocity = 0;
+    airFrames = -1;
+    airStartZ = -1;
+    airStartHeight = -1;
 }
 
-inline void FieldObject::sub_8047EB8() {
-    field_25C = -1;
+inline void FieldObject::land() {
+    airFrames = -1;
     field_212_13 = 0;
-    field_24C = field_250 = -1;
+    airStartZ = airStartHeight = -1;
     field_23E = field_240;
 }
 
@@ -924,15 +926,15 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
             field_1 = other->field_54;
             if (field_2B5_3) {
                 sub_8046A10();
-            } else if (field_25C >= 0) {
-                sub_8047EB8();
+            } else if (airFrames >= 0) {
+                land();
             }
         } else if (verticalThis == 1) {
             // Hitting the other object from below.
             if (field_4C_7 != 1 && other->field_29 != field_54) {
                 height -= overlap;
-                if (field_25C >= 0 && field_258 > 0) {
-                    field_258 = -field_258;
+                if (airFrames >= 0 && velocityZ > 0) {
+                    velocityZ = -velocityZ;
                 }
             }
         } else {
@@ -2596,8 +2598,8 @@ void FieldObject::method15(u8 force) {
                 field_26_4 = 0;
             }
         }
-        if (field_25C >= 0) {
-            field_250 += previousZ - z;
+        if (airFrames >= 0) {
+            airStartHeight += previousZ - z;
         }
         if (landed) {
             field_24_15 = 1;
@@ -2606,11 +2608,11 @@ void FieldObject::method15(u8 force) {
         }
     }
 
-    if (height > 0 && field_25C == -1 && field_20C_14 && (s8)field_1 == field_25C && force == 0) {
+    if (height > 0 && airFrames == -1 && field_20C_14 && (s8)field_1 == airFrames && force == 0) {
         if (height <= (s16)field_23E && field_26_4) {
             height = 0;
         } else {
-            sub_80401F0(0, -1, (s16)field_23E);
+            startAirborne(0, -1, (s16)field_23E);
         }
     }
 }
@@ -2851,7 +2853,7 @@ int FieldObject::sub_8045F04(int mode, int relative, int centerX, int centerY, i
     field_2B5_0 = mode;
     field_2B7_3 = flags;
     field_2B8_0 = (flags >> 5) & 7;
-    if (!field_20C_14 && field_25C == -1) {
+    if (!field_20C_14 && airFrames == -1) {
         dz = field_2C4 - centerZ;
     } else {
         dz = 0;
@@ -2884,7 +2886,7 @@ void FieldObject::sub_80461B4(FieldObject** objects) {
                 if (!(field_2B7_0 & 2) && field_2D0 != field_2C0) {
                     y += field_2DA;
                 }
-                if (!(field_2B7_0 & 4) && field_2D4 != field_2C4 && field_25C == -1) {
+                if (!(field_2B7_0 & 4) && field_2D4 != field_2C4 && airFrames == -1) {
                     height += field_2DC;
                 }
                 break;
@@ -2897,7 +2899,7 @@ void FieldObject::sub_80461B4(FieldObject** objects) {
                     + ((int (*)(int, int))((u8*)dword_3001038
                                            + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
                         (field_2D0 - field_2C0) * field_2DE, field_2E0);
-                if (!field_20C_14 && field_25C == -1) {
+                if (!field_20C_14 && airFrames == -1) {
                     height = field_2C4
                              + ((int (*)(int, int))((u8*)dword_3001038
                                                     + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
@@ -2936,7 +2938,7 @@ void FieldObject::sub_80461B4(FieldObject** objects) {
                 }
                 x = field_2E4 + offsetX;
                 y = field_2E8 + offsetY;
-                if (!field_20C_14 && field_25C == -1) {
+                if (!field_20C_14 && airFrames == -1) {
                     z = 0;
                     height = field_2EC + offsetZ;
                 }
@@ -2972,7 +2974,7 @@ void FieldObject::sub_80461B4(FieldObject** objects) {
         }
     }
     if (field_2B5_3) {
-        sub_80402C4();
+        updateAirborne();
     }
 }
 #endif
@@ -2998,7 +3000,7 @@ void FieldObject::sub_80465D8() {
                     y = field_2D0;
                     field_2B7_0 |= 2;
                 }
-                if (!(field_2B7_0 & 4) && !field_20C_14 && field_25C == -1
+                if (!(field_2B7_0 & 4) && !field_20C_14 && airFrames == -1
                     && ((field_2D4 >= field_2C4 && field_2D4 <= z + height)
                         || (field_2D4 <= field_2C4 && field_2D4 >= z + height))) {
                     height = field_2D4;
@@ -3016,7 +3018,7 @@ void FieldObject::sub_80465D8() {
                 if (field_2B7_0 & axis) {
                     x = field_2CC;
                     y = field_2D0;
-                    if (!field_20C_14 && field_25C == -1) {
+                    if (!field_20C_14 && airFrames == -1) {
                         height = field_2D4 - z;
                     }
                     sub_8046980();
@@ -3040,7 +3042,7 @@ void FieldObject::sub_80465D8() {
                 }
                 break;
         }
-        if (field_2B5_3 && field_25C == -1) {
+        if (field_2B5_3 && airFrames == -1) {
             sub_8046A10();
         }
     }
@@ -3083,10 +3085,10 @@ void FieldObject::sub_8046980() {
 
 void FieldObject::sub_8046A10() {
     if (field_2B5_3) {
-        sub_8047EB8();
-        if (field_268 != -1) {
-            field_266 = field_268;
-            field_268 = -1;
+        land();
+        if (savedDefaultGravity != -1) {
+            defaultGravity = savedDefaultGravity;
+            savedDefaultGravity = -1;
         }
         field_2B5_3 = 0;
     }
@@ -3569,21 +3571,21 @@ bool FieldObject::sub_8047AF4() {
     return field_2B5_3;
 }
 
-void FieldObject::sub_8047B08(int mode, int animation) {
+void FieldObject::sub_8047B08(int mode, int velocityOrHeight) {
     int saved = (s16)field_23E;
 
     if (mode == 0) {
-        sub_80401F0(animation, -1, -1);
+        startAirborne(velocityOrHeight);
     } else {
-        sub_80400B0(animation, -1, -1);
+        jumpToHeight(velocityOrHeight);
     }
     field_23E = saved;
     field_2B5_3 = 1;
 }
 
-void FieldObject::sub_8047B5C(s16 value) {
-    field_268 = field_266;
-    field_266 = value;
+void FieldObject::sub_8047B5C(s16 gravity) {
+    savedDefaultGravity = defaultGravity;
+    defaultGravity = gravity;
 }
 
 bool FieldObject::sub_8047B78() {

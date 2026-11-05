@@ -2307,7 +2307,7 @@ _080457C0:
 	ldsh r3, [r0, r1]
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl sub_80401F0__11FieldObjectiii
+	bl startAirborne__11FieldObjectiii
 _080457D4:
 	add sp, #0x074
 	pop {r3, r4, r5}
