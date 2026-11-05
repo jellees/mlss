@@ -77,13 +77,13 @@ class FieldPlayerCharacter : public FieldObject {
     u8 field_352_5 : 1;
     u8 field_352_6 : 1;
     u8 field_352_7 : 1;
-    u8 field_353_0 : 1; // field_36C follows sprite (method8)
-    u8 field_353_1 : 1;
-    u8 field_353_2 : 1;
-    u8 field_353_3 : 1;
-    u8 field_353_4 : 2; // Set from byte_83A0A38 (sub_804FC30)
-    u8 field_353_6 : 1;
-    u8 field_353_7 : 1; // method5's copy of field_353_6
+    u32 field_353_0 : 1; // field_36C follows sprite (method8)
+    u32 field_353_1 : 1;
+    u32 field_353_2 : 1;
+    u32 field_353_3 : 1;
+    u32 field_353_4 : 2; // Set from byte_83A0A38 (sub_804FC30)
+    u32 field_353_6 : 1;
+    u32 field_353_7 : 1; // method5's copy of field_353_6
     s8 field_354;       // method5's copy of field_238
     u8 field_355;
     u16 field_356; // Saved field_218 (sub_8049AB4)

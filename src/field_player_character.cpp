@@ -3797,14 +3797,9 @@ int FieldPlayerCharacter::method13() {
     return result;
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804FC30__20FieldPlayerCharacter.s\"");
-#else
 void FieldPlayerCharacter::sub_804FC30() {
     if (airFrames == -1 && field_2B5_0 == 0) {
-        field_353_4 = byte_83A0A38[angle >> 5][field_26_2];
+        field_353_4 = byte_83A0A38[(angle / 32) * 4 + field_26_2];
     }
 }
-#endif
 

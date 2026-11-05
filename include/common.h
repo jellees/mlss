@@ -573,7 +573,7 @@ extern u8* off_83A086C[]; // Indexed by [!FieldPlayerCharacter::field_352_7][sta
 extern s8 byte_83A09E4[][8][3]; // FieldPlayerCharacter::field_372-374 per animation and direction
 extern u16 word_83A0A2C[]; // FieldPlayerCharacter::sub_804A124: corner masks that may match
 extern u8 byte_83A0A2E[];
-extern u8 byte_83A0A38[8][4]; // FieldPlayerCharacter::sub_804FC30, indexed by [angle / 32][field_26_2]
+extern u8 byte_83A0A38[]; // FieldPlayerCharacter::sub_804FC30, indexed by (angle / 32) * 4 + field_26_2
 extern u8 byte_83A0A58[8]; // FieldPlayerCharacter::sub_804B360 push directions per angle / 32 for a single blocked corner
 extern u8 byte_83A0A60[8];
 extern u8 byte_83A0A68[8];
