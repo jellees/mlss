@@ -1053,6 +1053,16 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
 }
 #endif
 
+// The front edge of an object's collision box is at y + 0x100. Written as helpers because the
+// nonmatching method13 and method15 get much closer with them than with inline arithmetic.
+static inline int yToFrontEdge(int y) {
+    return y + 0x100;
+}
+
+static inline int frontEdgeToY(int edge) {
+    return edge - 0x100;
+}
+
 // https://decomp.me/scratch/TODO
 // Same calls and control flow; mostly register and stack allocation differs (e.g. the original keeps
 // newY in r10), plus the 8-11 shape switches of the "below" checks, which the original compiles as
@@ -1066,7 +1076,6 @@ asm_unified(".include \"asm/nonmatching/method13__11FieldObject.s\"");
 // overlapped before moving, then one cell further. Returns the sides that were hit (field_24_11:
 // 1 back, 2 right, 4 front, 8 left).
 int FieldObject::method13() {
-    int moveAngle;
     int direction;
     int previousLeft;
     int previousRight;
@@ -1103,24 +1112,24 @@ int FieldObject::method13() {
     int e;
 
     if (!field_20C_0 || field_214_21 || !field_20C_11) {
-        return field_24_11;
+        goto end;
     }
     if (x == previousX && y == previousY) {
-        return field_24_11;
+        goto end;
     }
-    moveAngle = sub_8047E7C();
-    if (moveAngle == -1) {
-        return field_24_11;
+    direction = sub_8047E7C();
+    if (direction == -1) {
+        goto end;
     }
 
     previousLeft = previousX - field_278 / 2;
     previousRight = previousLeft + field_278;
-    previousBack = previousY + 0x100 - field_27C;
-    previousFront = previousY + 0x100;
+    previousBack = yToFrontEdge(previousY) - field_27C;
+    previousFront = yToFrontEdge(previousY);
     previousTop = previousZ + previousHeight + field_27A;
     left = x - field_278 / 2;
     right = left + field_278;
-    back = y + 0x100 - field_27C;
+    back = yToFrontEdge(y) - field_27C;
     front = back + field_27C;
     bottom = z;
     if (!field_20C_13) {
@@ -1129,10 +1138,9 @@ int FieldObject::method13() {
     topEdge = bottom + field_27A;
     field_224 = NULL;
 
-    direction = moveAngle >> 13;
-    if (moveAngle & 0x3FFF) {
-        direction |= 1;
-    }
+    // Angle to direction: the 4 exact axis angles give the even directions 0, 2, 4 and 6, any other
+    // angle the odd (diagonal) direction between them.
+    direction = (direction >> 13) | ((direction & 0x3FFF) != 0);
 
     for (pass = 0; pass < 2; pass++) {
         steps = byte_83A06C0[direction];
@@ -1181,7 +1189,11 @@ int FieldObject::method13() {
                                     && cell->floorType == 1)) {
                                 edge = (cellY + 1) << 12;
                                 if (edge > back) {
-                                    goto hit_back;
+                                    newY = frontEdgeToY(edge) + field_27C;
+                                    moved |= 2;
+                                    field_224 = cell;
+                                    field_24_11 |= 1;
+                                    break;
                                 }
                             }
                         }
@@ -1220,7 +1232,8 @@ int FieldObject::method13() {
                                         rowBack = rowFront - 0x1000;
                                         e = back - rowBack;
                                         newX = d + (0x1000 - e - d) / 2 + colLeft + field_278 / 2;
-                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100 + field_27C;
+                                        newY = frontEdgeToY(e + (0x1000 - d - e) / 2 + rowBack)
+                                               + field_27C;
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 1;
@@ -1231,7 +1244,7 @@ int FieldObject::method13() {
                                         d = right - colLeft;
                                         e = back - rowBack;
                                         newX = e + (d - e) / 2 + colLeft - field_278 / 2;
-                                        newY = d + (e - d) / 2 + rowBack - 0x100 + field_27C;
+                                        newY = frontEdgeToY(d + (e - d) / 2 + rowBack) + field_27C;
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 1;
@@ -1260,7 +1273,7 @@ int FieldObject::method13() {
                                         && ((colLeft < previousRight && colRight > left)
                                             || (colRight > previousLeft && colLeft < right))
                                         && rowFront <= previousBack && rowFront > back) {
-                                        newY = rowFront - 0x100 + field_27C;
+                                        newY = frontEdgeToY(rowFront) + field_27C;
                                         moved |= 2;
                                         field_224 = cell;
                                         field_24_11 |= 1;
@@ -1273,7 +1286,7 @@ int FieldObject::method13() {
                             && !(field_210_0 && (cell->tileFlags & field_26_4))) {
                             if (ceiling == -1 || top != previousZ) {
                                 if ((cellY + 1) << 12 > back) {
-                                    newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                                    newY = frontEdgeToY((cellY + 1) << 12) + field_27C;
                                     moved |= 2;
                                     field_224 = cell;
                                     field_24_11 |= 1;
@@ -1289,7 +1302,8 @@ int FieldObject::method13() {
                                         rowBack = rowFront - 0x1000;
                                         e = back - rowBack;
                                         newX = d + (0x1000 - e - d) / 2 + colLeft + field_278 / 2;
-                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100 + field_27C;
+                                        newY = frontEdgeToY(e + (0x1000 - d - e) / 2 + rowBack)
+                                               + field_27C;
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 1;
@@ -1300,7 +1314,7 @@ int FieldObject::method13() {
                                         d = right - colLeft;
                                         e = back - rowBack;
                                         newX = e + (d - e) / 2 + colLeft - field_278 / 2;
-                                        newY = d + (e - d) / 2 + rowBack - 0x100 + field_27C;
+                                        newY = frontEdgeToY(d + (e - d) / 2 + rowBack) + field_27C;
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 1;
@@ -1316,7 +1330,7 @@ int FieldObject::method13() {
                                     if (((colLeft < previousRight && colRight > left)
                                          || (colRight > previousLeft && colLeft < right))
                                         && rowFront <= previousBack && rowFront > back) {
-                                        newY = rowFront - 0x100 + field_27C;
+                                        newY = frontEdgeToY(rowFront) + field_27C;
                                         moved |= 2;
                                         field_224 = cell;
                                         field_24_11 |= 1;
@@ -1405,7 +1419,7 @@ int FieldObject::method13() {
                                     d = left - colLeft;
                                     if (e - d > 0) {
                                         newX = (d - e) / 2 + e + colLeft + field_278 / 2;
-                                        newY = d + (e - d) / 2 + rowBack - 0x100;
+                                        newY = frontEdgeToY(d + (e - d) / 2 + rowBack);
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 4;
@@ -1415,7 +1429,7 @@ int FieldObject::method13() {
                                     if (e - (colRight - right) > 0) {
                                         d = right - colLeft;
                                         newX = d + (0x1000 - e - d) / 2 + colLeft - field_278 / 2;
-                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100;
+                                        newY = frontEdgeToY(e + (0x1000 - d - e) / 2 + rowBack);
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 4;
@@ -1441,7 +1455,7 @@ int FieldObject::method13() {
                                         && ((colLeft < previousRight && colRight > left)
                                             || (colRight > previousLeft && colLeft < right))
                                         && rowBack >= previousFront && rowBack < front) {
-                                        newY = rowBack - 0x100;
+                                        newY = frontEdgeToY(rowBack);
                                         moved |= 2;
                                         field_224 = cell;
                                         field_24_11 |= 4;
@@ -1454,7 +1468,7 @@ int FieldObject::method13() {
                             && !(field_210_0 && (cell->tileFlags & field_26_4))) {
                             if (ceiling == -1 || top != previousZ) {
                                 if (cellY << 12 < front) {
-                                    newY = (cellY << 12) - 0x100;
+                                    newY = frontEdgeToY(cellY << 12);
                                     moved |= 2;
                                     field_224 = cell;
                                     field_24_11 |= 4;
@@ -1469,7 +1483,7 @@ int FieldObject::method13() {
                                     d = left - colLeft;
                                     if (e - d > 0) {
                                         newX = (d - e) / 2 + e + colLeft + field_278 / 2;
-                                        newY = d + (e - d) / 2 + rowBack - 0x100;
+                                        newY = frontEdgeToY(d + (e - d) / 2 + rowBack);
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 4;
@@ -1479,7 +1493,7 @@ int FieldObject::method13() {
                                     if (e - (colRight - right) > 0) {
                                         d = right - colLeft;
                                         newX = d + (0x1000 - e - d) / 2 + colLeft - field_278 / 2;
-                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100;
+                                        newY = frontEdgeToY(e + (0x1000 - d - e) / 2 + rowBack);
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 4;
@@ -1496,7 +1510,7 @@ int FieldObject::method13() {
                                     if (((colLeft < previousRight && colRight > left)
                                          || (colRight > previousLeft && colLeft < right))
                                         && rowBack >= previousFront && rowBack < front) {
-                                        newY = rowBack - 0x100;
+                                        newY = frontEdgeToY(rowBack);
                                         moved |= 2;
                                         field_224 = cell;
                                         field_24_11 |= 4;
@@ -1597,7 +1611,7 @@ int FieldObject::method13() {
                                         e = left - colLeft;
                                         d = front - rowBack;
                                         newX = d + (e - d) / 2 + colLeft + field_278 / 2;
-                                        newY = e + (d - e) / 2 + rowBack - 0x100;
+                                        newY = frontEdgeToY(e + (d - e) / 2 + rowBack);
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 8;
@@ -1667,7 +1681,7 @@ int FieldObject::method13() {
                                         e = left - colLeft;
                                         d = front - rowBack;
                                         newX = d + (e - d) / 2 + colLeft + field_278 / 2;
-                                        newY = e + (d - e) / 2 + rowBack - 0x100;
+                                        newY = frontEdgeToY(e + (d - e) / 2 + rowBack);
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 8;
@@ -1772,7 +1786,7 @@ int FieldObject::method13() {
                                     e = back - rowBack;
                                     if (d - e > 0) {
                                         newX = e + (d - e) / 2 + colLeft - field_278 / 2;
-                                        newY = d + (e - d) / 2 + rowBack - 0x100 + field_27C;
+                                        newY = frontEdgeToY(d + (e - d) / 2 + rowBack) + field_27C;
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 2;
@@ -1782,7 +1796,7 @@ int FieldObject::method13() {
                                     if (d - (rowFront - front) > 0) {
                                         e = front - rowBack;
                                         newX = d + (0x1000 - e - d) / 2 + colLeft - field_278 / 2;
-                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100;
+                                        newY = frontEdgeToY(e + (0x1000 - d - e) / 2 + rowBack);
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 2;
@@ -1836,7 +1850,7 @@ int FieldObject::method13() {
                                     e = back - rowBack;
                                     if (d - e > 0) {
                                         newX = e + (d - e) / 2 + colLeft - field_278 / 2;
-                                        newY = d + (e - d) / 2 + rowBack - 0x100 + field_27C;
+                                        newY = frontEdgeToY(d + (e - d) / 2 + rowBack) + field_27C;
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 2;
@@ -1846,7 +1860,7 @@ int FieldObject::method13() {
                                     if (d - (rowFront - front) > 0) {
                                         e = front - rowBack;
                                         newX = d + (0x1000 - e - d) / 2 + colLeft - field_278 / 2;
-                                        newY = e + (0x1000 - d - e) / 2 + rowBack - 0x100;
+                                        newY = frontEdgeToY(e + (0x1000 - d - e) / 2 + rowBack);
                                         moved = 3;
                                         field_224 = cell;
                                         field_24_11 |= 2;
@@ -1893,7 +1907,7 @@ int FieldObject::method13() {
                     }
                     if (floor - adjust > previousZ && floor - adjust > bottom
                         && (cellY + 1) << 12 > back) {
-                        newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                        newY = frontEdgeToY((cellY + 1) << 12) + field_27C;
                         moved |= 2;
                         field_224 = cell;
                         field_24_11 |= 1;
@@ -1910,7 +1924,7 @@ int FieldObject::method13() {
                     }
                     if (ceiling >= 0 && ceiling < previousTop && top - adjust > previousZ
                         && ceiling < topEdge && top - adjust > bottom && (cellY + 1) << 12 > back) {
-                        newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                        newY = frontEdgeToY((cellY + 1) << 12) + field_27C;
                         moved |= 2;
                         field_224 = cell;
                         field_24_11 |= 1;
@@ -1932,7 +1946,7 @@ int FieldObject::method13() {
                     }
                     if (floor - adjust > previousZ && floor - adjust > bottom
                         && (cellY + 1) << 12 > back) {
-                        newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                        newY = frontEdgeToY((cellY + 1) << 12) + field_27C;
                         moved |= 2;
                         field_224 = cell;
                         field_24_11 |= 1;
@@ -1949,7 +1963,7 @@ int FieldObject::method13() {
                     }
                     if (ceiling >= 0 && ceiling < previousTop && top - adjust > previousZ
                         && ceiling < topEdge && top - adjust > bottom && (cellY + 1) << 12 > back) {
-                        newY = ((cellY + 1) << 12) - 0x100 + field_27C;
+                        newY = frontEdgeToY((cellY + 1) << 12) + field_27C;
                         moved |= 2;
                         field_224 = cell;
                         field_24_11 |= 1;
@@ -1970,7 +1984,7 @@ int FieldObject::method13() {
                         adjust = 0x1000;
                     }
                     if (floor - adjust > previousZ && floor - adjust > bottom && cellY << 12 < front) {
-                        newY = (cellY << 12) - 0x100;
+                        newY = frontEdgeToY(cellY << 12);
                         moved |= 2;
                         field_224 = cell;
                         field_24_11 |= 4;
@@ -1987,7 +2001,7 @@ int FieldObject::method13() {
                     }
                     if (ceiling >= 0 && ceiling < previousTop && top - adjust > previousZ
                         && ceiling < topEdge && top - adjust > bottom && cellY << 12 < front) {
-                        newY = (cellY << 12) - 0x100;
+                        newY = frontEdgeToY(cellY << 12);
                         moved |= 2;
                         field_224 = cell;
                         field_24_11 |= 4;
@@ -2008,7 +2022,7 @@ int FieldObject::method13() {
                         adjust = 0x1000;
                     }
                     if (floor - adjust > previousZ && floor - adjust > bottom && cellY << 12 < front) {
-                        newY = (cellY << 12) - 0x100;
+                        newY = frontEdgeToY(cellY << 12);
                         moved |= 2;
                         field_224 = cell;
                         field_24_11 |= 4;
@@ -2025,7 +2039,7 @@ int FieldObject::method13() {
                     }
                     if (ceiling >= 0 && ceiling < previousTop && top - adjust > previousZ
                         && ceiling < topEdge && top - adjust > bottom && cellY << 12 < front) {
-                        newY = (cellY << 12) - 0x100;
+                        newY = frontEdgeToY(cellY << 12);
                         moved |= 2;
                         field_224 = cell;
                         field_24_11 |= 4;
@@ -2033,14 +2047,8 @@ int FieldObject::method13() {
                     break;
                 }
 
-                hit_back:
-                    newY = edge - 0x100 + field_27C;
-                    moved |= 2;
-                    field_224 = cell;
-                    field_24_11 |= 1;
-                    break;
                 hit_front:
-                    newY = edge - 0x100;
+                    newY = frontEdgeToY(edge);
                     moved |= 2;
                     field_224 = cell;
                     field_24_11 |= 4;
@@ -2066,7 +2074,7 @@ int FieldObject::method13() {
             }
             if (moved & 2) {
                 y = newY;
-                back = y + 0x100 - field_27C;
+                back = yToFrontEdge(y) - field_27C;
                 front = back + field_27C;
             }
         } while (*steps != -1);
@@ -2075,6 +2083,7 @@ int FieldObject::method13() {
     if (field_24_11 && field_2B5_0 && field_2B6_7) {
         sub_8046980();
     }
+end:
     return field_24_11;
 }
 #endif
@@ -2118,6 +2127,7 @@ void FieldObject::method15(u8 force) {
     int tolerance;
     int useTop;
     int newHeight;
+    int shape;
 
     if (force == 0) {
         if (!field_20C_0 || field_214_21) {
@@ -2254,10 +2264,10 @@ void FieldObject::method15(u8 force) {
 
         // Probes 3 and 4: the back corners.
         below = get_coldef_ptr_by_xz(field_290, (x & ~0xFFF) / 0x1000,
-                                     ((y + 0x100 - field_280) & ~0xFFF) / 0x1000);
+                                     ((yToFrontEdge(y) - field_280) & ~0xFFF) / 0x1000);
         flagsLeft = 0;
         probeX = x - field_27E / 2;
-        probeY = y + 0x100 - field_280;
+        probeY = yToFrontEdge(y) - field_280;
         probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
                             !field_20C_13 || field_210_0, field_20C_11);
         if (probe->tileFlags
@@ -2303,7 +2313,7 @@ void FieldObject::method15(u8 force) {
 
         flagsRight = 0;
         probeX = x + (field_27E / 2 - 0x100);
-        probeY = y + 0x100 - field_280;
+        probeY = yToFrontEdge(y) - field_280;
         probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
                             !field_20C_13 || field_210_0, field_20C_11);
         if (probe->tileFlags
@@ -2407,9 +2417,9 @@ void FieldObject::method15(u8 force) {
                         break;
                     case 3:
                         if ((u8)(topCell->secondaryShape - 4) <= 1) {
-                            probe = sub_803FBA4(field_290, x, y + 0x100 - field_280, &floor, &ceiling,
-                                                &top, 1, field_20C_11);
-                            if (probe->tileFlags & topCell->tileFlags) {
+                            probe = sub_803FBA4(field_290, x, yToFrontEdge(y) - field_280, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (topCell->tileFlags & probe->tileFlags) {
                                 if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
                                     bestTop = top;
                                 } else {
@@ -2424,7 +2434,7 @@ void FieldObject::method15(u8 force) {
                         } else if (topCell->secondaryShape == 6) {
                             probe = sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top,
                                                 1, field_20C_11);
-                            if (probe->tileFlags & topCell->tileFlags) {
+                            if (topCell->tileFlags & probe->tileFlags) {
                                 if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
                                     bestTop = top;
                                 } else {
@@ -2437,9 +2447,9 @@ void FieldObject::method15(u8 force) {
                         break;
                     case 4:
                         if ((u8)(topCell->secondaryShape - 4) <= 1) {
-                            probe = sub_803FBA4(field_290, x, y + 0x100 - field_280, &floor, &ceiling,
-                                                &top, 1, field_20C_11);
-                            if (probe->tileFlags & topCell->tileFlags) {
+                            probe = sub_803FBA4(field_290, x, yToFrontEdge(y) - field_280, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (topCell->tileFlags & probe->tileFlags) {
                                 if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
                                     bestTop = top;
                                 } else {
@@ -2492,66 +2502,67 @@ void FieldObject::method15(u8 force) {
         } else {
             if (floorCell->primaryShape - 4 <= 2u) {
                 field_26_2 = floorCell->primaryShape - 3;
+                shape = floorCell->primaryShape;
                 switch (floorProbe) {
                     case 1:
-                        if ((u8)(floorCell->primaryShape - 4) <= 1) {
+                        if ((u8)(shape - 4) <= 1) {
                             bestFloor += 0xFFF;
                             bestFloor &= ~0xFFF;
-                        } else if (floorCell->primaryShape == 6) {
+                        } else if (shape == 6) {
                             sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top,
                                         floorProbe, field_20C_11);
                             bestFloor = floor;
                         }
                         break;
                     case 2:
-                        if ((u8)(floorCell->primaryShape - 4) <= 1) {
+                        if ((u8)(shape - 4) <= 1) {
                             bestFloor += 0xFFF;
                             bestFloor &= ~0xFFF;
-                        } else if (floorCell->primaryShape == 6) {
+                        } else if (shape == 6) {
                             sub_803FBA4(field_290, x + (field_27E / 2 - 0x100), y, &floor, &ceiling,
                                         &top, 1, field_20C_11);
                             bestFloor = floor;
                         }
                         break;
                     case 3:
-                        if ((u8)(floorCell->primaryShape - 4) <= 1) {
-                            probe = sub_803FBA4(field_290, x, y + 0x100 - field_280, &floor, &ceiling,
-                                                &top, 1, field_20C_11);
-                            if (probe->tileFlags & floorCell->tileFlags) {
+                        if ((u8)(shape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, yToFrontEdge(y) - field_280, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (floorCell->tileFlags & probe->tileFlags) {
                                 if (floor < bestFloor - 0x1000 || floor >= bestFloor + 0x1000) {
                                     bestFloor = top;
                                 } else {
                                     bestFloor = floor;
                                 }
                             } else {
-                                if (floorCell->primaryShape == 5) {
+                                if (shape == 5) {
                                     bestFloor += 0xFFF;
                                 }
                                 bestFloor &= ~0xFFF;
                             }
-                        } else if (floorCell->primaryShape == 6) {
+                        } else if (shape == 6) {
                             sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top, 1,
                                         field_20C_11);
                             bestFloor = floor;
                         }
                         break;
                     case 4:
-                        if ((u8)(floorCell->primaryShape - 4) <= 1) {
-                            probe = sub_803FBA4(field_290, x, y + 0x100 - field_280, &floor, &ceiling,
-                                                &top, 1, field_20C_11);
-                            if (probe->tileFlags & floorCell->tileFlags) {
+                        if ((u8)(shape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, yToFrontEdge(y) - field_280, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (floorCell->tileFlags & probe->tileFlags) {
                                 if (floor < bestFloor - 0x1000 || floor >= bestFloor + 0x1000) {
                                     bestFloor = top;
                                 } else {
                                     bestFloor = floor;
                                 }
                             } else {
-                                if (floorCell->primaryShape == 4) {
+                                if (shape == 4) {
                                     bestFloor += 0xFFF;
                                 }
                                 bestFloor &= ~0xFFF;
                             }
-                        } else if (floorCell->primaryShape == 6) {
+                        } else if (shape == 6) {
                             sub_803FBA4(field_290, x + (field_27E / 2 - 0x100), y, &floor, &ceiling,
                                         &top, 1, field_20C_11);
                             bestFloor = floor;
