@@ -6,7 +6,7 @@
 // "FPC" (Field Player Character): Mario and Luigi (FieldManager::objects[0] / [1], and leader /
 // follower). Implemented in src/field_player_character.cpp (0x08048064-0x0804FE68), which also emits the
 // vtable (0x08CDBE88), the inline members and the implicit destructor (0x081DD5B0). That file also holds
-// FieldClass1 ("FPSB").
+// FieldPlayerShotBullet ("FPSB").
 #pragma interface
 
 // FieldManager::field_20C[2], one per player character (FieldPlayerCharacter::field_368).
@@ -200,20 +200,33 @@ class FieldPlayerCharacter : public FieldObject {
     }
 };
 
-// "FPSB" (FieldManager::field_A8[8]). A plain class without virtual functions, implemented between the
-// FieldPlayerCharacter functions (0x0804DFE8-0x0804FB3C).
-class FieldClass1 {
+// "FPSB" (Field Player Shot Bullet): the water that Luigi gets out of Pump Mario. FieldManager::shotBullets[8]
+// holds the pool. A plain class without virtual functions, implemented between the FieldPlayerCharacter functions
+// (0x0804DFE8-0x0804FB3C). Each shot moves along the owner's direction, despawns after its duration, collides
+// with walls and floors and reports hits on objects to its owner (FieldPlayerCharacter::field_33C_0 etc.).
+enum FieldPlayerShotBulletType {
+    // Luigi jumps: a column of droplets. One spawns per frame, round-robin through all 8 slots
+    // (FieldManager::shotBulletIndex counts up); each lives about 6 frames.
+    FIELD_PLAYER_SHOT_BULLET_JET = 2,
+    // Luigi's hammer: up to three slow water bubbles, in slots 2, 1, 0 (shotBulletIndex counts down from 3).
+    FIELD_PLAYER_SHOT_BULLET_BUBBLE = 3,
+    // Luigi's hand: Mario spits the water out in place (slot 0), used to water plants.
+    FIELD_PLAYER_SHOT_BULLET_SPIT = 4,
+};
+
+class FieldPlayerShotBullet {
   public:
-    u16 index : 3;
-    u16 type : 3;
-    u16 active : 1;
-    u16 field_0_7 : 4; // Sprite layer, like FieldObject::field_214_13
-    u16 direction : 3;
-    u16 onTop : 1; // Standing on the secondary floor (sub_804F904)
-    u16 field_0_15 : 1;
-    u8 sides : 4; // Sides hit (sub_804E6E0)
-    u8 field_2_4 : 4;
-    u8 pad_3[0x5];
+    u32 index : 3;
+    u32 type : 3; // enum FieldPlayerShotBulletType
+    u32 active : 1;
+    u32 layer : 4; // Sprite layer, like FieldObject::field_214_13
+    u32 direction : 3;
+    u32 onTop : 1;     // Standing on the secondary floor (sub_804F904)
+    u32 pushes : 1;    // Pushes the objects it hits (byte_83A0C6C)
+    u32 sides : 4;     // Sides where it hit an object (sub_804E6E0)
+    u32 wallSides : 4; // Sides where it hit a wall (sub_804EA68)
+    u32 field_3 : 8;   // Unused
+    u8 pad_4[0x4];     // Unused
     s32 x;
     s32 y;
     s32 z;
@@ -222,36 +235,36 @@ class FieldClass1 {
     s32 previousY;
     s32 previousZ;
     s32 previousHeight;
-    s16 speed;
+    s16 speed; // Distance per frame (word_83A0C60)
     s16 velocityX;
     s16 velocityY;
-    u16 timer;
-    u16 duration;
-    u16 field_32; // Box width
-    u16 field_34;
-    u16 field_36; // Box depth
-    u16 field_38;
-    u16 field_3A;
-    u16 field_3C;
+    u16 timer;    // Distance travelled
+    u16 duration; // Range (word_83A0C66 << 8)
+    // Boxes unpacked from byte_801349C (sub_804E0D8): one for walls and floors, one for hitting objects.
+    u16 boxWidth;
+    u16 boxHeight;
+    u16 boxDepth;
+    u16 hitWidth;
+    u16 hitHeight;
+    u16 hitDepth;
     s8 frame; // Animation frame to restore (sub_804DFE8)
-    u8 pad_3F;
-    void* map;
+    void* map; // The owner's collision map (FieldObject::field_290)
     struct Sprite* sprite;
     FieldObject* owner;
 
-    FieldClass1(int index);                                                 // 0x0804FB28
-    void sub_804DFE8();                                                     // 0x0804DFE8
-    void sub_804E0D8(int type, FieldObject* owner, int frame);              // 0x0804E0D8
-    void sub_804E33C(FieldObject** objects, int count);                     // 0x0804E33C
-    void sub_804E450();                                                     // 0x0804E450
-    u8* sub_804E5C4(u8* data);                                              // 0x0804E5C4
-    void sub_804E6E0(FieldObject** objects, int count);                     // 0x0804E6E0
-    u8 sub_804EA68();                                                       // 0x0804EA68
-    void sub_804F904();                                                     // 0x0804F904
+    FieldPlayerShotBullet(int index);                                                     // 0x0804FB28
+    void sub_804DFE8();                                                                   // 0x0804DFE8
+    void sub_804E0D8(int type, FieldObject* owner, int frame);                            // 0x0804E0D8
+    void sub_804E33C(FieldObject** objects, int count);                                   // 0x0804E33C
+    void sub_804E450();                                                                   // 0x0804E450
+    u8* sub_804E5C4(u8* data);                                                            // 0x0804E5C4
+    void sub_804E6E0(FieldObject** objects, int count);                                   // 0x0804E6E0
+    u8 sub_804EA68();                                                                     // 0x0804EA68
+    void sub_804F904();                                                                   // 0x0804F904
     struct Coldef* sub_804FA30(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top); // 0x0804FA30
-    void sub_804FA94(s16 cameraX, s16 cameraY);                             // 0x0804FA94
-    void sub_804FAF8();                                                     // 0x0804FAF8
-    void sub_804FB14();                                                     // 0x0804FB14
+    void sub_804FA94(s16 cameraX, s16 cameraY);                                           // 0x0804FA94
+    void sub_804FAF8();                                                                   // 0x0804FAF8
+    void sub_804FB14();                                                                   // 0x0804FB14
 };
 
 #endif

@@ -11126,7 +11126,7 @@ sub_8031518:
 	ldr r2, [r6, #0x00]
 	movs r1, #0x04
 	movs r3, #0x00
-	bl sub_804E0D8__11FieldClass1iP11FieldObjecti
+	bl sub_804E0D8__21FieldPlayerShotBulletiP11FieldObjecti
 	ldr r2, _08031648 @ =0x0000026E
 	adds r1, r5, r2
 	movs r0, #0x46
@@ -11208,7 +11208,7 @@ sub_8031650:
 	ldr r2, [r1, #0x00]
 	movs r1, #0x04
 	movs r3, #0x00
-	bl sub_804E0D8__11FieldClass1iP11FieldObjecti
+	bl sub_804E0D8__21FieldPlayerShotBulletiP11FieldObjecti
 	ldr r0, _080316F4 @ =0x00000355
 	adds r4, r4, r0
 	movs r0, #0x46
@@ -11478,7 +11478,7 @@ _080317A4:
 	adds r0, r7, #0x0
 	adds r0, #0xA8
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	adds r0, r7, #0x0
 	movs r1, #0x00
 	bl sub_802DF80
@@ -11632,7 +11632,7 @@ _08031986:
 	ldr r2, [r5, #0x00]
 	movs r1, #0x03
 	movs r3, #0x00
-	bl sub_804E0D8__11FieldClass1iP11FieldObjecti
+	bl sub_804E0D8__21FieldPlayerShotBulletiP11FieldObjecti
 	movs r1, #0x01
 	negs r1, r1
 	movs r0, #0x57
@@ -22690,7 +22690,7 @@ sub_803DF00:
 	ldr r2, [r1, #0x00]
 	movs r1, #0x04
 	movs r3, #0x00
-	bl sub_804E0D8__11FieldClass1iP11FieldObjecti
+	bl sub_804E0D8__21FieldPlayerShotBulletiP11FieldObjecti
 	ldr r0, _0803DF98 @ =0x00000355
 	adds r4, r4, r0
 	movs r0, #0x46
@@ -22733,35 +22733,35 @@ _0803DFC0:
 	adds r4, r6, #0x0
 	adds r4, #0x54
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	adds r0, r5, #0x0
 	adds r0, #0xAC
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	adds r0, r5, #0x0
 	adds r0, #0xB0
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	adds r0, r5, #0x0
 	adds r0, #0xB4
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	adds r0, r5, #0x0
 	adds r0, #0xB8
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	adds r0, r5, #0x0
 	adds r0, #0xBC
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	adds r0, r5, #0x0
 	adds r0, #0xC0
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	adds r0, r5, #0x0
 	adds r0, #0xC4
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	movs r5, #0x01
 	negs r5, r5
 	ldrb r0, [r4, #0x00]

@@ -535,7 +535,7 @@ _08026BEC:
 	movs r3, #0x01
 	bl __nw__FUliPcUc
 	adds r1, r6, #0x0
-	bl __11FieldClass1i
+	bl __21FieldPlayerShotBulleti
 	str r0, [r5, #0x00]
 	adds r4, r6, #0x1
 	movs r0, #0x4C
@@ -544,7 +544,7 @@ _08026BEC:
 	movs r3, #0x01
 	bl __nw__FUliPcUc
 	adds r1, r4, #0x0
-	bl __11FieldClass1i
+	bl __21FieldPlayerShotBulleti
 	str r0, [r5, #0x04]
 	adds r4, r6, #0x2
 	movs r0, #0x4C
@@ -553,7 +553,7 @@ _08026BEC:
 	movs r3, #0x01
 	bl __nw__FUliPcUc
 	adds r1, r4, #0x0
-	bl __11FieldClass1i
+	bl __21FieldPlayerShotBulleti
 	str r0, [r5, #0x08]
 	adds r4, r6, #0x3
 	movs r0, #0x4C
@@ -562,7 +562,7 @@ _08026BEC:
 	movs r3, #0x01
 	bl __nw__FUliPcUc
 	adds r1, r4, #0x0
-	bl __11FieldClass1i
+	bl __21FieldPlayerShotBulleti
 	str r0, [r5, #0x0C]
 	adds r5, #0x10
 	adds r6, #0x04

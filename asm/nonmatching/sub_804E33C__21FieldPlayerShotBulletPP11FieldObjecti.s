@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_804E33C__11FieldClass1PP11FieldObjecti
-sub_804E33C__11FieldClass1PP11FieldObjecti:
+	thumb_func_start sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti
+sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti:
 	push {r4, r5, r6, lr}
 	add sp, #-0x004
 	adds r4, r0, #0x0
@@ -48,7 +48,7 @@ _0804E370:
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
 	adds r2, r6, #0x0
-	bl sub_804E6E0__11FieldClass1PP11FieldObjecti
+	bl sub_804E6E0__21FieldPlayerShotBulletPP11FieldObjecti
 	b _0804E448
 _0804E396:
 	movs r0, #0x2A
@@ -71,15 +71,15 @@ _0804E396:
 	cmp r0, r1
 	bls _0804E3C4
 	adds r0, r4, #0x0
-	bl sub_804FAF8__11FieldClass1
+	bl sub_804FAF8__21FieldPlayerShotBullet
 	b _0804E448
 _0804E3C4:
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
 	adds r2, r6, #0x0
-	bl sub_804E6E0__11FieldClass1PP11FieldObjecti
+	bl sub_804E6E0__21FieldPlayerShotBulletPP11FieldObjecti
 	adds r0, r4, #0x0
-	bl sub_804EA68__11FieldClass1
+	bl sub_804EA68__21FieldPlayerShotBullet
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0804E3E4
@@ -139,7 +139,7 @@ _0804E432:
 	strb r0, [r2, #0x12]
 _0804E442:
 	adds r0, r4, #0x0
-	bl sub_804F904__11FieldClass1
+	bl sub_804F904__21FieldPlayerShotBullet
 _0804E448:
 	add sp, #0x004
 	pop {r4, r5, r6}

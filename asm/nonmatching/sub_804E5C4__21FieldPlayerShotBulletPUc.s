@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_804E5C4__11FieldClass1PUc
-sub_804E5C4__11FieldClass1PUc:
+	thumb_func_start sub_804E5C4__21FieldPlayerShotBulletPUc
+sub_804E5C4__21FieldPlayerShotBulletPUc:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9

@@ -61,7 +61,7 @@ class FieldManager : public Process {
     FieldBackup* field_20;
     void* field_24;
     FieldObject* objects[32];
-    FieldClass1* field_A8[8];
+    FieldPlayerShotBullet* shotBullets[8]; // "FPSB": Pump Mario's water
     u16* field_C8;
     u16* field_CC;
     struct struc_3000388* field_D0;
@@ -190,7 +190,7 @@ class FieldManager : public Process {
     u8 field_246_5 : 3;
     u8 pad_247[0x24];
     u8 field_26B_0 : 5;
-    u8 field_26B_5 : 3;
+    u8 shotBulletIndex : 3; // Next shotBullets slot: counts up for jets, down from 3 for bubbles
     u8 field_26C;
     u8 pad_26D[0xD];
     u16 field_27A;

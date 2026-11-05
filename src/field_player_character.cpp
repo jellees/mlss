@@ -1184,7 +1184,7 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
 #endif
 
 asm_unified(".include \"asm/nonmatching/sub_804DDF4.s\"");
-void FieldClass1::sub_804DFE8() {
+void FieldPlayerShotBullet::sub_804DFE8() {
     u16 animationSet;
     int buffer;
     u8 value;
@@ -1216,9 +1216,9 @@ void FieldClass1::sub_804DFE8() {
 
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804E0D8__11FieldClass1iP11FieldObjecti.s\"");
+asm_unified(".include \"asm/nonmatching/sub_804E0D8__21FieldPlayerShotBulletiP11FieldObjecti.s\"");
 #else
-void FieldClass1::sub_804E0D8(int type, FieldObject* owner, int frame) {
+void FieldPlayerShotBullet::sub_804E0D8(int type, FieldObject* owner, int frame) {
     u8 value;
     int animation;
     int flag;
@@ -1250,30 +1250,30 @@ void FieldClass1::sub_804E0D8(int type, FieldObject* owner, int frame) {
     z = previousZ = owner->z;
     height = previousHeight = owner->height + word_83A0C70[type];
     box = byte_801349C[sprite->field_16];
-    field_38 = (((box[0] >> 3 << 1) & 0x3F) + 2) << 8;
-    field_3A = ((((box[0] << 3) | (box[1] >> 5)) & 0x3F) + 1) << 8;
-    field_3C = ((((box[1] << 1) | (box[2] >> 7)) & 0x3F) + 1) << 8;
-    field_32 = (((box[2] >> 2 << 1) & 0x3F) + 2) << 8;
-    field_34 = ((((box[2] << 4) | (box[3] >> 4)) & 0x3F) + 1) << 8;
-    field_36 = ((((box[3] << 2) | (box[4] >> 6)) & 0x3F) + 1) << 8;
+    hitWidth = (((box[0] >> 3 << 1) & 0x3F) + 2) << 8;
+    hitHeight = ((((box[0] << 3) | (box[1] >> 5)) & 0x3F) + 1) << 8;
+    hitDepth = ((((box[1] << 1) | (box[2] >> 7)) & 0x3F) + 1) << 8;
+    boxWidth = (((box[2] >> 2 << 1) & 0x3F) + 2) << 8;
+    boxHeight = ((((box[2] << 4) | (box[3] >> 4)) & 0x3F) + 1) << 8;
+    boxDepth = ((((box[3] << 2) | (box[4] >> 6)) & 0x3F) + 1) << 8;
     speed = word_83A0C60[type];
     velocityX = speed * word_839F564[direction][0] / 256;
     velocityY = speed * word_839F564[direction][1] / 256;
     duration = word_83A0C66[type] << 8;
     x = owner->x + word_83A0C76[type][direction][0];
     y = owner->y + word_83A0C76[type][direction][1];
-    field_0_7 = direction >= 3 && direction <= 5 ? 13 : 14;
+    layer = direction >= 3 && direction <= 5 ? 13 : 14;
     map = owner->field_290;
-    field_0_15 = byte_83A0C6C[type];
+    pushes = byte_83A0C6C[type];
     active = 1;
     timer = 0;
     sides = 0;
-    field_2_4 = 0;
+    wallSides = 0;
     this->owner = owner;
 }
 #endif
 
-void FieldClass1::sub_804E33C(FieldObject** objects, int count) {
+void FieldPlayerShotBullet::sub_804E33C(FieldObject** objects, int count) {
     if (!active) {
         return;
     }
@@ -1283,7 +1283,7 @@ void FieldClass1::sub_804E33C(FieldObject** objects, int count) {
         }
         return;
     }
-    if (type == 4) {
+    if (type == FIELD_PLAYER_SHOT_BULLET_SPIT) {
         sub_801E150(sprite, sprite->field_20[1] + 5, 0, 0, 0);
         sub_804E6E0(objects, count);
         return;
@@ -1311,7 +1311,7 @@ void FieldClass1::sub_804E33C(FieldObject** objects, int count) {
 }
 
 // Picks the sprite priority from the collision cells around this object.
-void FieldClass1::sub_804E450() {
+void FieldPlayerShotBullet::sub_804E450() {
     int cellX = x / 4096;
     int cellY = y / 4096;
     struct Coldef* coldef = get_coldef_ptr_by_xz(map, cellX, cellY);
@@ -1354,13 +1354,13 @@ void FieldClass1::sub_804E450() {
 }
 
 // Like FieldPlayerCharacter::sub_8049FF4: returns the box of data that contains this object, if any.
-u8* FieldClass1::sub_804E5C4(u8* data) {
-    if (active && type == 4) {
+u8* FieldPlayerShotBullet::sub_804E5C4(u8* data) {
+    if (active && type == FIELD_PLAYER_SHOT_BULLET_SPIT) {
         int px = x / 256;
         int py = y / 256;
         int pz = (z + height) / 256;
-        u16 halfWidth = field_32 >> 8;
-        int depth = field_36 >> 8;
+        u16 halfWidth = boxWidth >> 8;
+        int depth = boxDepth >> 8;
         int count = data[4];
         u8* box = data - (data[6] << 8 | data[5]);
         int i;
@@ -1395,11 +1395,11 @@ u8* FieldClass1::sub_804E5C4(u8* data) {
 
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804E6E0__11FieldClass1PP11FieldObjecti.s\"");
+asm_unified(".include \"asm/nonmatching/sub_804E6E0__21FieldPlayerShotBulletPP11FieldObjecti.s\"");
 #else
 // Checks this object's box against the objects (and a FieldMonster's FMCH) and reports hits to the owner.
-void FieldClass1::sub_804E6E0(FieldObject** objects, int count) {
-    int left = x - (field_38 >> 1);
+void FieldPlayerShotBullet::sub_804E6E0(FieldObject** objects, int count) {
+    int left = x - (hitWidth >> 1);
     int top = y;
     int bottom = z + height;
     int i;
@@ -1431,10 +1431,10 @@ void FieldClass1::sub_804E6E0(FieldObject** objects, int count) {
             otherWidth = other->field_272;
             otherDepth = other->field_276;
             otherHeight = other->field_274;
-            depth = field_3C;
-            boxHeight = field_3A;
+            depth = hitDepth;
+            boxHeight = hitHeight;
             edge = other->x - (otherWidth >> 1);
-            width = field_38;
+            width = hitWidth;
             otherX = other->x;
             if (edge < left) {
                 overlap = edge + otherWidth - left;
@@ -1489,31 +1489,31 @@ void FieldClass1::sub_804E6E0(FieldObject** objects, int count) {
                     if (previousX < otherX) {
                         side = 2;
                         otherSide = 8;
-                        if (other->field_20C_5 && field_0_15) {
+                        if (other->field_20C_5 && pushes) {
                             x = otherX - ((width + other->field_272) >> 1);
                         }
                     } else {
                         side = 8;
                         otherSide = 2;
-                        if (other->field_20C_5 && field_0_15) {
+                        if (other->field_20C_5 && pushes) {
                             x = otherX + ((width + other->field_272) >> 1);
                         }
                     }
                 } else if (previousTop > otherY - depth / 2) {
                     side = 1;
                     otherSide = 4;
-                    if (other->field_20C_5 && field_0_15) {
+                    if (other->field_20C_5 && pushes) {
                         y = depth + otherY;
                     }
                 } else {
                     side = 4;
                     otherSide = 1;
-                    if (other->field_20C_5 && field_0_15) {
+                    if (other->field_20C_5 && pushes) {
                         y = otherY - other->field_276;
                     }
                 }
             }
-            if (other->field_20C_5 && field_0_15) {
+            if (other->field_20C_5 && pushes) {
                 sides |= side;
                 other->field_24_3 |= otherSide;
             }
@@ -1537,13 +1537,13 @@ void FieldClass1::sub_804E6E0(FieldObject** objects, int count) {
 }
 #endif
 
-asm_unified(".include \"asm/nonmatching/sub_804EA68__11FieldClass1.s\"");
+asm_unified(".include \"asm/nonmatching/sub_804EA68__21FieldPlayerShotBullet.s\"");
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804F904__11FieldClass1.s\"");
+asm_unified(".include \"asm/nonmatching/sub_804F904__21FieldPlayerShotBullet.s\"");
 #else
 // Puts this object on the floor below it.
-void FieldClass1::sub_804F904() {
+void FieldPlayerShotBullet::sub_804F904() {
     int lowestCeiling;
     int highestTop;
     int bottom;
@@ -1569,7 +1569,7 @@ void FieldClass1::sub_804F904() {
     if (highestTop < objectTop) {
         highestTop = objectTop;
     }
-    sub_803FBA4(map, x - 0x100 + (field_32 >> 1), y + 0x100 - field_36, &floor, &ceiling, &objectTop, FALSE, TRUE);
+    sub_803FBA4(map, x - 0x100 + (boxWidth >> 1), y + 0x100 - boxDepth, &floor, &ceiling, &objectTop, FALSE, TRUE);
     if (ceiling >= 0 && lowestCeiling > ceiling) {
         lowestCeiling = ceiling;
     }
@@ -1605,7 +1605,7 @@ void FieldClass1::sub_804F904() {
 }
 #endif
 
-struct Coldef* FieldClass1::sub_804FA30(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top) {
+struct Coldef* FieldPlayerShotBullet::sub_804FA30(s16 cellX, s16 cellY, int* floor, int* ceiling, int* top) {
     struct Coldef* coldef = get_coldef_ptr_by_xz(map, cellX, cellY);
 
     *floor = (coldef->primaryHeight << 11) << coldef->heightScale;
@@ -1618,25 +1618,25 @@ struct Coldef* FieldClass1::sub_804FA30(s16 cellX, s16 cellY, int* floor, int* c
     return coldef;
 }
 
-void FieldClass1::sub_804FA94(s16 cameraX, s16 cameraY) {
+void FieldPlayerShotBullet::sub_804FA94(s16 cameraX, s16 cameraY) {
     sprite->xPosition = x / 256 - cameraX;
     sprite->yPosition = (y - z - height) / 256 - cameraY;
-    sprite->field_E = field_0_7 << 12 | (0x800 - y / 256);
+    sprite->field_E = layer << 12 | (0x800 - y / 256);
 }
 
-void FieldClass1::sub_804FAF8() {
+void FieldPlayerShotBullet::sub_804FAF8() {
     sub_8020D40(sprite);
     active = 0;
 }
 
-void FieldClass1::sub_804FB14() {
+void FieldPlayerShotBullet::sub_804FB14() {
     previousX = x;
     previousY = y;
     previousZ = z;
     previousHeight = height;
 }
 
-FieldClass1::FieldClass1(int index) {
+FieldPlayerShotBullet::FieldPlayerShotBullet(int index) {
     this->index = index;
 }
 

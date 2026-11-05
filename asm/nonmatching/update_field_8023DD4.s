@@ -1874,37 +1874,37 @@ _08024D0A:
 	ldm r6!, {r0}
 	ldrb r2, [r4, #0x00]
 	ldr r1, [sp, #0x038]
-	bl sub_804E33C__11FieldClass1PP11FieldObjecti
+	bl sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti
 	ldr r0, [r6, #0x00]
 	ldrb r2, [r4, #0x00]
 	ldr r1, [sp, #0x038]
-	bl sub_804E33C__11FieldClass1PP11FieldObjecti
+	bl sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti
 	ldr r3, [sp, #0x03C]
 	ldr r0, [r3, #0x08]
 	ldrb r2, [r4, #0x00]
 	ldr r1, [sp, #0x038]
-	bl sub_804E33C__11FieldClass1PP11FieldObjecti
+	bl sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti
 	ldr r6, [sp, #0x03C]
 	ldr r0, [r6, #0x0C]
 	ldrb r2, [r4, #0x00]
 	ldr r1, [sp, #0x038]
-	bl sub_804E33C__11FieldClass1PP11FieldObjecti
+	bl sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti
 	ldr r0, [r6, #0x10]
 	ldrb r2, [r4, #0x00]
 	ldr r1, [sp, #0x038]
-	bl sub_804E33C__11FieldClass1PP11FieldObjecti
+	bl sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti
 	ldr r0, [r6, #0x14]
 	ldrb r2, [r4, #0x00]
 	ldr r1, [sp, #0x038]
-	bl sub_804E33C__11FieldClass1PP11FieldObjecti
+	bl sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti
 	ldr r0, [r6, #0x18]
 	ldrb r2, [r4, #0x00]
 	ldr r1, [sp, #0x038]
-	bl sub_804E33C__11FieldClass1PP11FieldObjecti
+	bl sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti
 	ldr r0, [r6, #0x1C]
 	ldrb r2, [r4, #0x00]
 	ldr r1, [sp, #0x038]
-	bl sub_804E33C__11FieldClass1PP11FieldObjecti
+	bl sub_804E33C__21FieldPlayerShotBulletPP11FieldObjecti
 _08024D64:
 	ldr r0, _08024E00 @ =0x00000291
 	add r0, r10
@@ -2322,33 +2322,33 @@ _080250AC:
 	add r4, r10
 	movs r3, #0x00
 	ldsh r2, [r4, r3]
-	bl sub_804FA94__11FieldClass1ss
+	bl sub_804FA94__21FieldPlayerShotBulletss
 	ldr r0, [r6, #0x00]
-	bl sub_804E450__11FieldClass1
+	bl sub_804E450__21FieldPlayerShotBullet
 	ldr r0, [r6, #0x04]
 	movs r2, #0x00
 	ldsh r1, [r5, r2]
 	movs r3, #0x00
 	ldsh r2, [r4, r3]
-	bl sub_804FA94__11FieldClass1ss
+	bl sub_804FA94__21FieldPlayerShotBulletss
 	ldr r0, [r6, #0x04]
-	bl sub_804E450__11FieldClass1
+	bl sub_804E450__21FieldPlayerShotBullet
 	ldr r0, [r6, #0x08]
 	movs r2, #0x00
 	ldsh r1, [r5, r2]
 	movs r3, #0x00
 	ldsh r2, [r4, r3]
-	bl sub_804FA94__11FieldClass1ss
+	bl sub_804FA94__21FieldPlayerShotBulletss
 	ldr r0, [r6, #0x08]
-	bl sub_804E450__11FieldClass1
+	bl sub_804E450__21FieldPlayerShotBullet
 	ldr r0, [r6, #0x0C]
 	movs r2, #0x00
 	ldsh r1, [r5, r2]
 	movs r3, #0x00
 	ldsh r2, [r4, r3]
-	bl sub_804FA94__11FieldClass1ss
+	bl sub_804FA94__21FieldPlayerShotBulletss
 	ldr r0, [r6, #0x0C]
-	bl sub_804E450__11FieldClass1
+	bl sub_804E450__21FieldPlayerShotBullet
 	subs r7, #0x04
 	adds r6, #0x10
 	cmp r7, #0x00

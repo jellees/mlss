@@ -477,7 +477,7 @@ void FieldManager::sub_8025F28() {
     data->luigiLeads = luigiLeads;
     data->field_0_4 = field_208_3;
     data->brothersTogether = brothersTogether;
-    data->field_0_6 = field_26B_5;
+    data->field_0_6 = shotBulletIndex;
     data->field_0_10 = field_246_2;
     data->field_0_13 = field_FA_5;
     data->field_0_18 = field_208_6;
@@ -667,7 +667,7 @@ void FieldManager::sub_80265EC() {
     }
 
     for (i = 0; i < 8; i++) {
-        field_A8[i]->sub_804DFE8();
+        shotBullets[i]->sub_804DFE8();
     }
 }
 
@@ -795,7 +795,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
     }
     field_11D = field_10F + field_111 + field_113;
     for (i = 0; i < 8; i++) {
-        field_A8[i] = new (1, "FPSB", 1) FieldClass1(i);
+        shotBullets[i] = new (1, "FPSB", 1) FieldPlayerShotBullet(i);
     }
 }
 #endif
