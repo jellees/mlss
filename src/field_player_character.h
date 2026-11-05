@@ -151,7 +151,10 @@ class FieldPlayerCharacter : public FieldObject {
     void sub_804B360(u8 arg1, u8 arg2);                 // 0x0804B360
     bool sub_804D0EC();                                 // 0x0804D0EC
     bool sub_804D18C();                                 // 0x0804D18C
+    int sub_804D2CC();                                  // 0x0804D2CC
+    bool sub_804D734(int mode, FieldObject** objects, int count); // 0x0804D734
     bool sub_804DBD0(int mode);                         // 0x0804DBD0
+    void sub_804DDF4(FieldObject** objects, int count); // 0x0804DDF4
     int sub_804FB3C();                                  // 0x0804FB3C
     void sub_804FB64(FieldObject** objects, u8 arg1, u8 arg2); // 0x0804FB64
     void sub_804FC30();                                 // 0x0804FC30

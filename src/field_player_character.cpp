@@ -1509,8 +1509,260 @@ bool FieldPlayerCharacter::sub_804D18C() {
     return FALSE;
 }
 
-asm_unified(".include \"asm/nonmatching/sub_804D2CC.s\"");
-asm_unified(".include \"asm/nonmatching/sub_804D734.s\"");
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_804D2CC__20FieldPlayerCharacter.s\"");
+#else
+// Slides this player character around a corner: when it walks straight into a wall that blocks only one
+// side of it, it moves onto the free cell row or column. Returns the direction to move in, or -1.
+int FieldPlayerCharacter::sub_804D2CC() {
+    u8 sides;
+    u8 count;
+    u8 mask;
+    int i;
+    int blocked;
+    int bottom;
+    int top;
+    int floor;
+    int ceiling;
+    int objectTop;
+
+    sides = field_24_11;
+    if (sides == 0 || field_4C_3 != 0) {
+        return -1;
+    }
+    if (velocityX != 0 && velocityY != 0) {
+        return -1;
+    }
+    mask = 1;
+    count = sides & mask;
+    for (i = 4; ; ) {
+        mask <<= 1;
+        if (--i == 0) {
+            break;
+        }
+        if (sides & mask) {
+            if (++count == 2) {
+                break;
+            }
+        }
+    }
+    if (count != 1) {
+        return -1;
+    }
+    blocked = 0;
+    bottom = z + height;
+    top = bottom + field_27A;
+    if (velocityX != 0) {
+        int probeX;
+        int probeY;
+        int probeY2;
+
+        if (field_34C != y) {
+            return -1;
+        }
+        if (velocityX < 0) {
+            probeX = field_348 - (field_278 >> 1);
+        } else {
+            probeX = field_348 + -0x100 + (field_278 >> 1) + 0xFF;
+            probeX &= ~0xFF;
+        }
+        probeY = field_34C + 0x100;
+        probeY2 = probeY;
+        probeY -= field_27C;
+        probeY2 = ((probeY2 + 0xFF) & ~0xFF) - 0x100;
+        sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
+            || (field_20C_13 && bottom > floor && bottom != objectTop)) {
+            blocked |= 1;
+        }
+        sub_803FBA4(field_290, probeX, probeY2, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
+            || (field_20C_13 && bottom > floor && bottom != objectTop)) {
+            blocked |= 8;
+        }
+        if (blocked == 1) {
+            y = (y + 0x100) & ~0xFF;
+            return 4;
+        }
+        if (blocked == 8) {
+            y = ((y + 0xFF) & ~0xFF) - 0x100;
+            return 0;
+        }
+    } else if (velocityY != 0) {
+        int probeY;
+        int left;
+        int right;
+
+        if (field_348 != x) {
+            return -1;
+        }
+        if (velocityY > 0) {
+            probeY = y + 0x100;
+        } else {
+            probeY = y - field_27C;
+        }
+        left = x - (field_278 >> 1);
+        right = left + field_278 + 0xFF;
+        right &= ~0xFF;
+        sub_803FBA4(field_290, left, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
+            || (field_20C_13 && bottom > floor && bottom != objectTop)) {
+            blocked |= 1;
+        }
+        sub_803FBA4(field_290, x - 0x100, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
+            || (field_20C_13 && bottom > floor && bottom != objectTop)) {
+            blocked |= 2;
+        }
+        sub_803FBA4(field_290, x, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
+            || (field_20C_13 && bottom > floor && bottom != objectTop)) {
+            blocked |= 4;
+        }
+        sub_803FBA4(field_290, right, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
+            || (field_20C_13 && bottom > floor && bottom != objectTop)) {
+            blocked |= 8;
+        }
+        if (blocked == 1) {
+            x = (x + 0x200) & ~0x1FF;
+            return 2;
+        }
+        if (blocked == 8) {
+            x = (x - 0x100) & ~0x1FF;
+            return 6;
+        }
+    }
+    return -1;
+}
+#endif
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_804D734__20FieldPlayerCharacteriPP11FieldObjecti.s\"");
+#else
+// Hammer hits (mode 0, or 1 for ?) on objects: like sub_804DBD0 for the walls, with one box from
+// word_83A0A78 for FieldMonsters and one for the other objects. Returns whether an object was hit.
+bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int count) {
+    int high;
+    int low;
+    int left;
+    int left2;
+    int right;
+    int right2;
+    int top;
+    int top2;
+    int bottom;
+    int bottom2;
+
+    if (mode != 1 && !(field_35A_11 && sprite->field_23 > 2 && sprite->field_23 <= 4)
+        && !(sprite->field_23 == 3 || sprite->field_23 == 4)) {
+        return FALSE;
+    }
+    if (mode == 0) {
+        if (field_35A_11) {
+            switch (sprite->field_23) {
+                case 3:
+                    high = 0x1800;
+                    low = 0x100;
+                    break;
+                case 4:
+                    high = 0x1000;
+                    low = 0;
+                    break;
+            }
+        } else {
+            switch (sprite->field_23) {
+                case 3:
+                    high = 0x2800;
+                    low = 0x1000;
+                    break;
+                case 4:
+                    high = 0x1000;
+                    low = 0;
+                    break;
+            }
+        }
+    } else if (field_35A_11) {
+        high = 0x1000;
+        low = 0x100;
+    } else {
+        high = 0x2000;
+        low = 0x100;
+    }
+    left = x + word_83A0A78[mode][0][direction][0];
+    right = x + word_83A0A78[mode][0][direction][1];
+    top = y + word_83A0A78[mode][0][direction][2];
+    bottom = y + word_83A0A78[mode][0][direction][3];
+    left2 = x + word_83A0A78[mode][1][direction][0];
+    right2 = x + word_83A0A78[mode][1][direction][1];
+    top2 = y + word_83A0A78[mode][1][direction][2];
+    bottom2 = y + word_83A0A78[mode][1][direction][3];
+    high += z + height;
+    low += z + height;
+    for (; count != 0; count--, objects++) {
+        FieldObject* other = *objects;
+        int pass;
+
+        for (pass = 0; pass <= 1; pass++) {
+            int otherLeft;
+            int otherBottom;
+
+            if (other->field_54 == field_54 || !other->field_20C_0 || other->field_214_21
+                || other->field_20C_19 == 6 || !(other->field_20C_5 || other->field_20C_7)) {
+                goto next;
+            }
+            if (other->field_20C_19 == 3) {
+                otherLeft = other->x - (other->field_272 >> 1);
+                if (left >= otherLeft + other->field_272 || right <= otherLeft) {
+                    goto next;
+                }
+                otherBottom = other->y + other->field_270;
+                if (top <= otherBottom - other->field_276 || bottom >= otherBottom) {
+                    goto next;
+                }
+            } else {
+                otherLeft = other->x - (other->field_272 >> 1);
+                if (left2 >= otherLeft + other->field_272 || right2 <= otherLeft) {
+                    goto next;
+                }
+                otherBottom = other->y + other->field_270;
+                if (top2 <= otherBottom - other->field_276 || bottom2 >= otherBottom) {
+                    goto next;
+                }
+            }
+            otherBottom = other->z + other->height;
+            if (low >= otherBottom + other->field_274 || high <= otherBottom) {
+                goto next;
+            }
+            if (mode == 0 ? field_20C_8 & other->field_210_4 : field_20C_8 & other->field_20C_5) {
+                field_24_3 |= byte_83A0B78[direction];
+            }
+            if (other->field_20C_6 & field_20C_9) {
+                //! \bug Pushes the first object rather than the FieldMonster's FMCH.
+                (*objects)->field_24_3 |= byte_83A0B80[direction];
+            }
+            if (field_20C_24 && (field_20C_8 & other->field_20C_7) && field_350_0 == 0) {
+                field_33C_0 = other->field_54;
+                field_33C_7 = pass;
+                field_350_0 = byte_83A0B78[direction];
+                field_342 = mode;
+            }
+            if (mode == 0 ? other->field_210_4 : other->field_20C_5) {
+                return TRUE;
+            }
+        next:
+            if (other->field_20C_19 == 3 && ((FieldMonster*)other)->field_344 != NULL
+                && ((FieldMonster*)other)->field_344->field_20C_0) {
+                other = ((FieldMonster*)other)->field_344;
+            } else {
+                break;
+            }
+        }
+    }
+    return FALSE;
+}
+#endif
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804DBD0__20FieldPlayerCharacteri.s\"");
@@ -1587,7 +1839,95 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
 }
 #endif
 
-asm_unified(".include \"asm/nonmatching/sub_804DDF4.s\"");
+// These are inline: sub_804DDF4 inlines sub_804FC90, and g++ emits the out-of-line copies at the end of the
+// file in reverse definition order (0x0804FC90, 0x0804FCD4, 0x0804FD3C).
+inline void FieldPlayerCharacter::sub_804FD3C() {
+    field_214_0 = 4;
+    sub_8049000(field_54 == 0 ? 0x103E : 0x1053);
+    field_35A_2 = 1;
+}
+
+inline void FieldPlayerCharacter::sub_804FCD4() {
+    field_214_0 = 3;
+    sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1028 : 0x1001) : 0x1002);
+    state = 0;
+    field_212_6 = 0;
+}
+
+inline void FieldPlayerCharacter::sub_804FC90() {
+    if (field_368->field_13 != -1) {
+        field_368->field_0 = field_368->field_1;
+        field_368->field_10[!field_352_7] = field_368->field_13;
+        field_368->field_13 = -1;
+    }
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_804DDF4__20FieldPlayerCharacterPP11FieldObjecti.s\"");
+#else
+// Finds the object this player character stands on (field_33E) among objects, and the one it stands on
+// top of with field_20C_1 > 1 (field_33C).
+void FieldPlayerCharacter::sub_804DDF4(FieldObject** objects, int count) {
+    int left = x - field_272 / 2;
+    int top = y + field_270;
+    FieldObject* found = NULL;
+    int i;
+
+    for (i = 0; i < count; i++, objects++) {
+        FieldObject* other = *objects;
+        int pass;
+
+        for (pass = 0; pass <= 1; pass++) {
+            if (other->field_20C_0 && other->field_20C_7) {
+                u16 otherWidth = other->field_272;
+                u16 otherDepth = other->field_276;
+                u16 width = field_272;
+                u16 depth = field_276;
+                int edge = other->x - (otherWidth >> 1);
+                int overlap;
+
+                if (edge < left) {
+                    overlap = edge + otherWidth - left;
+                } else {
+                    overlap = left + width - edge;
+                }
+                if (overlap > 0) {
+                    edge = other->y + other->field_270;
+                    if (edge > top) {
+                        overlap = top - (edge - otherDepth);
+                    } else {
+                        overlap = edge - (top - depth);
+                    }
+                    if (overlap > 0) {
+                        int distance = other->z + other->height - z;
+
+                        if (other->field_20C_5 ? distance <= 0x2800 : distance <= 0) {
+                            field_33E = other->field_54;
+                            found = other;
+                            if (other->field_20C_1 > 1) {
+                                field_33C_0 = other->field_54;
+                                field_33C_7 = pass;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            if (other->field_20C_19 == 3 && ((FieldMonster*)other)->field_344 != NULL
+                && ((FieldMonster*)other)->field_344->field_20C_0) {
+                other = ((FieldMonster*)other)->field_344;
+            } else {
+                break;
+            }
+        }
+    }
+    sub_804FC90();
+    if (found != NULL && !found->field_20C_10) {
+        field_368->field_16_0 |= 1;
+    }
+}
+#endif
 void FieldPlayerShotBullet::sub_804DFE8() {
     u16 animationSet;
     int buffer;
@@ -2626,23 +2966,3 @@ void FieldPlayerCharacter::sub_804FC30() {
 }
 #endif
 
-void FieldPlayerCharacter::sub_804FC90() {
-    if (field_368->field_13 != -1) {
-        field_368->field_0 = field_368->field_1;
-        field_368->field_10[!field_352_7] = field_368->field_13;
-        field_368->field_13 = -1;
-    }
-}
-
-void FieldPlayerCharacter::sub_804FCD4() {
-    field_214_0 = 3;
-    sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1028 : 0x1001) : 0x1002);
-    state = 0;
-    field_212_6 = 0;
-}
-
-void FieldPlayerCharacter::sub_804FD3C() {
-    field_214_0 = 4;
-    sub_8049000(field_54 == 0 ? 0x103E : 0x1053);
-    field_35A_2 = 1;
-}

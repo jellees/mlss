@@ -72,7 +72,8 @@ public:
     u8 pad_56[0x196];
     u8 field_1EC[0x20];
     u32 field_20C_0 : 1;
-    u32 field_20C_1 : 4;
+    u32 field_20C_1 : 3;
+    u32 field_20C_4 : 1;
     u32 field_20C_5 : 1;
     u32 field_20C_6 : 1;
     u32 field_20C_7 : 1;

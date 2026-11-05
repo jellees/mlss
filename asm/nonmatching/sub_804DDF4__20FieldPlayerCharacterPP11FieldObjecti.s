@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_804DDF4
-sub_804DDF4:
+	thumb_func_start sub_804DDF4__20FieldPlayerCharacterPP11FieldObjecti
+sub_804DDF4__20FieldPlayerCharacterPP11FieldObjecti:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9

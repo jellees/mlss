@@ -2178,7 +2178,7 @@ _0802B7C8:
 	ldr r1, [r1, #0x04]
 	bl _call_via_r1
 	adds r0, r7, #0x0
-	bl sub_804D2CC
+	bl sub_804D2CC__20FieldPlayerCharacter
 	adds r0, r7, #0x0
 	mov r1, r8
 	movs r2, #0x00
@@ -16686,7 +16686,7 @@ _08037094:
 	cmp r5, #0x00
 	beq _08037150
 	ldr r0, [r4, #0x00]
-	bl sub_804D2CC
+	bl sub_804D2CC__20FieldPlayerCharacter
 	ldr r0, [r4, #0x00]
 	adds r1, r7, #0x0
 	adds r1, #0x28
@@ -21298,7 +21298,7 @@ sub_803C834:
 	ldrb r2, [r0, #0x00]
 	subs r2, #0x02
 	adds r0, r4, #0x0
-	bl sub_804DDF4
+	bl sub_804DDF4__20FieldPlayerCharacterPP11FieldObjecti
 	adds r0, r4, #0x0
 	bl sub_80458B0__11FieldObject
 	lsls r0, r0, #0x18
