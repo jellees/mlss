@@ -574,6 +574,10 @@ extern s8 byte_83A09E4[][8][3]; // FieldPlayerCharacter::field_372-374 per anima
 extern u16 word_83A0A2C[]; // FieldPlayerCharacter::sub_804A124: corner masks that may match
 extern u8 byte_83A0A2E[];
 extern u8 byte_83A0A38[8][4]; // FieldPlayerCharacter::sub_804FC30, indexed by [angle / 32][field_26_2]
+extern u8 byte_83A0A58[8]; // FieldPlayerCharacter::sub_804B360 push directions per angle / 32 for a single blocked corner
+extern u8 byte_83A0A60[8];
+extern u8 byte_83A0A68[8];
+extern u8 byte_83A0A70[8];
 extern u16 word_83A0C5A[]; // FieldPlayerShotBullet animations, indexed by type - 2
 extern u16 word_83A0C60[]; // FieldPlayerShotBullet tables, indexed by type - 2
 extern s8 byte_83A0CD6[8][4]; // FieldPlayerShotBullet::sub_804EA68: sides to check per direction, ended by -1

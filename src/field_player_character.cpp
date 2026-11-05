@@ -1460,7 +1460,849 @@ bool FieldPlayerCharacter::sub_804B25C(FieldObject* other) {
     return TRUE;
 }
 
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804B360__20FieldPlayerCharacterUcUc.s\"");
+#else
+// FieldObject::method15 for the player characters (floor and surface under the box, now also tracking the
+// lowest ceiling so a rising player bumps its head), followed by a step down out of solid cells
+// (sub_804D18C) and, when moving down, pushing the box out of what its four corners went into.
+void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
+    int landed;
+    int lowestCeiling;
+    int currentTop;
+    struct Coldef* topCell;
+    int bestTop;
+    int floorProbe;
+    u8 topProbe;
+    int previousBase;
+    int previousLimit;
+    int current;
+    int floor;
+    int ceiling;
+    int top;
+    struct Coldef* probe;
+    int floorLimit;
+    int topLimit;
+    int bestFloor;
+    int floorX;
+    int floorY;
+    struct Coldef* floorCell;
+    int topX;
+    int topY;
+    int probeX;
+    int probeY;
+    struct Coldef* below;
+    int flagsLeft;
+    int flagsRight;
+    int adjust;
+    int result;
+    int tolerance;
+    int useTop;
+    int newHeight;
+    int shape;
+
+    if (force == 0) {
+        if (!field_20C_0 || field_214_21) {
+            goto settle;
+        }
+        if (field_20C_13 && !field_210_0) {
+            int cellFloor;
+            int cellCeiling;
+            int cellTop;
+
+            if (x == previousX && y == previousY && z == previousZ && height == previousHeight) {
+                goto settle;
+            }
+            coldef = sub_803FBA4(field_290, x, y, &cellFloor, &cellCeiling, &cellTop, 0, field_20C_11);
+            field_26_1 = cellTop != -1 && z + height >= cellTop;
+            field_230 = x;
+            field_234 = y;
+            if (field_26_1) {
+                height = z + height - cellTop;
+                z = cellTop;
+            } else {
+                height = z + height - cellFloor;
+                z = cellFloor;
+            }
+            field_26_4 = 0;
+            goto settle;
+        }
+    }
+
+    if (x != previousX || y != previousY || z != previousZ || height != previousHeight || force != 0) {
+        lowestCeiling = 0xFFFFFF;
+        topCell = NULL;
+        bestTop = 0;
+        floorProbe = 0;
+        topProbe = 0;
+        previousBase = previousZ + previousHeight;
+        previousLimit = previousBase + field_27A;
+        current = z + height;
+        currentTop = current + field_27A;
+
+        // Probe 0: the center.
+        probe = sub_803FBA4(field_290, x, y, &floor, &ceiling, &top, TRUE, field_20C_11);
+        floorLimit = floor;
+        if (probe->primaryShape > 3) {
+            floorLimit += 0x1000;
+        }
+        if (field_210_6) {
+            topLimit = top;
+            if (top >= 0 && probe->secondaryShape > 3 && probe->secondaryShape <= 6) {
+                topLimit += 0x1000;
+            }
+        } else {
+            top = -1;
+            topLimit = -1;
+        }
+        bestFloor = floor;
+        floorX = x;
+        floorY = y;
+        floorCell = probe;
+        if (bestTop < top) {
+            bestTop = top;
+            topX = x;
+            topY = y;
+            topCell = probe;
+        }
+
+        // Probe 1: the left edge.
+        probeX = x - field_27E / 2;
+        probeY = y;
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
+                            TRUE, field_20C_11);
+        if (probe->primaryShape == 5) {
+            floor -= field_27E / 2;
+        }
+        if (floorLimit < floor && topLimit <= floor && bestFloor < floor) {
+            bestFloor = floor;
+            floorX = probeX;
+            floorY = probeY;
+            floorCell = probe;
+            floorProbe = 1;
+            if (probe->primaryShape > 3) {
+                floorLimit = bestFloor + 0x1000;
+            }
+        }
+        if (field_210_6) {
+            if (probe->secondaryShape == 5) {
+                top -= field_27E / 2;
+            }
+            if (floorLimit < top && topLimit < top && bestTop < top) {
+                bestTop = top;
+                topX = probeX;
+                topY = probeY;
+                topCell = probe;
+                topProbe = 1;
+                if (probe->secondaryShape - 4 <= 2u) {
+                    topLimit = bestTop + 0x1000;
+                }
+            }
+            sub_803FBA4(field_290, x - (field_278 >> 1), y, &floor, &ceiling, &top, FALSE, field_20C_11);
+            if (ceiling >= 0 && lowestCeiling > ceiling) {
+                lowestCeiling = ceiling;
+            }
+        }
+
+        // Probe 2: the right edge.
+        probeX = x - 0x100 + field_27E / 2;
+        probeY = y;
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
+                            TRUE, field_20C_11);
+        if (probe->primaryShape == 4) {
+            floor += 0x100 - field_27E / 2;
+        }
+        if (floorLimit < floor && topLimit <= floor && bestFloor < floor) {
+            bestFloor = floor;
+            floorX = probeX;
+            floorY = probeY;
+            floorCell = probe;
+            floorProbe = 2;
+            if (probe->primaryShape > 3) {
+                floorLimit = bestFloor + 0x1000;
+            }
+        }
+        if (field_210_6) {
+            if (probe->secondaryShape == 4) {
+                top += 0x100 - field_27E / 2;
+            }
+            if (floorLimit < top && topLimit < top && bestTop < top) {
+                bestTop = top;
+                topX = probeX;
+                topY = probeY;
+                topCell = probe;
+                topProbe = 2;
+                if (probe->secondaryShape - 4 <= 2u) {
+                    topLimit = bestTop + 0x1000;
+                }
+            }
+            sub_803FBA4(field_290, x - 0x100 + (field_278 >> 1), y, &floor, &ceiling, &top, FALSE, field_20C_11);
+            if (ceiling >= 0 && lowestCeiling > ceiling) {
+                lowestCeiling = ceiling;
+            }
+        }
+
+        // Probes 3 and 4: the back corners.
+        below = get_coldef_ptr_by_xz(field_290, (x & ~0xFFF) / 0x1000,
+                                     (((y + 0x100) - field_280) & ~0xFFF) / 0x1000);
+        flagsLeft = 0;
+        probeX = x - field_27E / 2;
+        probeY = (y + 0x100) - field_280;
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
+                            TRUE, field_20C_11);
+        if (probe->tileFlags
+            && !(probe->primaryShape == 3 && probe->floorType == 8 && probe->secondaryShape == 3)) {
+            flagsLeft = probe->tileFlags;
+        }
+        if (probe->primaryShape == 5) {
+            floor -= field_27E / 2;
+        } else if (probe->primaryShape == 4) {
+            floor += field_27E / 2;
+            if (below->primaryShape != 4 && below->secondaryShape != 4) {
+                floor &= ~0xFFF;
+            }
+        } else if (probe->primaryShape == 6) {
+            floor += 0x100 - field_280;
+        }
+        if (floorLimit < floor && topLimit <= floor && bestFloor < floor) {
+            bestFloor = floor;
+            floorX = probeX;
+            floorY = probeY;
+            floorCell = probe;
+            floorProbe = 3;
+        }
+        if (field_210_6) {
+            if (probe->secondaryShape == 5) {
+                top -= field_27E / 2;
+            } else if (probe->secondaryShape == 4) {
+                top += field_27E / 2;
+                if (below->primaryShape != 4 && below->secondaryShape != 4) {
+                    top &= ~0xFFF;
+                }
+            } else if (probe->secondaryShape == 6) {
+                top += 0x100 - field_280;
+            }
+            if (floorLimit < top && topLimit < top && bestTop < top) {
+                bestTop = top;
+                topX = probeX;
+                topY = probeY;
+                topCell = probe;
+                topProbe = 3;
+            }
+            sub_803FBA4(field_290, x - (field_278 >> 1), y + 0x100 - field_27C, &floor, &ceiling, &top, FALSE, field_20C_11);
+            if (ceiling >= 0 && lowestCeiling > ceiling) {
+                lowestCeiling = ceiling;
+            }
+        }
+
+        flagsRight = 0;
+        probeX = x - 0x100 + field_27E / 2;
+        probeY = (y + 0x100) - field_280;
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
+                            TRUE, field_20C_11);
+        if (probe->tileFlags
+            && !(probe->primaryShape == 3 && probe->floorType == 8 && probe->secondaryShape == 3)) {
+            flagsRight = probe->tileFlags;
+        }
+        adjust = 0;
+        if (probe->primaryShape == 4) {
+            floor += 0x100 - field_27E / 2;
+        } else if (probe->primaryShape == 5) {
+            floor += field_27E / 2 - 0x100;
+            if (flagsLeft & flagsRight) {
+                adjust = 0x1000;
+            }
+        } else if (probe->primaryShape == 6) {
+            floor += 0x100 - field_280;
+        } else if (flagsLeft & flagsRight) {
+            adjust = -0x1000;
+        }
+        if (floorLimit < floor && topLimit <= floor && bestFloor < floor + adjust) {
+            bestFloor = floor;
+            floorX = probeX;
+            floorY = probeY;
+            floorCell = probe;
+            floorProbe = 4;
+        }
+        if (field_210_6) {
+            adjust = 0;
+            if (probe->secondaryShape == 4) {
+                top += 0x100 - field_27E / 2;
+            } else if (probe->secondaryShape == 5) {
+                int offset = field_27E / 2 - 0x100;
+                int fraction = top & 0xFFF;
+
+                if (fraction != 0 && 0x1000 - fraction > offset) {
+                    top += offset;
+                    if (flagsLeft & flagsRight) {
+                        adjust = 0x1000;
+                    }
+                }
+            } else if (probe->secondaryShape == 6) {
+                top += 0x100 - field_280;
+            } else if (flagsLeft & flagsRight) {
+                adjust = -0x1000;
+            }
+            if (floorLimit < top && topLimit < top && bestTop < top + adjust) {
+                bestTop = top;
+                topX = probeX;
+                topY = probeY;
+                topCell = probe;
+                topProbe = 4;
+            }
+            sub_803FBA4(field_290, x - 0x100 + (field_278 >> 1), y + 0x100 - field_27C, &floor, &ceiling, &top, FALSE, field_20C_11);
+            if (ceiling >= 0 && lowestCeiling > ceiling) {
+                lowestCeiling = ceiling;
+            }
+        }
+
+        if (lowestCeiling == 0xFFFFFF) {
+            lowestCeiling = 0;
+        }
+        // Only step up onto a higher surface when coming from below it; bump into the lowest ceiling when
+        // rising.
+        result = current;
+        landed = 0;
+        if (current > previousBase) {
+            if (field_20C_11 && lowestCeiling > 0) {
+                if (previousLimit < lowestCeiling + 0x800 && currentTop > lowestCeiling) {
+                    result = lowestCeiling - field_27A;
+                    landed = 1;
+                    if (airFrames >= 0 && velocityZ > 0) {
+                        velocityZ = -velocityZ;
+                    }
+                } else if (previousLimit >= bestTop && current < bestTop) {
+                    result = bestTop;
+                }
+            }
+        } else if (current < previousBase) {
+            if (bestTop > 0 && previousLimit > bestTop && current < bestTop) {
+                result = bestTop;
+            } else if (current < bestFloor) {
+                result = bestFloor;
+            }
+        }
+
+        tolerance = 0;
+        if (topCell->tileFlags & field_26_4) {
+            tolerance = (s16)field_23E;
+        }
+        useTop = FALSE;
+        if (bestTop > 0) {
+            if (bestFloor >= bestTop) {
+                useTop = bestFloor > result;
+            } else if (bestTop <= result + tolerance) {
+                useTop = TRUE;
+            }
+        }
+
+        if (useTop) {
+            if (topCell->secondaryShape - 4 <= 2u && topCell->floorType != 2) {
+                field_26_2 = topCell->secondaryShape - 3;
+                switch (topProbe) {
+                    case 1:
+                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                            bestTop += 0xFFF;
+                            bestTop &= ~0xFFF;
+                        } else if (topCell->secondaryShape == 6) {
+                            sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top,
+                                        topProbe, field_20C_11);
+                            bestTop = top;
+                        }
+                        break;
+                    case 2:
+                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                            bestTop += 0xFFF;
+                            bestTop &= ~0xFFF;
+                        } else if (topCell->secondaryShape == 6) {
+                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling,
+                                        &top, 1, field_20C_11);
+                            bestTop = top;
+                        }
+                        break;
+                    case 3:
+                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, (y + 0x100) - field_280, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (topCell->tileFlags & probe->tileFlags) {
+                                if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
+                                    bestTop = top;
+                                } else {
+                                    bestTop = floor;
+                                }
+                            } else {
+                                if (topCell->secondaryShape == 5) {
+                                    bestTop += 0xFFF;
+                                }
+                                bestTop &= ~0xFFF;
+                            }
+                        } else if (topCell->secondaryShape == 6) {
+                            probe = sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top,
+                                                1, field_20C_11);
+                            if (probe->tileFlags & topCell->tileFlags) {
+                                if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
+                                    bestTop = top;
+                                } else {
+                                    bestTop = floor;
+                                }
+                            } else {
+                                bestTop &= ~0xFFF;
+                            }
+                        }
+                        break;
+                    case 4:
+                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, (y + 0x100) - field_280, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (topCell->tileFlags & probe->tileFlags) {
+                                if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
+                                    bestTop = top;
+                                } else {
+                                    bestTop = floor;
+                                }
+                            } else {
+                                if (topCell->secondaryShape == 4) {
+                                    bestTop += 0xFFF;
+                                }
+                                bestTop &= ~0xFFF;
+                            }
+                        } else if (topCell->secondaryShape == 6) {
+                            probe = sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (probe->tileFlags & topCell->tileFlags) {
+                                if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
+                                    bestTop = top;
+                                } else {
+                                    bestTop = floor;
+                                }
+                            } else {
+                                bestTop &= ~0xFFF;
+                            }
+                        }
+                        break;
+                }
+            } else {
+                field_26_2 = 0;
+            }
+
+            newHeight = result - bestTop;
+            if (force == 0 && height <= 0 && newHeight <= (field_20C_14 ? (s16)field_23E + 0x100 : 0)
+                && (field_20C_11 || (previousHeight == 0 && (topCell->tileFlags & field_26_4)))) {
+                newHeight = 0;
+            }
+            if (newHeight > 0 && height == 0 && -velocityZ >= newHeight && field_20C_14) {
+                newHeight = 0;
+            }
+            height = newHeight;
+            z = bestTop;
+            field_26_1 = 1;
+            field_230 = topX;
+            field_234 = topY;
+            coldef = topCell;
+            // The original computes this test without branches, like `(field_20C_13 ^ 1) |
+            // field_210_0`.
+            if (((field_20C_13 ^ 1) | field_210_0) && topCell->tileFlags && topCell->primaryShape != 3
+                && topCell->secondaryShape != 3 && topCell->floorType != 8) {
+                field_26_4 = topCell->tileFlags;
+            } else {
+                field_26_4 = 0;
+            }
+        } else {
+            if (floorCell->primaryShape - 4 <= 2u && floorCell->floorType != 2) {
+                field_26_2 = floorCell->primaryShape - 3;
+                shape = floorCell->primaryShape;
+                switch (floorProbe) {
+                    case 1:
+                        if ((u8)(shape - 4) <= 1) {
+                            bestFloor += 0xFFF;
+                            bestFloor &= ~0xFFF;
+                        } else if (shape == 6) {
+                            sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top,
+                                        floorProbe, field_20C_11);
+                            bestFloor = floor;
+                        }
+                        break;
+                    case 2:
+                        if ((u8)(shape - 4) <= 1) {
+                            bestFloor += 0xFFF;
+                            bestFloor &= ~0xFFF;
+                        } else if (shape == 6) {
+                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling,
+                                        &top, 1, field_20C_11);
+                            bestFloor = floor;
+                        }
+                        break;
+                    case 3:
+                        if ((u8)(shape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, (y + 0x100) - field_280, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (floorCell->tileFlags & probe->tileFlags) {
+                                if (floor < bestFloor - 0x1000 || floor >= bestFloor + 0x1000) {
+                                    bestFloor = top;
+                                } else {
+                                    bestFloor = floor;
+                                }
+                            } else {
+                                if (shape == 5) {
+                                    bestFloor += 0xFFF;
+                                }
+                                bestFloor &= ~0xFFF;
+                            }
+                        } else if (shape == 6) {
+                            sub_803FBA4(field_290, x - field_27E / 2, y, &floor, &ceiling, &top, 1,
+                                        field_20C_11);
+                            bestFloor = floor;
+                        }
+                        break;
+                    case 4:
+                        if ((u8)(shape - 4) <= 1) {
+                            probe = sub_803FBA4(field_290, x, (y + 0x100) - field_280, &floor,
+                                                &ceiling, &top, 1, field_20C_11);
+                            if (floorCell->tileFlags & probe->tileFlags) {
+                                if (floor < bestFloor - 0x1000 || floor >= bestFloor + 0x1000) {
+                                    bestFloor = top;
+                                } else {
+                                    bestFloor = floor;
+                                }
+                            } else {
+                                if (shape == 4) {
+                                    bestFloor += 0xFFF;
+                                }
+                                bestFloor &= ~0xFFF;
+                            }
+                        } else if (shape == 6) {
+                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling,
+                                        &top, 1, field_20C_11);
+                            bestFloor = floor;
+                        }
+                        break;
+                }
+            } else {
+                field_26_2 = 0;
+            }
+
+            newHeight = result - bestFloor;
+            if (force == 0 && height <= 0 && newHeight <= (field_20C_14 ? (s16)field_23E + 0x100 : 0)
+                && (field_20C_11 || (previousHeight == 0 && (floorCell->tileFlags & field_26_4)))) {
+                newHeight = 0;
+            }
+            if (newHeight > 0 && height == 0 && -velocityZ >= newHeight && field_20C_14) {
+                newHeight = 0;
+            }
+            height = newHeight;
+            z = bestFloor;
+            if (z + height < 0) {
+                height = 0;
+                z = 0;
+            }
+            field_26_1 = 0;
+            field_230 = floorX;
+            field_234 = floorY;
+            coldef = floorCell;
+            if (((field_20C_13 ^ 1) | field_210_0) && floorCell->tileFlags
+                && floorCell->primaryShape != 3 && floorCell->secondaryShape != 3
+                && floorCell->floorType != 8) {
+                field_26_4 = floorCell->tileFlags;
+            } else {
+                field_26_4 = 0;
+            }
+        }
+        if (airFrames >= 0) {
+            airStartHeight += previousZ - z;
+        }
+        if (landed) {
+            field_24_15 = 1;
+        } else if (height == 0) {
+            field_24_15 = 2;
+        }
+    }
+
+    if (height > 0 && airFrames == -1 && field_20C_14 && (s8)field_1 == airFrames && force == 0) {
+        if (height <= (s16)field_23E && field_26_4) {
+            height = 0;
+        } else {
+            startAirborne(0, -1, (s16)field_23E);
+        }
+    }
+
+settle:
+    // Drop out of anything the box ended up inside of.
+    if (force == 0 && (field_20C_13 || arg2) && !field_210_0 && sub_804D18C()) {
+        z += height;
+        height = 0;
+        airFrames = -1;
+    }
+    if (arg2 && field_20C_14 && height > 0 && airFrames >= 0) {
+        height = 0;
+        airFrames = -1;
+    }
+
+    // Moving down: push the box out of the floors and surfaces that its four corners went into.
+    if (field_20C_11 && (height != 0 || previousHeight != 0) && z + height < previousZ + previousHeight) {
+        int left = x - (field_278 >> 1);
+        int right = (x - 0x100 + (field_278 >> 1) + 0xFF) & ~0xFF;
+        int front = y + 0x100 - field_27C;
+        int back = (y + 0xFF) & ~0xFF;
+        int level = z + height;
+        u16 onTop;
+        int diagonal;
+        u16 slopes;
+        u8 corners;
+        struct Coldef* cells[4];
+        int cornerFloor;
+        int cornerCeiling;
+        int cornerTop;
+
+        if (level < 0) {
+            level = 0;
+        }
+        onTop = 0;
+        diagonal = 0;
+        slopes = 0;
+        corners = 0;
+        cells[0] = sub_803FBA4(field_290, left, front, &cornerFloor, &cornerCeiling, &cornerTop, TRUE, field_20C_11);
+        if (field_26_2 == 0 && !(cells[0]->tileFlags & field_26_4)) {
+            if (cells[0]->primaryShape > 3) {
+                cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
+            }
+            if (cells[0]->secondaryShape - 4 <= 2u) {
+                cornerTop = (cornerTop + 0x1000) & ~0xFFF;
+            }
+        }
+        if (level > 0 && level < cornerFloor) {
+            int adjust = 0;
+
+            if (cells[0]->tileFlags) {
+                if (cells[0]->tileFlags & field_26_4) {
+                    adjust = 0x1000;
+                } else if ((u8)(cells[0]->primaryShape - 5) <= 1) {
+                    slopes |= 1;
+                }
+            }
+            if (cornerFloor >= level + adjust) {
+                corners |= 1;
+            }
+        } else if (level >= cornerCeiling && level < cornerTop) {
+            int adjust = 0;
+
+            if (cells[0]->tileFlags) {
+                if (cells[0]->tileFlags & field_26_4) {
+                    adjust = 0x1000;
+                } else if ((u8)(cells[0]->secondaryShape - 5) <= 1) {
+                    slopes |= 1;
+                }
+            } else if (cells[0]->secondaryShape == 14) {
+                diagonal = cells[0]->secondaryShape;
+            }
+            if (cornerTop >= level + adjust) {
+                corners |= 1;
+                onTop |= 1;
+            }
+        }
+        if (diagonal == 0) {
+        cells[1] = sub_803FBA4(field_290, right, front, &cornerFloor, &cornerCeiling, &cornerTop, TRUE, field_20C_11);
+        if (field_26_2 == 0 && !(cells[1]->tileFlags & field_26_4)) {
+            if (cells[1]->primaryShape > 3) {
+                cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
+            }
+            if (cells[1]->secondaryShape - 4 <= 2u) {
+                cornerTop = (cornerTop + 0x1000) & ~0xFFF;
+            }
+        }
+        if (level > 0 && level < cornerFloor) {
+            int adjust = 0;
+
+            if (cells[1]->tileFlags) {
+                if (cells[1]->tileFlags & field_26_4) {
+                    adjust = 0x1000;
+                } else if (cells[1]->primaryShape == 4 || cells[1]->primaryShape == 6) {
+                    slopes |= 2;
+                }
+            }
+            if (cornerFloor >= level + adjust) {
+                corners |= 2;
+            }
+        } else if (level >= cornerCeiling && level < cornerTop) {
+            int adjust = 0;
+
+            if (cells[1]->tileFlags) {
+                if (cells[1]->tileFlags & field_26_4) {
+                    adjust = 0x1000;
+                } else if (cells[1]->secondaryShape == 4 || cells[1]->secondaryShape == 6) {
+                    slopes |= 2;
+                }
+            } else if (cells[1]->secondaryShape == 12) {
+                diagonal = cells[1]->secondaryShape;
+            }
+            if (cornerTop >= level + adjust) {
+                corners |= 2;
+                onTop |= 2;
+            }
+        }
+        if (diagonal == 0) {
+        cells[2] = sub_803FBA4(field_290, left, back, &cornerFloor, &cornerCeiling, &cornerTop, TRUE, field_20C_11);
+        if (field_26_2 == 0 && !(cells[2]->tileFlags & field_26_4)) {
+            if (cells[2]->primaryShape > 3) {
+                cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
+            }
+            if (cells[2]->secondaryShape - 4 <= 2u) {
+                cornerTop = (cornerTop + 0x1000) & ~0xFFF;
+            }
+        }
+        if (level > 0 && level < cornerFloor) {
+            int adjust = 0;
+
+            if (cells[2]->tileFlags) {
+                if (cells[2]->tileFlags & field_26_4) {
+                    adjust = 0x1000;
+                } else if ((u8)(cells[2]->primaryShape - 5) <= 1) {
+                    slopes |= 4;
+                }
+            }
+            if (cornerFloor >= level + adjust) {
+                corners |= 4;
+            }
+        } else if (level >= cornerCeiling && level < cornerTop) {
+            int adjust = 0;
+
+            if (cells[2]->tileFlags) {
+                if (cells[2]->tileFlags & field_26_4) {
+                    adjust = 0x1000;
+                } else if ((u8)(cells[2]->secondaryShape - 5) <= 1) {
+                    slopes |= 4;
+                }
+            } else if (cells[2]->secondaryShape == 15) {
+                diagonal = cells[2]->secondaryShape;
+            }
+            if (cornerTop >= level + adjust) {
+                corners |= 4;
+                onTop |= 4;
+            }
+        }
+        if (diagonal == 0) {
+        cells[3] = sub_803FBA4(field_290, right, back, &cornerFloor, &cornerCeiling, &cornerTop, TRUE, field_20C_11);
+        if (field_26_2 == 0 && !(cells[3]->tileFlags & field_26_4)) {
+            if (cells[3]->primaryShape > 3) {
+                cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
+            }
+            if (cells[3]->secondaryShape - 4 <= 2u) {
+                cornerTop = (cornerTop + 0x1000) & ~0xFFF;
+            }
+        }
+        if (level > 0 && level < cornerFloor) {
+            int adjust = 0;
+
+            if (cells[3]->tileFlags) {
+                if (cells[3]->tileFlags & field_26_4) {
+                    adjust = 0x1000;
+                } else if (cells[3]->primaryShape == 4 || cells[3]->primaryShape == 6) {
+                    slopes |= 8;
+                }
+            }
+            if (cornerFloor >= level + adjust) {
+                corners |= 8;
+            }
+        } else if (level >= cornerCeiling && level < cornerTop) {
+            int adjust = 0;
+
+            if (cells[3]->tileFlags) {
+                if (cells[3]->tileFlags & field_26_4) {
+                    adjust = 0x1000;
+                } else if (cells[3]->secondaryShape == 4 || cells[3]->secondaryShape == 6) {
+                    slopes |= 8;
+                }
+            } else if (cells[3]->secondaryShape == 13) {
+                diagonal = cells[3]->secondaryShape;
+            }
+            if (cornerTop >= level + adjust) {
+                corners |= 8;
+                onTop |= 8;
+            }
+        }
+        }
+        }
+        }
+        if (corners) {
+            u8 push = 0;
+
+            if ((corners & 3) == 3) {
+                push = 1;
+            } else if ((corners & 0xC) == 0xC) {
+                push = 4;
+            }
+            if ((corners & 5) == 5) {
+                push |= 8;
+            } else if ((corners & 0xA) == 0xA) {
+                push |= 2;
+            }
+            if (push == 0) {
+                corners &= ~slopes;
+                if (corners & 1) {
+                    push = byte_83A0A58[angle >> 5];
+                }
+                if (corners & 2) {
+                    push = byte_83A0A60[angle >> 5];
+                }
+                if (corners & 4) {
+                    push = byte_83A0A68[angle >> 5];
+                }
+                if (corners & 8) {
+                    push = byte_83A0A70[angle >> 5];
+                }
+            }
+            if (push & 1) {
+                int edge = (front + 0x1000) & ~0xFFF;
+
+                if (((onTop & 1) && cells[0]->secondaryShape == 8) || ((onTop & 2) && cells[1]->secondaryShape == 8)) {
+                    edge -= 0x800;
+                } else if ((onTop & 1) && cells[0]->secondaryShape == 14) {
+                    edge -= left & 0xFFF;
+                } else if ((onTop & 2) && cells[1]->secondaryShape == 12) {
+                    edge = edge - 0x1000 + (right & 0xFFF);
+                }
+                y = edge - 0x100 + field_27C;
+            } else if (push & 4) {
+                int edge = back & ~0xFFF;
+
+                if (((onTop & 4) && cells[2]->secondaryShape == 9) || ((onTop & 8) && cells[3]->secondaryShape == 9)) {
+                    edge += 0x800;
+                } else if ((onTop & 4) && cells[2]->secondaryShape == 15) {
+                    edge += left & 0xFFF;
+                } else if ((onTop & 8) && cells[3]->secondaryShape == 13) {
+                    edge = edge + 0x1000 - (right & 0xFFF);
+                }
+                y = edge - 0x100;
+            }
+            if (push & 8) {
+                int edge = (left + 0x1000) & ~0xFFF;
+
+                if (((onTop & 1) && cells[0]->secondaryShape == 11) || ((onTop & 4) && cells[2]->secondaryShape == 11)) {
+                    edge -= 0x800;
+                } else if ((onTop & 1) && cells[0]->secondaryShape == 14) {
+                    edge -= front & 0xFFF;
+                } else if ((onTop & 4) && cells[2]->secondaryShape == 15) {
+                    edge = edge - 0x1000 + (back & 0xFFF);
+                }
+                x = edge + (field_278 >> 1);
+            } else if (push & 2) {
+                int edge = right & ~0xFFF;
+
+                if (((onTop & 2) && cells[1]->secondaryShape == 10) || ((onTop & 8) && cells[3]->secondaryShape == 10)) {
+                    edge += 0x800;
+                } else if ((onTop & 2) && cells[1]->secondaryShape == 12) {
+                    edge += front & 0xFFF;
+                } else if ((onTop & 8) && cells[3]->secondaryShape == 13) {
+                    edge = edge + 0x1000 - (back & 0xFFF);
+                }
+                x = edge - (field_278 >> 1);
+            }
+            field_24_11 |= corners;
+        }
+    }
+}
+#endif
+
 bool FieldPlayerCharacter::sub_804D0EC() {
     if (field_54 == 0 && field_35A_11) {
         if (get_coldef_ptr_by_xz(field_290, previousX / 4096, previousY / 4096)->floorType == 3) {
