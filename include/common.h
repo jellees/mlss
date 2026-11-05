@@ -591,7 +591,7 @@ extern s16 word_83A0B88[][8][6]; // FieldPlayerCharacter::sub_804DBD0 probe offs
 extern s16 word_83A0A78[][2][8][4]; // FieldPlayerCharacter::sub_804D734 hammer boxes per mode, half and direction
 extern u8 byte_83A0B78[8]; // Sides hit per direction (this object)
 extern u8 byte_83A0B80[8]; // Sides hit per direction (the other object)
-extern u8 byte_83A0C48[9][2];
+extern u8 byte_83A0C48[]; // FieldPlayerCharacter::sub_804DBD0: 9 pairs of offset indices
 extern struct struc_83A065C stru_83A065C[];
 extern u8* off_83A069C[];
 extern s8 byte_83A06C0[8][4];

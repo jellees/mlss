@@ -2605,7 +2605,7 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
     return FALSE;
 }
 #endif
-// https://decomp.me/scratch/TODO
+// https://decomp.me/scratch/XdoXk
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804DBD0__20FieldPlayerCharacteri.s\"");
 #else
@@ -2657,8 +2657,8 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
     high += z;
     low += z;
     for (i = 0; i < 9; i++) {
-        int probeX = x + offsets[byte_83A0C48[i][0]];
-        int probeY = y + offsets[byte_83A0C48[i][1]];
+        int probeX = x + offsets[byte_83A0C48[i * 2]];
+        int probeY = y + offsets[byte_83A0C48[i * 2 + 1]];
         struct Coldef* coldef =
             sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
 
