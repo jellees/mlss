@@ -140,7 +140,7 @@ struct Sprite {
     s16 field_8;
     s16 field_A;
     s16 field_C;
-    s16 field_E;
+    u16 field_E;
     u32 field_10_0 : 1;
     u32 field_10_1 : 5;
     u32 field_10_6 : 2;
@@ -170,7 +170,9 @@ struct Sprite {
     u8 field_20[2];
     u8 field_22;
     u8 field_23;
-    u8 pad24[4];
+    u8 field_24;
+    u8 field_25; // Frame count (FieldClass1::sub_804DFE8)
+    u8 pad26[2];
     u16 field_28_0 : 9;
     u16 field_28_9 : 1;
     u16 field_28_10 : 3;
@@ -382,6 +384,7 @@ void sub_8017E34(void);
 void sub_8018218(void*, void*, size_t, int, int);
 void runtime_install_interrupt_callback(int, void (*)(void));
 void sub_80193B4(int, int, int);
+void stop_sfx_80195A8(int);
 void play_sfx_80195B4(int, int);
 u32 sub_80198B0(void*);
 u16 sub_81152FC(void*, u16);
@@ -390,7 +393,7 @@ void sub_801B5A0(void*, int, int, int, int, int, int, int, int, int);
 void sub_801B390(void*, u8, int*, int*, int*);
 void sub_8116654(void*, u8);
 struct Coldef* get_coldef_ptr_by_xz(void* map, s16 x, s16 z);
-struct Coldef* sub_803FBA4(void* map, int x, int y, int* floor, int* ceiling, int* top, u8 arg6,
+struct Coldef* sub_803FBA4(void* map, int x, int y, int* floor, int* ceiling, int* top, bool arg6,
                            bool arg7);
 void sub_8116680(void*, u8);
 u8 sub_8114C1C(void*, u8, u16, u8, u16, u16);
@@ -565,6 +568,22 @@ extern u8 byte_83A05EC[];
 extern u8 byte_83A061C[];
 extern u8 byte_83A0636[];
 extern s8 byte_83A0656[];
+extern s8* off_83A09DC[]; // Indexed by [FieldObject::field_54][state] (FieldPlayerCharacter::sub_8048174)
+extern u8* off_83A086C[]; // Indexed by [!FieldPlayerCharacter::field_352_7][state]
+extern s8 byte_83A09E4[][8][3]; // FieldPlayerCharacter::field_372-374 per animation and direction
+extern u16 word_83A0A2C[]; // FieldPlayerCharacter::sub_804A124: corner masks that may match
+extern u8 byte_83A0A2E[];
+extern u8 byte_83A0A38[8][4]; // FieldPlayerCharacter::sub_804FC30, indexed by [angle / 32][field_26_2]
+extern u16 word_83A0C5A[]; // FieldClass1 animations, indexed by type - 2
+extern u16 word_83A0C60[]; // FieldClass1 tables, indexed by type - 2
+extern s16 word_83A0C66[];
+extern u8 byte_83A0C6C[];
+extern s16 word_83A0C70[];
+extern s16 word_83A0C76[][8][2];
+extern s16 word_839F564[8][2]; // Direction vectors
+extern u8 byte_801349C[][7]; // Packed sprite boxes, indexed by Sprite::field_16
+extern s16 word_83A0B88[][8][6]; // FieldPlayerCharacter::sub_804DBD0 probe offsets
+extern u8 byte_83A0C48[9][2];
 extern struct struc_83A065C stru_83A065C[];
 extern u8* off_83A069C[];
 extern s8 byte_83A06C0[8][4];

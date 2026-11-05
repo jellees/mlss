@@ -3,6 +3,7 @@
 #include "common.h"
 #include "field_object.h"
 #include "field_player_character.h"
+#include "field_object_subclass3.h"
 
 FieldObject::FieldObject(int room, int index) {
     field_1 = 0xFF;
@@ -417,8 +418,8 @@ void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
     } else {
         field_A = 0;
     }
-    // Type 7 objects are FieldPlayerCharacters.
-    if (field_20C_19 == 7 && ((FieldPlayerCharacter*)this)->field_33C_2) {
+    // Type 7 objects are FieldObjectSubclass3s (FBLK/SBLK; their constructors set it).
+    if (field_20C_19 == 7 && ((FieldObjectSubclass3*)this)->field_33C_2) {
         return;
     }
     if (field_211_0 != 0

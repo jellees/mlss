@@ -11,7 +11,13 @@
 
 class FieldObjectSubclass3 : public FieldObject {
   public:
-    u8 pad_33C[0x14];
+    u16 field_33C_0 : 1;
+    u16 field_33C_1 : 1;
+    u16 field_33C_2 : 1;
+    u16 field_33C_3 : 3;
+    u16 field_33C_6 : 4;
+    u16 field_33C_10 : 6;
+    u8 pad_33E[0x12];
 
     FieldObjectSubclass3(int room, int index);
 };

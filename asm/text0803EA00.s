@@ -286,7 +286,7 @@ _0803EC22:
 	ldr r5, [sp, #0x024]
 	ldr r1, [r5, #0x00]
 	adds r0, r6, #0x0
-	bl sub_8049FF4
+	bl sub_8049FF4__20FieldPlayerCharacterPUc
 	adds r5, r0, #0x0
 	ldrb r1, [r4, #0x00]
 	adds r0, r7, #0x0
@@ -303,7 +303,7 @@ _0803EC3C:
 	ldr r0, [r0, #0x00]
 	ldr r2, [sp, #0x024]
 	ldr r1, [r2, #0x00]
-	bl sub_804E5C4
+	bl sub_804E5C4__11FieldClass1PUc
 	adds r5, r0, #0x0
 	cmp r5, #0x00
 	bne _0803EC56
@@ -744,21 +744,21 @@ _0803F446:
 	bne _0803F446
 _0803F4AE:
 	ldr r0, [r5, #0x00]
-	bl sub_804FB14
+	bl sub_804FB14__11FieldClass1
 	ldr r0, [r5, #0x04]
-	bl sub_804FB14
+	bl sub_804FB14__11FieldClass1
 	ldr r0, [r5, #0x08]
-	bl sub_804FB14
+	bl sub_804FB14__11FieldClass1
 	ldr r0, [r5, #0x0C]
-	bl sub_804FB14
+	bl sub_804FB14__11FieldClass1
 	ldr r0, [r5, #0x10]
-	bl sub_804FB14
+	bl sub_804FB14__11FieldClass1
 	ldr r0, [r5, #0x14]
-	bl sub_804FB14
+	bl sub_804FB14__11FieldClass1
 	ldr r0, [r5, #0x18]
-	bl sub_804FB14
+	bl sub_804FB14__11FieldClass1
 	ldr r0, [r5, #0x1C]
-	bl sub_804FB14
+	bl sub_804FB14__11FieldClass1
 	add sp, #0x02C
 	pop {r3, r4, r5}
 	mov r8, r3

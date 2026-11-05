@@ -667,7 +667,7 @@ void FieldManager::sub_80265EC() {
     }
 
     for (i = 0; i < 8; i++) {
-        sub_804DFE8(field_A8[i]);
+        field_A8[i]->sub_804DFE8();
     }
 }
 

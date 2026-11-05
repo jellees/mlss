@@ -6041,7 +6041,7 @@ _08029B76:
 	subs r1, #0x01
 _08029C12:
 	adds r0, r2, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r4, #0x00]
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
@@ -6213,7 +6213,7 @@ _08029D1C:
 	subs r1, #0x01
 _08029D72:
 	adds r0, r2, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r4, #0x00]
 	movs r6, #0xA5
 	lsls r6, r6, #0x02
@@ -6375,7 +6375,7 @@ _08029EB0:
 	cmp r0, #0x00
 	beq _08029EC4
 	adds r0, r5, #0x0
-	bl sub_80492DC
+	bl sub_80492DC__20FieldPlayerCharacter
 _08029EC4:
 	ldr r1, _08029EFC @ =0x00001004
 	movs r0, #0x00
@@ -6437,7 +6437,7 @@ _08029F04:
 	strb r0, [r2, #0x00]
 	ldr r1, _08029FBC @ =0x0000102E
 	adds r0, r5, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r1, _08029FC0 @ =0x0000026B
 	adds r2, r7, r1
 	ldrb r1, [r2, #0x00]
@@ -6561,7 +6561,7 @@ _0802A028:
 	cmp r0, #0x00
 	beq _0802A03C
 	adds r0, r5, #0x0
-	bl sub_80492DC
+	bl sub_80492DC__20FieldPlayerCharacter
 _0802A03C:
 	movs r1, #0xDA
 	lsls r1, r1, #0x02
@@ -6611,7 +6611,7 @@ _0802A060:
 	strb r0, [r2, #0x00]
 	ldr r1, _0802A0C0 @ =0x00001028
 	adds r0, r5, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r1, #0xDA
 	lsls r1, r1, #0x02
 	adds r0, r6, r1
@@ -6688,7 +6688,7 @@ _0802A128:
 	cmp r0, #0x00
 	beq _0802A13C
 	adds r0, r6, #0x0
-	bl sub_80492DC
+	bl sub_80492DC__20FieldPlayerCharacter
 _0802A13C:
 	movs r2, #0xDA
 	lsls r2, r2, #0x02
@@ -6729,7 +6729,7 @@ _0802A160:
 	strh r1, [r0, #0x00]
 	ldr r1, _0802A210 @ =0x00001043
 	adds r0, r6, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, _0802A214 @ =0x0000035B
 	adds r2, r6, r0
 	ldrb r0, [r2, #0x00]
@@ -6891,7 +6891,7 @@ _0802A2BC:
 	cmp r0, #0x00
 	beq _0802A2D0
 	adds r0, r6, #0x0
-	bl sub_80492DC
+	bl sub_80492DC__20FieldPlayerCharacter
 _0802A2D0:
 	movs r1, #0xDA
 	lsls r1, r1, #0x02
@@ -6947,7 +6947,7 @@ _0802A2F4:
 	strb r0, [r2, #0x00]
 	ldr r1, _0802A380 @ =0x00001046
 	adds r0, r6, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r2, #0x82
 	lsls r2, r2, #0x02
 	adds r0, r7, r2

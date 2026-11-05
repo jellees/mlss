@@ -1767,7 +1767,7 @@ _080234D0:
 	adds r5, r7, r1
 	ldr r0, [r5, #0x00]
 	ldr r1, _0802357C @ =0x00001045
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r3, #0x82
 	lsls r3, r3, #0x02
 	adds r2, r7, r3
@@ -1961,10 +1961,10 @@ _0802358C:
 	mov r2, r8
 	ldr r0, [r2, #0x00]
 	ldr r1, _080236D4 @ =0x00001038
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	ldr r1, _080236D8 @ =0x00001050
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r1, [r6, #0x00]
 	mov r3, r8
 	ldr r0, [r3, #0x00]

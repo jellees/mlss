@@ -181,7 +181,9 @@ public:
     u16 field_280;
     u8 field_282;
     u8 field_283;
-    u8 pad_284[0xC];
+    s32 field_284; // Collision box left, top and bottom (FieldPlayerCharacter::sub_804B028)
+    s32 field_288;
+    s32 field_28C;
     void* field_290;
     struct Sprite* sprite;
     u32 field_298_0 : 1;

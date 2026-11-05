@@ -197,7 +197,7 @@ _0802A636:
 	cmp r0, #0x00
 	beq _0802A64C
 	adds r0, r3, #0x0
-	bl sub_80492DC
+	bl sub_80492DC__20FieldPlayerCharacter
 _0802A64C:
 	movs r1, #0x81
 	lsls r1, r1, #0x02
@@ -210,7 +210,7 @@ _0802A64C:
 	cmp r0, #0x00
 	beq _0802A734
 	adds r0, r2, #0x0
-	bl sub_80492DC
+	bl sub_80492DC__20FieldPlayerCharacter
 	b _0802A734
 _0802A668: .4byte 0x0300034C
 _0802A66C: .4byte 0x0000035A
@@ -239,7 +239,7 @@ _0802A670:
 	cmp r0, #0x01
 	bhi _0802A6B0
 	adds r0, r3, #0x0
-	bl sub_804FD3C
+	bl sub_804FD3C__20FieldPlayerCharacter
 	b _0802A6CC
 	.byte 0x00, 0x00
 _0802A6A8: .4byte 0x0000035B
@@ -257,7 +257,7 @@ _0802A6B0:
 	cmp r0, #0x00
 	beq _0802A6CC
 	adds r0, r2, #0x0
-	bl sub_80492DC
+	bl sub_80492DC__20FieldPlayerCharacter
 _0802A6CC:
 	movs r1, #0x81
 	lsls r1, r1, #0x02
@@ -287,7 +287,7 @@ _0802A6CC:
 	cmp r0, #0x01
 	bhi _0802A718
 	adds r0, r3, #0x0
-	bl sub_804FD3C
+	bl sub_804FD3C__20FieldPlayerCharacter
 	b _0802A734
 	.byte 0x00, 0x00
 _0802A70C: .4byte 0x0000035A
@@ -306,7 +306,7 @@ _0802A718:
 	cmp r0, #0x00
 	beq _0802A734
 	adds r0, r2, #0x0
-	bl sub_80492DC
+	bl sub_80492DC__20FieldPlayerCharacter
 _0802A734:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -436,7 +436,7 @@ _0802A7D0:
 	adds r0, r2, #0x0
 	adds r1, r5, #0x0
 	movs r2, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 _0802A83A:
 	movs r1, #0x82
 	lsls r1, r1, #0x02
@@ -465,7 +465,7 @@ _0802A83A:
 	adds r0, r2, #0x0
 	adds r1, r5, #0x0
 	movs r2, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 _0802A874:
 	movs r7, #0x81
 	lsls r7, r7, #0x02
@@ -916,7 +916,7 @@ _0802AC94:
 	beq _0802ACEE
 _0802ACDE:
 	adds r0, r3, #0x0
-	bl sub_80497A8
+	bl sub_80497A8__20FieldPlayerCharacter
 	movs r0, #0x00
 	movs r1, #0x1E
 	movs r2, #0x00
@@ -1027,7 +1027,7 @@ _0802AD8C:
 	cmp r0, #0x00
 	bne _0802ADCA
 	adds r0, r2, #0x0
-	bl sub_804FC30
+	bl sub_804FC30__20FieldPlayerCharacter
 _0802ADCA:
 	movs r5, #0x82
 	lsls r5, r5, #0x02
@@ -1254,7 +1254,7 @@ _0802B040:
 	cmp r0, #0x00
 	beq _0802B086
 	adds r0, r2, #0x0
-	bl sub_804FC30
+	bl sub_804FC30__20FieldPlayerCharacter
 _0802B086:
 	movs r4, #0x80
 	lsls r4, r4, #0x02
@@ -1477,7 +1477,7 @@ _0802B216:
 	adds r1, #0x28
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	subs r5, #0x04
 	adds r0, r6, r5
 	ldr r5, [r0, #0x00]
@@ -1696,7 +1696,7 @@ _0802B3EA:
 	adds r4, r4, r6
 	mov r8, r4
 	ldr r0, [r4, #0x00]
-	bl sub_804D0EC
+	bl sub_804D0EC__20FieldPlayerCharacter
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802B400
@@ -1787,7 +1787,7 @@ _0802B484:
 	cmp r4, r0
 	bne _0802B518
 	adds r0, r3, #0x0
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	mov r2, r8
 	ldr r0, [r2, #0x00]
 	movs r3, #0xDA
@@ -1901,7 +1901,7 @@ _0802B59A:
 	movs r0, #0x01
 	ands r1, r0
 	adds r0, r2, #0x0
-	bl sub_80490CC
+	bl sub_80490CC__20FieldPlayerCharacterUc
 _0802B5BA:
 	movs r1, #0x81
 	lsls r1, r1, #0x02
@@ -1917,7 +1917,7 @@ _0802B5BA:
 	movs r0, #0x01
 	ands r1, r0
 	adds r0, r2, #0x0
-	bl sub_80490CC
+	bl sub_80490CC__20FieldPlayerCharacterUc
 _0802B5DA:
 	mov r0, r10
 	ldrb r1, [r0, #0x00]
@@ -2183,7 +2183,7 @@ _0802B7C8:
 	mov r1, r8
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6, r7}
@@ -2307,7 +2307,7 @@ _0802B8A4:
 	adds r0, r0, r1
 	ldr r1, [r0, #0x00]
 	adds r0, r5, #0x0
-	bl sub_804B028
+	bl sub_804B028__20FieldPlayerCharacterP11FieldObject
 _0802B8E0:
 	ldr r2, _0802B940 @ =0x0000020D
 	adds r0, r5, r2
@@ -2376,7 +2376,7 @@ _0802B94C:
 	beq _0802B976
 	adds r0, r5, #0x0
 	adds r1, r2, #0x0
-	bl sub_804B028
+	bl sub_804B028__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802B9F8
@@ -2389,7 +2389,7 @@ _0802B97A:
 	ldr r4, [r7, #0x00]
 	adds r0, r5, #0x0
 	adds r1, r4, #0x0
-	bl sub_804B028
+	bl sub_804B028__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802B94C
@@ -2494,7 +2494,7 @@ _0802BA3E:
 _0802BA42:
 	ldr r1, [r7, #0x00]
 	adds r0, r5, #0x0
-	bl sub_804B028
+	bl sub_804B028__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802BA52
@@ -2743,7 +2743,7 @@ _0802BC20:
 	beq _0802BC32
 	ldr r1, [r6, #0x00]
 	adds r0, r5, #0x0
-	bl sub_804B028
+	bl sub_804B028__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802BC1C
@@ -2787,7 +2787,7 @@ _0802BC6E:
 	bne _0802BC9C
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_8049BD8
+	bl sub_8049BD8__20FieldPlayerCharacteri
 	ldr r3, _0802BC98 @ =0x00000352
 	adds r0, r5, r3
 	ldrb r1, [r0, #0x00]
@@ -2812,7 +2812,7 @@ _0802BC9C:
 	bne _0802BCCC
 	adds r0, r5, #0x0
 	movs r1, #0x02
-	bl sub_8049BD8
+	bl sub_8049BD8__20FieldPlayerCharacteri
 	ldrb r1, [r4, #0x00]
 	adds r0, r7, #0x0
 	ands r0, r1
@@ -2833,7 +2833,7 @@ _0802BCCC:
 	cmp r0, r1
 	beq _0802BD1C
 	adds r0, r5, #0x0
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r3, _0802BD04 @ =0x00000352
 	adds r0, r5, r3
 	ldrb r1, [r0, #0x00]
@@ -2861,7 +2861,7 @@ _0802BD0A:
 	b _0802BD1C
 _0802BD16:
 	adds r0, r5, #0x0
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 _0802BD1C:
 	add sp, #0x004
 	pop {r3, r4, r5}
@@ -4708,7 +4708,7 @@ _0802D67E:
 	adds r1, r1, r0
 	strb r2, [r1, #0x00]
 	ldr r0, [r3, #0x00]
-	bl sub_8049224
+	bl sub_8049224__20FieldPlayerCharacter
 	b _0802D8D4
 _0802D6AC: .4byte 0x00000246
 _0802D6B0: .4byte 0x00000239
@@ -5009,7 +5009,7 @@ _0802DA4A:
 	adds r1, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	ldr r3, [r5, #0x00]
 	ldr r5, [r3, #0x14]
 	ldr r1, [r3, #0x18]
@@ -5125,7 +5125,7 @@ _0802DB3C:
 	movs r0, #0x01
 	ands r1, r0
 	adds r0, r2, #0x0
-	bl sub_8049370
+	bl sub_8049370__20FieldPlayerCharacterUc
 	b _0802DBEE
 _0802DB50:
 	ldr r1, _0802DB88 @ =0x00000246
@@ -5199,7 +5199,7 @@ _0802DBE0:
 	b _0802DBEE
 _0802DBE8:
 	adds r0, r2, #0x0
-	bl sub_8049430
+	bl sub_8049430__20FieldPlayerCharacter
 _0802DBEE:
 	movs r2, #0x80
 	lsls r2, r2, #0x02
@@ -5222,7 +5222,7 @@ sub_802DC0C:
 	adds r7, r0, #0x0
 	adds r6, r1, #0x0
 	adds r0, r6, #0x0
-	bl sub_804D18C
+	bl sub_804D18C__20FieldPlayerCharacter
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802DC22
@@ -5255,7 +5255,7 @@ _0802DC22:
 	bge _0802DC62
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802DC1E
@@ -5264,7 +5264,7 @@ _0802DC22:
 _0802DC62:
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802DC1E
@@ -5273,7 +5273,7 @@ _0802DC62:
 _0802DC74:
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802DC1E
@@ -5284,28 +5284,28 @@ _0802DC88: .4byte 0x00000111
 _0802DC8C:
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802DC1E
 	adds r4, #0x04
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802DC1E
 	adds r4, #0x04
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802DC1E
 	adds r4, #0x04
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802DC1E
@@ -5356,7 +5356,7 @@ _0802DCEE:
 	bge _0802DD30
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802DD2C
@@ -5367,7 +5367,7 @@ _0802DD2C:
 _0802DD30:
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802DD40
@@ -5378,7 +5378,7 @@ _0802DD40:
 _0802DD44:
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802DD54
@@ -5391,7 +5391,7 @@ _0802DD54:
 _0802DD5C:
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802DD6C
@@ -5399,7 +5399,7 @@ _0802DD5C:
 _0802DD6C:
 	ldr r1, [r4, #0x04]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802DD7C
@@ -5407,7 +5407,7 @@ _0802DD6C:
 _0802DD7C:
 	ldr r1, [r4, #0x08]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802DD8C
@@ -5415,7 +5415,7 @@ _0802DD7C:
 _0802DD8C:
 	ldr r1, [r4, #0x0C]
 	adds r0, r6, #0x0
-	bl sub_804B25C
+	bl sub_804B25C__20FieldPlayerCharacterP11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802DD9C
@@ -6849,7 +6849,7 @@ sub_802E854:
 	lsls r4, r4, #0x02
 	add r4, r9
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	mov r0, r9
 	movs r2, #0x00
@@ -7356,7 +7356,7 @@ sub_802EC64:
 	lsls r0, r0, #0x02
 	adds r4, r5, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
@@ -7582,7 +7582,7 @@ _0802EE06:
 	add r0, sp, #0x004
 	strb r7, [r0, #0x00]
 	adds r0, r5, #0x0
-	bl sub_804A124
+	bl sub_804A124__20FieldPlayerCharacterP12FieldStruct6PiT2bT4
 	adds r1, r4, #0x0
 	adds r1, #0xE4
 	str r0, [r1, #0x00]
@@ -7609,12 +7609,12 @@ _0802EE06:
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
 	ldr r0, [r0, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	movs r1, #0x81
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
 	ldr r0, [r0, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	movs r1, #0x82
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -8048,7 +8048,7 @@ _0802F16A:
 	ldr r0, [r5, #0x00]
 	movs r1, #0x01
 	movs r2, #0x00
-	bl sub_804B360
+	bl sub_804B360__20FieldPlayerCharacterUcUc
 _0802F1B6:
 	ldr r1, [r5, #0x00]
 	ldr r0, [r1, #0x0C]
@@ -8160,7 +8160,7 @@ _0802F24C:
 	ldr r0, [r5, #0x00]
 	movs r1, #0x01
 	movs r2, #0x00
-	bl sub_804B360
+	bl sub_804B360__20FieldPlayerCharacterUcUc
 	ldr r1, [r5, #0x00]
 	ldr r0, [r1, #0x0C]
 	str r0, [r1, #0x34]
@@ -8312,7 +8312,7 @@ _0802F3BC:
 	ldr r1, _0802F428 @ =0x00001052
 _0802F3BE:
 	adds r0, r2, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r7, #0x80
 	lsls r7, r7, #0x02
 	adds r0, r6, r7
@@ -8371,7 +8371,7 @@ _0802F434:
 	ldr r1, _0802F48C @ =0x00001052
 _0802F436:
 	adds r0, r2, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r1, #0x81
 	lsls r1, r1, #0x02
 	adds r0, r6, r1
@@ -9133,12 +9133,12 @@ _0802FABE:
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
 	ldr r0, [r0, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	movs r1, #0x81
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
 	ldr r0, [r0, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 _0802FAD6:
 	pop {r3, r4}
 	mov r8, r3
@@ -9468,7 +9468,7 @@ _0802FE78:
 	lsls r3, r3, #0x02
 	adds r4, r5, r3
 	ldr r0, [r4, #0x00]
-	bl sub_804D0EC
+	bl sub_804D0EC__20FieldPlayerCharacter
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0802FEAE
@@ -10075,7 +10075,7 @@ sub_8030484:
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r7, #0x0
 	movs r2, #0x00
@@ -10395,7 +10395,7 @@ _080307B0:
 	adds r1, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	movs r0, #0x81
 	lsls r0, r0, #0x02
 	adds r5, r7, r0
@@ -10478,7 +10478,7 @@ _08030868:
 	adds r1, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 _08030898:
 	movs r1, #0x81
 	lsls r1, r1, #0x02
@@ -10667,7 +10667,7 @@ sub_8031234:
 	lsls r0, r0, #0x02
 	adds r4, r6, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
 	movs r2, #0x00
@@ -10861,7 +10861,7 @@ sub_80313C0:
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r7, #0x0
 	movs r2, #0x00
@@ -10937,7 +10937,7 @@ sub_80313C0:
 	strb r0, [r2, #0x00]
 	ldr r0, [r6, #0x00]
 	ldr r1, _0803150C @ =0x0000103F
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	movs r2, #0xFB
 	adds r2, r2, r7
@@ -11024,7 +11024,7 @@ sub_8031518:
 	lsls r0, r0, #0x02
 	adds r4, r5, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
@@ -11087,7 +11087,7 @@ sub_8031518:
 	mov r1, r9
 	ldr r0, [r1, #0x00]
 	ldr r1, _0803163C @ =0x00001041
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	add r0, r10
 	ldrb r1, [r0, #0x00]
@@ -11097,7 +11097,7 @@ sub_8031518:
 	strb r4, [r0, #0x00]
 	ldr r0, [r6, #0x00]
 	ldr r1, _08031640 @ =0x00001030
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r4, [r6, #0x00]
 	movs r0, #0xA5
 	lsls r0, r0, #0x02
@@ -11126,7 +11126,7 @@ sub_8031518:
 	ldr r2, [r6, #0x00]
 	movs r1, #0x04
 	movs r3, #0x00
-	bl sub_804E0D8
+	bl sub_804E0D8__11FieldClass1iP11FieldObjecti
 	ldr r2, _08031648 @ =0x0000026E
 	adds r1, r5, r2
 	movs r0, #0x46
@@ -11186,7 +11186,7 @@ sub_8031650:
 	strb r0, [r2, #0x00]
 	ldr r1, _080316EC @ =0x00001030
 	adds r0, r4, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -11208,7 +11208,7 @@ sub_8031650:
 	ldr r2, [r1, #0x00]
 	movs r1, #0x04
 	movs r3, #0x00
-	bl sub_804E0D8
+	bl sub_804E0D8__11FieldClass1iP11FieldObjecti
 	ldr r0, _080316F4 @ =0x00000355
 	adds r4, r4, r0
 	movs r0, #0x46
@@ -11445,7 +11445,7 @@ _080317A4:
 	mov r6, r10
 	ldr r0, [r6, #0x00]
 	ldr r1, _080318FC @ =0x00001002
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	mov r1, r8
 	ldr r0, [r1, #0x00]
 	movs r2, #0x85
@@ -11458,7 +11458,7 @@ _080317A4:
 	mov r3, r8
 	ldr r0, [r3, #0x00]
 	ldr r1, _08031900 @ =0x00001001
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	mov r4, r8
 	ldr r0, [r4, #0x00]
 	add r0, r9
@@ -11478,7 +11478,7 @@ _080317A4:
 	adds r0, r7, #0x0
 	adds r0, #0xA8
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8
+	bl sub_804FAF8__11FieldClass1
 	adds r0, r7, #0x0
 	movs r1, #0x00
 	bl sub_802DF80
@@ -11632,7 +11632,7 @@ _08031986:
 	ldr r2, [r5, #0x00]
 	movs r1, #0x03
 	movs r3, #0x00
-	bl sub_804E0D8
+	bl sub_804E0D8__11FieldClass1iP11FieldObjecti
 	movs r1, #0x01
 	negs r1, r1
 	movs r0, #0x57
@@ -11735,7 +11735,7 @@ _08031A96:
 	strb r0, [r2, #0x00]
 	ldr r0, [r3, #0x00]
 	ldr r1, _08031B6C @ =0x00001002
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r1, _08031B70 @ =0x00000209
 	adds r0, r7, r1
 	ldrb r1, [r0, #0x00]
@@ -11804,7 +11804,7 @@ _08031B10:
 _08031B48:
 	ldr r0, [r4, #0x00]
 	ldr r1, _08031B7C @ =0x00001001
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r4, #0x00]
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
@@ -12090,7 +12090,7 @@ _08031D58:
 	adds r1, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	b _080324FC
 _08031D7C:
 	adds r0, r1, #0x0
@@ -12155,7 +12155,7 @@ _08031EF4:
 	adds r1, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	movs r0, #0x81
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
@@ -12177,7 +12177,7 @@ _08031EF4:
 	adds r1, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x04]
 	subs r0, #0x2E
@@ -12309,7 +12309,7 @@ sub_8032514:
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r7, #0x0
 	movs r2, #0x00
@@ -13097,7 +13097,7 @@ _08032D12:
 	adds r0, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 _08032D56:
 	movs r0, #0x81
 	lsls r0, r0, #0x02
@@ -13275,7 +13275,7 @@ _08032E92:
 	adds r1, #0x28
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 _08032EC0:
 	movs r4, #0x81
 	lsls r4, r4, #0x02
@@ -13486,7 +13486,7 @@ sub_80339B8:
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r7, #0x0
 	movs r2, #0x00
@@ -13619,7 +13619,7 @@ sub_80339B8:
 	strb r0, [r2, #0x00]
 	ldr r0, [r5, #0x00]
 	ldr r1, _08033B8C @ =0x00001025
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r5, #0x00]
 	movs r1, #0xFB
 	adds r1, r1, r7
@@ -13757,7 +13757,7 @@ sub_8033B98:
 	lsls r3, r3, #0x02
 	adds r4, r6, r3
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	movs r2, #0x82
 	lsls r2, r2, #0x02
@@ -13797,7 +13797,7 @@ _08033C32:
 	strb r0, [r2, #0x00]
 	ldr r1, _08033DF0 @ =0x00001044
 	mov r0, r8
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r3, #0xA5
 	lsls r3, r3, #0x02
 	add r3, r8
@@ -13985,7 +13985,7 @@ _08033DAC:
 	adds r0, r2, #0x0
 	bl sub_804FFCC__12FieldMonster
 	mov r0, r8
-	bl sub_80499B8
+	bl sub_80499B8__20FieldPlayerCharacter
 	b _08033E20
 _08033DE4: .4byte 0x0000035B
 _08033DE8: .4byte 0x00000351
@@ -14485,7 +14485,7 @@ _080347A0:
 	strb r0, [r1, #0x00]
 	ldr r1, _0803486C @ =0x00001045
 	adds r0, r4, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	adds r6, #0x3B
 	adds r2, r5, r6
 	ldrb r1, [r2, #0x00]
@@ -14554,7 +14554,7 @@ sub_8034870:
 	lsls r3, r3, #0x02
 	adds r4, r6, r3
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	movs r2, #0x82
 	lsls r2, r2, #0x02
@@ -14577,7 +14577,7 @@ _080348D4:
 _080348E4:
 	ldr r1, _08034950 @ =0x00001002
 	adds r0, r5, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r1, #0x80
 	lsls r1, r1, #0x01
 	adds r0, r6, r1
@@ -14588,7 +14588,7 @@ _080348E4:
 	movs r2, #0x75
 	bl jumpToHeight__11FieldObjectiii
 	adds r0, r5, #0x0
-	bl sub_80496B4
+	bl sub_80496B4__20FieldPlayerCharacter
 	movs r3, #0xDB
 	lsls r3, r3, #0x02
 	adds r0, r5, r3
@@ -14694,7 +14694,7 @@ sub_803495C:
 	strb r0, [r2, #0x00]
 	ldr r0, [r5, #0x00]
 	ldr r1, _08034A54 @ =0x00001025
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r5, #0x00]
 	movs r3, #0xA5
 	lsls r3, r3, #0x02
@@ -14766,7 +14766,7 @@ sub_8034A5C:
 	adds r6, r7, r0
 	ldr r0, [r6, #0x00]
 	ldr r1, _08034BA8 @ =0x00001045
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r1, _08034BAC @ =0x00000246
 	adds r2, r7, r1
 	ldrb r1, [r2, #0x00]
@@ -15206,7 +15206,7 @@ _0803513A:
 	adds r1, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	adds r7, #0x04
 	adds r0, r6, r7
 	ldr r0, [r0, #0x00]
@@ -15313,7 +15313,7 @@ _08035582:
 	mov r1, r9
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x04]
 	subs r0, #0x51
@@ -15425,7 +15425,7 @@ sub_8035974:
 	lsls r3, r3, #0x02
 	adds r4, r5, r3
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
@@ -15596,7 +15596,7 @@ _08035A3A:
 _08035AF8:
 	ldr r1, _08035B8C @ =0x0000103F
 	adds r0, r6, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	mov r2, r8
 	ldrb r0, [r2, #0x00]
 	lsls r0, r0, #0x1D
@@ -15678,7 +15678,7 @@ sub_8035B98:
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r7, #0x0
 	movs r2, #0x00
@@ -16012,7 +16012,7 @@ _08035E26:
 	adds r1, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	movs r4, #0x81
 	lsls r4, r4, #0x02
 	add r4, r9
@@ -16034,7 +16034,7 @@ _08035E26:
 	adds r1, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x04]
 	subs r0, #0x65
@@ -16411,7 +16411,7 @@ sub_8036E14:
 	lsls r0, r0, #0x02
 	adds r4, r5, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
@@ -16476,7 +16476,7 @@ sub_8036E14:
 	strb r0, [r1, #0x00]
 	ldr r0, [r6, #0x00]
 	movs r1, #0x02
-	bl sub_804955C
+	bl sub_804955C__20FieldPlayerCharacteri
 	ldr r1, _08036F68 @ =0x0000026E
 	adds r0, r5, r1
 	mov r2, r9
@@ -16513,7 +16513,7 @@ sub_8036E14:
 	mov r1, r8
 	ldr r0, [r1, #0x00]
 	ldr r1, _08036F70 @ =0x0000104D
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	add r0, r10
 	ldrb r1, [r0, #0x00]
@@ -16523,7 +16523,7 @@ sub_8036E14:
 	strb r4, [r0, #0x00]
 	ldr r0, [r6, #0x00]
 	ldr r1, _08036F74 @ =0x00001026
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	mov r3, r8
 	ldr r1, [r3, #0x00]
 	movs r2, #0xA5
@@ -16656,7 +16656,7 @@ _0803704A:
 	adds r0, r2, #0x0
 	movs r2, #0x00
 	movs r3, #0x01
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 _08037084:
 	adds r0, r7, #0x0
 	bl sub_802E2F4
@@ -16692,9 +16692,9 @@ _08037094:
 	adds r1, #0x28
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	ldr r0, [r4, #0x00]
-	bl sub_804FB3C
+	bl sub_804FB3C__20FieldPlayerCharacter
 	adds r1, r0, #0x0
 	cmp r1, #0x00
 	blt _08037128
@@ -16745,7 +16745,7 @@ _08037128:
 	cmp r0, #0x00
 	beq _08037168
 	adds r0, r2, #0x0
-	bl sub_804FC30
+	bl sub_804FC30__20FieldPlayerCharacter
 	b _08037168
 _0803714C: .4byte 0x00000353
 _08037150:
@@ -16759,7 +16759,7 @@ _08037150:
 	adds r0, r2, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 _08037168:
 	movs r5, #0x80
 	lsls r5, r5, #0x02
@@ -16796,7 +16796,7 @@ _08037182:
 	strh r0, [r1, #0x04]
 	ldr r0, [r3, #0x00]
 	ldr r1, _08037228 @ =0x00001002
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r1, #0x81
 	lsls r1, r1, #0x02
 	adds r3, r7, r1
@@ -16890,7 +16890,7 @@ _0803726E:
 	adds r0, r2, #0x0
 	movs r2, #0x00
 	movs r3, #0x01
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	b _0803730C
 _080372A4: .4byte 0x00000353
 _080372A8:
@@ -16918,7 +16918,7 @@ _080372A8:
 	adds r1, #0x28
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	adds r0, r7, #0x0
 	bl sub_802A4E8
 	subs r5, #0x04
@@ -17204,7 +17204,7 @@ sub_8038140:
 	lsls r1, r1, #0x02
 	adds r4, r6, r1
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
 	movs r2, #0x00
@@ -17290,7 +17290,7 @@ sub_8038140:
 	strb r0, [r1, #0x00]
 	ldr r0, [r5, #0x00]
 	movs r1, #0x02
-	bl sub_804955C
+	bl sub_804955C__20FieldPlayerCharacteri
 	ldr r0, _080382B8 @ =0x0000026A
 	adds r1, r6, r0
 	ldrb r0, [r1, #0x00]
@@ -17332,7 +17332,7 @@ sub_8038140:
 	mov r1, r10
 	ldr r0, [r1, #0x00]
 	ldr r1, _080382C4 @ =0x00001034
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r5, #0x00]
 	add r0, r9
 	ldrb r1, [r0, #0x00]
@@ -17343,7 +17343,7 @@ sub_8038140:
 	ldr r0, [r5, #0x00]
 	movs r1, #0x82
 	lsls r1, r1, #0x05
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r3, _080382C8 @ =0x00000246
 	adds r6, r6, r3
 	ldrb r1, [r6, #0x00]
@@ -17703,7 +17703,7 @@ _0803854E:
 	mov r1, r10
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	movs r2, #0x81
 	lsls r2, r2, #0x02
 	adds r0, r7, r2
@@ -17711,9 +17711,9 @@ _0803854E:
 	mov r1, r10
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	ldr r0, [r4, #0x00]
-	bl sub_804FB3C
+	bl sub_804FB3C__20FieldPlayerCharacter
 	adds r1, r0, #0x0
 	cmp r1, #0x00
 	blt _080385C2
@@ -17754,7 +17754,7 @@ _080385C2:
 	lsls r4, r4, #0x02
 	adds r0, r7, r4
 	ldr r0, [r0, #0x00]
-	bl sub_804FB3C
+	bl sub_804FB3C__20FieldPlayerCharacter
 	adds r1, r0, #0x0
 	cmp r1, #0x00
 	blt _08038618
@@ -18159,11 +18159,11 @@ _08038E3A:
 	strb r1, [r0, #0x00]
 	ldr r0, [r6, #0x00]
 	ldr r1, _08038F6C @ =0x00001002
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	mov r3, r8
 	ldr r0, [r3, #0x00]
 	ldr r1, _08038F70 @ =0x00001001
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	movs r4, #0xDB
 	lsls r4, r4, #0x02
@@ -18380,7 +18380,7 @@ sub_8039078:
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r7, #0x0
 	movs r2, #0x00
@@ -18522,7 +18522,7 @@ _080390F6:
 	subs r1, #0x1A
 _080391AA:
 	adds r0, r2, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r4, [r6, #0x00]
 	mov r2, r8
 	ldr r0, [r2, #0x00]
@@ -18852,7 +18852,7 @@ sub_8039A00:
 	lsls r0, r0, #0x02
 	adds r4, r5, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
@@ -18924,7 +18924,7 @@ sub_8039A00:
 	strb r0, [r1, #0x00]
 	ldr r0, [r6, #0x00]
 	movs r1, #0x02
-	bl sub_804955C
+	bl sub_804955C__20FieldPlayerCharacteri
 	ldr r3, _08039B48 @ =0x0000026E
 	adds r0, r5, r3
 	mov r1, r9
@@ -18958,7 +18958,7 @@ sub_8039A00:
 	mov r1, r8
 	ldr r0, [r1, #0x00]
 	ldr r1, _08039B50 @ =0x0000104D
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	add r0, r9
 	ldrb r1, [r0, #0x00]
@@ -18967,7 +18967,7 @@ sub_8039A00:
 	strb r4, [r0, #0x00]
 	ldr r0, [r6, #0x00]
 	ldr r1, _08039B54 @ =0x00001026
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	mov r2, r8
 	ldr r1, [r2, #0x00]
 	movs r3, #0xA5
@@ -19013,7 +19013,7 @@ sub_8039B5C:
 	lsls r0, r0, #0x02
 	adds r4, r5, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
@@ -19085,7 +19085,7 @@ sub_8039B5C:
 	strb r0, [r1, #0x00]
 	ldr r0, [r6, #0x00]
 	movs r1, #0x02
-	bl sub_804955C
+	bl sub_804955C__20FieldPlayerCharacteri
 	ldr r1, _08039C90 @ =0x0000026E
 	adds r0, r5, r1
 	mov r3, r8
@@ -19120,7 +19120,7 @@ sub_8039B5C:
 	strb r0, [r1, #0x00]
 	ldr r0, [r3, #0x00]
 	ldr r1, _08039C98 @ =0x00001034
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	add r0, r8
 	ldrb r1, [r0, #0x00]
@@ -19130,7 +19130,7 @@ sub_8039B5C:
 	ldr r0, [r6, #0x00]
 	movs r1, #0x82
 	lsls r1, r1, #0x05
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r1, #0x01
 	negs r1, r1
 	movs r0, #0x87
@@ -19356,20 +19356,20 @@ _0803A31E:
 	bne _0803A378
 	ldr r1, _0803A370 @ =0x00001001
 	adds r0, r3, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	ldr r1, _0803A374 @ =0x00001002
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	b _0803A388
 _0803A370: .4byte 0x00001001
 _0803A374: .4byte 0x00001002
 _0803A378:
 	ldr r1, _0803A424 @ =0x00001002
 	adds r0, r3, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	ldr r1, _0803A428 @ =0x00001001
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 _0803A388:
 	movs r4, #0x81
 	lsls r4, r4, #0x02
@@ -19467,7 +19467,7 @@ sub_803A438:
 	lsls r0, r0, #0x02
 	adds r4, r6, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r6, #0x0
 	movs r2, #0x00
@@ -19543,7 +19543,7 @@ _0803A482:
 	strb r0, [r1, #0x00]
 	ldr r0, [r7, #0x00]
 	movs r1, #0x02
-	bl sub_804955C
+	bl sub_804955C__20FieldPlayerCharacteri
 	ldr r0, _0803A574 @ =0x0000026E
 	adds r1, r6, r0
 	movs r0, #0x00
@@ -19592,7 +19592,7 @@ _0803A482:
 	adds r1, #0x1A
 _0803A544:
 	adds r0, r2, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r7, #0x00]
 	adds r0, #0x54
 	ldrb r0, [r0, #0x00]
@@ -19802,10 +19802,10 @@ sub_803AAE4:
 	strb r1, [r4, #0x00]
 	ldr r0, [r5, #0x00]
 	ldr r1, _0803AC64 @ =0x00001037
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	ldr r1, _0803AC68 @ =0x0000104F
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r5, #0x00]
 	movs r1, #0x01
 	negs r1, r1
@@ -19955,7 +19955,7 @@ sub_803AC8C:
 	lsls r2, r2, #0x02
 	adds r4, r7, r2
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	adds r0, r7, #0x0
 	movs r2, #0x00
@@ -19965,7 +19965,7 @@ sub_803AC8C:
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
 	ldr r0, [r4, #0x00]
-	bl sub_804FC90
+	bl sub_804FC90__20FieldPlayerCharacter
 	ldr r1, [r4, #0x00]
 	movs r2, #0x82
 	lsls r2, r2, #0x02
@@ -20314,10 +20314,10 @@ sub_803AE38:
 	strb r0, [r1, #0x15]
 	ldr r0, [r2, #0x00]
 	ldr r1, _0803AFC4 @ =0x00001001
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r6, #0x00]
 	ldr r1, _0803AFC8 @ =0x00001002
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	adds r0, r7, #0x0
 	movs r1, #0x01
 	bl sub_802E4C8
@@ -21073,7 +21073,7 @@ sub_803C638:
 	cmp r0, #0x04
 	bhi _0803C656
 	adds r0, r1, #0x0
-	bl sub_804FCD4
+	bl sub_804FCD4__20FieldPlayerCharacter
 	b _0803C668
 _0803C656:
 	adds r0, r2, #0x0
@@ -21083,7 +21083,7 @@ _0803C656:
 	cmp r0, #0x02
 	bhi _0803C668
 	adds r0, r1, #0x0
-	bl sub_80494D4
+	bl sub_80494D4__20FieldPlayerCharacter
 _0803C668:
 	pop {r0}
 	bx r0
@@ -21238,7 +21238,7 @@ sub_803C7D8:
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0x0
 	adds r0, r1, #0x0
-	bl sub_804FB3C
+	bl sub_804FB3C__20FieldPlayerCharacter
 	adds r1, r0, #0x0
 	cmp r1, #0x00
 	blt _0803C82C
@@ -22222,7 +22222,7 @@ _0803DAC8:
 	adds r1, r5, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	movs r2, #0x81
 	lsls r2, r2, #0x02
 	adds r4, r7, r2
@@ -22232,7 +22232,7 @@ _0803DAC8:
 	adds r1, r5, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
 	add sp, #0x004
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -22308,7 +22308,7 @@ sub_803DBE4:
 	strb r0, [r2, #0x00]
 	ldr r1, _0803DC84 @ =0x00001044
 	adds r0, r4, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r0, #0xA5
 	lsls r0, r0, #0x02
 	adds r4, r4, r0
@@ -22495,7 +22495,7 @@ sub_803DD68:
 _0803DDC2:
 	ldr r1, _0803DE28 @ =0x00001002
 	adds r0, r4, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r2, #0x80
 	lsls r2, r2, #0x01
 	adds r0, r5, r2
@@ -22517,7 +22517,7 @@ _0803DDC2:
 	bl _call_via_r2
 	strb r6, [r7, #0x00]
 	adds r0, r4, #0x0
-	bl sub_80496B4
+	bl sub_80496B4__20FieldPlayerCharacter
 	movs r1, #0xDB
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -22582,7 +22582,7 @@ sub_803DE2C:
 	strb r3, [r1, #0x00]
 	ldr r0, [r5, #0x00]
 	ldr r1, _0803DEF8 @ =0x00001002
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	ldr r0, [r5, #0x00]
 	movs r2, #0x80
 	lsls r2, r2, #0x01
@@ -22611,7 +22611,7 @@ sub_803DE2C:
 	ands r0, r1
 	str r0, [r2, #0x00]
 	ldr r0, [r5, #0x00]
-	bl sub_80496B4
+	bl sub_80496B4__20FieldPlayerCharacter
 	ldr r0, [r5, #0x00]
 	movs r1, #0xDB
 	lsls r1, r1, #0x02
@@ -22668,7 +22668,7 @@ sub_803DF00:
 	strb r0, [r2, #0x00]
 	ldr r1, _0803DF90 @ =0x00001030
 	adds r0, r4, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -22690,7 +22690,7 @@ sub_803DF00:
 	ldr r2, [r1, #0x00]
 	movs r1, #0x04
 	movs r3, #0x00
-	bl sub_804E0D8
+	bl sub_804E0D8__11FieldClass1iP11FieldObjecti
 	ldr r0, _0803DF98 @ =0x00000355
 	adds r4, r4, r0
 	movs r0, #0x46
@@ -22733,35 +22733,35 @@ _0803DFC0:
 	adds r4, r6, #0x0
 	adds r4, #0x54
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8
+	bl sub_804FAF8__11FieldClass1
 	adds r0, r5, #0x0
 	adds r0, #0xAC
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8
+	bl sub_804FAF8__11FieldClass1
 	adds r0, r5, #0x0
 	adds r0, #0xB0
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8
+	bl sub_804FAF8__11FieldClass1
 	adds r0, r5, #0x0
 	adds r0, #0xB4
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8
+	bl sub_804FAF8__11FieldClass1
 	adds r0, r5, #0x0
 	adds r0, #0xB8
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8
+	bl sub_804FAF8__11FieldClass1
 	adds r0, r5, #0x0
 	adds r0, #0xBC
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8
+	bl sub_804FAF8__11FieldClass1
 	adds r0, r5, #0x0
 	adds r0, #0xC0
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8
+	bl sub_804FAF8__11FieldClass1
 	adds r0, r5, #0x0
 	adds r0, #0xC4
 	ldr r0, [r0, #0x00]
-	bl sub_804FAF8
+	bl sub_804FAF8__11FieldClass1
 	movs r5, #0x01
 	negs r5, r5
 	ldrb r0, [r4, #0x00]
@@ -22771,7 +22771,7 @@ _0803DFC0:
 	subs r1, #0x01
 _0803E022:
 	adds r0, r6, #0x0
-	bl sub_8049000
+	bl sub_8049000__20FieldPlayerCharacterUs
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r0, r6, r2
