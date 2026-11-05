@@ -582,8 +582,8 @@ void FieldManager::sub_80262CC(int x, int y, int z, int height, int type, bool a
     }
 }
 
-// Only the order of two instructions differs: the original shifts arg3 before loading the table
-// address.
+// Only the order of two instructions differs: in the first branch, the original shifts arg3 before
+// loading the table address and adding 12 (pointer arithmetic gives that order for the second table).
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_802641C__12FieldManageriiii.s\"");
 #else
@@ -595,7 +595,7 @@ void FieldManager::sub_802641C(int arg1, int arg2, int arg3, int arg4) {
     if (arg2 >= 4 && arg2 <= 11) {
         text = *stru_83BBDD0[arg3].field_C[gGameState.field_8C0];
     } else if (arg2 > 11) {
-        text = *stru_83BCDC4[arg3].field_0[gGameState.field_8C0];
+        text = *(stru_83BCDC4 + arg3)->field_0[gGameState.field_8C0];
     }
     if (text != 0) {
         sub_80F032C(evts);
