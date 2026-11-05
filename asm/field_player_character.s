@@ -517,7 +517,7 @@ _080484F0:
 	lsls r2, r2, #0x10
 	asrs r2, r2, #0x10
 	adds r0, r4, #0x0
-	bl method8__11FieldObjectUsUsPP11FieldObject
+	bl method8__11FieldObjectssPP11FieldObject
 _080484FE:
 	movs r6, #0xDB
 	lsls r6, r6, #0x02

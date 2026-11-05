@@ -270,7 +270,7 @@ void FieldManager::sub_802563C() {
                     arg = field_10B - 2;
                 }
                 (*objects)->method12(&this->objects[index], arg, 0);
-                sub_80503CC(*objects++);
+                ((FieldMonster*)*objects++)->sub_80503CC();
                 count--;
             } while (count != 0);
         }

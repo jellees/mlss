@@ -4,8 +4,8 @@
 // Objects on the field (Mario, Luigi, NPCs, ...). FieldObject is implemented in src/field_object.cpp
 // (0x0803FEB8-0x08048064), which has `#pragma implementation` for this header: it emits the vtable
 // (0x08CDBDE8) and the out-of-line copies of the inline members at the end of its .text. g++ emits those
-// in reverse order of definition: the inline members defined in field_object.cpp (sub_8047DC8 first),
-// then the ones defined in this class (method4, ~FieldObject).
+// in reverse order of definition: the inline members defined in field_object.cpp (sub_8047DC8 first, method4
+// last), then the ones defined in this class (~FieldObject).
 #pragma interface
 
 // FieldObject::state. The base class only sets the generic values below (sub_804034C, from the physics);
@@ -324,23 +324,11 @@ public:
     }
     virtual void method2(u16* arg1, u16* arg2, void* arg3); // 0x080403C4
     virtual void method3(); // 0x080409F4
-    virtual void method4() { // 0x08047FDC
-        if (field_222 != 0xFF) {
-            int value;
-
-            field_20C_25 = 1;
-            value = sprite->field_12_1;
-            sub_8021ED8(sprite);
-            sprite->field_12_1 = value;
-            if (field_20C_22) {
-                sub_8047DC8(0xFF);
-            }
-        }
-    }
+    virtual void method4(); // 0x08047FDC, inline in field_object.cpp
     virtual void method5(); // 0x08040020
     virtual void method6(int arg); // 0x08040AE0
     virtual void method7(u8 force); // 0x08040C50
-    virtual void method8(u16 cameraX, u16 cameraY, FieldObject** objects); // 0x08040CF4
+    virtual void method8(s16 cameraX, s16 cameraY, FieldObject** objects); // 0x08040CF4
     virtual void method9(); // 0x08040FA0
     virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects); // 0x08041368
     virtual void method11(); // 0x08047CE8

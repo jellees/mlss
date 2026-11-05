@@ -4958,7 +4958,7 @@ sub_8029380:
 	adds r5, r1, r2
 _080293A2:
 	ldm r6!, {r0}
-	bl sub_80507E0
+	bl sub_80507E0__12FieldMonster
 	adds r4, #0x01
 	ldrb r0, [r5, #0x00]
 	cmp r4, r0

@@ -1842,27 +1842,27 @@ _08024C6E:
 	cmp r1, #0x02
 	bge _08024CD6
 	ldm r5!, {r0}
-	bl sub_8050078
+	bl sub_8050078__12FieldMonster
 	subs r4, #0x01
 _08024CD6:
 	ldm r5!, {r0}
-	bl sub_8050078
+	bl sub_8050078__12FieldMonster
 	subs r4, #0x01
 _08024CDE:
 	ldm r5!, {r0}
-	bl sub_8050078
+	bl sub_8050078__12FieldMonster
 	subs r4, #0x01
 	cmp r4, #0x00
 	beq _08024D0A
 _08024CEA:
 	ldr r0, [r5, #0x00]
-	bl sub_8050078
+	bl sub_8050078__12FieldMonster
 	ldr r0, [r5, #0x04]
-	bl sub_8050078
+	bl sub_8050078__12FieldMonster
 	ldr r0, [r5, #0x08]
-	bl sub_8050078
+	bl sub_8050078__12FieldMonster
 	ldr r0, [r5, #0x0C]
-	bl sub_8050078
+	bl sub_8050078__12FieldMonster
 	subs r4, #0x04
 	adds r5, #0x10
 	cmp r4, #0x00

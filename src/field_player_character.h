@@ -37,7 +37,7 @@ class FieldPlayerCharacter : public FieldObject {
     virtual void method3();                                                // 0x08048704
     virtual void method5();                                                // 0x080482E0
     virtual void method7(u8 force);                                        // 0x080487F0
-    virtual void method8(u16 cameraX, u16 cameraY, FieldObject** objects); // 0x08048438
+    virtual void method8(s16 cameraX, s16 cameraY, FieldObject** objects); // 0x08048438
     virtual void method11();                                               // 0x0804A4C8
     virtual void method12(FieldObject** others, int count, u8 flag);       // 0x0804A5D4
     virtual int method13();                                                // 0x0804FBDC

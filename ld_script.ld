@@ -33,7 +33,7 @@ SECTIONS
         asm/text0803EA00.o(.text);
         src/field_object.o(.text);
         asm/field_player_character.o(.text);
-        asm/field_monster.o(.text);
+        src/field_monster.o(.text);
         asm/field_object_subclass3.o(.text);
         asm/text0805139C.o(.text);
         src/system_screens.o(.text);
@@ -48,6 +48,8 @@ SECTIONS
         asm/text08127E50.o(.text);
         src/save_menu.o(.text);
         asm/text0812A9A0.o(.text);
+        src/field_monster.o(.gnu.linkonce.t._._20FieldObjectSubclass4);
+        asm/text081DD5F8.o(.text);
 
         asm/rodata081DD790.o(.rodata);
         src/heap.o(.rodata);
@@ -57,6 +59,8 @@ SECTIONS
         src/field.o(.rodata);
         asm/field.o(.rodata);
         asm/rodata081E269C.o(.rodata);
+        src/field_monster.o(.rodata);
+        asm/rodata081E26C4.o(.rodata);
         src/system_screens.o(.rodata);
         asm/rodata081E273C.o(.rodata);
         src/title_screen.o(.rodata);
@@ -69,7 +73,7 @@ SECTIONS
         asm/rodata08CDBDC8.o(.rodata);
         src/field_object.o(.gnu.linkonce.d.*);
         asm/rodata08CDBE88.o(.rodata);
-        asm/field_monster.o(.data);
+        src/field_monster.o(.gnu.linkonce.d.*);
         asm/rodata08CDC068.o(.rodata);
         src/system_screens.o(.gnu.linkonce.d._vt.18MarioBrosSaveError);
         src/system_screens.o(.gnu.linkonce.d._vt.15SaveClearScreen);

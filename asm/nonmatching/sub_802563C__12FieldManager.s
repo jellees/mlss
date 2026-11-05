@@ -397,7 +397,7 @@ _0802591C:
 	mov r9, r1
 	subs r1, #0x04
 	ldm r1!, {r0}
-	bl sub_80503CC
+	bl sub_80503CC__12FieldMonster
 	subs r7, #0x01
 	cmp r7, #0x00
 	beq _08025A04
@@ -442,7 +442,7 @@ _08025978:
 	adds r1, r0, #0x0
 	ldm r1!, {r0}
 	str r1, [sp, #0x004]
-	bl sub_80503CC
+	bl sub_80503CC__12FieldMonster
 	ldr r2, _080259C0 @ =0x00000246
 	adds r0, r6, r2
 	ldrb r1, [r0, #0x00]
@@ -482,7 +482,7 @@ _080259CC:
 	bl _call_via_r4
 	ldr r2, [sp, #0x004]
 	ldr r0, [r2, #0x00]
-	bl sub_80503CC
+	bl sub_80503CC__12FieldMonster
 	subs r7, #0x02
 	movs r3, #0x08
 	add r9, r3

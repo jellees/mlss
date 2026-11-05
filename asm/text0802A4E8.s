@@ -13983,7 +13983,7 @@ _08033DAC:
 	cmp r0, #0x18
 	bne _08033E0C
 	adds r0, r2, #0x0
-	bl sub_804FFCC
+	bl sub_804FFCC__12FieldMonster
 	mov r0, r8
 	bl sub_80499B8
 	b _08033E20

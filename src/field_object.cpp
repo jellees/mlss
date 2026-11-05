@@ -388,7 +388,7 @@ void FieldObject::method7(u8 force) {
     }
 }
 
-void FieldObject::method8(u16 cameraX, u16 cameraY, FieldObject** objects) {
+void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
     int screenX;
     int screenY;
     u16 spriteX;
@@ -397,9 +397,9 @@ void FieldObject::method8(u16 cameraX, u16 cameraY, FieldObject** objects) {
     if (field_222 == 0xFF) {
         return;
     }
-    screenX = x / 256 - (s16)cameraX;
+    screenX = x / 256 - cameraX;
     field_6 = screenX;
-    screenY = (y - z) / 256 - (s16)cameraY - byte_83A0656[field_20C_15];
+    screenY = (y - z) / 256 - cameraY - byte_83A0656[field_20C_15];
     field_8 = screenY;
     spriteX = field_6 + field_23A;
     spriteY = (screenY - height / 256) + byte_83A0656[field_20C_15] + (field_23B + 1);
@@ -728,6 +728,22 @@ void FieldObject::sub_80418E8(FieldObject** objects) {
                     airFrames = -1;
                 }
             }
+        }
+    }
+}
+
+// Inline, but defined here instead of in the class, so that other files (FieldMonster::method4) call
+// it instead of inlining it. Its out-of-line copy is emitted after the inline members below.
+inline void FieldObject::method4() {
+    if (field_222 != 0xFF) {
+        int value;
+
+        field_20C_25 = 1;
+        value = sprite->field_12_1;
+        sub_8021ED8(sprite);
+        sprite->field_12_1 = value;
+        if (field_20C_22) {
+            sub_8047DC8(0xFF);
         }
     }
 }
@@ -3467,7 +3483,7 @@ void FieldObject::method19(u8 index) {
     field_218 = value;
     if (field_21C != value) {
         sub_8040790();
-        sub_8040804(1, -1, -1);
+        sub_8040804(true, -1, -1);
     }
     field_214_8 = 1;
 }
@@ -3479,7 +3495,7 @@ void FieldObject::method18(u8 index) {
     field_218 = value;
     if (field_21A != value) {
         sub_8040790();
-        sub_8040804(1, -1, -1);
+        sub_8040804(true, -1, -1);
     }
     field_214_7 = 1;
 }

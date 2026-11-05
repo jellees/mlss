@@ -1334,7 +1334,7 @@ _0802314E:
 	cmp r0, #0x00
 	bne _080231B0
 	adds r0, r3, #0x0
-	bl sub_80501EC
+	bl sub_80501EC__12FieldMonster
 	ldr r5, [sp, #0x04C]
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x10
@@ -1354,7 +1354,7 @@ _08023168:
 	cmp r0, #0x00
 	beq _080231B0
 	adds r0, r3, #0x0
-	bl sub_80502C8
+	bl sub_80502C8__12FieldMonster
 	ldr r1, [sp, #0x04C]
 	ldrb r0, [r1, #0x00]
 	movs r1, #0x10
