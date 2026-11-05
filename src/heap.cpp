@@ -66,13 +66,10 @@ void free_heap_memory_8018C68(void* p) {
     }
 }
 
-// Close but not matching: register allocation differs (size and block swap registers).
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/alloc_heap_8018CEC.s\"");
-#else
 void* alloc_heap_8018CEC(int heap, u32 size, char* label) {
     HeapBlock* block;
     int i;
+    HeapBlock* next;
 
     if (size == 0) {
         return NULL;
@@ -90,23 +87,27 @@ void* alloc_heap_8018CEC(int heap, u32 size, char* label) {
         if ((blockSize & HEAP_BLOCK_FREE) && blockSize >= size + sizeof(HeapBlock)) {
             blockSize &= ~HEAP_BLOCK_FREE;
             if (blockSize > size + sizeof(HeapBlock) * 2) {
-                HeapBlock* rest = (HeapBlock*)((u8*)block + size + sizeof(HeapBlock));
+                HeapBlock* rest = (HeapBlock*)((u8*)block + (size + sizeof(HeapBlock)));
+                u32 restSize = blockSize - sizeof(HeapBlock);
 
-                rest->size = (blockSize - sizeof(HeapBlock) - size) | HEAP_BLOCK_FREE;
+                rest->size = (restSize - size) | HEAP_BLOCK_FREE;
                 rest->previous = block;
-                rest->next = block->next;
+                next = block->next;
+                rest->next = next;
                 for (i = 0; i < 4; i++) {
                     rest->label[i] = "FREE"[i];
                 }
-                if (block->next != NULL) {
-                    block->next->previous = rest;
+                if (next != NULL) {
+                    next->previous = rest;
                 }
                 block->size = size + sizeof(HeapBlock);
                 block->next = rest;
             } else {
                 block->size = blockSize;
             }
-            COPY_LABEL(block->label, label);
+            for (i = 0; i < 4; i++) {
+                block->label[i] = label[i];
+            }
             return block + 1;
         }
         block = block->next;
@@ -114,7 +115,6 @@ void* alloc_heap_8018CEC(int heap, u32 size, char* label) {
 
     return NULL;
 }
-#endif
 
 void operator delete[](void* p) {
     free_heap_memory_8018C68(p);
