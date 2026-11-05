@@ -69,14 +69,14 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_350_13 : 1; // method5's copy of field_350_6
     u16 field_350_14 : 1;
     u16 field_350_15 : 1;
-    u8 field_352_0 : 1;
-    u8 field_352_1 : 1;
-    u8 field_352_2 : 1;
-    u8 field_352_3 : 1;
-    u8 field_352_4 : 1;
-    u8 field_352_5 : 1;
-    u8 field_352_6 : 1;
-    u8 field_352_7 : 1;
+    u32 field_352_0 : 1;
+    u32 field_352_1 : 1;
+    u32 field_352_2 : 1;
+    u32 field_352_3 : 1;
+    u32 field_352_4 : 1;
+    u32 field_352_5 : 1;
+    u32 field_352_6 : 1;
+    u32 field_352_7 : 1;
     u32 field_353_0 : 1; // field_36C follows sprite (method8)
     u32 field_353_1 : 1;
     u32 field_353_2 : 1;

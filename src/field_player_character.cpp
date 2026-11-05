@@ -851,10 +851,6 @@ struct FieldStruct6* FieldPlayerCharacter::sub_804A124(struct FieldStruct6* entr
 }
 #endif
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/method11__20FieldPlayerCharacter.s\"");
-#else
 void FieldPlayerCharacter::method11() {
     u8 flags;
 
@@ -873,19 +869,18 @@ void FieldPlayerCharacter::method11() {
     } else {
         flags = off_83A086C[field_352_7 ^ 1][state];
     }
-    field_352_0 = flags;
+    field_352_0 = flags & 1;
     flags >>= 1;
-    field_352_1 = flags;
+    field_352_1 = flags & 1;
     flags >>= 1;
-    field_352_2 = flags;
+    field_352_2 = flags & 1;
     flags >>= 1;
-    field_352_3 = flags;
+    field_352_3 = flags & 1;
     flags >>= 1;
-    field_352_4 = flags;
+    field_352_4 = flags & 1;
     flags >>= 1;
-    field_352_5 = flags;
+    field_352_5 = flags & 1;
 }
-#endif
 
 // The IWRAM copy of the division routine (loc_819832C), as in FieldObject.
 #define IWRAM_DIV(a, b) (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(a, b))
