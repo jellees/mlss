@@ -2605,10 +2605,6 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
     return FALSE;
 }
 #endif
-// https://decomp.me/scratch/XdoXk
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804DBD0__20FieldPlayerCharacteri.s\"");
-#else
 bool FieldPlayerCharacter::sub_804DBD0(int mode) {
     s16* offsets;
     int high;
@@ -2671,7 +2667,7 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
                 && coldef->primaryHeight + coldef->gap == -coldef->secondaryHeight) {
                 continue;
             }
-            if (mode == 0 && coldef->floorType == 8 && !(coldef->tileFlags & 2)) {
+            if (mode == 0 && coldef->floorType == 8 && (coldef->tileFlags & 2)) {
                 continue;
             }
             return TRUE;
@@ -2679,7 +2675,6 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
     }
     return FALSE;
 }
-#endif
 
 // These are inline: sub_804DDF4 inlines sub_804FC90, and g++ emits the out-of-line copies at the end of the
 // file in reverse definition order (0x0804FC90, 0x0804FCD4, 0x0804FD3C).
