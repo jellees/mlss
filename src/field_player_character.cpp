@@ -737,7 +737,7 @@ u8* FieldPlayerCharacter::sub_8049FF4(u8* data) {
     return NULL;
 }
 
-// https://decomp.me/scratch/TODO
+// https://decomp.me/scratch/jzB50
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804A124__20FieldPlayerCharacterP12FieldStruct6PiT2bT4.s\"");
 #else
@@ -829,25 +829,25 @@ struct FieldStruct6* FieldPlayerCharacter::sub_804A124(struct FieldStruct6* entr
     while (TRUE) {
         if (left >= entries->left && right <= entries->right && top >= entries->top
             && bottom <= entries->bottom && field_26_1 == entries->layer) {
-            if (!filtered) {
-                *outX = x - (entries->left << 12);
-                *outY = y - (entries->top << 12);
-                return entries;
-            } else {
+            if (filtered) {
                 u8 type = entries->type;
 
-                if (directions[0] == type || directions[1] == type || directions[2] == type) {
-                    *outX = x - (entries->left << 12);
-                    *outY = y - (entries->top << 12);
-                    return entries;
+                if (directions[0] != type && directions[1] != type && directions[2] != type) {
+                    goto next;
                 }
             }
+            *outX = x - (entries->left << 12);
+            *outY = y - (entries->top << 12);
+            return entries;
         }
+    next:
         if (entries->last) {
-            return NULL;
+            break;
         }
         entries++;
     }
+
+    return NULL;
 }
 #endif
 
@@ -3645,65 +3645,73 @@ asm_unified(".include \"asm/nonmatching/sub_804F904__21FieldPlayerShotBullet.s\"
 // Puts this object on the floor below it.
 void FieldPlayerShotBullet::sub_804F904() {
     int lowestCeiling;
-    int highestTop;
+    int bestTop;
     int bottom;
     int floor;
     int ceiling;
-    int objectTop;
-    struct Coldef* coldef;
-    u32 shape;
-    int baseFloor;
+    int top;
+    struct Coldef* probe;
+    int topLimit;
+    int probeX;
+    int probeY;
+    int bestFloor;
     bool above;
 
     if (x == previousX && y == previousY && z == previousZ && height == previousHeight) {
         return;
     }
     lowestCeiling = 0xFFFFFF;
-    highestTop = 0;
+    bestTop = 0;
     bottom = z + height;
-    coldef = sub_803FBA4(map, x, y, &floor, &ceiling, &objectTop, TRUE, TRUE);
-    if (objectTop >= 0) {
-        shape = coldef->secondaryShape;
+    probe = sub_803FBA4(map, x, y, &floor, &ceiling, &top, TRUE, TRUE);
+    topLimit = top;
+    if (top >= 0 && probe->secondaryShape > 3 && probe->secondaryShape <= 6) {
+        topLimit += 0x1000;
     }
-    baseFloor = floor;
-    if (highestTop < objectTop) {
-        highestTop = objectTop;
+    bestFloor = floor;
+    if (bestTop < top) {
+        bestTop = top;
     }
-    sub_803FBA4(map, x - 0x100 + (boxWidth >> 1), y + 0x100 - boxDepth, &floor, &ceiling, &objectTop,
-                FALSE, TRUE);
+    probeX = x - 0x100;
+    probeY = y + 0x100;
+    sub_803FBA4(map, probeX + (boxWidth >> 1), probeY - boxDepth, &floor, &ceiling, &top, FALSE, TRUE);
     if (ceiling >= 0 && lowestCeiling > ceiling) {
         lowestCeiling = ceiling;
     }
+    if (lowestCeiling == 0xFFFFFF) {
+        lowestCeiling = 0;
+    }
     above = FALSE;
-    if (highestTop > 0) {
-        if (baseFloor >= highestTop) {
-            if (baseFloor > bottom) {
+    if (bestTop > 0) {
+        if (bestFloor >= bestTop) {
+            if (bestFloor > bottom) {
                 above = TRUE;
             }
-        } else if (highestTop <= bottom) {
+        } else if (bestTop <= bottom) {
             above = TRUE;
         }
     }
     if (above) {
-        height = bottom - highestTop;
+        height = bottom - bestTop;
         if (height < 0) {
             height = 0;
         }
-        z = highestTop;
+        z = bestTop;
         onTop = 1;
     } else {
-        height = bottom - baseFloor;
+        height = bottom - bestFloor;
         if (height < 0) {
             height = 0;
         }
-        z = baseFloor;
-        if (baseFloor + height < 0) {
+        z = bestFloor;
+        if (bestFloor + height < 0) {
             height = 0;
             z = 0;
         }
         onTop = 0;
     }
 }
+
 #endif
 
 struct Coldef* FieldPlayerShotBullet::sub_804FA30(int cellX, int cellY, int* floor, int* ceiling,
