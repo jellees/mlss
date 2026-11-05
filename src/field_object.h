@@ -154,7 +154,9 @@ public:
     s16 velocityY;
     u8 pad_246[0x2];
     s32 gravity;
+    // The absolute height you become airborne at.
     s32 airStartZ;
+    // The height from the floor you become airborne at.
     s32 airStartHeight;
     s32 jumpVelocity;
     s32 velocityZ;
