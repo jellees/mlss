@@ -335,10 +335,6 @@ void FieldManager::sub_8025ACC() {
     }
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8025C04__12FieldManageri.s\"");
-#else
 u8 FieldManager::sub_8025C04(int index) {
     FieldObject* object = objects[index];
     u8 result = 0;
@@ -371,8 +367,11 @@ u8 FieldManager::sub_8025C04(int index) {
             }
             if (overlap > 0) {
                 otherZ = other->z;
-                if (other->height > 0 || (other->height < 0 && other->previousHeight < 0)) {
-                    otherZ += other->height;
+                //! Possible fake match: otherTop is reused for the height (a new variable gives
+                //! different registers).
+                otherTop = other->height;
+                if (otherTop > 0 || (otherTop < 0 && other->previousHeight < 0)) {
+                    otherZ += otherTop;
                 }
                 if (otherZ <= z) {
                     overlap = otherZ + other->field_274 - z;
@@ -387,7 +386,6 @@ u8 FieldManager::sub_8025C04(int index) {
     }
     return result;
 }
-#endif
 
 bool FieldManager::sub_8025D24(int type) {
     if (field_12A > 1) {
