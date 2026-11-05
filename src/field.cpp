@@ -467,16 +467,11 @@ bool FieldManager::sub_8025E94() {
     return 0;
 }
 
-// https://decomp.me/scratch/TODO
-// Only register allocation differs. The original masks follower->direction with an extra `& 7` (the 7
-// lives in a register from the first player block), but an explicit `& 7` adds a stack slot.
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8025F28__12FieldManager.s\"");
-#else
 void FieldManager::sub_8025F28() {
     struct SaveSlot* slot = &dword_3000FFC->slots[stru_3000D40.slot];
     struct SaveSlotData* data = &slot->data;
-    struct SaveSlotPlayer* player;
+    struct SaveSlotPlayer* leaderData;
+    struct SaveSlotPlayer* followerData;
 
     data->field_0_0 = field_F8_6;
     data->field_0_1 = field_208_0;
@@ -491,32 +486,31 @@ void FieldManager::sub_8025F28() {
     data->field_0_19 = field_208_7;
     data->field_0_20 = word_3000D3C;
 
-    player = &data->field_4[luigiLeads];
-    player->field_0 = field_124;
-    player->field_2_0 = leader->direction;
-    player->field_4 = leader->x / 256;
-    player->field_6 = leader->y / 256;
-    player->field_8 = leader->z / 256;
-    player->field_A = leader->height / 256;
+    leaderData = &data->field_4[luigiLeads];
+    leaderData->field_0 = field_124;
+    leaderData->field_2_0 = leader->direction;
+    leaderData->field_4 = leader->x / 256;
+    leaderData->field_6 = leader->y / 256;
+    leaderData->field_8 = leader->z / 256;
+    leaderData->field_A = leader->height / 256;
 
-    player = &data->field_4[luigiLeads ^ 1];
+    followerData = &data->field_4[luigiLeads ^ 1];
     if (field_2D8_0 == 31) {
-        player->field_0 = field_124;
-        player->field_2_0 = follower->direction;
-        player->field_4 = follower->x / 256;
-        player->field_6 = follower->y / 256;
-        player->field_8 = follower->z / 256;
-        player->field_A = follower->height / 256;
+        followerData->field_0 = field_124;
+        followerData->field_2_0 = follower->direction;
+        followerData->field_4 = follower->x / 256;
+        followerData->field_6 = follower->y / 256;
+        followerData->field_8 = follower->z / 256;
+        followerData->field_A = follower->height / 256;
     } else {
-        player->field_0 = field_2DA;
-        player->field_2_0 = field_2D8_5;
-        player->field_4 = field_2DC / 256;
-        player->field_6 = field_2E0 / 256;
-        player->field_8 = field_2E4 / 256;
-        player->field_A = field_2E8 / 256;
+        followerData->field_0 = field_2DA;
+        followerData->field_2_0 = field_2D8_5;
+        followerData->field_4 = field_2DC / 256;
+        followerData->field_6 = field_2E0 / 256;
+        followerData->field_8 = field_2E4 / 256;
+        followerData->field_A = field_2E8 / 256;
     }
 }
-#endif
 
 int FieldManager::sub_80261C0(FieldObject* object) {
     if (field_1F4 != 0) {
