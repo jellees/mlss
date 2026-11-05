@@ -45,8 +45,8 @@ struct FieldStruct6 {
 
 class FieldPlayerCharacter : public FieldObject {
   public:
-    u16 field_33C_0 : 7;
-    u16 field_33C_7 : 1;
+    u8 field_33C_0 : 7;
+    u8 field_33C_7 : 1;
     u16 field_33D_0 : 7; // method5's copy of field_33C_0
     u16 field_33D_7 : 1; // method5's copy of field_33C_7
     s8 field_33E;

@@ -584,8 +584,8 @@ extern s8 byte_83A0CD6[8][4]; // FieldPlayerShotBullet::sub_804EA68: sides to ch
 extern s16 word_83A0C66[];
 extern u8 byte_83A0C6C[];
 extern s16 word_83A0C70[];
-extern s16 word_83A0C76[][8][2];
-extern s16 word_839F564[8][2]; // Direction vectors
+extern s16 word_83A0C76[];
+extern s16 word_839F564[]; // Direction vectors
 extern u8 byte_801349C[][7]; // Packed sprite boxes, indexed by Sprite::field_16
 extern s16 word_83A0B88[][8][6]; // FieldPlayerCharacter::sub_804DBD0 probe offsets
 extern s16 word_83A0A78[][2][8][4]; // FieldPlayerCharacter::sub_804D734 hammer boxes per mode, half and direction

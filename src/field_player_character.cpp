@@ -2694,10 +2694,6 @@ inline void FieldPlayerCharacter::sub_804FC90() {
     }
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804DDF4__20FieldPlayerCharacterPP11FieldObjecti.s\"");
-#else
 // Finds the object this player character stands on (field_33E) among objects, and the one it stands on
 // top of with field_20C_1 > 1 (field_33C).
 void FieldPlayerCharacter::sub_804DDF4(FieldObject** objects, int count) {
@@ -2759,7 +2755,6 @@ void FieldPlayerCharacter::sub_804DDF4(FieldObject** objects, int count) {
         field_368->field_16_0 |= 1;
     }
 }
-#endif
 void FieldPlayerShotBullet::sub_804DFE8() {
     u16 animationSet;
     int buffer;
@@ -2790,10 +2785,6 @@ void FieldPlayerShotBullet::sub_804DFE8() {
     sprite->field_11_6 = flag;
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804E0D8__21FieldPlayerShotBulletiP11FieldObjecti.s\"");
-#else
 void FieldPlayerShotBullet::sub_804E0D8(int type, FieldObject* owner, int frame) {
     u8 value;
     int animation;
@@ -2826,18 +2817,18 @@ void FieldPlayerShotBullet::sub_804E0D8(int type, FieldObject* owner, int frame)
     z = previousZ = owner->z;
     height = previousHeight = owner->height + word_83A0C70[type];
     box = byte_801349C[sprite->field_16];
-    hitWidth = (((box[0] >> 3 << 1) & 0x3F) + 2) << 8;
-    hitHeight = ((((box[0] << 3) | (box[1] >> 5)) & 0x3F) + 1) << 8;
-    hitDepth = ((((box[1] << 1) | (box[2] >> 7)) & 0x3F) + 1) << 8;
-    boxWidth = (((box[2] >> 2 << 1) & 0x3F) + 2) << 8;
-    boxHeight = ((((box[2] << 4) | (box[3] >> 4)) & 0x3F) + 1) << 8;
-    boxDepth = ((((box[3] << 2) | (box[4] >> 6)) & 0x3F) + 1) << 8;
+    hitWidth = (((box[0] >> 3 << 1) & 0x3F) + 2) * 256;
+    hitHeight = ((((box[0] << 3) | (box[1] >> 5)) & 0x3F) + 1) * 256;
+    hitDepth = ((((box[1] << 1) | (box[2] >> 7)) & 0x3F) + 1) * 256;
+    boxWidth = (((box[2] >> 2 << 1) & 0x3F) + 2) * 256;
+    boxHeight = ((((box[2] << 4) | (box[3] >> 4)) & 0x3F) + 1) * 256;
+    boxDepth = ((((box[3] << 2) | (box[4] >> 6)) & 0x3F) + 1) * 256;
     speed = word_83A0C60[type];
-    velocityX = speed * word_839F564[direction][0] / 256;
-    velocityY = speed * word_839F564[direction][1] / 256;
-    duration = word_83A0C66[type] << 8;
-    x = owner->x + word_83A0C76[type][direction][0];
-    y = owner->y + word_83A0C76[type][direction][1];
+    velocityX = speed * word_839F564[direction * 2 + 0] / 256;
+    velocityY = speed * word_839F564[direction * 2 + 1] / 256;
+    duration = word_83A0C66[type] * 256;
+    x = owner->x + word_83A0C76[type * 16 + direction * 2 + 0];
+    y = owner->y + word_83A0C76[type * 16 + direction * 2 + 1];
     layer = direction >= 3 && direction <= 5 ? 13 : 14;
     map = owner->field_290;
     pushes = byte_83A0C6C[type];
@@ -2847,7 +2838,6 @@ void FieldPlayerShotBullet::sub_804E0D8(int type, FieldObject* owner, int frame)
     wallSides = 0;
     this->owner = owner;
 }
-#endif
 
 void FieldPlayerShotBullet::sub_804E33C(FieldObject** objects, int count) {
     if (!active) {
