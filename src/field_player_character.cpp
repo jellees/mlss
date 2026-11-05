@@ -3638,10 +3638,6 @@ u8 FieldPlayerShotBullet::sub_804EA68() {
 }
 #endif
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804F904__21FieldPlayerShotBullet.s\"");
-#else
 // Puts this object on the floor below it.
 void FieldPlayerShotBullet::sub_804F904() {
     int lowestCeiling;
@@ -3652,18 +3648,25 @@ void FieldPlayerShotBullet::sub_804F904() {
     int top;
     struct Coldef* probe;
     int topLimit;
-    int probeX;
-    int probeY;
     int bestFloor;
     bool above;
+    int result;
+    int offset;
+    int floorLimit;
 
     if (x == previousX && y == previousY && z == previousZ && height == previousHeight) {
         return;
     }
+    // Stripped-down copy of FieldPlayerCharacter's floor probes (see sub_804B360): lowestCeiling,
+    // floorLimit and topLimit are computed but never used.
     lowestCeiling = 0xFFFFFF;
     bestTop = 0;
     bottom = z + height;
     probe = sub_803FBA4(map, x, y, &floor, &ceiling, &top, TRUE, TRUE);
+    floorLimit = floor;
+    if (probe->primaryShape > 3) {
+        floorLimit += 0x1000;
+    }
     topLimit = top;
     if (top >= 0 && probe->secondaryShape > 3 && probe->secondaryShape <= 6) {
         topLimit += 0x1000;
@@ -3672,34 +3675,34 @@ void FieldPlayerShotBullet::sub_804F904() {
     if (bestTop < top) {
         bestTop = top;
     }
-    probeX = x - 0x100;
-    probeY = y + 0x100;
-    sub_803FBA4(map, probeX + (boxWidth >> 1), probeY - boxDepth, &floor, &ceiling, &top, FALSE, TRUE);
+    offset = 0x100;
+    sub_803FBA4(map, x - offset + (boxWidth >> 1), y + offset - boxDepth, &floor, &ceiling, &top, FALSE, TRUE);
     if (ceiling >= 0 && lowestCeiling > ceiling) {
         lowestCeiling = ceiling;
     }
     if (lowestCeiling == 0xFFFFFF) {
         lowestCeiling = 0;
     }
+    result = bottom;
     above = FALSE;
     if (bestTop > 0) {
         if (bestFloor >= bestTop) {
-            if (bestFloor > bottom) {
+            if (bestFloor > result) {
                 above = TRUE;
             }
-        } else if (bestTop <= bottom) {
+        } else if (bestTop <= result) {
             above = TRUE;
         }
     }
     if (above) {
-        height = bottom - bestTop;
+        height = result - bestTop;
         if (height < 0) {
             height = 0;
         }
         z = bestTop;
         onTop = 1;
     } else {
-        height = bottom - bestFloor;
+        height = result - bestFloor;
         if (height < 0) {
             height = 0;
         }
@@ -3711,8 +3714,6 @@ void FieldPlayerShotBullet::sub_804F904() {
         onTop = 0;
     }
 }
-
-#endif
 
 struct Coldef* FieldPlayerShotBullet::sub_804FA30(int cellX, int cellY, int* floor, int* ceiling,
                                                   int* top) {
