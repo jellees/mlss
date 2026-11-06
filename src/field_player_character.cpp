@@ -1496,7 +1496,9 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
     int useTop;
     int newHeight;
     int shape;
+    int edgeOffset;
 
+    edgeOffset = 0x100;
     if (force == 0) {
         if (!field_20C_0 || field_214_21) {
             goto settle;
@@ -1601,7 +1603,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         }
 
         // Probe 2: the right edge.
-        probeX = x - 0x100 + field_27E / 2;
+        probeX = x - edgeOffset + field_27E / 2;
         probeY = y;
         probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
                             TRUE, field_20C_11);
@@ -1632,7 +1634,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                     topLimit = bestTop + 0x1000;
                 }
             }
-            sub_803FBA4(field_290, x - 0x100 + (field_278 >> 1), y, &floor, &ceiling, &top, FALSE, field_20C_11);
+            sub_803FBA4(field_290, x - edgeOffset + (field_278 >> 1), y, &floor, &ceiling, &top, FALSE, field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
             }
@@ -1640,10 +1642,10 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
 
         // Probes 3 and 4: the back corners.
         below = get_coldef_ptr_by_xz(field_290, (x & ~0xFFF) / 0x1000,
-                                     (((y + 0x100) - field_280) & ~0xFFF) / 0x1000);
+                                     (((y + edgeOffset) - field_280) & ~0xFFF) / 0x1000);
         flagsLeft = 0;
         probeX = x - field_27E / 2;
-        probeY = (y + 0x100) - field_280;
+        probeY = (y + edgeOffset) - field_280;
         probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
                             TRUE, field_20C_11);
         if (probe->tileFlags
@@ -1685,15 +1687,15 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                 topCell = probe;
                 topProbe = 3;
             }
-            sub_803FBA4(field_290, x - (field_278 >> 1), y + 0x100 - field_27C, &floor, &ceiling, &top, FALSE, field_20C_11);
+            sub_803FBA4(field_290, x - (field_278 >> 1), y + edgeOffset - field_27C, &floor, &ceiling, &top, FALSE, field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
             }
         }
 
         flagsRight = 0;
-        probeX = x - 0x100 + field_27E / 2;
-        probeY = (y + 0x100) - field_280;
+        probeX = x - edgeOffset + field_27E / 2;
+        probeY = (y + edgeOffset) - field_280;
         probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
                             TRUE, field_20C_11);
         if (probe->tileFlags
@@ -1746,7 +1748,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                 topCell = probe;
                 topProbe = 4;
             }
-            sub_803FBA4(field_290, x - 0x100 + (field_278 >> 1), y + 0x100 - field_27C, &floor, &ceiling, &top, FALSE, field_20C_11);
+            sub_803FBA4(field_290, x - edgeOffset + (field_278 >> 1), y + edgeOffset - field_27C, &floor, &ceiling, &top, FALSE, field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
             }
@@ -1811,14 +1813,14 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                             bestTop += 0xFFF;
                             bestTop &= ~0xFFF;
                         } else if (topCell->secondaryShape == 6) {
-                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling,
+                            sub_803FBA4(field_290, x - edgeOffset + field_27E / 2, y, &floor, &ceiling,
                                         &top, 1, field_20C_11);
                             bestTop = top;
                         }
                         break;
                     case 3:
                         if ((u8)(topCell->secondaryShape - 4) <= 1) {
-                            probe = sub_803FBA4(field_290, x, (y + 0x100) - field_280, &floor,
+                            probe = sub_803FBA4(field_290, x, (y + edgeOffset) - field_280, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (topCell->tileFlags & probe->tileFlags) {
                                 if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
@@ -1848,7 +1850,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                         break;
                     case 4:
                         if ((u8)(topCell->secondaryShape - 4) <= 1) {
-                            probe = sub_803FBA4(field_290, x, (y + 0x100) - field_280, &floor,
+                            probe = sub_803FBA4(field_290, x, (y + edgeOffset) - field_280, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (topCell->tileFlags & probe->tileFlags) {
                                 if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
@@ -1863,7 +1865,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                                 bestTop &= ~0xFFF;
                             }
                         } else if (topCell->secondaryShape == 6) {
-                            probe = sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor,
+                            probe = sub_803FBA4(field_290, x - edgeOffset + field_27E / 2, y, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (probe->tileFlags & topCell->tileFlags) {
                                 if (floor < bestTop - 0x1000 || floor >= bestTop + 0x1000) {
@@ -1923,14 +1925,14 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                             bestFloor += 0xFFF;
                             bestFloor &= ~0xFFF;
                         } else if (shape == 6) {
-                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling,
+                            sub_803FBA4(field_290, x - edgeOffset + field_27E / 2, y, &floor, &ceiling,
                                         &top, 1, field_20C_11);
                             bestFloor = floor;
                         }
                         break;
                     case 3:
                         if ((u8)(shape - 4) <= 1) {
-                            probe = sub_803FBA4(field_290, x, (y + 0x100) - field_280, &floor,
+                            probe = sub_803FBA4(field_290, x, (y + edgeOffset) - field_280, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (floorCell->tileFlags & probe->tileFlags) {
                                 if (floor < bestFloor - 0x1000 || floor >= bestFloor + 0x1000) {
@@ -1952,7 +1954,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                         break;
                     case 4:
                         if ((u8)(shape - 4) <= 1) {
-                            probe = sub_803FBA4(field_290, x, (y + 0x100) - field_280, &floor,
+                            probe = sub_803FBA4(field_290, x, (y + edgeOffset) - field_280, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (floorCell->tileFlags & probe->tileFlags) {
                                 if (floor < bestFloor - 0x1000 || floor >= bestFloor + 0x1000) {
@@ -1967,7 +1969,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                                 bestFloor &= ~0xFFF;
                             }
                         } else if (shape == 6) {
-                            sub_803FBA4(field_290, x - 0x100 + field_27E / 2, y, &floor, &ceiling,
+                            sub_803FBA4(field_290, x - edgeOffset + field_27E / 2, y, &floor, &ceiling,
                                         &top, 1, field_20C_11);
                             bestFloor = floor;
                         }
@@ -2036,8 +2038,8 @@ settle:
     // Moving down: push the box out of the floors and surfaces that its four corners went into.
     if (field_20C_11 && (height != 0 || previousHeight != 0) && z + height < previousZ + previousHeight) {
         int left = x - (field_278 >> 1);
-        int right = (x - 0x100 + (field_278 >> 1) + 0xFF) & ~0xFF;
-        int front = y + 0x100 - field_27C;
+        int right = (x - edgeOffset + (field_278 >> 1) + 0xFF) & ~0xFF;
+        int front = y + edgeOffset - field_27C;
         int back = (y + 0xFF) & ~0xFF;
         int level = z + height;
         u16 onTop;
