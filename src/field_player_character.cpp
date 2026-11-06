@@ -1283,7 +1283,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
 }
 #endif
 
-// https://decomp.me/scratch/TODO
+// https://decomp.me/scratch/Cw5Jm
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804B028__20FieldPlayerCharacterP11FieldObject.s\"");
 #else
@@ -2348,7 +2348,7 @@ bool FieldPlayerCharacter::sub_804D18C() {
     return FALSE;
 }
 
-// https://decomp.me/scratch/TODO
+// https://decomp.me/scratch/lbDtE
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804D2CC__20FieldPlayerCharacter.s\"");
 #else

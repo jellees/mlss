@@ -8,6 +8,7 @@
 // Close but not matching: only the registers of the IWRAM heap end (r5) and heap + 0x200 (r6) are
 // swapped. The EWRAM heap is an integer address: as a symbol, its label would be stored relative to
 // the heap register instead of through its own address constant.
+// https://decomp.me/scratch/Cp7pf
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/init_heap.s\"");
 #else
