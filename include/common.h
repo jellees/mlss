@@ -7,6 +7,7 @@ extern "C" {
 // Structs
 // Defined in src/process.h.
 struct Process;
+struct FieldManager;
 
 struct struc_3000388 {
     u16 field_0;
