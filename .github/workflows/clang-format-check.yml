@@ -6,9 +6,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Run clang-format style check for C/C++/Protobuf programs.
-      uses: jidicula/clang-format-action@v4.10.1
-      with:
-        clang-format-version: '23'
-        check-path: 'src'
-        fallback-style: 'Mozilla' # optional
+    # Same clang-format version as the one bundled with the VS Code C/C++ extension (23.1.1), so
+    # formatting in the editor gives exactly what this check expects.
+    - name: Install clang-format
+      run: pip install clang-format==23.1.1
+    - name: Run clang-format style check
+      run: |
+        clang-format --version
+        find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -print0 \
+          | xargs -0 clang-format --style=file:.clang-format --dry-run --Werror
