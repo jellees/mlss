@@ -9,6 +9,7 @@ void init_heap() {
     gIwramHeap.previous = NULL;
     gIwramHeap.next = NULL;
     gIwramHeap.size = ((u32)gIwramHeapEnd - 0x200 - (u32)&gIwramHeap) | HEAP_BLOCK_FREE;
+    
     for (i = 0; i < 4; i++) {
         gIwramHeap.label[i] = "FREE"[i];
     }
@@ -17,11 +18,9 @@ void init_heap() {
     EWRAM_HEAP->previous = NULL;
     EWRAM_HEAP->next = NULL;
     EWRAM_HEAP->size = EWRAM_HEAP_SIZE | HEAP_BLOCK_FREE;
-    {
-        int j;
-        for (j = 0; j < 4; j++) {
-            EWRAM_HEAP->label[j] = "FREE"[j];
-        }
+
+    for (i = 0; i < 4; i++) {
+        EWRAM_HEAP->label[i] = "FREE"[i];
     }
 }
 
