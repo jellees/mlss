@@ -18,14 +18,14 @@ Sign::Sign(u8 priority, char* label, u16 roomId) : Process(priority, label) {
     scrollY = 0;
     width = 0;
     height = 0;
-    centerX = 120;
-    centerY = 80;
+    mapPositionX = 120;
+    mapPositionY = 80;
 
     for (entry = stru_83A0D2C; entry->roomId != 0xFFFF; entry++) {
         if (entry->roomId == roomId) {
             mapRoomId = entry->mapRoomId;
-            centerX = entry->centerX;
-            centerY = entry->centerY;
+            mapPositionX = entry->mapPositionX;
+            mapPositionY = entry->mapPositionY;
             break;
         }
     }
@@ -75,9 +75,9 @@ void Sign::update() {
                 arrows[i]->yPosition = word_83A0E64[i * 2 + 1];
             }
 
-            field_3C = sub_8020DD0(0, 0x80FD, 1, -1, -1, -1, -1);
-            sub_801E150(field_3C, 0, -1, 0, 0);
-            field_3C->field_1F_0 = 2;
+            youAreHere = sub_8020DD0(0, 0x80FD, 1, -1, -1, -1, -1);
+            sub_801E150(youAreHere, 0, -1, 0, 0);
+            youAreHere->field_1F_0 = 2;
             renderer->enable();
             sub_805A0EC(map, 2, &width, &height);
             state = 1;
@@ -89,16 +89,16 @@ void Sign::update() {
             }
 
             panm->enable();
-            sprite_show_8020CBC(field_3C);
-            scrollX = centerX - 120;
-            scrollY = centerY - 88;
+            sprite_show_8020CBC(youAreHere);
+            scrollX = mapPositionX - 120;
+            scrollY = mapPositionY - 88;
             sub_8051ACC();
             sub_8051A00();
             state = 2;
             break;
 
         case 2:
-            if (field_3C->field_13_0 != 0) {
+            if (youAreHere->field_13_0 != 0) {
                 break;
             }
 
@@ -143,8 +143,8 @@ void Sign::update() {
 }
 
 void Sign::sub_8051A00() {
-    field_3C->xPosition = centerX - scrollX;
-    field_3C->yPosition = centerY - scrollY;
+    youAreHere->xPosition = mapPositionX - scrollX;
+    youAreHere->yPosition = mapPositionY - scrollY;
 
     if (scrollY == 0) {
         sprite_hide_8021F20(arrows[0]);

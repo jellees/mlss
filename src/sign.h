@@ -22,11 +22,14 @@ class SignRenderer : public Process {
 
 // Entries of stru_83A0D2C, terminated by room 0xFFFF.
 // Should check where these entries are stored in rom later. Maybe they are part of this file.
+// Ok this is trippy so I should explain it here:
+// This struct is basically a conversion from the roomId you're in, to the roomId that has the map
+// graphics. So a map is basically just a normal room that only has graphics, the map that you can view.
 struct SignMapEntry {
     u16 roomId;
     u16 mapRoomId;
-    u16 centerX;
-    u16 centerY;
+    u16 mapPositionX;
+    u16 mapPositionY;
 };
 
 class Sign : public Process {
@@ -35,14 +38,16 @@ class Sign : public Process {
     s16 scrollY;
     u16 width;
     u16 height;
-    u16 mapRoomId;   // Room whose map is shown: 0x200 unless roomId is in stru_83A0D2C
-    u16 centerX; // 120 unless the room is in stru_83A0D2C
-    u16 centerY; // 80 unless the room is in stru_83A0D2C
+    u16 mapRoomId; // Room whose map is shown: 0x200 unless roomId is in stru_83A0D2C
+    // Position of the sign ("you are here") on the map; the map opens centered on it.
+    // (120, 80) unless the room is in stru_83A0D2C
+    u16 mapPositionX;
+    u16 mapPositionY;
     u16 roomId;
     // Scroll arrows: up (shown unless scrollY is 0), right (unless scrollX is width - 240), down
     // (unless scrollY is height - 160) and left (unless scrollX is 0)
     struct Sprite* arrows[4];
-    struct Sprite* field_3C; // Positioned at center - scroll
+    struct Sprite* youAreHere; // Miniature sign board at mapPosition - scroll
     SignRenderer* renderer;  // "SBDR"
     S_MP* map;               // "S_MP"
     Process* panm;           // "PANM", made by init_ybpa_process_8114B4C
