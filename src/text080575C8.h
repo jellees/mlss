@@ -43,11 +43,16 @@ class S_MP : public Process {
     u8 padAC[0x4CC];
     u8 field_578;
     Process* panm; // 0x57C
-    u8 pad580[0x1C];
+    u8 pad580[0x4];
+    u8 field_584; // Set while sub_805C6B8 has something to clean up
+    u8 pad585[0x17];
 
     S_MP(u8 priority, char* label, u16 arg2, s16 scrollX, s16 scrollY, Process* panm);
+    ~S_MP();
     virtual void update();
     void sub_8059EC8(u16 arg1);
+    void sub_8057BE4();
+    void sub_805C6B8();
 };
 
 #endif

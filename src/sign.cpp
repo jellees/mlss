@@ -49,7 +49,7 @@ Sign::Sign(u8 priority, char* label, u16 room) : Process(priority, label) {
 inline Sign::~Sign() {
     sub_8021FD4();
     if (map) {
-        sub_8057B58(map, 3);
+        delete map;
     }
     if (renderer) {
         delete renderer;

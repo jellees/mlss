@@ -162,7 +162,7 @@ FieldManager::~FieldManager() {
         sub_805C73C(field_308, 3);
     }
     if (field_304) {
-        sub_8057B58(field_304, 3);
+        delete field_304;
     }
     sub_80292EC(this);
     operator delete(field_1C);
@@ -1096,7 +1096,7 @@ void FieldManager::sub_8027688() {
     field_FC_0 = 1;
     sub_80273E4();
     if (field_304) {
-        sub_8057B58(field_304, 3);
+        delete field_304;
         field_304 = NULL;
     }
     runtime_install_interrupt_callback(2, NULL);
@@ -1116,7 +1116,7 @@ void FieldManager::sub_802772C() {
     field_FC_0 = 1;
     sub_80273E4();
     if (field_304) {
-        sub_8057B58(field_304, 3);
+        delete field_304;
         field_304 = NULL;
     }
     runtime_install_interrupt_callback(2, NULL);

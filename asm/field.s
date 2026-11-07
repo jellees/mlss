@@ -381,7 +381,7 @@ _08027CDE:
 	cmp r0, #0x00
 	beq _08027CFA
 	movs r1, #0x03
-	bl sub_8057B58
+	bl _._4S_MP
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _08027CFA:
@@ -811,7 +811,7 @@ _08028050:
 	cmp r0, #0x00
 	beq _08028064
 	movs r1, #0x03
-	bl sub_8057B58
+	bl _._4S_MP
 	str r6, [r4, #0x00]
 _08028064:
 	movs r0, #0x02
@@ -947,7 +947,7 @@ sub_802814C:
 	cmp r0, #0x00
 	beq _0802817E
 	movs r1, #0x03
-	bl sub_8057B58
+	bl _._4S_MP
 	movs r0, #0x00
 	str r0, [r5, #0x00]
 _0802817E:
@@ -2815,7 +2815,7 @@ sub_8028FBC:
 	cmp r0, #0x00
 	beq _08028FEA
 	movs r1, #0x03
-	bl sub_8057B58
+	bl _._4S_MP
 	movs r0, #0x00
 	str r0, [r5, #0x00]
 _08028FEA:
@@ -3813,7 +3813,7 @@ sub_8029788:
 	lsls r2, r2, #0x02
 	adds r0, r1, r2
 	ldr r0, [r0, #0x00]
-	bl sub_805C6B8
+	bl sub_805C6B8__4S_MP
 _080297A6:
 	ldrh r0, [r4, #0x00]
 	movs r2, #0xF0

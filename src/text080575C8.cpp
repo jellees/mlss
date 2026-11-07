@@ -197,3 +197,54 @@ S_MP::S_MP(u8 priority, char* label, u16 arg2, s16 scrollX, s16 scrollY, Process
     BUFFER_REG_BG3CNT = (BGCNT_TXT512x256 | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(4)) | bg3Priority;
     field_578 = 0;
 }
+
+S_MP::~S_MP() {
+    if (field_584) {
+        sub_805C6B8();
+    }
+    sub_80184F4((void*)VRAM);
+    delete[] cmpw;
+    delete[] midt;
+    delete[] mids;
+    delete[] mpcl;
+    delete[] mpdw;
+    delete[] mapw;
+}
+
+void S_MP::sub_8057BE4() {
+    u8 bg1Priority;
+    u8 bg2Priority;
+    u8 bg3Priority;
+    u8 mode;
+
+    field_1C = -5;
+    field_578 = 1;
+    cmpw = new (1, "CMPW", 0) u8[0x2000];
+    CpuFastFill(0, cmpw, 0x2000);
+
+    mode = stru_3000DD0.field_2 & 0x60;
+    bg1Priority = 0;
+    bg2Priority = 0;
+    bg3Priority = 0;
+    switch (mode) {
+        case 0:
+            bg1Priority = 1;
+            bg2Priority = 2;
+            bg3Priority = 3;
+            break;
+        case 0x20:
+            bg1Priority = 1;
+            bg2Priority = 3;
+            bg3Priority = 2;
+            break;
+        case 0x40:
+            bg1Priority = 2;
+            bg2Priority = 3;
+            bg3Priority = 1;
+            break;
+    }
+
+    BUFFER_REG_BG1CNT = (BGCNT_TXT512x256 | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(0)) | bg1Priority;
+    BUFFER_REG_BG2CNT = (BGCNT_TXT512x256 | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(2)) | bg2Priority;
+    BUFFER_REG_BG3CNT = (BGCNT_TXT512x256 | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(4)) | bg3Priority;
+}

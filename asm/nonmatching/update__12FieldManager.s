@@ -993,7 +993,7 @@ _08022E4A:
 	cmp r5, #0x00
 	beq _08022E7C
 	adds r0, r5, #0x0
-	bl sub_8057BE4
+	bl sub_8057BE4__4S_MP
 	ldr r0, [r6, #0x00]
 	bl enable__7Process
 	b _08022EAA

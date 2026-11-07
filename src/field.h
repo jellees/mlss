@@ -3,6 +3,7 @@
 
 #include "process.h"
 #include "asm_processes.h"
+#include "text080575C8.h"
 #include "field_object.h"
 #include "field_player_character.h"
 #include "field_monster.h"
@@ -254,7 +255,7 @@ class FieldManager : public Process {
     s32 field_2E4;
     s32 field_2E8;
     u8 pad_2EC[0x18];
-    Process* field_304;
+    S_MP* field_304;
     Process* field_308;
     Process* field_30C;
     FieldProcess803EA00* field_310;
