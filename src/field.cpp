@@ -4,6 +4,7 @@
 #include "common.h"
 #include "heap.h"
 #include "field.h"
+#include "sign.h"
 
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/init_fldm_8021FF8.s\"");
@@ -1102,7 +1103,7 @@ void FieldManager::sub_8027688() {
     if (dword_3000C78 == NULL) {
         dword_3000C78 = sub_800063C;
     }
-    sub_8051628(operator new(0x4C, 0, "SIGN", 0), 8, "SIGN", field_124);
+    new (0, "SIGN", 0) Sign(8, "SIGN", field_124);
 }
 
 // Like sub_8027688, but ends with sub_812F5A4 instead of the "SIGN" process.

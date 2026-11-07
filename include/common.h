@@ -451,7 +451,6 @@ void sub_8122BA0(int, int);
 void sub_812F5A4(int, int);
 void stop_all_sfx_801959C(void);
 void sub_803C8A4(struct FieldManager*, int, int);
-struct Process* sub_8051628(void*, u8, char*, u16); // Constructor of the "SIGN" process
 void sub_80FAFD8(void*, int);
 void sub_81166AC(struct Process*, int);
 void popup_animate(struct Popup*);
