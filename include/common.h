@@ -510,7 +510,6 @@ void sub_8018A4C(u32);
 struct EventScriptProcess* bevs_process_init_80F048C(void*, int, u8, char*);
 struct EventScriptProcess* evts_process_init_80EF3FC(void*, int, u8, char*);
 void sub_819A138(void*, u32);
-void sub_8057C9C(struct Process*, s16, s16);
 void sub_805A0EC(struct Process*, int, u16*, u16*);
 void sub_805C73C(struct Process*, u32);
 void sub_805CCC0(struct Process*, u32);

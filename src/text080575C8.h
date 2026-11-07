@@ -52,6 +52,7 @@ class S_MP : public Process {
     virtual void update();
     void sub_8059EC8(u16 arg1);
     void sub_8057BE4();
+    u8 sub_8057C9C(s16 x, s16 y);
     void sub_805C6B8();
 };
 

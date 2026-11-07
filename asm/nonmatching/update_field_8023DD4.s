@@ -2795,7 +2795,7 @@ _08025444:
 	add r2, r10
 	movs r3, #0x00
 	ldsh r2, [r2, r3]
-	bl sub_8057C9C
+	bl sub_8057C9C__4S_MPss
 	ldr r4, [sp, #0x040]
 	ldrb r7, [r4, #0x00]
 	movs r0, #0x04

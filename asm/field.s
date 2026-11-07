@@ -1524,7 +1524,7 @@ _080285FC:
 	ldsh r1, [r3, r2]
 	movs r3, #0x00
 	ldsh r2, [r7, r3]
-	bl sub_8057C9C
+	bl sub_8057C9C__4S_MPss
 _08028610:
 	movs r7, #0x9D
 	lsls r7, r7, #0x02

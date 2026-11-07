@@ -192,5 +192,5 @@ void Sign::sub_8051ACC() {
         scrollY = height - 160;
     }
 
-    sub_8057C9C(map, scrollX, scrollY);
+    map->sub_8057C9C(scrollX, scrollY);
 }

@@ -248,3 +248,30 @@ void S_MP::sub_8057BE4() {
     BUFFER_REG_BG2CNT = (BGCNT_TXT512x256 | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(2)) | bg2Priority;
     BUFFER_REG_BG3CNT = (BGCNT_TXT512x256 | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(4)) | bg3Priority;
 }
+
+// Sets the scroll position of layer 2, clamped to its size. Returns the edges it was clamped to
+// (1: top, 2: bottom, 4: left, 8: right).
+u8 S_MP::sub_8057C9C(s16 x, s16 y) {
+    u8 edges = 0;
+    int layer = 2;
+
+    if (x <= 0) {
+        x = 0;
+        edges = 4;
+    } else if (x >= width[layer] - 240) {
+        x = width[layer] - 240;
+        edges = 8;
+    }
+
+    if (y <= 0) {
+        y = 0;
+        edges |= 1;
+    } else if (y >= height[layer] - 160) {
+        y = height[layer] - 160;
+        edges |= 2;
+    }
+
+    field_66[layer] = x - layerX[layer];
+    field_6C[layer] = y - layerY[layer];
+    return edges;
+}
