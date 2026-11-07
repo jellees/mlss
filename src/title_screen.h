@@ -70,14 +70,14 @@ enum TitleScreenSuitcaseVisualStates {
 
 // Declared in reverse order of their vtables in the ROM: g++ emits vtables in reverse.
 class SpriteRenderer : public Process {
-public:
+  public:
     SpriteRenderer(u8 priority, char* label) : Process(priority, label) {
     }
     virtual void update();
 };
 
 class CompanyIntro : public Process {
-public:
+  public:
     s8 brightness;
     u8 flags : 1;
     s32 verticalOffset;
@@ -98,7 +98,7 @@ public:
 };
 
 class MarioBrosScoreVisual : public Process {
-public:
+  public:
     char topScore[6];
     char pScore[2];
 
@@ -107,7 +107,7 @@ public:
 };
 
 class TitleScreen : public Process {
-public:
+  public:
     s8 brightness;
     u8 suitcaseVisualState : 2;
     // Index to the state after fade in.

@@ -822,7 +822,8 @@ void FieldManager::sub_8026C78() {
             case 0x00:
             case 0x20:
             case 0x40: {
-                FieldObjectSubclass3* object = new (1, "SBLK", 1) FieldObjectSubclass3(entry, index, -1, -1);
+                FieldObjectSubclass3* object =
+                    new (1, "SBLK", 1) FieldObjectSubclass3(entry, index, -1, -1);
 
                 if ((flags & 0x10) && object->field_33C_0) {
                     object->field_20C_25 = 0;
@@ -839,13 +840,13 @@ void FieldManager::sub_8026C78() {
             case 0xA0:
             case 0xC0:
                 field_134[field_1F4].field_0_0 = flags != 0xA0;
-                field_134[field_1F4].field_0_1
-                    = sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, (u16)(index + 0x1360));
+                field_134[field_1F4].field_0_1 =
+                    sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, (u16)(index + 0x1360));
                 field_134[field_1F4].field_1 = entry[1];
                 field_134[field_1F4].field_2 = entry[2];
                 offset = (u8)(entry[5] >> 1);
-                field_134[field_1F4].field_3
-                    = (entry[3] & 0x7F) + ((entry[5] & 0x20) ? (u32)(offset | ~0x1F) >> 3 : offset >> 3);
+                field_134[field_1F4].field_3 =
+                    (entry[3] & 0x7F) + ((entry[5] & 0x20) ? (u32)(offset | ~0x1F) >> 3 : offset >> 3);
                 field_134[field_1F4].field_4 = index;
                 field_134[field_1F4].field_8 = entry;
                 field_1F4++;
@@ -933,7 +934,8 @@ void FieldManager::sub_8027030(int mode, int arg2, u16 arg3, u16 arg4, u16 arg5)
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8027168__12FieldManageriiUsUs.s\"");
 #else
-// Not called anywhere. Like sub_8027030, for modes 6 and 7: starts a "WIPE" transition centered on (x, y).
+// Not called anywhere. Like sub_8027030, for modes 6 and 7: starts a "WIPE" transition centered on (x,
+// y).
 void FieldManager::sub_8027168(int mode, int arg2, u16 x, u16 y) {
     s16 dx;
     s16 dy;
@@ -972,8 +974,8 @@ void FieldManager::sub_8027168(int mode, int arg2, u16 x, u16 y) {
                 dy = 0xA0 - dy;
             }
             field_106 = ((int (*)(int))dword_3001038)(dx * dx + dy * dy);
-            field_318 = sub_8079D1C(operator new(0x44, 0, "WIPE", 0), 1, "WIPE", mode + 8, arg2, &field_102, 3,
-                                    0x3E, sub_80292A0);
+            field_318 = sub_8079D1C(operator new(0x44, 0, "WIPE", 0), 1, "WIPE", mode + 8, arg2,
+                                    &field_102, 3, 0x3E, sub_80292A0);
             field_128 = 0;
             break;
     }
@@ -1128,10 +1130,13 @@ void FieldManager::sub_802772C() {
 
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_80277C4__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb.s\"");
+asm_unified(
+    ".include "
+    "\"asm/nonmatching/sub_80277C4__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb.s\"");
 #else
 // Not called anywhere. Prepares a battle between player and monster.
-void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMonster* monster, bool arg4) {
+void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMonster* monster,
+                               bool arg4) {
     FieldStruct2* fmex;
     int i;
 

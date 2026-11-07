@@ -32,7 +32,7 @@ enum OptionScreenStates {
 #pragma interface
 
 class SaveClearScreen : public Process {
-public:
+  public:
     u8 field_1C_0 : 1;
     s8 brightness;
     u8* bwcw;
@@ -54,7 +54,7 @@ public:
 };
 
 class MarioBrosSaveError : public Process {
-public:
+  public:
     u8 brightness;
     u8* bwcw;
     u8* field_24;

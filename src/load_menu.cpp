@@ -771,8 +771,7 @@ void LoadMenu::sub_8126C3C() {
                     && (this->entries[slot].field_18 == 2 || this->entries[slot].field_18 == i)) {
                     this->sprites[index] =
                         sub_8020DD0(0, this->entries[slot].items[i].id, 1, -1, -1, -1, -1);
-                    sub_801E150(this->sprites[index], this->entries[slot].items[i].field_2, -1,
-                                0, 0);
+                    sub_801E150(this->sprites[index], this->entries[slot].items[i].field_2, -1, 0, 0);
                     sub_801E150(this->sprites[index], this->entries[slot].items[i].field_2,
                                 this->entries[slot].items[i].field_3, 0, 0);
                     sprite_show_8020CBC(this->sprites[index]);

@@ -10,7 +10,7 @@
 #pragma interface
 
 class OptionsMenu : public Process {
-public:
+  public:
     s8 brightness;
     s8 field_1D;
     Process* odtr;
@@ -42,7 +42,7 @@ public:
 };
 
 class OptionsRenderer : public Process {
-public:
+  public:
     OptionsRenderer(u8 priority, char* label) : Process(priority, label) {
     }
     virtual void update();

@@ -3,14 +3,14 @@
 
 // Objects on the field (Mario, Luigi, NPCs, ...). FieldObject is implemented in src/field_object.cpp
 // (0x0803FEB8-0x08048064), which has `#pragma implementation` for this header: it emits the vtable
-// (0x08CDBDE8) and the out-of-line copies of the inline members at the end of its .text. g++ emits those
-// in reverse order of definition: the inline members defined in field_object.cpp (sub_8047DC8 first, method4
-// last), then the ones defined in this class (~FieldObject).
+// (0x08CDBDE8) and the out-of-line copies of the inline members at the end of its .text. g++ emits
+// those in reverse order of definition: the inline members defined in field_object.cpp (sub_8047DC8
+// first, method4 last), then the ones defined in this class (~FieldObject).
 #pragma interface
 
-// FieldObject::state. The base class only sets the generic values below (sub_804034C, from the physics);
-// subclasses use higher values for their own actions (FieldPlayerCharacter: 4, 5 = hammer, 7 = hammer
-// hits, 10, ...). method6 re-applies the animation when it changes.
+// FieldObject::state. The base class only sets the generic values below (sub_804034C, from the
+// physics); subclasses use higher values for their own actions (FieldPlayerCharacter: 4, 5 = hammer, 7
+// = hammer hits, 10, ...). method6 re-applies the animation when it changes.
 enum FieldObjectState {
     FIELD_OBJECT_STATE_IDLE,
     FIELD_OBJECT_STATE_MOVING,
@@ -19,7 +19,7 @@ enum FieldObjectState {
 };
 
 class FieldObject {
-public:
+  public:
     s8 field_0;
     u8 field_1;
     u8 angle; // Facing angle 0-255 (direction = angle / 32)
@@ -30,11 +30,11 @@ public:
     s16 field_A;
     s32 x;
     s32 y;
-    s32 z; // Height of the floor the object is on
-    s32 height; // Height above that floor (the vertical position is z + height)
-    s32 field_1C; // Sort key (sub_8047C18): z plus the height of the object below (method14)
+    s32 z;                 // Height of the floor the object is on
+    s32 height;            // Height above that floor (the vertical position is z + height)
+    s32 field_1C;          // Sort key (sub_8047C18): z plus the height of the object below (method14)
     struct Coldef* coldef; // Collision cell the object stands on (method15)
-    u32 direction : 3; // Facing direction 0-7
+    u32 direction : 3;     // Facing direction 0-7
     u32 field_24_3 : 4;
     u32 field_24_7 : 2;
     u32 field_24_9 : 1;
@@ -269,8 +269,9 @@ public:
     struct Coldef* sub_80457E8(int cellX, int cellY, int* floor, int* ceiling, int* top);
     int sub_80458B0();
     int sub_8045A94(int mode, int relative, int targetX, int targetY, int targetZ, u16 speed);
-    int sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6, int arg7, int arg8,
-                    u16 arg9, u16 arg10, u16 arg11, u16 angle, u16 speed, int direction, int flags);
+    int sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6, int arg7,
+                    int arg8, u16 arg9, u16 arg10, u16 arg11, u16 angle, u16 speed, int direction,
+                    int flags);
     void sub_80461B4(FieldObject** objects);
     void sub_80465D8();
     void sub_8046980();
@@ -326,23 +327,23 @@ public:
     virtual ~FieldObject() {
     }
     virtual void method2(u16* arg1, u16* arg2, void* arg3); // 0x080403C4
-    virtual void method3(); // 0x080409F4
-    virtual void method4(); // 0x08047FDC, inline in field_object.cpp
-    virtual void method5(); // 0x08040020
-    virtual void method6(int arg); // 0x08040AE0
-    virtual void method7(u8 force); // 0x08040C50
-    virtual void method8(s16 cameraX, s16 cameraY, FieldObject** objects); // 0x08040CF4
-    virtual void method9(); // 0x08040FA0
+    virtual void method3();                                 // 0x080409F4
+    virtual void method4();                                 // 0x08047FDC, inline in field_object.cpp
+    virtual void method5();                                 // 0x08040020
+    virtual void method6(int arg);                          // 0x08040AE0
+    virtual void method7(u8 force);                         // 0x08040C50
+    virtual void method8(s16 cameraX, s16 cameraY, FieldObject** objects);            // 0x08040CF4
+    virtual void method9();                                                           // 0x08040FA0
     virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects); // 0x08041368
-    virtual void method11(); // 0x08047CE8
-    virtual void method12(FieldObject** others, int count, u8 flag); // 0x08041A2C
-    virtual int method13(); // 0x08041FFC
-    virtual void method14(FieldObject** objects, u8 arg); // 0x08047C68
-    virtual void method15(u8 arg); // 0x08044630
-    virtual void method16(int mode); // 0x08047B98
-    virtual void method17(); // 0x080459C0
-    virtual void method18(u8 index); // 0x08047858
-    virtual void method19(u8 index); // 0x08047804
+    virtual void method11();                                                          // 0x08047CE8
+    virtual void method12(FieldObject** others, int count, u8 flag);                  // 0x08041A2C
+    virtual int method13();                                                           // 0x08041FFC
+    virtual void method14(FieldObject** objects, u8 arg);                             // 0x08047C68
+    virtual void method15(u8 arg);                                                    // 0x08044630
+    virtual void method16(int mode);                                                  // 0x08047B98
+    virtual void method17();                                                          // 0x080459C0
+    virtual void method18(u8 index);                                                  // 0x08047858
+    virtual void method19(u8 index);                                                  // 0x08047804
 };
 
 #endif

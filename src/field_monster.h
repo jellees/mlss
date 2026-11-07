@@ -3,8 +3,8 @@
 
 #include "field_object.h"
 
-// "FMON" (Field Monster). Implemented in src/field_monster.cpp (0x0804FE68-0x080508A8), which also emits the
-// vtables (FieldMonster 0x08CDBF28, FieldObjectSubclass4 0x08CDBFC8) and the inline members.
+// "FMON" (Field Monster). Implemented in src/field_monster.cpp (0x0804FE68-0x080508A8), which also
+// emits the vtables (FieldMonster 0x08CDBF28, FieldObjectSubclass4 0x08CDBFC8) and the inline members.
 #pragma interface
 
 // "FMCH". Created by FieldMonster's constructor and stored in FieldMonster::field_344.
@@ -46,8 +46,8 @@ class FieldMonster : public FieldObject {
     void sub_80503CC();                // 0x080503CC
 
     // Overridden vtable slots; the others are inherited from FieldObject. Each override calls the
-    // FieldObject version and then forwards the call to field_344. All of these are inline and emitted at
-    // the end of field_monster.cpp, in reverse definition order.
+    // FieldObject version and then forwards the call to field_344. All of these are inline and emitted
+    // at the end of field_monster.cpp, in reverse definition order.
     virtual ~FieldMonster() { // slot 1, 0x08050850
         delete field_344;
     }

@@ -10,7 +10,7 @@
 
 // Declared outside extern "C": inside it, agbcp drops the destructor's vtable reset and delete.
 class Process {
-public:
+  public:
     u8 state;
     u8 priority;
     s16 flag : 1;

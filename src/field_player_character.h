@@ -4,9 +4,9 @@
 #include "field_object.h"
 
 // "FPC" (Field Player Character): Mario and Luigi (FieldManager::objects[0] / [1], and leader /
-// follower). Implemented in src/field_player_character.cpp (0x08048064-0x0804FE68), which also emits the
-// vtable (0x08CDBE88), the inline members and the implicit destructor (0x081DD5B0). That file also holds
-// FieldPlayerShotBullet ("FPSB").
+// follower). Implemented in src/field_player_character.cpp (0x08048064-0x0804FE68), which also emits
+// the vtable (0x08CDBE88), the inline members and the implicit destructor (0x081DD5B0). That file also
+// holds FieldPlayerShotBullet ("FPSB").
 #pragma interface
 
 // FieldManager::field_20C[2], one per player character (FieldPlayerCharacter::field_368).
@@ -27,7 +27,8 @@ struct FieldStruct4 {
     u8 field_17_7 : 1; // FieldPlayerCharacter::method5's copy of field_16_7
 };
 
-// 12-byte cell rectangles (FieldPlayerCharacter::sub_804A124). The list ends with the entry that has last set.
+// 12-byte cell rectangles (FieldPlayerCharacter::sub_804A124). The list ends with the entry that has
+// last set.
 struct FieldStruct6 {
     u32 left : 8; // In cells
     u32 top : 8;
@@ -84,9 +85,9 @@ class FieldPlayerCharacter : public FieldObject {
     u32 field_353_4 : 2; // Set from byte_83A0A38 (sub_804FC30)
     u32 field_353_6 : 1;
     u32 field_353_7 : 1; // method5's copy of field_353_6
-    s8 field_354;       // method5's copy of field_238
+    s8 field_354;        // method5's copy of field_238
     u8 field_355;
-    u16 field_356; // Saved field_218 (sub_8049AB4)
+    u16 field_356;       // Saved field_218 (sub_8049AB4)
     u16 field_358_0 : 3; // Saved direction (sub_8049AB4)
     u16 field_358_3 : 1;
     u16 field_358_4 : 8;
@@ -129,41 +130,41 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_384;
     u8 pad_386[0x6];
 
-    FieldPlayerCharacter(int room, int index); // 0x08048064
-    void sub_8048174(int arg);                  // 0x08048174
-    void sub_8049000(u16 animation);            // 0x08049000
-    void sub_80490CC(u8 arg);                   // 0x080490CC
-    void sub_8049224();                         // 0x08049224
-    void sub_80492DC();                         // 0x080492DC
-    void sub_8049370(u8 arg);                   // 0x08049370
-    void sub_8049430();                         // 0x08049430
-    void sub_80494D4();                         // 0x080494D4
-    void sub_804955C(int type);                 // 0x0804955C
-    void sub_80496B4();                         // 0x080496B4
-    void sub_80497A8();                         // 0x080497A8
-    void sub_80498B0();                         // 0x080498B0 (uncalled)
-    void sub_80499B8();                         // 0x080499B8
-    void sub_8049AB4(int mode, int animation);  // 0x08049AB4
-    void sub_8049BD8(int value);                // 0x08049BD8
-    void sub_8049C38(FieldObject** objects, int count); // 0x08049C38
-    u8 sub_804B028(FieldObject* other);                 // 0x0804B028
-    bool sub_804B25C(FieldObject* other);               // 0x0804B25C
-    void sub_804B360(u8 arg1, u8 arg2);                 // 0x0804B360
-    bool sub_804D0EC();                                 // 0x0804D0EC
-    bool sub_804D18C();                                 // 0x0804D18C
-    int sub_804D2CC();                                  // 0x0804D2CC
+    FieldPlayerCharacter(int room, int index);                    // 0x08048064
+    void sub_8048174(int arg);                                    // 0x08048174
+    void sub_8049000(u16 animation);                              // 0x08049000
+    void sub_80490CC(u8 arg);                                     // 0x080490CC
+    void sub_8049224();                                           // 0x08049224
+    void sub_80492DC();                                           // 0x080492DC
+    void sub_8049370(u8 arg);                                     // 0x08049370
+    void sub_8049430();                                           // 0x08049430
+    void sub_80494D4();                                           // 0x080494D4
+    void sub_804955C(int type);                                   // 0x0804955C
+    void sub_80496B4();                                           // 0x080496B4
+    void sub_80497A8();                                           // 0x080497A8
+    void sub_80498B0();                                           // 0x080498B0 (uncalled)
+    void sub_80499B8();                                           // 0x080499B8
+    void sub_8049AB4(int mode, int animation);                    // 0x08049AB4
+    void sub_8049BD8(int value);                                  // 0x08049BD8
+    void sub_8049C38(FieldObject** objects, int count);           // 0x08049C38
+    u8 sub_804B028(FieldObject* other);                           // 0x0804B028
+    bool sub_804B25C(FieldObject* other);                         // 0x0804B25C
+    void sub_804B360(u8 arg1, u8 arg2);                           // 0x0804B360
+    bool sub_804D0EC();                                           // 0x0804D0EC
+    bool sub_804D18C();                                           // 0x0804D18C
+    int sub_804D2CC();                                            // 0x0804D2CC
     bool sub_804D734(int mode, FieldObject** objects, int count); // 0x0804D734
-    bool sub_804DBD0(int mode);                         // 0x0804DBD0
-    void sub_804DDF4(FieldObject** objects, int count); // 0x0804DDF4
-    int sub_804FB3C();                                  // 0x0804FB3C
-    void sub_804FB64(FieldObject** objects, u8 arg1, u8 arg2); // 0x0804FB64
-    void sub_804FC30();                                 // 0x0804FC30
-    void sub_804FC90();                                 // 0x0804FC90
-    void sub_804FD3C();                                 // 0x0804FD3C
-    u8* sub_8049FF4(u8* data);                          // 0x08049FF4
+    bool sub_804DBD0(int mode);                                   // 0x0804DBD0
+    void sub_804DDF4(FieldObject** objects, int count);           // 0x0804DDF4
+    int sub_804FB3C();                                            // 0x0804FB3C
+    void sub_804FB64(FieldObject** objects, u8 arg1, u8 arg2);    // 0x0804FB64
+    void sub_804FC30();                                           // 0x0804FC30
+    void sub_804FC90();                                           // 0x0804FC90
+    void sub_804FD3C();                                           // 0x0804FD3C
+    u8* sub_8049FF4(u8* data);                                    // 0x08049FF4
     struct FieldStruct6* sub_804A124(struct FieldStruct6* entries, int* outX, int* outY, bool grounded,
                                      bool filtered); // 0x0804A124
-    void sub_804FCD4();                         // 0x0804FCD4
+    void sub_804FCD4();                              // 0x0804FCD4
 
     // Overridden vtable slots; the others are inherited from FieldObject. The destructor (slot 1) is
     // compiler-generated (a linkonce copy at 0x081DD5B0).
@@ -175,7 +176,7 @@ class FieldPlayerCharacter : public FieldObject {
     virtual void method11();                                               // 0x0804A4C8
     virtual void method12(FieldObject** others, int count, u8 flag);       // 0x0804A5D4
     virtual int method13();                                                // 0x0804FBDC
-    virtual void method18(u8 index) { // 0x0804FDF4
+    virtual void method18(u8 index) {                                      // 0x0804FDF4
         u32 savedField = field_214_0;
         u32 savedDirection = direction;
 
@@ -203,15 +204,17 @@ class FieldPlayerCharacter : public FieldObject {
     }
 };
 
-// "FPSB" (Field Player Shot Bullet): the water that Luigi gets out of Pump Mario. FieldManager::shotBullets[8]
-// holds the pool. A plain class without virtual functions, implemented between the FieldPlayerCharacter functions
-// (0x0804DFE8-0x0804FB3C). Each shot moves along the owner's direction, despawns after its duration, collides
-// with walls and floors and reports hits on objects to its owner (FieldPlayerCharacter::field_33C_0 etc.).
+// "FPSB" (Field Player Shot Bullet): the water that Luigi gets out of Pump Mario.
+// FieldManager::shotBullets[8] holds the pool. A plain class without virtual functions, implemented
+// between the FieldPlayerCharacter functions (0x0804DFE8-0x0804FB3C). Each shot moves along the owner's
+// direction, despawns after its duration, collides with walls and floors and reports hits on objects to
+// its owner (FieldPlayerCharacter::field_33C_0 etc.).
 enum FieldPlayerShotBulletType {
     // Luigi jumps: a column of droplets. One spawns per frame, round-robin through all 8 slots
     // (FieldManager::shotBulletIndex counts up); each lives about 6 frames.
     FIELD_PLAYER_SHOT_BULLET_JET = 2,
-    // Luigi's hammer: up to three slow water bubbles, in slots 2, 1, 0 (shotBulletIndex counts down from 3).
+    // Luigi's hammer: up to three slow water bubbles, in slots 2, 1, 0 (shotBulletIndex counts down
+    // from 3).
     FIELD_PLAYER_SHOT_BULLET_BUBBLE = 3,
     // Luigi's hand: Mario spits the water out in place (slot 0), used to water plants.
     FIELD_PLAYER_SHOT_BULLET_SPIT = 4,
@@ -243,14 +246,15 @@ class FieldPlayerShotBullet {
     s16 velocityY;
     u16 timer;    // Distance travelled
     u16 duration; // Range (word_83A0C66 << 8)
-    // Boxes unpacked from byte_801349C (sub_804E0D8): one for walls and floors, one for hitting objects.
+    // Boxes unpacked from byte_801349C (sub_804E0D8): one for walls and floors, one for hitting
+    // objects.
     u16 boxWidth;
     u16 boxHeight;
     u16 boxDepth;
     u16 hitWidth;
     u16 hitHeight;
     u16 hitDepth;
-    s8 frame; // Animation frame to restore (sub_804DFE8)
+    s8 frame;  // Animation frame to restore (sub_804DFE8)
     void* map; // The owner's collision map (FieldObject::field_290)
     struct Sprite* sprite;
     FieldObject* owner;

@@ -3,10 +3,10 @@
 
 #include "process.h"
 
-// "SIGN": the map shown when the player reads a sign on the field (created by FieldManager::sub_8027688).
-// The screen fades to black, then into the map, which can be scrolled; B fades back out.
-// Implemented in asm/sign.s (0x08051628-0x08051B98, vtables 0x08CDC1A8 and 0x08CDC1B8). Interface-only,
-// so that no file emits the vtables or inline members.
+// "SIGN": the map shown when the player reads a sign on the field (created by
+// FieldManager::sub_8027688). The screen fades to black, then into the map, which can be scrolled; B
+// fades back out. Implemented in asm/sign.s (0x08051628-0x08051B98, vtables 0x08CDC1A8 and 0x08CDC1B8).
+// Interface-only, so that no file emits the vtables or inline members.
 #pragma interface
 
 // "SBDR": the renderer of the sign (parentProcess is the Sign). Its update is the same as
@@ -34,8 +34,8 @@ class Sign : public Process {
     struct Sprite* arrowLeft;  // Shown unless scrollX is 0
     s16* field_3C;
     SignRenderer* renderer; // "SBDR"
-    Process* map;  // "S_MP"
-    Process* panm; // "PANM", made by init_ybpa_process_8114B4C
+    Process* map;           // "S_MP"
+    Process* panm;          // "PANM", made by init_ybpa_process_8114B4C
 
     Sign(u8 priority, char* label, u16 room);
     ~Sign();

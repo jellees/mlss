@@ -6,7 +6,7 @@
 #pragma interface
 
 class GameBoyPlayerLogo : public Process {
-public:
+  public:
     s8 brightness;
     u16 dpadInput;
     u16 previousDpadInput;

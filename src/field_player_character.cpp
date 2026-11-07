@@ -883,15 +883,17 @@ void FieldPlayerCharacter::method11() {
 }
 
 // The IWRAM copy of the division routine (loc_819832C), as in FieldObject.
-#define IWRAM_DIV(a, b) (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(a, b))
+#define IWRAM_DIV(a, b)                                                                                \
+    (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(a, b))
 
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/method12__20FieldPlayerCharacterPP11FieldObjectiUc.s\"");
 #else
-// Like FieldObject::method12 (collisions with the other objects), with a second pass into a FieldMonster's
-// FMCH, the closest object below in field_238, landing only on objects with field_20C_23, and a "squeeze"
-// mode (1: this object is above the other, 2: below) that scales the boxes by the height overlap.
+// Like FieldObject::method12 (collisions with the other objects), with a second pass into a
+// FieldMonster's FMCH, the closest object below in field_238, landing only on objects with
+// field_20C_23, and a "squeeze" mode (1: this object is above the other, 2: below) that scales the
+// boxes by the height overlap.
 void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
     int left;
     int top;
@@ -1071,7 +1073,8 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
                         otherOffset = IWRAM_DIV(otherOffset * overlap, other->field_274);
                         otherTop = other->y + otherOffset;
                         mode = 1;
-                    } else if (verticalThis == 0 && bottom <= otherBottom && other->previousHeight > 0) {
+                    } else if (verticalThis == 0 && bottom <= otherBottom
+                               && other->previousHeight > 0) {
                         width = IWRAM_DIV(width * overlap, field_274);
                         thisLeft = x - width / 2;
                         depth = IWRAM_DIV(depth * overlap, field_274);
@@ -1261,7 +1264,8 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
             if (pushOther) {
                 other->field_24_3 |= sideOther;
                 other->field_24_7 |= verticalOther;
-                //! \bug Probably meant to set other->field_0, like the block above does for this object.
+                //! \bug Probably meant to set other->field_0, like the block above does for this
+                //! object.
                 if (field_0 == -1) {
                     field_0 = other->field_54;
                 }
@@ -1459,8 +1463,8 @@ bool FieldPlayerCharacter::sub_804B25C(FieldObject* other) {
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_804B360__20FieldPlayerCharacterUcUc.s\"");
 #else
-// FieldObject::method15 for the player characters (floor and surface under the box, now also tracking the
-// lowest ceiling so a rising player bumps its head), followed by a step down out of solid cells
+// FieldObject::method15 for the player characters (floor and surface under the box, now also tracking
+// the lowest ceiling so a rising player bumps its head), followed by a step down out of solid cells
 // (sub_804D18C) and, when moving down, pushing the box out of what its four corners went into.
 void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
     int landed;
@@ -1567,8 +1571,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         // Probe 1: the left edge.
         probeX = x - field_27E / 2;
         probeY = y;
-        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
-                            TRUE, field_20C_11);
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, TRUE, field_20C_11);
         if (probe->primaryShape == 5) {
             floor -= field_27E / 2;
         }
@@ -1596,7 +1599,8 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                     topLimit = bestTop + 0x1000;
                 }
             }
-            sub_803FBA4(field_290, x - (field_278 >> 1), y, &floor, &ceiling, &top, FALSE, field_20C_11);
+            sub_803FBA4(field_290, x - (field_278 >> 1), y, &floor, &ceiling, &top, FALSE,
+                        field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
             }
@@ -1605,8 +1609,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         // Probe 2: the right edge.
         probeX = x - edgeOffset + field_27E / 2;
         probeY = y;
-        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
-                            TRUE, field_20C_11);
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, TRUE, field_20C_11);
         if (probe->primaryShape == 4) {
             floor += 0x100 - field_27E / 2;
         }
@@ -1634,7 +1637,8 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                     topLimit = bestTop + 0x1000;
                 }
             }
-            sub_803FBA4(field_290, x - edgeOffset + (field_278 >> 1), y, &floor, &ceiling, &top, FALSE, field_20C_11);
+            sub_803FBA4(field_290, x - edgeOffset + (field_278 >> 1), y, &floor, &ceiling, &top, FALSE,
+                        field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
             }
@@ -1646,8 +1650,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         flagsLeft = 0;
         probeX = x - field_27E / 2;
         probeY = (y + edgeOffset) - field_280;
-        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
-                            TRUE, field_20C_11);
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, TRUE, field_20C_11);
         if (probe->tileFlags
             && !(probe->primaryShape == 3 && probe->floorType == 8 && probe->secondaryShape == 3)) {
             flagsLeft = probe->tileFlags;
@@ -1687,7 +1690,8 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                 topCell = probe;
                 topProbe = 3;
             }
-            sub_803FBA4(field_290, x - (field_278 >> 1), y + edgeOffset - field_27C, &floor, &ceiling, &top, FALSE, field_20C_11);
+            sub_803FBA4(field_290, x - (field_278 >> 1), y + edgeOffset - field_27C, &floor, &ceiling,
+                        &top, FALSE, field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
             }
@@ -1696,8 +1700,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         flagsRight = 0;
         probeX = x - edgeOffset + field_27E / 2;
         probeY = (y + edgeOffset) - field_280;
-        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top,
-                            TRUE, field_20C_11);
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, TRUE, field_20C_11);
         if (probe->tileFlags
             && !(probe->primaryShape == 3 && probe->floorType == 8 && probe->secondaryShape == 3)) {
             flagsRight = probe->tileFlags;
@@ -1748,7 +1751,8 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                 topCell = probe;
                 topProbe = 4;
             }
-            sub_803FBA4(field_290, x - edgeOffset + (field_278 >> 1), y + edgeOffset - field_27C, &floor, &ceiling, &top, FALSE, field_20C_11);
+            sub_803FBA4(field_290, x - edgeOffset + (field_278 >> 1), y + edgeOffset - field_27C,
+                        &floor, &ceiling, &top, FALSE, field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
             }
@@ -1757,8 +1761,8 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         if (lowestCeiling == 0xFFFFFF) {
             lowestCeiling = 0;
         }
-        // Only step up onto a higher surface when coming from below it; bump into the lowest ceiling when
-        // rising.
+        // Only step up onto a higher surface when coming from below it; bump into the lowest ceiling
+        // when rising.
         result = current;
         landed = 0;
         if (current > previousBase) {
@@ -2036,7 +2040,8 @@ settle:
     }
 
     // Moving down: push the box out of the floors and surfaces that its four corners went into.
-    if (field_20C_11 && (height != 0 || previousHeight != 0) && z + height < previousZ + previousHeight) {
+    if (field_20C_11 && (height != 0 || previousHeight != 0)
+        && z + height < previousZ + previousHeight) {
         int left = x - (field_278 >> 1);
         int right = (x - edgeOffset + (field_278 >> 1) + 0xFF) & ~0xFF;
         int front = y + edgeOffset - field_27C;
@@ -2058,7 +2063,8 @@ settle:
         diagonal = 0;
         slopes = 0;
         corners = 0;
-        cells[0] = sub_803FBA4(field_290, left, front, &cornerFloor, &cornerCeiling, &cornerTop, TRUE, field_20C_11);
+        cells[0] = sub_803FBA4(field_290, left, front, &cornerFloor, &cornerCeiling, &cornerTop, TRUE,
+                               field_20C_11);
         if (field_26_2 == 0 && !(cells[0]->tileFlags & field_26_4)) {
             if (cells[0]->primaryShape > 3) {
                 cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
@@ -2098,127 +2104,130 @@ settle:
             }
         }
         if (diagonal == 0) {
-        cells[1] = sub_803FBA4(field_290, right, front, &cornerFloor, &cornerCeiling, &cornerTop, TRUE, field_20C_11);
-        if (field_26_2 == 0 && !(cells[1]->tileFlags & field_26_4)) {
-            if (cells[1]->primaryShape > 3) {
-                cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
-            }
-            if (cells[1]->secondaryShape - 4 <= 2u) {
-                cornerTop = (cornerTop + 0x1000) & ~0xFFF;
-            }
-        }
-        if (level > 0 && level < cornerFloor) {
-            int adjust = 0;
-
-            if (cells[1]->tileFlags) {
-                if (cells[1]->tileFlags & field_26_4) {
-                    adjust = 0x1000;
-                } else if (cells[1]->primaryShape == 4 || cells[1]->primaryShape == 6) {
-                    slopes |= 2;
+            cells[1] = sub_803FBA4(field_290, right, front, &cornerFloor, &cornerCeiling, &cornerTop,
+                                   TRUE, field_20C_11);
+            if (field_26_2 == 0 && !(cells[1]->tileFlags & field_26_4)) {
+                if (cells[1]->primaryShape > 3) {
+                    cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
+                }
+                if (cells[1]->secondaryShape - 4 <= 2u) {
+                    cornerTop = (cornerTop + 0x1000) & ~0xFFF;
                 }
             }
-            if (cornerFloor >= level + adjust) {
-                corners |= 2;
-            }
-        } else if (level >= cornerCeiling && level < cornerTop) {
-            int adjust = 0;
+            if (level > 0 && level < cornerFloor) {
+                int adjust = 0;
 
-            if (cells[1]->tileFlags) {
-                if (cells[1]->tileFlags & field_26_4) {
-                    adjust = 0x1000;
-                } else if (cells[1]->secondaryShape == 4 || cells[1]->secondaryShape == 6) {
-                    slopes |= 2;
+                if (cells[1]->tileFlags) {
+                    if (cells[1]->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    } else if (cells[1]->primaryShape == 4 || cells[1]->primaryShape == 6) {
+                        slopes |= 2;
+                    }
                 }
-            } else if (cells[1]->secondaryShape == 12) {
-                diagonal = cells[1]->secondaryShape;
-            }
-            if (cornerTop >= level + adjust) {
-                corners |= 2;
-                onTop |= 2;
-            }
-        }
-        if (diagonal == 0) {
-        cells[2] = sub_803FBA4(field_290, left, back, &cornerFloor, &cornerCeiling, &cornerTop, TRUE, field_20C_11);
-        if (field_26_2 == 0 && !(cells[2]->tileFlags & field_26_4)) {
-            if (cells[2]->primaryShape > 3) {
-                cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
-            }
-            if (cells[2]->secondaryShape - 4 <= 2u) {
-                cornerTop = (cornerTop + 0x1000) & ~0xFFF;
-            }
-        }
-        if (level > 0 && level < cornerFloor) {
-            int adjust = 0;
+                if (cornerFloor >= level + adjust) {
+                    corners |= 2;
+                }
+            } else if (level >= cornerCeiling && level < cornerTop) {
+                int adjust = 0;
 
-            if (cells[2]->tileFlags) {
-                if (cells[2]->tileFlags & field_26_4) {
-                    adjust = 0x1000;
-                } else if ((u8)(cells[2]->primaryShape - 5) <= 1) {
-                    slopes |= 4;
+                if (cells[1]->tileFlags) {
+                    if (cells[1]->tileFlags & field_26_4) {
+                        adjust = 0x1000;
+                    } else if (cells[1]->secondaryShape == 4 || cells[1]->secondaryShape == 6) {
+                        slopes |= 2;
+                    }
+                } else if (cells[1]->secondaryShape == 12) {
+                    diagonal = cells[1]->secondaryShape;
+                }
+                if (cornerTop >= level + adjust) {
+                    corners |= 2;
+                    onTop |= 2;
                 }
             }
-            if (cornerFloor >= level + adjust) {
-                corners |= 4;
-            }
-        } else if (level >= cornerCeiling && level < cornerTop) {
-            int adjust = 0;
-
-            if (cells[2]->tileFlags) {
-                if (cells[2]->tileFlags & field_26_4) {
-                    adjust = 0x1000;
-                } else if ((u8)(cells[2]->secondaryShape - 5) <= 1) {
-                    slopes |= 4;
+            if (diagonal == 0) {
+                cells[2] = sub_803FBA4(field_290, left, back, &cornerFloor, &cornerCeiling, &cornerTop,
+                                       TRUE, field_20C_11);
+                if (field_26_2 == 0 && !(cells[2]->tileFlags & field_26_4)) {
+                    if (cells[2]->primaryShape > 3) {
+                        cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
+                    }
+                    if (cells[2]->secondaryShape - 4 <= 2u) {
+                        cornerTop = (cornerTop + 0x1000) & ~0xFFF;
+                    }
                 }
-            } else if (cells[2]->secondaryShape == 15) {
-                diagonal = cells[2]->secondaryShape;
-            }
-            if (cornerTop >= level + adjust) {
-                corners |= 4;
-                onTop |= 4;
-            }
-        }
-        if (diagonal == 0) {
-        cells[3] = sub_803FBA4(field_290, right, back, &cornerFloor, &cornerCeiling, &cornerTop, TRUE, field_20C_11);
-        if (field_26_2 == 0 && !(cells[3]->tileFlags & field_26_4)) {
-            if (cells[3]->primaryShape > 3) {
-                cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
-            }
-            if (cells[3]->secondaryShape - 4 <= 2u) {
-                cornerTop = (cornerTop + 0x1000) & ~0xFFF;
-            }
-        }
-        if (level > 0 && level < cornerFloor) {
-            int adjust = 0;
+                if (level > 0 && level < cornerFloor) {
+                    int adjust = 0;
 
-            if (cells[3]->tileFlags) {
-                if (cells[3]->tileFlags & field_26_4) {
-                    adjust = 0x1000;
-                } else if (cells[3]->primaryShape == 4 || cells[3]->primaryShape == 6) {
-                    slopes |= 8;
+                    if (cells[2]->tileFlags) {
+                        if (cells[2]->tileFlags & field_26_4) {
+                            adjust = 0x1000;
+                        } else if ((u8)(cells[2]->primaryShape - 5) <= 1) {
+                            slopes |= 4;
+                        }
+                    }
+                    if (cornerFloor >= level + adjust) {
+                        corners |= 4;
+                    }
+                } else if (level >= cornerCeiling && level < cornerTop) {
+                    int adjust = 0;
+
+                    if (cells[2]->tileFlags) {
+                        if (cells[2]->tileFlags & field_26_4) {
+                            adjust = 0x1000;
+                        } else if ((u8)(cells[2]->secondaryShape - 5) <= 1) {
+                            slopes |= 4;
+                        }
+                    } else if (cells[2]->secondaryShape == 15) {
+                        diagonal = cells[2]->secondaryShape;
+                    }
+                    if (cornerTop >= level + adjust) {
+                        corners |= 4;
+                        onTop |= 4;
+                    }
+                }
+                if (diagonal == 0) {
+                    cells[3] = sub_803FBA4(field_290, right, back, &cornerFloor, &cornerCeiling,
+                                           &cornerTop, TRUE, field_20C_11);
+                    if (field_26_2 == 0 && !(cells[3]->tileFlags & field_26_4)) {
+                        if (cells[3]->primaryShape > 3) {
+                            cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
+                        }
+                        if (cells[3]->secondaryShape - 4 <= 2u) {
+                            cornerTop = (cornerTop + 0x1000) & ~0xFFF;
+                        }
+                    }
+                    if (level > 0 && level < cornerFloor) {
+                        int adjust = 0;
+
+                        if (cells[3]->tileFlags) {
+                            if (cells[3]->tileFlags & field_26_4) {
+                                adjust = 0x1000;
+                            } else if (cells[3]->primaryShape == 4 || cells[3]->primaryShape == 6) {
+                                slopes |= 8;
+                            }
+                        }
+                        if (cornerFloor >= level + adjust) {
+                            corners |= 8;
+                        }
+                    } else if (level >= cornerCeiling && level < cornerTop) {
+                        int adjust = 0;
+
+                        if (cells[3]->tileFlags) {
+                            if (cells[3]->tileFlags & field_26_4) {
+                                adjust = 0x1000;
+                            } else if (cells[3]->secondaryShape == 4 || cells[3]->secondaryShape == 6) {
+                                slopes |= 8;
+                            }
+                        } else if (cells[3]->secondaryShape == 13) {
+                            diagonal = cells[3]->secondaryShape;
+                        }
+                        if (cornerTop >= level + adjust) {
+                            corners |= 8;
+                            onTop |= 8;
+                        }
+                    }
                 }
             }
-            if (cornerFloor >= level + adjust) {
-                corners |= 8;
-            }
-        } else if (level >= cornerCeiling && level < cornerTop) {
-            int adjust = 0;
-
-            if (cells[3]->tileFlags) {
-                if (cells[3]->tileFlags & field_26_4) {
-                    adjust = 0x1000;
-                } else if (cells[3]->secondaryShape == 4 || cells[3]->secondaryShape == 6) {
-                    slopes |= 8;
-                }
-            } else if (cells[3]->secondaryShape == 13) {
-                diagonal = cells[3]->secondaryShape;
-            }
-            if (cornerTop >= level + adjust) {
-                corners |= 8;
-                onTop |= 8;
-            }
-        }
-        }
-        }
         }
         if (corners) {
             u8 push = 0;
@@ -2251,7 +2260,8 @@ settle:
             if (push & 1) {
                 int edge = (front + 0x1000) & ~0xFFF;
 
-                if (((onTop & 1) && cells[0]->secondaryShape == 8) || ((onTop & 2) && cells[1]->secondaryShape == 8)) {
+                if (((onTop & 1) && cells[0]->secondaryShape == 8)
+                    || ((onTop & 2) && cells[1]->secondaryShape == 8)) {
                     edge -= 0x800;
                 } else if ((onTop & 1) && cells[0]->secondaryShape == 14) {
                     edge -= left & 0xFFF;
@@ -2262,7 +2272,8 @@ settle:
             } else if (push & 4) {
                 int edge = back & ~0xFFF;
 
-                if (((onTop & 4) && cells[2]->secondaryShape == 9) || ((onTop & 8) && cells[3]->secondaryShape == 9)) {
+                if (((onTop & 4) && cells[2]->secondaryShape == 9)
+                    || ((onTop & 8) && cells[3]->secondaryShape == 9)) {
                     edge += 0x800;
                 } else if ((onTop & 4) && cells[2]->secondaryShape == 15) {
                     edge += left & 0xFFF;
@@ -2274,7 +2285,8 @@ settle:
             if (push & 8) {
                 int edge = (left + 0x1000) & ~0xFFF;
 
-                if (((onTop & 1) && cells[0]->secondaryShape == 11) || ((onTop & 4) && cells[2]->secondaryShape == 11)) {
+                if (((onTop & 1) && cells[0]->secondaryShape == 11)
+                    || ((onTop & 4) && cells[2]->secondaryShape == 11)) {
                     edge -= 0x800;
                 } else if ((onTop & 1) && cells[0]->secondaryShape == 14) {
                     edge -= front & 0xFFF;
@@ -2285,7 +2297,8 @@ settle:
             } else if (push & 2) {
                 int edge = right & ~0xFFF;
 
-                if (((onTop & 2) && cells[1]->secondaryShape == 10) || ((onTop & 8) && cells[3]->secondaryShape == 10)) {
+                if (((onTop & 2) && cells[1]->secondaryShape == 10)
+                    || ((onTop & 8) && cells[3]->secondaryShape == 10)) {
                     edge += 0x800;
                 } else if ((onTop & 2) && cells[1]->secondaryShape == 12) {
                     edge += front & 0xFFF;
@@ -2375,7 +2388,7 @@ int FieldPlayerCharacter::sub_804D2CC() {
     }
     mask = 1;
     count = sides & mask;
-    for (i = 4; ; ) {
+    for (i = 4;;) {
         mask <<= 1;
         if (--i == 0) {
             break;
@@ -2673,8 +2686,8 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
     return FALSE;
 }
 
-// These are inline: sub_804DDF4 inlines sub_804FC90, and g++ emits the out-of-line copies at the end of the
-// file in reverse definition order (0x0804FC90, 0x0804FCD4, 0x0804FD3C).
+// These are inline: sub_804DDF4 inlines sub_804FC90, and g++ emits the out-of-line copies at the end of
+// the file in reverse definition order (0x0804FC90, 0x0804FCD4, 0x0804FD3C).
 inline void FieldPlayerCharacter::sub_804FD3C() {
     field_214_0 = 4;
     sub_8049000(field_54 == 0 ? 0x103E : 0x1053);
@@ -3678,7 +3691,8 @@ void FieldPlayerShotBullet::sub_804F904() {
         bestTop = top;
     }
     offset = 0x100;
-    sub_803FBA4(map, x - offset + (boxWidth >> 1), y + offset - boxDepth, &floor, &ceiling, &top, FALSE, TRUE);
+    sub_803FBA4(map, x - offset + (boxWidth >> 1), y + offset - boxDepth, &floor, &ceiling, &top, FALSE,
+                TRUE);
     if (ceiling >= 0 && lowestCeiling > ceiling) {
         lowestCeiling = ceiling;
     }
@@ -3793,4 +3807,3 @@ void FieldPlayerCharacter::sub_804FC30() {
         field_353_4 = byte_83A0A38[(angle / 32) * 4 + field_26_2];
     }
 }
-
