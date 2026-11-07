@@ -77,6 +77,17 @@ struct GameState {
     void* field_8D0;
 };
 
+// Map header of the current room? (used by the map file at 0x080575C8)
+struct struc_3000DD0 {
+    u8 field_0;
+    u8 field_1;
+    u8 field_2;
+    u8 pad3[9];
+    u16 field_C;
+    u8 padE[4];
+    u16 field_12;
+};
+
 struct struc_3000D18 {
     u8 field_0_0 : 1;
     u8 field_0_1 : 3;
@@ -499,7 +510,6 @@ struct EventScriptProcess* bevs_process_init_80F048C(void*, int, u8, char*);
 struct EventScriptProcess* evts_process_init_80EF3FC(void*, int, u8, char*);
 void sub_819A138(void*, u32);
 void sub_8057B58(struct Process*, u32);
-struct Process* sub_80575C8(void*, u8, char*, u16, s16, s16, struct Process*);
 void sub_8057C9C(struct Process*, s16, s16);
 void sub_805A0EC(struct Process*, int, u16*, u16*);
 void sub_805C73C(struct Process*, u32);
@@ -549,6 +559,7 @@ extern struct EeprStruct1* dword_3000FFC;
 extern struct struc_3000FF4* dword_3000FF4;
 extern struct LoadMenuItem* dword_3000FF8;
 extern u8 byte_3000C80;
+extern struct struc_3000DD0 stru_3000DD0;
 extern struct struc_3000D40 stru_3000D40;
 extern struct FieldManager* dword_3000D7C;
 extern struct struc_3000D44* dword_3000D44;

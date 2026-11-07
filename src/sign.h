@@ -2,6 +2,7 @@
 #define SIGN_H
 
 #include "process.h"
+#include "text080575C8.h"
 
 // "SIGN": the map shown when the player reads a sign on the field (created by
 // FieldManager::sub_8027688). The screen fades to black, then into the map, which can be scrolled; B
@@ -43,7 +44,7 @@ class Sign : public Process {
     struct Sprite* arrows[4];
     struct Sprite* field_3C; // Positioned at center - scroll
     SignRenderer* renderer;  // "SBDR"
-    Process* map;            // "S_MP"
+    S_MP* map;               // "S_MP"
     Process* panm;           // "PANM", made by init_ybpa_process_8114B4C
 
     Sign(u8 priority, char* label, u16 room);

@@ -44,6 +44,7 @@ SECTIONS
         src/title_screen.o(.text);
         src/multiplayer_serial.o(.text);
         asm/text08057568.o(.text);
+        src/text080575C8.o(.text);
         asm/text080575C8.o(.text);
         asm/text0805CCE0.o(.text);
         src/load_menu.o(.text);
@@ -68,6 +69,7 @@ SECTIONS
         src/system_screens.o(.rodata);
         asm/rodata081E273C.o(.rodata);
         src/title_screen.o(.rodata);
+        src/text080575C8.o(.rodata);
         asm/rodata081E2794.o(.rodata);
         asm/rodata081E2840.o(.rodata);
         src/load_menu.o(.rodata);

@@ -1023,7 +1023,7 @@ _08022E7C:
 	str r1, [sp, #0x008]
 	movs r1, #0x08
 	adds r2, r4, #0x0
-	bl sub_80575C8
+	bl __4S_MPUcPcUsssP7Process
 	str r0, [r6, #0x00]
 _08022EAA:
 	movs r0, #0xAE

@@ -40,7 +40,7 @@ Sign::Sign(u8 priority, char* label, u16 room) : Process(priority, label) {
     process->parentProcess = this;
     process->disable();
 
-    map = sub_80575C8(operator new(0x59C, 0, "S_MP", 0), 8, "S_MP", zoom, scrollX, scrollY, panm);
+    map = new (0, "S_MP", 0) S_MP(8, "S_MP", zoom, scrollX, scrollY, panm);
     map->parentProcess = this;
 
     sub_8020994(0x15C0, 0, 1, 0x80);
