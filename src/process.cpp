@@ -5,29 +5,28 @@
 #define PROCESS_DISABLED 0
 #define PROCESS_ENABLED  1
 
-struct Process* process_add(struct Process* process, u8 priority, char* label) {
+Process::Process(u8 priority, char* label) {
     u32 processCount;
-    struct Process* latestProcess;
+    Process* latestProcess;
     char* destLabel;
 
-    process->definition = &stru_8CDBD68;
     processCount = 0;
     latestProcess = gGameState.startProcessLink;
 
     if (latestProcess == NULL) {
-        gGameState.startProcessLink = process;
-        process->previousProcess = NULL;
-        process->nextProcess = NULL;
-        destLabel = process->label;
+        gGameState.startProcessLink = this;
+        previousProcess = NULL;
+        nextProcess = NULL;
+        destLabel = this->label;
     } else {
         if (latestProcess == NULL) {
         out:
-            latestProcess->nextProcess = process;
-            process->previousProcess = latestProcess;
-            process->nextProcess = NULL;
+            latestProcess->nextProcess = this;
+            previousProcess = latestProcess;
+            nextProcess = NULL;
             processCount++;
         } else {
-            destLabel = process->label;
+            destLabel = this->label;
 
             while (latestProcess->priority <= priority) {
                 if (latestProcess->nextProcess == NULL) {
@@ -40,37 +39,35 @@ struct Process* process_add(struct Process* process, u8 priority, char* label) {
             }
 
             if (latestProcess->previousProcess == NULL) {
-                gGameState.startProcessLink = process;
-                process->previousProcess = NULL;
-                process->nextProcess = latestProcess;
-                latestProcess->previousProcess = process;
+                gGameState.startProcessLink = this;
+                previousProcess = NULL;
+                nextProcess = latestProcess;
+                latestProcess->previousProcess = this;
             } else {
-                latestProcess->previousProcess->nextProcess = process;
-                process->previousProcess = latestProcess->previousProcess;
-                process->nextProcess = latestProcess;
-                latestProcess->previousProcess = process;
+                latestProcess->previousProcess->nextProcess = this;
+                previousProcess = latestProcess->previousProcess;
+                nextProcess = latestProcess;
+                latestProcess->previousProcess = this;
             }
         }
     }
 
-    process->parentProcess = gGameState.currentProcess;
-    process->processCount = processCount;
-    process->state = 0;
-    process->priority = priority;
-    process->flag = PROCESS_ENABLED;
-    process->wait = TRUE;
-    process->executeMax = 1;
-    process->executeCounter = 0;
-    process->frames = 0;
+    parentProcess = gGameState.currentProcess;
+    this->processCount = processCount;
+    state = 0;
+    this->priority = priority;
+    flag = PROCESS_ENABLED;
+    wait = TRUE;
+    executeMax = 1;
+    executeCounter = 0;
+    frames = 0;
     COPY_LABEL(destLabel, label);
     gGameState.processCount++;
-
-    return process;
 }
 
-void process_execute_all(void) {
-    struct Process* exeProcess;
-    struct Process* process;
+void Process::executeAll() {
+    Process* exeProcess;
+    Process* process;
     bool32 stopExecuting;
 
     if (gGameState.startProcessLink != 0) {
@@ -87,8 +84,7 @@ void process_execute_all(void) {
 
                     if (executeMax & 8) {
                         if (++exeProcess->executeCounter >= -executeMax) {
-                            exeProcess->definition->update((u8*)exeProcess
-                                                           + exeProcess->definition->offset);
+                            exeProcess->update();
                             exeProcess->executeCounter = 0;
                         }
 
@@ -97,8 +93,7 @@ void process_execute_all(void) {
                             exeProcess->wait = TRUE;
                         }
                     } else {
-                        exeProcess->definition->update((u8*)exeProcess
-                                                       + exeProcess->definition->offset);
+                        exeProcess->update();
 
                         if (gGameState.currentProcess != NULL) {
                             exeProcess->frames++;
@@ -129,8 +124,8 @@ void process_execute_all(void) {
     }
 }
 
-bool32 process_exists(struct Process* process) {
-    struct Process* curProcess = gGameState.startProcessLink;
+bool32 Process::exists(Process* process) {
+    Process* curProcess = gGameState.startProcessLink;
 
     while (curProcess != NULL) {
         if (curProcess == process) {
@@ -143,8 +138,8 @@ bool32 process_exists(struct Process* process) {
     return FALSE;
 }
 
-void process_enable_all(void) {
-    struct Process* process = gGameState.startProcessLink;
+void Process::enableAll() {
+    Process* process = gGameState.startProcessLink;
 
     while (process != NULL) {
         process->flag = PROCESS_ENABLED;
@@ -153,8 +148,8 @@ void process_enable_all(void) {
     }
 }
 
-void process_disable_all(void) {
-    struct Process* process = gGameState.startProcessLink;
+void Process::disableAll() {
+    Process* process = gGameState.startProcessLink;
 
     while (process != NULL) {
         if (process->priority != 0 && process->priority != 255) {
@@ -165,40 +160,34 @@ void process_disable_all(void) {
     }
 }
 
-void process_enable(struct Process* process) {
-    process->flag = PROCESS_ENABLED;
-    process->wait = TRUE;
+void Process::enable() {
+    flag = PROCESS_ENABLED;
+    wait = TRUE;
 }
 
-void process_disable(struct Process* process) {
-    process->flag = PROCESS_DISABLED;
-    process->wait = TRUE;
+void Process::disable() {
+    flag = PROCESS_DISABLED;
+    wait = TRUE;
 }
 
-void process_remove(struct Process* process, u32 flags) {
-    process->definition = &stru_8CDBD68;
-
-    if (process->nextProcess != NULL) {
-        process->nextProcess->previousProcess = process->previousProcess;
+Process::~Process() {
+    if (nextProcess != NULL) {
+        nextProcess->previousProcess = previousProcess;
     }
 
-    if (process->previousProcess == NULL) {
-        gGameState.startProcessLink = process->nextProcess;
+    if (previousProcess == NULL) {
+        gGameState.startProcessLink = nextProcess;
     } else {
-        process->previousProcess->nextProcess = process->nextProcess;
+        previousProcess->nextProcess = nextProcess;
     }
 
     gGameState.processCount--;
 
-    if (gGameState.currentProcess == process) {
+    if (gGameState.currentProcess == this) {
         gGameState.currentProcess = NULL;
     }
 
-    if (gGameState.nextProcess == process) {
-        gGameState.nextProcess = process->nextProcess;
-    }
-
-    if (flags & PROCESS_REMOVE_FLAGS_FREE) {
-        free_heap_8018DA8(process);
+    if (gGameState.nextProcess == this) {
+        gGameState.nextProcess = nextProcess;
     }
 }

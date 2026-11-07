@@ -65,8 +65,19 @@ enum TitleScreenSuitcaseVisualStates {
     TS_SV_STATE_DISAPPEAR,
 };
 
-struct CompanyIntro {
-    struct Process process;
+#ifdef __cplusplus
+#pragma interface
+
+// Declared in reverse order of their vtables in the ROM: g++ emits vtables in reverse.
+class SpriteRenderer : public Process {
+  public:
+    SpriteRenderer(u8 priority, char* label) : Process(priority, label) {
+    }
+    virtual void update();
+};
+
+class CompanyIntro : public Process {
+  public:
     s8 brightness;
     u8 flags : 1;
     s32 verticalOffset;
@@ -76,14 +87,27 @@ struct CompanyIntro {
     s32 yPosLuigi;
     s32 acceleration;
     s32 velocity;
-    struct Process* opdr;
+    Process* opdr;
     struct Sprite* mario;
     struct Sprite* luigi;
     struct Sprite* alphaDreamLogo;
+
+    CompanyIntro(u8 priority, char* label);
+    ~CompanyIntro();
+    virtual void update();
 };
 
-struct TitleScreen {
-    struct Process process;
+class MarioBrosScoreVisual : public Process {
+  public:
+    char topScore[6];
+    char pScore[2];
+
+    MarioBrosScoreVisual(u8 priority, char* label, u32 topScore, u8 pScore);
+    virtual void update();
+};
+
+class TitleScreen : public Process {
+  public:
     s8 brightness;
     u8 suitcaseVisualState : 2;
     // Index to the state after fade in.
@@ -130,15 +154,17 @@ struct TitleScreen {
 
     struct BgAffineSrcData mlTextAffineSrc;
     struct BgAffineDstData mlTextAffineDst;
-    struct MarioBrosScoreVisual* mbsv;
+    MarioBrosScoreVisual* mbsv;
     s8 selection;
     struct Sprite* sprites[9];
+
+    TitleScreen(u8 priority, char* label, int entryState);
+    ~TitleScreen();
+    virtual void update();
+    void preparePressStart();
+    void prepareGameSelect(int selection);
 };
 
-struct CompanyIntro* company_intro_create(struct CompanyIntro*, u8, char*);
-struct TitleScreen* title_screen_create(struct TitleScreen*, u8, char*, int);
-void title_screen_prepare_game_select(struct TitleScreen*, int);
-struct MarioBrosScoreVisual* mario_bros_score_visual_create(struct MarioBrosScoreVisual*, u8, char*,
-                                                            u32, u8);
+#endif
 
 #endif

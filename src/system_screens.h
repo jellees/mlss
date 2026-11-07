@@ -1,6 +1,12 @@
 #ifndef SYSTEM_SCREENS_H
 #define SYSTEM_SCREENS_H
 
+#include "process.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define OPTION_FLAGS_SHIFT_EASY_SLEEP     0
 #define OPTION_FLAGS_SHIFT_RUMBLE_FEATURE 1
 #define OPTION_FLAGS_SHIFT_AUTO_FEATURE   2
@@ -20,8 +26,13 @@ enum OptionScreenStates {
     OPTS_STATE_LEAVE,
 };
 
-struct SaveClearScreen {
-    struct Process process;
+#ifdef __cplusplus
+}
+
+#pragma interface
+
+class SaveClearScreen : public Process {
+  public:
     u8 field_1C_0 : 1;
     s8 brightness;
     u8* bwcw;
@@ -29,16 +40,21 @@ struct SaveClearScreen {
     u16* bwsw;
     int* bbwf;
     struct struc_15* bbwi;
-    struct Process* bidr;
+    Process* bidr;
     int* winw;
     u16 field_3C;
     u8 pad_3E[2];
     struct Popup popup;
     struct Sprite* sprite;
+
+    SaveClearScreen(u8 priority, char* label);
+    ~SaveClearScreen();
+    virtual void update();
+    void showPopup(int width, int height);
 };
 
-struct MarioBrosSaveError {
-    struct Process process;
+class MarioBrosSaveError : public Process {
+  public:
     u8 brightness;
     u8* bwcw;
     u8* field_24;
@@ -47,15 +63,20 @@ struct MarioBrosSaveError {
     struct struc_15* bbwi;
     int* winw;
     struct Popup popup;
+
+    MarioBrosSaveError(u8 priority, char* label);
+    ~MarioBrosSaveError();
+    virtual void update();
+    void showPopup();
 };
 
-struct SaveClearScreen* save_clear_create(struct SaveClearScreen* bclr, u8 priority, char* label);
-void save_clear_destroy(struct SaveClearScreen* bclr, int flags);
-void save_clear_update(struct SaveClearScreen* bclr);
-struct MarioBrosSaveError* mario_bros_save_error_create(struct MarioBrosSaveError* mber, u8 priority,
-                                                        char* label);
-void mario_bros_save_error_update(struct MarioBrosSaveError* mber);
-void mario_bros_save_error_show_popup(struct MarioBrosSaveError* mber);
+extern "C" {
+#endif
+
 void popup_draw(struct Popup* popup, u16* map, u8 x, u8 y, u8 width, u8 height, u16 vramOffset);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

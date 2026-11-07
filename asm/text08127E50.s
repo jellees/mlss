@@ -16,7 +16,7 @@ sub_8127E50:
 	ldr r2, _08127E7C @ =0x08210F64
 	movs r0, #0x01
 	adds r1, r5, #0x0
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r7, r0, #0x0
 	ldr r0, _08127E80 @ =0x03000C84
 	ldr r2, [r0, #0x00]
@@ -30,7 +30,7 @@ _08127E84:
 	ldr r2, _08127EC4 @ =0x08210F64
 	movs r0, #0x01
 	adds r1, r5, #0x0
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r4, r0, #0x0
 	ldr r0, _08127EC8 @ =0x03000C84
 	ldr r2, [r0, #0x00]
@@ -51,7 +51,7 @@ _08127EA4:
 	adds r1, r7, #0x0
 	bl CpuSet
 	adds r0, r4, #0x0
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _08127EBC:
 	adds r0, r5, #0x0
 	pop {r4, r5, r6, r7}

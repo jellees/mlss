@@ -1,28 +1,69 @@
+#pragma implementation "system_screens.h"
+
 #include "global.h"
 #include "common.h"
+#include "heap.h"
 #include "process.h"
 #include "title_screen.h"
 #include "system_screens.h"
 #include "system_screen_popups.h"
+#include "options_menu.h"
 
-inline void mario_bros_save_error_destroy(struct MarioBrosSaveError* mber, int flags) {
-    mber->process.definition = &stru_8CDC1C8;
-    if (mber->winw) {
-        free_heap_8018D9C(mber->winw);
+// Sprite renderer of the save clear screen. Its inline update is only emitted for the vtable, as
+// weak code (linked right after this file's .text).
+class SaveClearRenderer : public Process {
+  public:
+    SaveClearRenderer(u8 priority, char* label) : Process(priority, label) {
     }
-    if (mber->bwcw) {
-        free_heap_8018D9C(mber->bwcw);
+    virtual void update() {
+        int var1 = gGameState.field_880;
+        sub_8020A78();
+        dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+        var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+        gGameState.field_880 = var1;
     }
-    if (mber->bwsw) {
-        free_heap_8018D9C(mber->bwsw);
+};
+
+inline MarioBrosSaveError::~MarioBrosSaveError() {
+    if (this->winw) {
+        operator delete[](this->winw);
     }
-    if (mber->bbwf) {
-        free_heap_8018D9C(mber->bbwf);
+    if (this->bwcw) {
+        operator delete[](this->bwcw);
     }
-    free_heap_8018DA8(mber->bbwi);
+    if (this->bwsw) {
+        operator delete[](this->bwsw);
+    }
+    if (this->bbwf) {
+        operator delete[](this->bbwf);
+    }
+    operator delete(this->bbwi);
     BUFFER_REG_DISPCNT = 0;
     BUFFER_REG_BLDCNT = 0;
-    process_remove(&mber->process, flags);
+}
+
+inline OptionsMenu::~OptionsMenu() {
+    sub_8021FD4();
+    if (this->odtr) {
+        delete this->odtr;
+    }
+    if (this->winw) {
+        operator delete[](this->winw);
+    }
+    if (this->bwcw) {
+        operator delete[](this->bwcw);
+    }
+    if (this->bwsw) {
+        operator delete[](this->bwsw);
+    }
+    if (this->bbwf) {
+        operator delete[](this->bbwf);
+    }
+    operator delete((void*)this->bbwi);
+    sub_801A6B0();
+    gGameState.field_31 = 2;
+    BUFFER_REG_DISPCNT = 0;
+    BUFFER_REG_BLDCNT = BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_NONE;
 }
 
 void popup_draw(struct Popup* popup, u16* map, u8 x, u8 y, u8 width, u8 height, u16 vramOffset) {
@@ -184,8 +225,8 @@ void popup_animate(struct Popup* popup) {
     }
 }
 
-struct OptionsMenu* options_create(struct OptionsMenu* optn, u8 priority, char* label, int a4) {
-    struct Process* odtr;
+OptionsMenu::OptionsMenu(u8 priority, char* label, int a4) : Process(priority, label) {
+    Process* odtr;
     u16* cgdw;
     u16* v10;
     int v11;
@@ -196,9 +237,6 @@ struct OptionsMenu* options_create(struct OptionsMenu* optn, u8 priority, char* 
     volatile int v31;
     int i;
 
-    process_add(&optn->process, priority, label);
-    optn->process.definition = &stru_8CDC1F8;
-
     BUFFER_REG_BLDCNT = 191;
     BUFFER_REG_BLDY = 16;
     BUFFER_REG_DISPCNT = 0;
@@ -206,25 +244,23 @@ struct OptionsMenu* options_create(struct OptionsMenu* optn, u8 priority, char* 
     sub_8017E34();
 
     gGameState.field_31 = 8;
-    optn->options_0 = a4;
+    this->options_0 = a4;
 
     sub_801A548();
 
-    odtr = (struct Process*)alloc_Zero(0x1C, 0, "OTDR", 0);
-    process_add(odtr, 8, "OTDR");
-    odtr->definition = &stru_8CDC208;
-    optn->odtr = odtr;
-    odtr->parentProcess = &optn->process;
+    odtr = new (0, "OTDR", 0) OptionsRenderer(8, "OTDR");
+    this->odtr = odtr;
+    odtr->parentProcess = this;
 
-    optn->selection = 0;
-    optn->brightness = 16;
-    optn->winw = alloc_zero_8018DB4(2048, 1, "WINW", 0);
-    optn->options_4 =
+    this->selection = 0;
+    this->brightness = 16;
+    this->winw = (int*)operator new[](2048, 1, "WINW", 0);
+    this->options_4 =
         gGameState.field_88A_4 | gGameState.field_88B_0 << 1 | dword_3000FFC->field_8_5 << 2;
-    optn->field_1D = 0;
+    this->field_1D = 0;
 
-    dword_3001034(0, (void*)&optn->popup, 8);
-    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
+    dword_3001034(0, (void*)&this->popup, 8);
+    cgdw = (u16*)operator new[](0x8000, 1, "CGDW", 0);
     dword_3000C84(dword_83A0E94, cgdw);
     CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A0E94) >> 2) & 0x1FFFFF);
     dword_3000C84(dword_83A1F60, cgdw);
@@ -259,16 +295,16 @@ struct OptionsMenu* options_create(struct OptionsMenu* optn, u8 priority, char* 
     }
     CpuFastSet(cgdw, (void*)0x600D800, 512);
     if (cgdw) {
-        free_heap_8018D9C(cgdw);
+        operator delete[](cgdw);
     }
 
     sub_8020994(0x3000, 8, 0, 0x80u);
 
-    optn->sprite = sub_8020DD0(5, 24581, 1, -1, -1, -1, -1);
-    sub_801E150(optn->sprite, 0, -1, 0, 0);
-    sprite_show_8020CBC(optn->sprite);
-    optn->sprite->xPosition = 40;
-    optn->sprite->yPosition = 55;
+    this->sprite = sub_8020DD0(5, 24581, 1, -1, -1, -1, -1);
+    sub_801E150(this->sprite, 0, -1, 0, 0);
+    sprite_show_8020CBC(this->sprite);
+    this->sprite->xPosition = 40;
+    this->sprite->yPosition = 55;
 
     if (gGameState.field_888_1 == 0) {
         CpuFastSet(off_83A2880, (void*)0x2000280, 16);
@@ -278,18 +314,18 @@ struct OptionsMenu* options_create(struct OptionsMenu* optn, u8 priority, char* 
         CpuFastSet(dword_83A1D80, (void*)0x2000080, 120);
     }
 
-    gGameState.field_0 = -1;
-    gGameState.field_2 = -1;
+    gGameState.field_0 = 0xFFFF;
+    gGameState.field_2 = 0xFFFF;
 
-    optn->bbwf = alloc_zero_8018DB4(sub_819941C - sub_8198784, 0, "BBWF", 1);
-    sub_81994EC(optn->bbwf, off_851F9E8);
-    optn->bbwi = alloc_Zero(20, 0, "BBWI", 1);
-    optn->bwcw = alloc_zero_8018DB4(115231, 1, "BWCW", 1);
-    optn->field_28 = (u8*)((int)&optn->bwcw[31] & 0xFFFFFFE0);
-    optn->field_2C = &optn->field_28[57600];
+    this->bbwf = (int*)operator new[](sub_819941C - sub_8198784, 0, "BBWF", 1);
+    sub_81994EC(this->bbwf, off_851F9E8);
+    this->bbwi = (struct struc_15*)operator new(20, 0, "BBWI", 1);
+    this->bwcw = (u8*)operator new[](115231, 1, "BWCW", 1);
+    this->field_28 = (u8*)((int)&this->bwcw[31] & 0xFFFFFFE0);
+    this->field_2C = &this->field_28[57600];
 
-    optn->bwsw = alloc_zero_8018DB4(3840, 1, "BWSW", 1);
-    v21 = &optn->bwsw[192];
+    this->bwsw = (u16*)operator new[](3840, 1, "BWSW", 1);
+    v21 = &this->bwsw[192];
     v22 = 0;
     while (v22 < 3) {
         u16 v23;
@@ -308,15 +344,15 @@ struct OptionsMenu* options_create(struct OptionsMenu* optn, u8 priority, char* 
         v22++;
         v21 = &v21[96];
     }
-    CpuFastSet(optn->bwsw, (void*)0x600D000, 512);
+    CpuFastSet(this->bwsw, (void*)0x600D000, 512);
 
     v31 = 0;
     CpuFastSet((void*)&v31, (void*)0x6004000, 0x1000008);
-    options_draw_labels(optn, 0);
-    dword_3001034(0, (void*)optn->field_2C, 57600);
+    drawLabels(0);
+    dword_3001034(0, (void*)this->field_2C, 57600);
 
     for (i = 1; i < 8; i++) {
-        options_draw_info_messages(optn, i);
+        drawInfoMessages(i);
         sub_8017E34();
     }
     sub_801A548();
@@ -337,67 +373,65 @@ struct OptionsMenu* options_create(struct OptionsMenu* optn, u8 priority, char* 
 
     sub_8019308(0, 30, -1);
     sub_80193B4(0, 0xFFu, 0x10u);
-
-    return optn;
 }
 
-void options_update(struct OptionsMenu* optn) {
-    switch (optn->process.state) {
+void OptionsMenu::update() {
+    switch (this->state) {
         case OPTS_STATE_FADE_IN:
-            optn->brightness--;
-            BUFFER_REG_BLDY = optn->brightness;
-            if (optn->brightness == 0) {
-                optn->process.state = OPTS_STATE_SELECT_OPTION;
+            this->brightness--;
+            BUFFER_REG_BLDY = this->brightness;
+            if (this->brightness == 0) {
+                this->state = OPTS_STATE_SELECT_OPTION;
             }
             break;
 
         case OPTS_STATE_SELECT_OPTION:
-            if (optn->field_1D > 0) {
-                optn->field_1D--;
+            if (this->field_1D > 0) {
+                this->field_1D--;
             }
-            if (optn->popup.zoomFrame > 0) {
-                popup_animate(&optn->popup);
+            if (this->popup.zoomFrame > 0) {
+                popup_animate(&this->popup);
                 break;
             }
-            if (optn->field_1D != 0 || gGameState.field_2A & A_BUTTON) {
+            if (this->field_1D != 0 || gGameState.field_2A & A_BUTTON) {
                 break;
             }
             if (gGameState.field_2A & B_BUTTON) {
-                if ((bool8)options_save(optn)) {
-                    optn->brightness = 16;
+                if ((bool8)save()) {
+                    this->brightness = 16;
                     sub_80193B4(0, 0, 16);
-                    optn->process.state = OPTS_STATE_LEAVE;
+                    this->state = OPTS_STATE_LEAVE;
                 } else {
-                    optn->process.state = OPTS_STATE_SAVE_ERROR;
+                    this->state = OPTS_STATE_SAVE_ERROR;
                 }
                 break;
             }
             if (gGameState.field_2E & DPAD_UP) {
-                optn->selection--;
-                if (optn->selection < 0) {
-                    optn->selection = 2;
+                this->selection--;
+                if (this->selection < 0) {
+                    this->selection = 2;
                 }
                 play_sfx_80195B4(95, -1);
             } else if (gGameState.field_2E & DPAD_DOWN) {
-                optn->selection++;
-                if (optn->selection > 2) {
-                    optn->selection = 0;
+                this->selection++;
+                if (this->selection > 2) {
+                    this->selection = 0;
                 }
                 play_sfx_80195B4(95, -1);
             }
-            optn->sprite->yPosition = 24 * optn->selection + 55;
-            switch (optn->selection) {
+            this->sprite->yPosition = 24 * this->selection + 55;
+            switch (this->selection) {
                 case 0:
-                    if ((optn->options_4 ^ OPTION_FLAGS_EASY_SLEEP) & OPTION_FLAGS_EASY_SLEEP) {
+                    if ((this->options_4 ^ OPTION_FLAGS_EASY_SLEEP) & OPTION_FLAGS_EASY_SLEEP) {
                         if (gGameState.field_2A & DPAD_LEFT) {
-                            optn->options_4 |= OPTION_FLAGS_EASY_SLEEP;
-                            options_show_info_popup(optn, word_83A2900[0], word_83A2900[1]);
+                            this->options_4 |= OPTION_FLAGS_EASY_SLEEP;
+                            showInfoPopup(word_83A2900[0], word_83A2900[1]);
                             play_sfx_80195B4(95, -1);
-                            optn->process.state = OPTS_STATE_EASY_SLEEP_CONFIRMATION;
+                            this->state = OPTS_STATE_EASY_SLEEP_CONFIRMATION;
                         }
                     } else {
                         if (gGameState.field_2A & DPAD_RIGHT) {
-                            optn->options_4 &= ~OPTION_FLAGS_EASY_SLEEP;
+                            this->options_4 &= ~OPTION_FLAGS_EASY_SLEEP;
                             play_sfx_80195B4(95, -1);
                         }
                     }
@@ -405,16 +439,16 @@ void options_update(struct OptionsMenu* optn) {
 
                 case 1:
                     if (gGameState.field_888_1 == 1) {
-                        if (!(optn->options_4 & OPTION_FLAGS_RUMBLE_FEATURE)) {
+                        if (!(this->options_4 & OPTION_FLAGS_RUMBLE_FEATURE)) {
                             if (gGameState.field_2A & DPAD_LEFT) {
-                                optn->options_4 |= OPTION_FLAGS_RUMBLE_FEATURE;
-                                options_show_info_popup(optn, word_83A2900[2], word_83A2900[3]);
+                                this->options_4 |= OPTION_FLAGS_RUMBLE_FEATURE;
+                                showInfoPopup(word_83A2900[2], word_83A2900[3]);
                                 play_sfx_80195B4(95, -1);
-                                optn->process.state = OPTS_STATE_RUMBLE_FEATURE_CONFIRMATION;
+                                this->state = OPTS_STATE_RUMBLE_FEATURE_CONFIRMATION;
                             }
                         } else {
                             if (gGameState.field_2A & DPAD_RIGHT) {
-                                optn->options_4 &= ~OPTION_FLAGS_RUMBLE_FEATURE;
+                                this->options_4 &= ~OPTION_FLAGS_RUMBLE_FEATURE;
                                 gGameState.field_88B_0 = 0;
                                 play_sfx_80195B4(95, -1);
                             }
@@ -423,16 +457,16 @@ void options_update(struct OptionsMenu* optn) {
                     break;
 
                 case 2:
-                    if (!(optn->options_4 & OPTION_FLAGS_AUTO_FEATURE)) {
+                    if (!(this->options_4 & OPTION_FLAGS_AUTO_FEATURE)) {
                         if (gGameState.field_2A & DPAD_LEFT) {
-                            optn->options_4 |= OPTION_FLAGS_AUTO_FEATURE;
-                            options_show_info_popup(optn, word_83A2900[4], word_83A2900[5]);
+                            this->options_4 |= OPTION_FLAGS_AUTO_FEATURE;
+                            showInfoPopup(word_83A2900[4], word_83A2900[5]);
                             play_sfx_80195B4(95, -1);
-                            optn->process.state = OPTS_STATE_AUTO_SLEEP_CONFIRMATION;
+                            this->state = OPTS_STATE_AUTO_SLEEP_CONFIRMATION;
                         }
                     } else {
                         if (gGameState.field_2A & DPAD_RIGHT) {
-                            optn->options_4 &= ~OPTION_FLAGS_AUTO_FEATURE;
+                            this->options_4 &= ~OPTION_FLAGS_AUTO_FEATURE;
                             play_sfx_80195B4(95, -1);
                         }
                     }
@@ -441,146 +475,122 @@ void options_update(struct OptionsMenu* optn) {
             break;
 
         case OPTS_STATE_EASY_SLEEP_CONFIRMATION:
-            if (optn->popup.zoomFrame == 0) {
+            if (this->popup.zoomFrame == 0) {
                 if (gGameState.field_2A & A_BUTTON) {
-                    optn->sprite->xPosition = 40;
-                    optn->sprite->yPosition = 24 * optn->selection + 55;
+                    this->sprite->xPosition = 40;
+                    this->sprite->yPosition = 24 * this->selection + 55;
                     off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
-                    optn->popup.isClosing = 1;
-                    optn->popup.zoomFrame = 7;
+                    this->popup.isClosing = 1;
+                    this->popup.zoomFrame = 7;
                     BUFFER_REG_DISPCNT &= ~DISPCNT_BG0_ON;
                     play_sfx_80195B4(96, -1);
-                    optn->process.state = OPTS_STATE_SELECT_OPTION;
+                    this->state = OPTS_STATE_SELECT_OPTION;
                 }
             } else {
-                popup_animate(&optn->popup);
+                popup_animate(&this->popup);
 
-                if (optn->popup.zoomFrame == 6) {
-                    sub_8018218(optn->field_2C, (void*)0x6004020, 0x4B00, 32, 0);
-                } else if (optn->popup.zoomFrame == 7) {
-                    sub_8018218(optn->bwsw, (void*)0x600C000, 0x500, 32, 0);
-                } else if (optn->popup.zoomFrame == 0) {
-                    optn->sprite->xPosition = optn->okButtonPosX + 6;
-                    optn->sprite->yPosition = optn->okButtonPosY + 7;
+                if (this->popup.zoomFrame == 6) {
+                    sub_8018218(this->field_2C, (void*)0x6004020, 0x4B00, 32, 0);
+                } else if (this->popup.zoomFrame == 7) {
+                    sub_8018218(this->bwsw, (void*)0x600C000, 0x500, 32, 0);
+                } else if (this->popup.zoomFrame == 0) {
+                    this->sprite->xPosition = this->okButtonPosX + 6;
+                    this->sprite->yPosition = this->okButtonPosY + 7;
                     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
                 }
             }
             break;
 
         case OPTS_STATE_RUMBLE_FEATURE_CONFIRMATION:
-            if (optn->popup.zoomFrame == 0) {
+            if (this->popup.zoomFrame == 0) {
                 if (gGameState.field_2A & A_BUTTON) {
-                    optn->sprite->xPosition = 40;
-                    optn->sprite->yPosition = 24 * optn->selection + 55;
+                    this->sprite->xPosition = 40;
+                    this->sprite->yPosition = 24 * this->selection + 55;
                     off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
-                    optn->popup.isClosing = 1;
-                    optn->popup.zoomFrame = 7;
+                    this->popup.isClosing = 1;
+                    this->popup.zoomFrame = 7;
                     BUFFER_REG_DISPCNT &= ~DISPCNT_BG0_ON;
                     gGameState.field_88B_0 = 1;
-                    optn->field_1D = 16;
+                    this->field_1D = 16;
                     sub_801ABE8(0, 16, 0);
                     play_sfx_80195B4(96, -1);
-                    optn->process.state = OPTS_STATE_SELECT_OPTION;
+                    this->state = OPTS_STATE_SELECT_OPTION;
                 }
             } else {
-                popup_animate(&optn->popup);
-                if (optn->popup.zoomFrame == 6) {
-                    sub_8018218(optn->field_2C + 0x4B00, (void*)0x6004020, 0x4B00, 32, 0);
-                } else if (optn->popup.zoomFrame == 7) {
-                    sub_8018218(optn->bwsw + 0x280, (void*)0x600C000, 0x500, 32, 0);
-                } else if (optn->popup.zoomFrame == 0) {
-                    optn->sprite->xPosition = optn->okButtonPosX + 6;
-                    optn->sprite->yPosition = optn->okButtonPosY + 7;
+                popup_animate(&this->popup);
+                if (this->popup.zoomFrame == 6) {
+                    sub_8018218(this->field_2C + 0x4B00, (void*)0x6004020, 0x4B00, 32, 0);
+                } else if (this->popup.zoomFrame == 7) {
+                    sub_8018218(this->bwsw + 0x280, (void*)0x600C000, 0x500, 32, 0);
+                } else if (this->popup.zoomFrame == 0) {
+                    this->sprite->xPosition = this->okButtonPosX + 6;
+                    this->sprite->yPosition = this->okButtonPosY + 7;
                     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
                 }
             }
             break;
 
         case OPTS_STATE_AUTO_SLEEP_CONFIRMATION:
-            if (optn->popup.zoomFrame == 0) {
+            if (this->popup.zoomFrame == 0) {
                 if (gGameState.field_2A & A_BUTTON) {
-                    optn->sprite->xPosition = 40;
-                    optn->sprite->yPosition = 24 * optn->selection + 55;
+                    this->sprite->xPosition = 40;
+                    this->sprite->yPosition = 24 * this->selection + 55;
                     off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
-                    optn->popup.isClosing = 1;
-                    optn->popup.zoomFrame = 7;
+                    this->popup.isClosing = 1;
+                    this->popup.zoomFrame = 7;
                     BUFFER_REG_DISPCNT &= ~DISPCNT_BG0_ON;
                     play_sfx_80195B4(96, -1);
-                    optn->process.state = OPTS_STATE_SELECT_OPTION;
+                    this->state = OPTS_STATE_SELECT_OPTION;
                 }
             } else {
-                popup_animate(&optn->popup);
-                if (optn->popup.zoomFrame == 6) {
-                    sub_8018218(optn->field_2C + 0x9600, (void*)0x6004020, 0x4B00, 32, 0);
-                } else if (optn->popup.zoomFrame == 7) {
-                    sub_8018218(optn->bwsw + 0x500, (void*)0x600C000, 0x500, 32, 0);
-                } else if (optn->popup.zoomFrame == 0) {
-                    optn->sprite->xPosition = optn->okButtonPosX + 6;
-                    optn->sprite->yPosition = optn->okButtonPosY + 7;
+                popup_animate(&this->popup);
+                if (this->popup.zoomFrame == 6) {
+                    sub_8018218(this->field_2C + 0x9600, (void*)0x6004020, 0x4B00, 32, 0);
+                } else if (this->popup.zoomFrame == 7) {
+                    sub_8018218(this->bwsw + 0x500, (void*)0x600C000, 0x500, 32, 0);
+                } else if (this->popup.zoomFrame == 0) {
+                    this->sprite->xPosition = this->okButtonPosX + 6;
+                    this->sprite->yPosition = this->okButtonPosY + 7;
                     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
                 }
             }
             break;
 
         case OPTS_STATE_SAVE_ERROR:
-            options_draw_save_error(optn);
-            options_show_save_error_popup(optn);
-            optn->brightness = 240;
-            optn->process.state = OPTS_STATE_SAVE_ERROR_CONFIRMATION;
+            drawSaveError();
+            showSaveErrorPopup();
+            this->brightness = 240;
+            this->state = OPTS_STATE_SAVE_ERROR_CONFIRMATION;
             break;
 
         case OPTS_STATE_SAVE_ERROR_CONFIRMATION:
-            if (optn->popup.zoomFrame == 0) {
-                optn->brightness--;
-                if (optn->brightness == 0
+            if (this->popup.zoomFrame == 0) {
+                this->brightness--;
+                if (this->brightness == 0
                     || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
-                    optn->brightness = 16;
+                    this->brightness = 16;
                     sub_80193B4(0, 0, 16);
-                    optn->process.state = OPTS_STATE_LEAVE;
+                    this->state = OPTS_STATE_LEAVE;
                 }
             } else {
-                popup_animate(&optn->popup);
-                if (optn->popup.zoomFrame == 6) {
-                    sub_8018218(optn->field_2C, (void*)0x6004020, 0x4B00, 32, 0);
-                } else if (optn->popup.zoomFrame == 7) {
-                    sub_8018218(optn->bwsw, (void*)0x600C000, 0x500, 32, 0);
-                } else if (optn->popup.zoomFrame == 0) {
+                popup_animate(&this->popup);
+                if (this->popup.zoomFrame == 6) {
+                    sub_8018218(this->field_2C, (void*)0x6004020, 0x4B00, 32, 0);
+                } else if (this->popup.zoomFrame == 7) {
+                    sub_8018218(this->bwsw, (void*)0x600C000, 0x500, 32, 0);
+                } else if (this->popup.zoomFrame == 0) {
                     BUFFER_REG_DISPCNT |= DISPCNT_BG0_ON;
                 }
             }
             break;
 
         case OPTS_STATE_LEAVE:
-            optn->brightness--;
-            BUFFER_REG_BLDY = 16 - optn->brightness;
-            if (optn->brightness == 0) {
-                if (optn) {
-                    optn->process.definition = &stru_8CDC1F8;
-                    sub_8021FD4();
-                    if (optn->odtr) {
-                        process_remove(optn->odtr, 3);
-                    }
-                    if (optn->winw) {
-                        free_heap_8018D9C(optn->winw);
-                    }
-                    if (optn->bwcw) {
-                        free_heap_8018D9C(optn->bwcw);
-                    }
-                    if (optn->bwsw) {
-                        free_heap_8018D9C(optn->bwsw);
-                    }
-                    if (optn->bbwf) {
-                        free_heap_8018D9C(optn->bbwf);
-                    }
-                    free_heap_8018DA8((void*)optn->bbwi);
-                    sub_801A6B0();
-                    gGameState.field_31 = 2;
-                    BUFFER_REG_DISPCNT = 0;
-                    BUFFER_REG_BLDCNT = BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_NONE;
-                    process_remove(&optn->process, 3);
-                }
+            this->brightness--;
+            BUFFER_REG_BLDY = 16 - this->brightness;
+            if (this->brightness == 0) {
+                delete this;
 
-                title_screen_create(alloc_Zero(sizeof(struct TitleScreen), 0, "OPEN", 0), 8, "OPEN", 3);
+                new (0, "OPEN", 0) TitleScreen(8, "OPEN", 3);
                 return;
             }
             break;
@@ -589,49 +599,49 @@ void options_update(struct OptionsMenu* optn) {
     sub_8021F7C();
 }
 
-int options_save(struct OptionsMenu* optn) {
-    gGameState.field_88A_4 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_EASY_SLEEP) & 1) != 0;
-    gGameState.field_88B_0 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_RUMBLE_FEATURE) & 1) != 0;
-    dword_3000FFC->field_8_3 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_EASY_SLEEP) & 1) != 0;
-    dword_3000FFC->field_8_4 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_RUMBLE_FEATURE) & 1) != 0;
-    dword_3000FFC->field_8_5 = ((optn->options_4 >> OPTION_FLAGS_SHIFT_AUTO_FEATURE) & 1) != 0;
+int OptionsMenu::save() {
+    gGameState.field_88A_4 = ((this->options_4 >> OPTION_FLAGS_SHIFT_EASY_SLEEP) & 1) != 0;
+    gGameState.field_88B_0 = ((this->options_4 >> OPTION_FLAGS_SHIFT_RUMBLE_FEATURE) & 1) != 0;
+    dword_3000FFC->field_8_3 = ((this->options_4 >> OPTION_FLAGS_SHIFT_EASY_SLEEP) & 1) != 0;
+    dword_3000FFC->field_8_4 = ((this->options_4 >> OPTION_FLAGS_SHIFT_RUMBLE_FEATURE) & 1) != 0;
+    dword_3000FFC->field_8_5 = ((this->options_4 >> OPTION_FLAGS_SHIFT_AUTO_FEATURE) & 1) != 0;
 
     return sub_812454C();
 }
 
-void options_draw_labels(struct OptionsMenu* optn, int a2) {
+void OptionsMenu::drawLabels(int a2) {
     int i;
 
-    dword_3001034(0, (void*)optn->field_28, 6144);
+    dword_3001034(0, (void*)this->field_28, 6144);
 
     for (i = 0; i < 3; i++) {
         if (gGameState.field_888_1 != 1 && i == 1) {
-            sub_8199D78(optn->bbwi, optn->field_28, 32, 4, 0, 0, 1, 2, 7, 0);
+            sub_8199D78(this->bbwi, this->field_28, 32, 4, 0, 0, 1, 2, 7, 0);
         } else {
-            sub_8199D78(optn->bbwi, optn->field_28, 32, 4, 0, 0, 1, 2, 5, 0);
+            sub_8199D78(this->bbwi, this->field_28, 32, 4, 0, 0, 1, 2, 5, 0);
         }
-        sub_8199D5C(optn->bbwi, 0, 16 * i + 2, *off_83A2920[i] + 2);
+        sub_8199D5C(this->bbwi, 0, 16 * i + 2, *off_83A2920[i] + 2);
         do {
-            u8* v5 = optn->bbwi->field_8;
+            u8* v5 = this->bbwi->field_8;
             if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
-                optn->bbwi->field_8 += 3;
+                this->bbwi->field_8 += 3;
             }
-        } while (sub_8199624(optn->bbwi) != 0);
+        } while (sub_8199624(this->bbwi) != 0);
     }
 
     if (a2) {
-        sub_8018218((void*)optn->field_28, (void*)0x6001000, 6144, 32, 0);
+        sub_8018218((void*)this->field_28, (void*)0x6001000, 6144, 32, 0);
     } else {
-        CpuFastSet((void*)optn->field_28, (void*)0x6001000, 0x600);
+        CpuFastSet((void*)this->field_28, (void*)0x6001000, 0x600);
     }
 }
 
-void options_draw_info_messages(struct OptionsMenu* optn, int a1) {
+void OptionsMenu::drawInfoMessages(int a1) {
     int i;
 
     if (a1 <= 1) {
-        dword_3001034(0, (void*)optn->field_2C, 0xE100);
-        dword_3001034(0, (void*)optn->bwsw, 0xF00);
+        dword_3001034(0, (void*)this->field_2C, 0xE100);
+        dword_3001034(0, (void*)this->bwsw, 0xF00);
         if (a1 == 1) {
             return;
         }
@@ -673,17 +683,17 @@ void options_draw_info_messages(struct OptionsMenu* optn, int a1) {
             u16 tile;
             int y;
 
-            sub_8199D78(optn->bbwi, optn->field_2C + j * 5 * 0xF00, (s16)width, (u8)odd, zero, zero, 1,
+            sub_8199D78(this->bbwi, this->field_2C + j * 5 * 0xF00, (s16)width, (u8)odd, zero, zero, 1,
                         2, 5, zero);
-            sub_8199D5C(optn->bbwi, 0, y0 + yOff, text0 + 2);
+            sub_8199D5C(this->bbwi, 0, y0 + yOff, text0 + 2);
             do {
-                u8* v5 = optn->bbwi->field_8;
+                u8* v5 = this->bbwi->field_8;
                 if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
-                    optn->bbwi->field_8 += 3;
+                    this->bbwi->field_8 += 3;
                 }
-            } while (sub_8199624(optn->bbwi) != 0);
+            } while (sub_8199624(this->bbwi) != 0);
 
-            dst = &optn->bwsw[j * 5 * 128];
+            dst = &this->bwsw[j * 5 * 128];
             tile = 0xE001;
             for (y = 0; y < 16; y++) {
                 int x;
@@ -695,20 +705,20 @@ void options_draw_info_messages(struct OptionsMenu* optn, int a1) {
                 dst += (30 - (s16)width) / 2 + 2;
             }
         } else {
-            sub_8199D78(optn->bbwi, optn->field_2C + j * 5 * 0xF00, (s16)width, (u8)odd, 0, 0, 1, 2, 5,
+            sub_8199D78(this->bbwi, this->field_2C + j * 5 * 0xF00, (s16)width, (u8)odd, 0, 0, 1, 2, 5,
                         0);
-            sub_8199D5C(optn->bbwi, 0, y1 + yOff, text1 + 2);
+            sub_8199D5C(this->bbwi, 0, y1 + yOff, text1 + 2);
             do {
-                u8* v5 = optn->bbwi->field_8;
+                u8* v5 = this->bbwi->field_8;
                 if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
-                    optn->bbwi->field_8 += 3;
+                    this->bbwi->field_8 += 3;
                 }
-            } while (sub_8199624(optn->bbwi) != 0);
+            } while (sub_8199624(this->bbwi) != 0);
         }
     }
 }
 
-void options_draw_save_error(struct OptionsMenu* optn) {
+void OptionsMenu::drawSaveError() {
     u16* dst;
     u16 tile;
     int y;
@@ -718,23 +728,23 @@ void options_draw_save_error(struct OptionsMenu* optn) {
     int text;
     int zero;
 
-    dword_3001034(0, (void*)optn->field_2C, 0x4B00);
-    dword_3001034(0, (void*)optn->bwsw, 0x500);
+    dword_3001034(0, (void*)this->field_2C, 0x4B00);
+    dword_3001034(0, (void*)this->bwsw, 0x500);
 
     zero = 0;
     width = word_83A2918[0];
     yPos = word_83A291C[1];
     text = dword_84E8B18;
-    sub_8199D78(optn->bbwi, optn->field_2C, (s16)width, (u8)word_83A291C[0], zero, zero, 1, 2, 5, 3);
-    sub_8199D5C(optn->bbwi, 0, yPos + 1, text + 2);
+    sub_8199D78(this->bbwi, this->field_2C, (s16)width, (u8)word_83A291C[0], zero, zero, 1, 2, 5, 3);
+    sub_8199D5C(this->bbwi, 0, yPos + 1, text + 2);
     do {
-        u8* v5 = optn->bbwi->field_8;
+        u8* v5 = this->bbwi->field_8;
         if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
-            optn->bbwi->field_8 += 3;
+            this->bbwi->field_8 += 3;
         }
-    } while (sub_8199624(optn->bbwi) != 0);
+    } while (sub_8199624(this->bbwi) != 0);
 
-    dst = optn->bwsw;
+    dst = this->bwsw;
     tile = 0xE001;
     for (y = 0; y < 16; y++) {
         dst += (30 - (s16)width) / 2;
@@ -745,20 +755,20 @@ void options_draw_save_error(struct OptionsMenu* optn) {
     }
 }
 
-void options_renderer_update(struct Process* odtr) {
-    struct OptionsMenu* optn;
+void OptionsRenderer::update() {
+    OptionsMenu* optn;
     u16* oam;
     u8 y;
     int i;
     int leftPalette;
     int rightPalette;
 
-    optn = (struct OptionsMenu*)odtr->parentProcess;
+    optn = (OptionsMenu*)parentProcess;
     oam = (u16*)gGameState.field_880;
     y = 48;
 
     if (optn->popup.zoomFrame == 0) {
-        switch (optn->process.state) {
+        switch (optn->state) {
             case 2:
             case 3:
             case 4:
@@ -823,25 +833,8 @@ void options_renderer_update(struct Process* odtr) {
     gGameState.field_880 = (int)oam;
 }
 
-//! Same as sprite_renderer_update. Possibly same inline?
-inline void save_clear_renderer_update(void) {
-    int var1 = gGameState.field_880;
-    sub_8020A78();
-    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
-    gGameState.field_880 = var1;
-}
-
-//! Similar but not same as sprite_renderer_create because it uses a different definition.
-static inline struct Process* save_clear_renderer_create(struct Process* renderer, u8 priority,
-                                                         char* label) {
-    process_add(renderer, priority, label);
-    renderer->definition = &stru_8CDC1E8;
-    return renderer;
-}
-
-struct SaveClearScreen* save_clear_create(struct SaveClearScreen* bclr, u8 priority, char* label) {
-    struct Process* bidr;
+SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, label) {
+    Process* bidr;
     u16* cgdw;
     u16* scdw;
     u8* strw;
@@ -849,9 +842,6 @@ struct SaveClearScreen* save_clear_create(struct SaveClearScreen* bclr, u8 prior
     int k;
     volatile int zero;
     int tileNum;
-
-    process_add(&bclr->process, priority, label);
-    bclr->process.definition = &stru_8CDC1D8;
 
     BUFFER_REG_BLDCNT = 191;
     BUFFER_REG_BLDY = 16;
@@ -862,39 +852,39 @@ struct SaveClearScreen* save_clear_create(struct SaveClearScreen* bclr, u8 prior
     gGameState.field_888_5 = 1;
     gGameState.field_888_6 = 1;
 
-    bidr = save_clear_renderer_create(alloc_Zero(sizeof(struct Process), 0, "BIDR", 0), 8, "BIDR");
-    bclr->bidr = bidr;
-    bidr->parentProcess = &bclr->process;
+    bidr = new (0, "BIDR", 0) SaveClearRenderer(8, "BIDR");
+    this->bidr = bidr;
+    bidr->parentProcess = this;
 
-    bclr->field_1C_0 = 1;
-    bclr->field_3C = 0;
-    bclr->brightness = 16;
-    bclr->winw = alloc_zero_8018DB4(0x800, 1, "WINW", 0);
+    this->field_1C_0 = 1;
+    this->field_3C = 0;
+    this->brightness = 16;
+    this->winw = (int*)operator new[](0x800, 1, "WINW", 0);
 
-    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
+    cgdw = (u16*)operator new[](0x8000, 1, "CGDW", 0);
     dword_3000C84(dword_83A0E94, cgdw);
     CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A0E94) >> 2) & 0x1FFFFF);
     if (cgdw) {
-        free_heap_8018D9C(cgdw);
+        operator delete[](cgdw);
     }
 
-    scdw = alloc_zero_8018DB4(0x800, 1, "SCDW", 1);
+    scdw = (u16*)operator new[](0x800, 1, "SCDW", 1);
     for (i = 15, tileNum = 0x107B; i >= 0; i--) {
         scdw[0x167 + i] = tileNum;
         tileNum--;
     }
     CpuFastSet(scdw, (void*)0x600E800, 0x200);
     if (scdw) {
-        free_heap_8018D9C(scdw);
+        operator delete[](scdw);
     }
 
     sub_8020994(0x2000, 8, 0, 0);
 
-    bclr->sprite = sub_8020DD0(5, 0x6005, 1, -1, -1, -1, -1);
-    sub_801E150(bclr->sprite, 0, -1, 0, 0);
-    sprite_show_8020CBC(bclr->sprite);
-    bclr->sprite->xPosition = 140;
-    bclr->sprite->yPosition = 90;
+    this->sprite = sub_8020DD0(5, 0x6005, 1, -1, -1, -1, -1);
+    sub_801E150(this->sprite, 0, -1, 0, 0);
+    sprite_show_8020CBC(this->sprite);
+    this->sprite->xPosition = 140;
+    this->sprite->yPosition = 90;
 
     if (gGameState.field_888_1 == 0) {
         CpuFastSet(dword_83A1BA0, (void*)0x2000080, 120);
@@ -902,19 +892,19 @@ struct SaveClearScreen* save_clear_create(struct SaveClearScreen* bclr, u8 prior
         CpuFastSet(dword_83A1D80, (void*)0x2000080, 120);
     }
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
-    gGameState.field_2 = -1;
+    gGameState.field_2 = 0xFFFF;
 
-    bclr->bbwf = alloc_zero_8018DB4(sub_819941C - sub_8198784, 0, "BBWF", 1);
-    sub_81994EC(bclr->bbwf, off_851F9E8);
-    bclr->bbwi = alloc_Zero(20, 0, "BBWI", 1);
-    bclr->bwcw = alloc_zero_8018DB4(0x12C1F, 1, "BWCW", 1);
-    bclr->field_24 = (u8*)((int)&bclr->bwcw[31] & 0xFFFFFFE0);
-    bclr->bwsw = alloc_zero_8018DB4(0x2800, 1, "BWSW", 1);
+    this->bbwf = (int*)operator new[](sub_819941C - sub_8198784, 0, "BBWF", 1);
+    sub_81994EC(this->bbwf, off_851F9E8);
+    this->bbwi = (struct struc_15*)operator new(20, 0, "BBWI", 1);
+    this->bwcw = (u8*)operator new[](0x12C1F, 1, "BWCW", 1);
+    this->field_24 = (u8*)((int)&this->bwcw[31] & 0xFFFFFFE0);
+    this->bwsw = (u16*)operator new[](0x2800, 1, "BWSW", 1);
 
     zero = 0;
     CpuFastSet((void*)&zero, (void*)0x6004000, 0x1000008);
 
-    strw = alloc_zero_8018DB4(0x100, 0, "STRW", 0);
+    strw = (u8*)operator new[](0x100, 0, "STRW", 0);
     for (k = 0; k < 5; k++) {
         u16 textY;
         u16 width;
@@ -931,16 +921,16 @@ struct SaveClearScreen* save_clear_create(struct SaveClearScreen* bclr, u8 prior
         strw[1] = 0x35;
         CpuSet((void*)(text + 2), strw + 2, 0x7F);
 
-        sub_8199D78(bclr->bbwi, bclr->field_24 + k * 0x3C00, (s16)width, 0, 0, 0, 1, 2, 5, 3);
-        sub_8199D5C(bclr->bbwi, 0, textY, (int)strw);
+        sub_8199D78(this->bbwi, this->field_24 + k * 0x3C00, (s16)width, 0, 0, 0, 1, 2, 5, 3);
+        sub_8199D5C(this->bbwi, 0, textY, (int)strw);
         do {
-            u8* v5 = bclr->bbwi->field_8;
+            u8* v5 = this->bbwi->field_8;
             if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
-                bclr->bbwi->field_8 += 3;
+                this->bbwi->field_8 += 3;
             }
-        } while (sub_8199624(bclr->bbwi) != 0);
+        } while (sub_8199624(this->bbwi) != 0);
 
-        dst = &bclr->bwsw[k * 1024];
+        dst = &this->bwsw[k * 1024];
         tile = 0xE001;
         for (row = 0; row < 16; row++) {
             dst += (30 - (s16)width) / 2;
@@ -950,10 +940,10 @@ struct SaveClearScreen* save_clear_create(struct SaveClearScreen* bclr, u8 prior
             dst += (30 - (s16)width) / 2 + 2;
         }
     }
-    free_heap_8018D9C(strw);
+    operator delete[](strw);
 
-    CpuFastSet(bclr->field_24, (void*)0x6004020, 0xF00);
-    CpuFastSet(bclr->bwsw, (void*)0x6002000, 0x200);
+    CpuFastSet(this->field_24, (void*)0x6004020, 0xF00);
+    CpuFastSet(this->bwsw, (void*)0x6002000, 0x200);
 
     BUFFER_REG_BG0CNT = 0x406;
     BUFFER_REG_BG1CNT = 0x1C02;
@@ -965,33 +955,30 @@ struct SaveClearScreen* save_clear_create(struct SaveClearScreen* bclr, u8 prior
     BUFFER_REG_BG2HOFS = 0;
     BUFFER_REG_BG2VOFS = 0;
 
-    save_clear_show_popup(bclr, word_83A2944[0], word_83A2944[1]);
+    showPopup(word_83A2944[0], word_83A2944[1]);
 
     BUFFER_REG_BLDCNT = 191;
     BUFFER_REG_BLDY = 0;
     BUFFER_REG_DISPCNT = 0x3340;
-
-    return bclr;
 }
 
-void save_clear_destroy(struct SaveClearScreen* bclr, int flags) {
-    bclr->process.definition = &stru_8CDC1D8;
-    if (bclr->bidr) {
-        process_remove(bclr->bidr, 3);
+SaveClearScreen::~SaveClearScreen() {
+    if (this->bidr) {
+        delete this->bidr;
     }
-    if (bclr->winw) {
-        free_heap_8018D9C(bclr->winw);
+    if (this->winw) {
+        operator delete[](this->winw);
     }
-    if (bclr->bwcw) {
-        free_heap_8018D9C(bclr->bwcw);
+    if (this->bwcw) {
+        operator delete[](this->bwcw);
     }
-    if (bclr->bwsw) {
-        free_heap_8018D9C(bclr->bwsw);
+    if (this->bwsw) {
+        operator delete[](this->bwsw);
     }
-    if (bclr->bbwf) {
-        free_heap_8018D9C(bclr->bbwf);
+    if (this->bbwf) {
+        operator delete[](this->bbwf);
     }
-    free_heap_8018DA8(bclr->bbwi);
+    operator delete(this->bbwi);
     sub_8021FD4();
 
     gGameState.field_888_5 = 0;
@@ -1000,77 +987,76 @@ void save_clear_destroy(struct SaveClearScreen* bclr, int flags) {
     gGameState.field_31 = 2;
     BUFFER_REG_DISPCNT = 0;
     BUFFER_REG_BLDCNT = 0;
-    process_remove(&bclr->process, flags);
 }
 
-void save_clear_update(struct SaveClearScreen* bclr) {
+void SaveClearScreen::update() {
     u16 progress;
 
-    switch (bclr->process.state) {
+    switch (this->state) {
         case 0:
-            if (bclr->popup.zoomFrame > 0) {
-                popup_animate(&bclr->popup);
-                if (bclr->popup.zoomFrame == 0) {
-                    if (bclr->popup.isClosing) {
-                        sub_8018218(bclr->field_24 + 0x3C00, (void*)0x6004020, 0x3C00, 0, 32);
-                        sub_8018218(bclr->bwsw + 0x400, (void*)0x6002000, 0x800, 0, 32);
-                        bclr->field_1C_0 = 1;
-                        save_clear_show_popup(bclr, word_83A2944[2], word_83A2944[3]);
-                        bclr->sprite->yPosition = 98;
-                        bclr->process.state = 1;
+            if (this->popup.zoomFrame > 0) {
+                popup_animate(&this->popup);
+                if (this->popup.zoomFrame == 0) {
+                    if (this->popup.isClosing) {
+                        sub_8018218(this->field_24 + 0x3C00, (void*)0x6004020, 0x3C00, 0, 32);
+                        sub_8018218(this->bwsw + 0x400, (void*)0x6002000, 0x800, 0, 32);
+                        this->field_1C_0 = 1;
+                        showPopup(word_83A2944[2], word_83A2944[3]);
+                        this->sprite->yPosition = 98;
+                        this->state = 1;
                     }
                 }
             } else if (gGameState.field_2A & A_BUTTON) {
                 off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
-                bclr->popup.isClosing = 1;
-                bclr->popup.zoomFrame = 7;
+                this->popup.isClosing = 1;
+                this->popup.zoomFrame = 7;
                 play_sfx_80195B4(96, -1);
-                if (bclr->field_1C_0) {
-                    bclr->process.state = 5;
+                if (this->field_1C_0) {
+                    this->state = 5;
                 }
             } else if (gGameState.field_2A & (DPAD_RIGHT | DPAD_LEFT)) {
-                bclr->field_1C_0 ^= 1;
+                this->field_1C_0 ^= 1;
                 play_sfx_80195B4(95, -1);
             }
-            bclr->sprite->xPosition = !bclr->field_1C_0 ? 100 : 140;
+            this->sprite->xPosition = !this->field_1C_0 ? 100 : 140;
             break;
 
         case 1:
-            if (bclr->popup.zoomFrame > 0) {
-                popup_animate(&bclr->popup);
-                if (bclr->popup.zoomFrame == 1) {
-                    if (bclr->popup.isClosing) {
-                        sub_8018218(bclr->field_24 + 0x7800, (void*)0x6004020, 0x3C00, 0, 32);
-                        sub_8018218(bclr->bwsw + 0x800, (void*)0x6002000, 0x800, 0, 32);
+            if (this->popup.zoomFrame > 0) {
+                popup_animate(&this->popup);
+                if (this->popup.zoomFrame == 1) {
+                    if (this->popup.isClosing) {
+                        sub_8018218(this->field_24 + 0x7800, (void*)0x6004020, 0x3C00, 0, 32);
+                        sub_8018218(this->bwsw + 0x800, (void*)0x6002000, 0x800, 0, 32);
                     }
                 }
-                if (bclr->popup.zoomFrame == 0) {
-                    if (bclr->popup.isClosing) {
-                        save_clear_show_popup(bclr, word_83A2944[4], word_83A2944[5]);
+                if (this->popup.zoomFrame == 0) {
+                    if (this->popup.isClosing) {
+                        showPopup(word_83A2944[4], word_83A2944[5]);
                         off_839EC80[0x4A] |= 0x10;
-                        sprite_hide_8021F20(bclr->sprite);
-                        bclr->process.state = 2;
+                        sprite_hide_8021F20(this->sprite);
+                        this->state = 2;
                     }
                 }
             } else if (gGameState.field_2A & A_BUTTON) {
                 off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
-                bclr->popup.isClosing = 1;
-                bclr->popup.zoomFrame = 7;
+                this->popup.isClosing = 1;
+                this->popup.zoomFrame = 7;
                 play_sfx_80195B4(96, -1);
-                if (bclr->field_1C_0) {
-                    bclr->process.state = 5;
+                if (this->field_1C_0) {
+                    this->state = 5;
                 }
             } else if (gGameState.field_2A & (DPAD_RIGHT | DPAD_LEFT)) {
-                bclr->field_1C_0 ^= 1;
+                this->field_1C_0 ^= 1;
                 play_sfx_80195B4(95, -1);
             }
-            bclr->sprite->xPosition = !bclr->field_1C_0 ? 100 : 140;
+            this->sprite->xPosition = !this->field_1C_0 ? 100 : 140;
             break;
 
         case 2:
-            if (bclr->popup.zoomFrame > 0) {
-                popup_animate(&bclr->popup);
-                if (bclr->popup.zoomFrame != 0) {
+            if (this->popup.zoomFrame > 0) {
+                popup_animate(&this->popup);
+                if (this->popup.zoomFrame != 0) {
                     break;
                 }
                 sub_812418C();
@@ -1095,38 +1081,38 @@ void save_clear_update(struct SaveClearScreen* bclr) {
                 gGameState.field_88A_3 = 0;
                 gGameState.field_88C_0 = 0;
             } else {
-                progress = sub_8124270(bclr->field_3C, 8);
+                progress = sub_8124270(this->field_3C, 8);
                 if (progress == 0xFFFF) {
                     gGameState.field_88C_0 = 1;
                     gGameState.field_8C0 = 0;
                     gGameState.field_88A_4 = 0;
                     gGameState.field_88B_0 = 0;
                     gGameState.field_88A_3 = 1;
-                    sub_8018218(bclr->field_24 + 0xF000, (void*)0x6004020, 0x3C00, 0, 32);
-                    sub_8018218(bclr->bwsw + 0x1000, (void*)0x6002000, 0x800, 0, 32);
-                    bclr->brightness = 240;
+                    sub_8018218(this->field_24 + 0xF000, (void*)0x6004020, 0x3C00, 0, 32);
+                    sub_8018218(this->bwsw + 0x1000, (void*)0x6002000, 0x800, 0, 32);
+                    this->brightness = 240;
                     BUFFER_REG_DISPCNT &= 0xFBFF;
-                    bclr->process.state = 4;
+                    this->state = 4;
                 } else {
-                    bclr->field_3C = progress;
+                    this->field_3C = progress;
                     {
                         u8* ptr = off_839EC80;
                         //! Possible fake match: the target re-reads field_3C after storing it.
-                        u8 value = (*(vu16*)&bclr->field_3C >> 3) + 56;
+                        u8 value = (*(vu16*)&this->field_3C >> 3) + 56;
                         ptr += 0x42;
                         *ptr = value;
                     }
-                    if (bclr->field_3C == 0x400) {
+                    if (this->field_3C == 0x400) {
                         gGameState.field_88C_0 = 1;
                         gGameState.field_8C0 = 0;
                         gGameState.field_88A_4 = 0;
                         gGameState.field_88B_0 = 0;
                         gGameState.field_88A_3 = 1;
                         ((s8*)off_839EC80)[REG_OFFSET_DISPCNT + 1] &= ~0x40;
-                        sub_8018218(bclr->field_24 + 0xB400, (void*)0x6004020, 0x3C00, 0, 32);
-                        sub_8018218(bclr->bwsw + 0xC00, (void*)0x6002000, 0x800, 0, 32);
-                        bclr->brightness = 240;
-                        bclr->process.state = 3;
+                        sub_8018218(this->field_24 + 0xB400, (void*)0x6004020, 0x3C00, 0, 32);
+                        sub_8018218(this->bwsw + 0xC00, (void*)0x6002000, 0x800, 0, 32);
+                        this->brightness = 240;
+                        this->state = 3;
                     }
                 }
             }
@@ -1134,24 +1120,22 @@ void save_clear_update(struct SaveClearScreen* bclr) {
 
         case 3:
         case 4:
-            if (--bclr->brightness == 0 || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
+            if (--this->brightness == 0 || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
                 ((s8*)off_839EC80)[0x4A] &= ~1;
                 ((s8*)off_839EC80)[0x4A] &= ~2;
                 ((s8*)off_839EC80)[0x4A] &= ~4;
-                bclr->popup.isClosing = 1;
-                bclr->popup.zoomFrame = 7;
-                bclr->process.state = 5;
+                this->popup.isClosing = 1;
+                this->popup.zoomFrame = 7;
+                this->state = 5;
             }
             break;
 
         case 5:
-            popup_animate(&bclr->popup);
-            if (bclr->popup.zoomFrame == 0) {
-                if (bclr) {
-                    save_clear_destroy(bclr, 3);
-                }
-                company_intro_create(alloc_Zero(0x4C, 0, "OPEN", 0), 8, "COMP");
+            popup_animate(&this->popup);
+            if (this->popup.zoomFrame == 0) {
+                delete this;
+                new (0, "OPEN", 0) CompanyIntro(8, "COMP");
                 return;
             }
             break;
@@ -1160,8 +1144,7 @@ void save_clear_update(struct SaveClearScreen* bclr) {
     sub_8021F7C();
 }
 
-struct MarioBrosSaveError* mario_bros_save_error_create(struct MarioBrosSaveError* mber, u8 priority,
-                                                        char* label) {
+MarioBrosSaveError::MarioBrosSaveError(u8 priority, char* label) : Process(priority, label) {
     u16* cgdw;
     volatile int zero;
     int text;
@@ -1171,22 +1154,19 @@ struct MarioBrosSaveError* mario_bros_save_error_create(struct MarioBrosSaveErro
     int row;
     int column;
 
-    process_add(&mber->process, priority, label);
-    mber->process.definition = &stru_8CDC1C8;
-
     BUFFER_REG_BLDCNT = 191;
     BUFFER_REG_BLDY = 16;
     BUFFER_REG_DISPCNT = 0;
     sub_8017E34();
 
-    mber->brightness = 240;
-    mber->winw = alloc_zero_8018DB4(0x800, 1, "WINW", 0);
+    this->brightness = 240;
+    this->winw = (int*)operator new[](0x800, 1, "WINW", 0);
 
-    cgdw = alloc_zero_8018DB4(0x8000, 1, "CGDW", 0);
+    cgdw = (u16*)operator new[](0x8000, 1, "CGDW", 0);
     dword_3000C84(dword_83A0E94, cgdw);
     CpuFastSet(cgdw, (void*)0x6000000, (sub_80198B0(dword_83A0E94) >> 2) & 0x1FFFFF);
     if (cgdw) {
-        free_heap_8018D9C(cgdw);
+        operator delete[](cgdw);
     }
 
     if (gGameState.field_888_1 == 0) {
@@ -1195,30 +1175,30 @@ struct MarioBrosSaveError* mario_bros_save_error_create(struct MarioBrosSaveErro
         CpuFastSet(dword_83A1D80, (void*)0x2000080, 120);
     }
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
-    gGameState.field_2 = -1;
+    gGameState.field_2 = 0xFFFF;
 
-    mber->bbwf = alloc_zero_8018DB4(sub_819941C - sub_8198784, 0, "BBWF", 1);
-    sub_81994EC(mber->bbwf, off_851F9E8);
-    mber->bbwi = alloc_Zero(20, 0, "BBWI", 1);
-    mber->bwcw = alloc_zero_8018DB4(0x1001F, 1, "BWCW", 1);
-    mber->field_24 = (u8*)((int)&mber->bwcw[31] & 0xFFFFFFE0);
-    mber->bwsw = alloc_zero_8018DB4(0x2000, 1, "BWSW", 1);
+    this->bbwf = (int*)operator new[](sub_819941C - sub_8198784, 0, "BBWF", 1);
+    sub_81994EC(this->bbwf, off_851F9E8);
+    this->bbwi = (struct struc_15*)operator new(20, 0, "BBWI", 1);
+    this->bwcw = (u8*)operator new[](0x1001F, 1, "BWCW", 1);
+    this->field_24 = (u8*)((int)&this->bwcw[31] & 0xFFFFFFE0);
+    this->bwsw = (u16*)operator new[](0x2000, 1, "BWSW", 1);
 
     zero = 0;
     CpuFastSet((void*)&zero, (void*)0x6004000, 0x1000008);
 
     text = dword_84E8A28;
     width = word_83A2978[0];
-    sub_8199D78(mber->bbwi, mber->field_24, width, 0, 0, 0, 1, 2, 5, 0);
-    sub_8199D5C(mber->bbwi, 0, 72, text + 2);
+    sub_8199D78(this->bbwi, this->field_24, width, 0, 0, 0, 1, 2, 5, 0);
+    sub_8199D5C(this->bbwi, 0, 72, text + 2);
     do {
-        u8* v5 = mber->bbwi->field_8;
+        u8* v5 = this->bbwi->field_8;
         if (v5[0] == 255 && v5[1] == 11 && v5[2] == 1) {
-            mber->bbwi->field_8 += 3;
+            this->bbwi->field_8 += 3;
         }
-    } while (sub_8199624(mber->bbwi) != 0);
+    } while (sub_8199624(this->bbwi) != 0);
 
-    dst = mber->bwsw;
+    dst = this->bwsw;
     tile = 0xE001;
     for (row = 0; row < 16; row++) {
         dst += (30 - width) / 2;
@@ -1228,8 +1208,8 @@ struct MarioBrosSaveError* mario_bros_save_error_create(struct MarioBrosSaveErro
         dst += (30 - width) / 2 + 2;
     }
 
-    CpuFastSet(mber->field_24, (void*)0x6004020, 0x1000);
-    CpuFastSet(mber->bwsw, (void*)0x6002000, 0x200);
+    CpuFastSet(this->field_24, (void*)0x6004020, 0x1000);
+    CpuFastSet(this->bwsw, (void*)0x6002000, 0x200);
 
     BUFFER_REG_BG0CNT = 0x406;
     BUFFER_REG_BG1CNT = 0x1C02;
@@ -1237,46 +1217,43 @@ struct MarioBrosSaveError* mario_bros_save_error_create(struct MarioBrosSaveErro
     BUFFER_REG_BG0VOFS = 0;
     BUFFER_REG_BG1HOFS = 0;
     BUFFER_REG_BG1VOFS = 0;
-    mario_bros_save_error_show_popup(mber);
+    showPopup();
 
     BUFFER_REG_BLDCNT = 191;
     BUFFER_REG_BLDY = 0;
     BUFFER_REG_DISPCNT = 0x3340;
-    return mber;
 }
 
-void mario_bros_save_error_update(struct MarioBrosSaveError* mber) {
-    switch (mber->process.state) {
+void MarioBrosSaveError::update() {
+    switch (this->state) {
         case 0:
-            if (mber->popup.zoomFrame > 0) {
-                popup_animate(&mber->popup);
-            } else if (--mber->brightness == 0
+            if (this->popup.zoomFrame > 0) {
+                popup_animate(&this->popup);
+            } else if (--this->brightness == 0
                        || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
-                mber->popup.isClosing = 1;
-                mber->popup.zoomFrame = 7;
-                mber->process.state = 1;
+                this->popup.isClosing = 1;
+                this->popup.zoomFrame = 7;
+                this->state = 1;
             }
             break;
 
         case 1:
-            popup_animate(&mber->popup);
-            if (mber->popup.zoomFrame == 0) {
-                if (mber) {
-                    mario_bros_save_error_destroy(mber, 3);
-                }
-                title_screen_create(alloc_Zero(0xE4, 0, "OPEN", 0), 8, "OPEN", 2);
+            popup_animate(&this->popup);
+            if (this->popup.zoomFrame == 0) {
+                delete this;
+                new (0, "OPEN", 0) TitleScreen(8, "OPEN", 2);
             }
             break;
     }
 }
 
-void mario_bros_save_error_show_popup(struct MarioBrosSaveError* mber) {
+void MarioBrosSaveError::showPopup() {
     u8 width = word_83A2978[0];
     u8 height = word_83A2978[1];
     u8 left = 15 - width / 2;
     u8 top = 10 - height / 2;
 
-    popup_draw(&mber->popup, (u16*)mber->winw, left, top, width, height, 0xE000);
+    popup_draw(&this->popup, (u16*)this->winw, left, top, width, height, 0xE000);
     off_839EC80[0x4A] |= 0x10;
 }

@@ -1,21 +1,20 @@
 #include "global.h"
 #include "common.h"
+#include "heap.h"
 #include "field.h"
 #include "game_mode.h"
 #include "system_screens.h"
 #include "title_screen.h"
 
-static const char sFieldLabel[];
+extern const char sFieldLabel[];
 
 void sub_801AF50(void) {
     sub_80FC1F8();
 }
 
 void make_fldm_801AF5C(int fromSave) {
-    //! Possible fake match. Not yet sure what happens here?
-    struct FldmFlag arg4 = { 1 }, arg5 = { 0 };
-    init_fldm_8021FF8(alloc_Zero(0x324, 0, (char*)sFieldLabel, 0), 8, (char*)sFieldLabel,
-                      !fromSave ? 0x73 : -1, arg4, arg5);
+    new (0, (char*)sFieldLabel, 0)
+        FieldManager(8, (char*)sFieldLabel, !fromSave ? 0x73 : -1, true, false);
 }
 
 void sub_801AFA0(void) {
@@ -47,9 +46,9 @@ void sub_801B014(void) {
 
 void sub_801B034(void) {
     if (gGameState.inputPressed == (L_BUTTON | R_BUTTON | SELECT_BUTTON | B_BUTTON | A_BUTTON)) {
-        save_clear_create(alloc_Zero(sizeof(struct SaveClearScreen), 0, "BCLR", 0), 8, "BCLR");
+        new (0, "BCLR", 0) SaveClearScreen(8, "BCLR");
     } else {
-        company_intro_create(alloc_Zero(sizeof(struct CompanyIntro), 0, "COMP", 0), 8, "COMP");
+        new (0, "COMP", 0) CompanyIntro(8, "COMP");
     }
 }
 
@@ -65,4 +64,4 @@ void sub_801B0AC(u16 mask) {
 
 //! Possible fake match.
 // Defined after the other functions so it is emitted after "BCLR" and "COMP" in .rodata.
-static const char sFieldLabel[] = "FLDM";
+const char sFieldLabel[] = "FLDM";
