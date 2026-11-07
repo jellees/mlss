@@ -301073,7 +301073,7 @@ sub_80F0984:
 	push {r4, lr}
 	adds r4, r1, #0x0
 	ldr r0, [r0, #0x14]
-	bl sub_8027378
+	bl sub_8027378__12FieldManager
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #0x01
@@ -301117,7 +301117,7 @@ _080F09BA:
 	str r0, [sp, #0x004]
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
-	bl sub_8027030
+	bl sub_8027030__12FieldManageriiUsUsUs
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5}
@@ -301153,7 +301153,7 @@ _080F0A0C:
 	adds r0, r3, #0x0
 	adds r1, r4, #0x0
 	adds r3, r5, #0x0
-	bl sub_8027030
+	bl sub_8027030__12FieldManageriiUsUsUs
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5}
@@ -301193,7 +301193,7 @@ _080F0AC0:
 	str r1, [sp, #0x000]
 	str r1, [sp, #0x004]
 	adds r1, r5, #0x0
-	bl sub_8027030
+	bl sub_8027030__12FieldManageriiUsUsUs
 	movs r0, #0x01
 	add sp, #0x010
 	pop {r4, r5, r6}

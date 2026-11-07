@@ -843,7 +843,7 @@ _08022CF8:
 	orrs r0, r1
 	strb r0, [r5, #0x00]
 	adds r0, r7, #0x0
-	bl sub_8026C78
+	bl sub_8026C78__12FieldManager
 	movs r0, #0x01
 	strb r0, [r7, #0x00]
 	bl _08023DBC
@@ -2785,7 +2785,7 @@ _08023CDC:
 	movs r1, #0x01
 	movs r2, #0x08
 	movs r3, #0x00
-	bl sub_8027030
+	bl sub_8027030__12FieldManageriiUsUsUs
 	movs r5, #0xC7
 	lsls r5, r5, #0x02
 	adds r0, r7, r5

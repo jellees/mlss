@@ -72,7 +72,7 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     fldm->field_2B9 = 0xFF;
     fldm->field_2B8_6 = 0;
     fldm->field_12B = -1;
-    fldm->field_12C_3 = 31;
+    fldm->field_12C_2 = -2;
     fldm->field_12C_1 = 0;
     fldm->field_12D_0 = 0;
     fldm->field_12D_4 = 0;
@@ -797,5 +797,374 @@ void FieldManager::make_field_objects_80267C0(int room) {
     for (i = 0; i < 8; i++) {
         shotBullets[i] = new (1, "FPSB", 1) FieldPlayerShotBullet(i);
     }
+}
+#endif
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8026C78__12FieldManager.s\"");
+#else
+// Creates the "SBLK" objects and fills field_134 from the entries at field_DC.
+void FieldManager::sub_8026C78() {
+    u8* header = field_DC;
+    u16 index = (header[2] << 8) | header[1];
+    int count = header[0];
+    int i;
+    u8* entry = header - ((header[4] << 8) | header[3]);
+    u8 offset;
+
+    field_1F4 = 0;
+    for (i = 0; i < count; i++, index++, entry += 8) {
+        u8 flags = entry[0];
+
+        switch (flags & ~0x10) {
+            case 0x00:
+            case 0x20:
+            case 0x40: {
+                FieldObjectSubclass3* object = new (1, "SBLK", 1) FieldObjectSubclass3(entry, index, -1, -1);
+
+                if ((flags & 0x10) && object->field_33C_0) {
+                    object->field_20C_25 = 0;
+                }
+                object->field_54 = field_10B;
+                objects[field_10B] = object;
+                if (field_11A == 0) {
+                    field_11A = field_10B;
+                }
+                field_11B++;
+                field_10B++;
+                break;
+            }
+            case 0xA0:
+            case 0xC0:
+                field_134[field_1F4].field_0_0 = flags != 0xA0;
+                field_134[field_1F4].field_0_1
+                    = sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, (u16)(index + 0x1360));
+                field_134[field_1F4].field_1 = entry[1];
+                field_134[field_1F4].field_2 = entry[2];
+                offset = (u8)(entry[5] >> 1);
+                field_134[field_1F4].field_3
+                    = (entry[3] & 0x7F) + ((entry[5] & 0x20) ? (u32)(offset | ~0x1F) >> 3 : offset >> 3);
+                field_134[field_1F4].field_4 = index;
+                field_134[field_1F4].field_8 = entry;
+                field_1F4++;
+                break;
+        }
+    }
+}
+#endif
+
+void FieldManager::sub_8026E94() {
+    struct struc_3000D44* process;
+
+    BUFFER_REG_DISPCNT = 0x1F40;
+    if (field_291_1) {
+        BUFFER_REG_BG0CNT = field_294;
+        dword_3001034(0, (void*)0x0600C000, 0x20);
+        dword_3001034(0, (void*)0x0600C800, 0x800);
+        field_291_1 = 0;
+    }
+    ((s8*)off_839EC80)[0x01] &= ~0x20;
+    if (field_2B8_0) {
+        if (field_2B8_4) {
+            if ((gGameState.field_3C.field_3C_0 & 0xF0) == 0xF0) {
+                sub_802EF18(this);
+            } else if (field_246_2 == 5) {
+                field_246_2 = 0;
+                sub_8029A0C(this, 0, 0);
+            }
+        }
+        field_2B8_0 = 0;
+    }
+    if (field_20A_7 == 2 || (field_20A_7 == 0 && !(gGameState.field_3C.field_3C_0 & 0x33))) {
+        field_244 = 0xFFC8;
+    }
+    if (field_12A == 0) {
+        field_12A = 1;
+        field_F8_1 = 0;
+        field_F8_2 = 0;
+    }
+    if (field_FC_0) {
+        sub_80193B4(0, field_1FA >> 8, 8);
+        field_FC_0 = 0;
+    }
+    process = dword_3000D44;
+    if (process->field_28_0) {
+        sub_801BC40(process, process->field_20, process->field_28_2);
+    }
+    ((Process*)dword_3000D44)->enable();
+}
+
+void FieldManager::sub_8027030(int mode, int arg2, u16 arg3, u16 arg4, u16 arg5) {
+    switch (mode) {
+        case 1:
+            sub_8026E94();
+        case 2:
+            field_128 = arg3;
+            sub_80291EC(this, mode != 1 ? 4 : 0, arg2, arg3, arg4, arg5);
+            break;
+        case 4:
+            if (field_F0 != 0) {
+                gGameState.field_0 = field_F0 >> 16;
+                gGameState.field_2 = field_F0;
+                gGameState.field_884 = field_F0;
+                sub_80290E0(this);
+            } else {
+                gGameState.field_0 = 0xFFFF;
+                gGameState.field_2 = (u16)-1;
+                gGameState.field_884 = (u32)-1;
+            }
+            sub_8026E94();
+            field_FE = word_2000272;
+            field_FC_11 = 1;
+        case 3:
+        case 5:
+            word_2000272 = 0;
+            gGameState.field_2 |= 0x8000;
+            sub_805C9DC(field_1FC, mode - 3);
+            field_128 = 0;
+            break;
+    }
+    field_FC_3 = mode;
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8027168__12FieldManageriiUsUs.s\"");
+#else
+// Not called anywhere. Like sub_8027030, for modes 6 and 7: starts a "WIPE" transition centered on (x, y).
+void FieldManager::sub_8027168(int mode, int arg2, u16 x, u16 y) {
+    s16 dx;
+    s16 dy;
+    struct struc_839EC80* buffer;
+
+    sub_80F032C(evts);
+    field_10A = 0;
+    dword_3001034(0x99999999, (void*)0x0600C000, 0x20);
+    dword_3001034(0xF000F000, (void*)0x0600C800, 0x800);
+    switch (mode) {
+        case 6:
+            if (field_F0 != 0) {
+                gGameState.field_0 = field_F0 >> 16;
+                gGameState.field_2 = field_F0;
+                gGameState.field_884 = field_F0;
+                sub_80290E0(this);
+            } else {
+                gGameState.field_0 = 0xFFFF;
+                gGameState.field_2 = (u16)-1;
+                gGameState.field_884 = (u32)-1;
+            }
+            sub_8026E94();
+            field_FE = word_2000272;
+            field_FC_11 = 1;
+        case 7:
+            gGameState.field_888_6 = 1;
+            field_102 = x;
+            field_104 = y;
+            field_108 = mode;
+            dx = x;
+            if (dx <= 0x77) {
+                dx = 0xF0 - dx;
+            }
+            dy = y;
+            if (dy <= 0x4F) {
+                dy = 0xA0 - dy;
+            }
+            field_106 = ((int (*)(int))dword_3001038)(dx * dx + dy * dy);
+            field_318 = sub_8079D1C(operator new(0x44, 0, "WIPE", 0), 1, "WIPE", mode + 8, arg2, &field_102, 3,
+                                    0x3E, sub_80292A0);
+            field_128 = 0;
+            break;
+    }
+    word_2000272 = 0;
+    gGameState.field_2 |= 0x8000;
+    buffer = (struct struc_839EC80*)off_839EC80;
+    buffer->field_12_0 = 0;
+    buffer->field_10_0 = 0;
+    BUFFER_REG_BG0CNT = 0x190C;
+    buffer->field_1_0 = 1;
+    field_FC_3 = mode;
+}
+#endif
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8027378__12FieldManager.s\"");
+#else
+// Whether the transition started by sub_8027030 or sub_8027168 is still running.
+bool FieldManager::sub_8027378() {
+    if (field_FC_3 <= 2) {
+        return sub_8116620(field_314);
+    } else if (field_FC_3 >= 3 && field_FC_3 <= 5) {
+        return ((u8*)field_1FC)[0xA];
+    } else if (field_FC_3 >= 6 && field_FC_3 <= 7) {
+        // The original only truncates this result to a byte instead of testing it.
+        return Process::exists(field_318);
+    }
+}
+#endif
+
+void FieldManager::sub_80273E4() {
+    int i;
+
+    sub_803C610();
+    sub_802563C();
+    sub_8025ACC();
+    field_120_0 = gGameState.field_3C.field_3C_0;
+    field_120_10 = gGameState.field_3C.field_3C_10;
+    field_120_12 = gGameState.field_3C.field_3C_12;
+    field_120_13 = gGameState.field_3C.field_3C_13;
+    if (field_1FC) {
+        sub_805CCC0(field_1FC, 3);
+        field_1FC = NULL;
+    }
+    if (field_308) {
+        sub_805C73C(field_308, 3);
+        field_308 = NULL;
+    }
+    if (field_310) {
+        delete field_310;
+        field_310 = NULL;
+    }
+    if (field_30C) {
+        delete field_30C;
+        field_30C = NULL;
+    }
+    sub_80F0184(evts);
+    if (field_F8_0) {
+        sub_8021FD4();
+        field_F8_0 = 0;
+    }
+    if (field_314) {
+        sub_81166AC(field_314, 3);
+        field_314 = NULL;
+    }
+    evts->process->disable();
+    bevs->process->disable();
+    disable();
+    for (i = 0; i < field_10B; i++) {
+        objects[i]->method3();
+    }
+    field_F9_7 = 1;
+}
+
+void FieldManager::sub_8027558() {
+    ((Process*)dword_3000D44)->disable();
+    sub_801A6B0();
+    field_1FA = gGameState.field_89C;
+    sub_80193B4(0, 0x80, 8);
+    field_FC_0 = 1;
+    sub_80273E4();
+    sub_805A1A8(field_304);
+    field_304->disable();
+    runtime_install_interrupt_callback(2, NULL);
+    state = 2;
+    byte_3000C24 = 2;
+    if (dword_3000C78 == NULL) {
+        dword_3000C78 = sub_800063C;
+    }
+    sub_8122BA0(field_12C_2, 0);
+}
+
+// Like sub_8027558, but with different arguments for sub_8122BA0.
+void FieldManager::sub_80275F4() {
+    ((Process*)dword_3000D44)->disable();
+    sub_801A6B0();
+    field_1FA = gGameState.field_89C;
+    sub_80193B4(0, 0x80, 8);
+    field_FC_0 = 1;
+    sub_80273E4();
+    sub_805A1A8(field_304);
+    field_304->disable();
+    runtime_install_interrupt_callback(2, NULL);
+    state = 2;
+    byte_3000C24 = 2;
+    if (dword_3000C78 == NULL) {
+        dword_3000C78 = sub_800063C;
+    }
+    sub_8122BA0(-1, 1);
+}
+
+// Like sub_8027558, but deletes field_304 and starts a "SIGN" process for the current room.
+void FieldManager::sub_8027688() {
+    sub_801A6B0();
+    field_1FA = gGameState.field_89C;
+    sub_80193B4(0, 0x80, 8);
+    field_FC_0 = 1;
+    sub_80273E4();
+    if (field_304) {
+        sub_8057B58(field_304, 3);
+        field_304 = NULL;
+    }
+    runtime_install_interrupt_callback(2, NULL);
+    state = 2;
+    byte_3000C24 = 2;
+    if (dword_3000C78 == NULL) {
+        dword_3000C78 = sub_800063C;
+    }
+    sub_8051628(operator new(0x4C, 0, "SIGN", 0), 8, "SIGN", field_124);
+}
+
+// Like sub_8027688, but ends with sub_812F5A4 instead of the "SIGN" process.
+void FieldManager::sub_802772C() {
+    sub_801A6B0();
+    field_1FA = gGameState.field_89C;
+    sub_80193B4(0, 0x80, 8);
+    field_FC_0 = 1;
+    sub_80273E4();
+    if (field_304) {
+        sub_8057B58(field_304, 3);
+        field_304 = NULL;
+    }
+    runtime_install_interrupt_callback(2, NULL);
+    state = 2;
+    byte_3000C24 = 2;
+    if (dword_3000C78 == NULL) {
+        dword_3000C78 = sub_800063C;
+    }
+    sub_812F5A4(field_12D_1, field_12D_2);
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80277C4__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb.s\"");
+#else
+// Not called anywhere. Prepares a battle between player and monster.
+void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMonster* monster, bool arg4) {
+    FieldStruct2* fmex;
+    int i;
+
+    stop_all_sfx_801959C();
+    sub_80F032C(evts);
+    fmex = field_1C;
+    for (i = 0; i < 4; i++) {
+        if (!fmex->field_25C[i].sprite->field_12_5) {
+            sub_8020D40(fmex->field_25C[i].sprite);
+        }
+    }
+    field_10A = 0;
+    field_FC_2 = 0;
+    field_2A9_2 = mode;
+    field_2A8_0 = monster->field_54;
+    field_2A8_5 = player->field_33C_7;
+    field_2A9_5 = player->field_54;
+    if (!monster->field_33C_7) {
+        monster->field_33D_0 = monster->field_214_0;
+        monster->field_33C_7 = 1;
+    }
+    monster->field_214_0 = 0;
+    monster->field_33C_0 = 0;
+    if (monster->field_344 != NULL && monster->field_344->field_20C_0) {
+        if (!monster->field_344->field_33C_1) {
+            monster->field_344->field_33C_2 = monster->field_344->field_214_0;
+            monster->field_344->field_33C_1 = 1;
+        }
+        monster->field_344->field_214_0 = 0;
+    }
+    field_2AA = monster->field_22C_0;
+    play_sfx_80195B4(word_839F5F8[field_2A9_2 * 2 + player->field_54], -1);
+    field_2A9_6 = arg4;
+    field_2A9_7 = arg4;
+    sub_803C8A4(this, 0, 1);
 }
 #endif

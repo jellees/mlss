@@ -7491,7 +7491,7 @@ _0802ED70:
 	adds r0, r5, #0x0
 	movs r1, #0x02
 	movs r3, #0x00
-	bl sub_8027030
+	bl sub_8027030__12FieldManageriiUsUsUs
 	ldr r1, [r4, #0x00]
 	ldr r3, _0802EDC0 @ =0x0000020D
 	adds r1, r1, r3
@@ -7650,7 +7650,7 @@ _0802EEAE:
 	movs r1, #0x02
 	movs r2, #0x10
 	movs r3, #0x00
-	bl sub_8027030
+	bl sub_8027030__12FieldManageriiUsUsUs
 	movs r1, #0x80
 	lsls r1, r1, #0x02
 	adds r0, r4, r1

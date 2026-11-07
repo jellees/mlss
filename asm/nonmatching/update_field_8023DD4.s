@@ -47,7 +47,7 @@ _08023E1A:
 	cmp r0, #0xF8
 	beq _08023E34
 	mov r0, r10
-	bl sub_8027558
+	bl sub_8027558__12FieldManager
 	bl _080254A2
 _08023E34:
 	movs r2, #0x01
@@ -56,7 +56,7 @@ _08023E34:
 	cmp r0, #0x00
 	beq _08023E48
 	mov r0, r10
-	bl sub_80275F4
+	bl sub_80275F4__12FieldManager
 	bl _080254A2
 _08023E48:
 	movs r0, #0x02
@@ -64,7 +64,7 @@ _08023E48:
 	cmp r0, #0x00
 	beq _08023E5A
 	mov r0, r10
-	bl sub_8027688
+	bl sub_8027688__12FieldManager
 	bl _080254A2
 _08023E5A:
 	ldr r0, _08023E74 @ =0x0000012D
@@ -75,7 +75,7 @@ _08023E5A:
 	cmp r0, #0x00
 	beq _08023E78
 	mov r0, r10
-	bl sub_802772C
+	bl sub_802772C__12FieldManager
 	bl _080254A2
 	lsls r0, r0, #0x00
 _08023E74: .4byte 0x0000012D
@@ -199,7 +199,7 @@ _08023F40:
 	.4byte _080243A8
 _08023F88:
 	mov r0, r10
-	bl sub_8027378
+	bl sub_8027378__12FieldManager
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _08023F98
@@ -237,7 +237,7 @@ _08023FC4:
 	cmp r0, #0x00
 	beq _08024000
 	mov r0, r10
-	bl sub_8027378
+	bl sub_8027378__12FieldManager
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _08024000
@@ -721,7 +721,7 @@ _080243A8:
 	cmp r0, #0x00
 	bne _080243F8
 	mov r0, r10
-	bl sub_8027378
+	bl sub_8027378__12FieldManager
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _080243C6
@@ -858,19 +858,19 @@ _080244E0:
 	mov r0, r10
 	bl sub_80290CC
 	mov r0, r10
-	bl sub_8027558
+	bl sub_8027558__12FieldManager
 	b _0802451E
 _080244F2:
 	mov r0, r10
 	bl sub_8029070
 	mov r0, r10
-	bl sub_80275F4
+	bl sub_80275F4__12FieldManager
 	b _0802451E
 _08024500:
 	mov r0, r10
 	bl sub_8029060
 	mov r0, r10
-	bl sub_8027688
+	bl sub_8027688__12FieldManager
 	b _0802451E
 _0802450E:
 	mov r0, r10
@@ -878,7 +878,7 @@ _0802450E:
 	movs r2, #0x00
 	bl sub_8029030
 	mov r0, r10
-	bl sub_802772C
+	bl sub_802772C__12FieldManager
 _0802451E:
 	ldrb r0, [r4, #0x00]
 	movs r1, #0x10
@@ -1356,7 +1356,7 @@ _080248B2:
 	movs r1, #0x02
 	movs r2, #0x08
 	movs r3, #0x00
-	bl sub_8027030
+	bl sub_8027030__12FieldManageriiUsUsUs
 	movs r1, #0x01
 	negs r1, r1
 	movs r0, #0x54

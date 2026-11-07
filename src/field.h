@@ -38,7 +38,9 @@ struct FieldStruct3 {
     u8 field_1;
     u8 field_2;
     u8 field_3;
-    u8 pad_4[0x8];
+    u16 field_4;
+    u8 pad_6[0x2];
+    u8* field_8;
 };
 
 // "FMBK" buffer (FieldManager::field_20): a copy of the field state.
@@ -65,7 +67,9 @@ class FieldManager : public Process {
     u16* field_C8;
     u16* field_CC;
     struct struc_3000388* field_D0;
-    u8 pad_D4[0x10];
+    u8 pad_D4[0x8];
+    u8* field_DC; // Count, first index and offset of the 8-byte entries read by sub_8026C78
+    u8 pad_E0[0x4];
     u32 field_E4;
     u8 pad_E8[0x8];
     u32 field_F0;
@@ -97,7 +101,12 @@ class FieldManager : public Process {
     u16 field_FC_7 : 4;
     u16 field_FC_11 : 1;
     u16 field_FC_12 : 4;
-    u8 pad_FE[0xC];
+    u16 field_FE;
+    u8 pad_100[0x2];
+    u16 field_102; // Wipe center x
+    u16 field_104; // Wipe center y
+    u16 field_106; // Wipe radius
+    u16 field_108; // Mode passed to sub_8027168
     u8 field_10A;
     u8 field_10B;
     u8 pad_10C;
@@ -132,10 +141,10 @@ class FieldManager : public Process {
     s8 field_12B;
     u8 field_12C_0 : 1;
     u8 field_12C_1 : 1;
-    u8 field_12C_2 : 1;
-    u8 field_12C_3 : 5;
+    s8 field_12C_2 : 6;
     u8 field_12D_0 : 1;
-    u8 field_12D_1 : 3;
+    u8 field_12D_1 : 1;
+    u8 field_12D_2 : 2;
     u8 field_12D_4 : 1;
     u8 field_12D_5 : 1;
     u8 field_12D_6 : 2;
@@ -210,14 +219,20 @@ class FieldManager : public Process {
     u8 field_291_0 : 1;
     u8 field_291_1 : 1;
     u8 field_291_2 : 6;
-    u8 pad_292[0x16];
-    u8 field_2A8_0 : 6;
+    u8 pad_292[0x2];
+    u16 field_294;
+    u8 pad_296[0x12];
+    u8 field_2A8_0 : 5; // Battle: index of the monster
+    u8 field_2A8_5 : 1;
     u8 field_2A8_6 : 1;
     u8 field_2A8_7 : 1;
-    u8 field_2A9_0 : 6;
+    u8 field_2A9_0 : 2;
+    u8 field_2A9_2 : 3; // Battle: mode passed to sub_80277C4
+    u8 field_2A9_5 : 1;
     u8 field_2A9_6 : 1;
     u8 field_2A9_7 : 1;
-    u8 pad_2AA[0x8];
+    u16 field_2AA;
+    u8 pad_2AC[0x6];
     s16 field_2B2;
     u8 pad_2B4[0x4];
     u8 field_2B8_0 : 1;
@@ -244,7 +259,7 @@ class FieldManager : public Process {
     Process* field_30C;
     FieldProcess803EA00* field_310;
     Process* field_314;
-    u32 field_318;
+    Process* field_318; // "WIPE"
     struct EventScriptProcess* evts;
     struct EventScriptProcess* bevs;
 
@@ -265,6 +280,17 @@ class FieldManager : public Process {
     void sub_80264F4(u16 arg1);
     void sub_80265EC();
     void make_field_objects_80267C0(int room);
+    void sub_8026C78();
+    void sub_8026E94();
+    void sub_8027030(int mode, int arg2, u16 arg3, u16 arg4, u16 arg5);
+    void sub_8027168(int mode, int arg2, u16 x, u16 y);
+    bool sub_8027378();
+    void sub_80273E4();
+    void sub_8027558();
+    void sub_80275F4();
+    void sub_8027688();
+    void sub_802772C();
+    void sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMonster* monster, bool arg4);
 };
 
 extern "C" {

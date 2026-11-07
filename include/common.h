@@ -17,7 +17,10 @@ struct struc_3000388 {
     u8 field_9;
     u8 pad2[0x32];
     u16 field_3C_0 : 10;
-    u16 field_3C_10 : 6;
+    u16 field_3C_10 : 2;
+    u16 field_3C_12 : 1;
+    u16 field_3C_13 : 1;
+    u16 field_3C_14 : 2;
     u8 pad3[2];
 };
 
@@ -64,7 +67,9 @@ struct GameState {
     u32 field_88B_1 : 7;
     u8 field_88C_0 : 1;
     u8 field_88C_1 : 7;
-    u8 pad2[0x33];
+    u8 pad2[0xF];
+    u16 field_89C;
+    u8 pad2_2[0x22];
     u8 field_8C0;
     u8 pad3[0xF];
     void* field_8D0;
@@ -300,6 +305,28 @@ struct struc_3000D40 {
     u16 slot : 2;
 };
 
+// The buffer at off_839EC80.
+struct struc_839EC80 {
+    u8 field_0;
+    u8 field_1_0 : 1;
+    u8 field_1_1 : 7;
+    u8 pad_2[0xE];
+    u16 field_10_0 : 9;
+    u16 field_10_9 : 7;
+    u16 field_12_0 : 9;
+    u16 field_12_9 : 7;
+};
+
+// Process at dword_3000D44 (implemented in asm, update near sub_801BC40).
+struct struc_3000D44 {
+    u8 pad_0[0x20];
+    u16 field_20;
+    u8 pad_22[0x6];
+    u8 field_28_0 : 1;
+    u8 field_28_1 : 1;
+    u8 field_28_2 : 4;
+};
+
 struct struc_11 {
     u16 field_0;
     u16 field_2;
@@ -418,6 +445,13 @@ void sub_8021F7C(void);
 void sub_812418C(void);
 u16 sub_8124270(u16, int);
 void sub_8021FD4(void);
+void sub_803C610(void);
+void sub_805A1A8(struct Process*);
+void sub_8122BA0(int, int);
+void sub_812F5A4(int, int);
+void stop_all_sfx_801959C(void);
+void sub_803C8A4(struct FieldManager*, int, int);
+struct Process* sub_8051628(void*, u8, char*, u16); // Constructor of the "SIGN" process
 void sub_80FAFD8(void*, int);
 void sub_81166AC(struct Process*, int);
 void popup_animate(struct Popup*);
@@ -482,6 +516,14 @@ void sub_80E9B0C(void);
 void sub_80E9D04(void);
 void sub_80E9D1C(void);
 void sub_801BD30(void);
+void sub_801BC40(struct struc_3000D44*, u16, u8);
+void sub_8029A0C(struct FieldManager*, int, int);
+void sub_802EF18(struct FieldManager*);
+void sub_80290E0(struct FieldManager*);
+void sub_80291EC(struct FieldManager*, int, int, u16, u16, u16);
+void sub_805C9DC(struct Process*, u8);
+struct Process* sub_8079D1C(void*, int, char*, u8, u16, u16*, int, int, void (*)(struct FieldManager*));
+void sub_80292A0(struct FieldManager*);
 void sub_801BD50(int);
 void sub_8122BFC(void);
 u16 sub_8199624(struct struc_15*);
@@ -504,6 +546,10 @@ extern struct LoadMenuItem* dword_3000FF8;
 extern u8 byte_3000C80;
 extern struct struc_3000D40 stru_3000D40;
 extern struct FieldManager* dword_3000D7C;
+extern struct struc_3000D44* dword_3000D44;
+extern u16 word_2000272;
+extern u8 byte_3000C24;
+extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
 extern struct EventScriptProcess* dword_3000D78;
 extern struct struc_3000FD0* dword_3000FD0;
 extern void* dword_3000FC0;
