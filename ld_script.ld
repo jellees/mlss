@@ -44,6 +44,8 @@ SECTIONS
         src/title_screen.o(.text);
         src/multiplayer_serial.o(.text);
         asm/text08057568.o(.text);
+        asm/text080575C8.o(.text);
+        asm/text0805CCE0.o(.text);
         src/load_menu.o(.text);
         asm/text08127BC8.o(.text);
         asm/text08127E50.o(.text);
@@ -67,6 +69,7 @@ SECTIONS
         asm/rodata081E273C.o(.rodata);
         src/title_screen.o(.rodata);
         asm/rodata081E2794.o(.rodata);
+        asm/rodata081E2840.o(.rodata);
         src/load_menu.o(.rodata);
         asm/rodata08210F64.o(.rodata);
         src/save_menu.o(.rodata);
@@ -84,6 +87,7 @@ SECTIONS
         asm/rodata08CDC1F8.o(.rodata);
         src/title_screen.o(.gnu.linkonce.d.*);
         asm/rodata08CDC278.o(.rodata);
+        asm/rodata08CDC2C8.o(.rodata);
         src/load_menu.o(.gnu.linkonce.d.*);
         src/save_menu.o(.gnu.linkonce.d.*);
         asm/rodata08CDC3F8.o(.rodata);
