@@ -8,6 +8,7 @@ extern "C" {
 // Defined in src/process.h.
 struct Process;
 struct FieldManager;
+struct SignMapEntry;
 
 struct struc_3000388 {
     u16 field_0;
@@ -160,7 +161,8 @@ struct Sprite {
     u32 field_12_5 : 1;
     u32 field_12_6 : 1;
     u32 field_12_7 : 1;
-    u32 field_13_0 : 4;
+    u32 field_13_0 : 2;
+    u32 field_13_2 : 2;
     u32 field_13_4 : 4;
     u16 field_14;
     u16 field_16;
@@ -497,6 +499,9 @@ struct EventScriptProcess* bevs_process_init_80F048C(void*, int, u8, char*);
 struct EventScriptProcess* evts_process_init_80EF3FC(void*, int, u8, char*);
 void sub_819A138(void*, u32);
 void sub_8057B58(struct Process*, u32);
+struct Process* sub_80575C8(void*, u8, char*, u16, s16, s16, struct Process*);
+void sub_8057C9C(struct Process*, s16, s16);
+void sub_805A0EC(struct Process*, int, u16*, u16*);
 void sub_805C73C(struct Process*, u32);
 void sub_805CCC0(struct Process*, u32);
 void sub_80F0184(struct EventScriptProcess*);
@@ -563,6 +568,9 @@ extern void (*dword_3001034)(int, void*, int);
 extern int (*dword_3001038)();
 
 // ROM
+extern struct SignMapEntry stru_83A0D2C[]; // Sign zoom and center per room
+extern u16 word_83A0E64[];                // Sign arrow positions (x, y)
+extern s8 byte_83A0E74[];                 // Sign scroll steps (x, y) per D-pad state
 extern int loc_8198220();
 extern int loc_819832C(int, int);
 extern int loc_8198350(int, int);

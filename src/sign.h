@@ -5,17 +5,27 @@
 
 // "SIGN": the map shown when the player reads a sign on the field (created by
 // FieldManager::sub_8027688). The screen fades to black, then into the map, which can be scrolled; B
-// fades back out. Implemented in asm/sign.s (0x08051628-0x08051B98, vtables 0x08CDC1A8 and 0x08CDC1B8).
-// Interface-only, so that no file emits the vtables or inline members.
+// fades back out.
 #pragma interface
 
 // "SBDR": the renderer of the sign (parentProcess is the Sign). Its update is the same as
-// SpriteRenderer::update and the other renderers' (a shared inline function).
+// SpriteRenderer::update and the other renderers'.
 class SignRenderer : public Process {
   public:
-    SignRenderer(u8 priority, char* label);
-    ~SignRenderer();
+    SignRenderer(u8 priority, char* label) : Process(priority, label) {
+    }
+    ~SignRenderer() {
+    }
     virtual void update();
+};
+
+// Entries of stru_83A0D2C, terminated by room 0xFFFF.
+// Should check where these entries are stored in rom later. Maybe they are part of this file.
+struct SignMapEntry {
+    u16 room;
+    u16 zoom;
+    u16 centerX;
+    u16 centerY;
 };
 
 class Sign : public Process {
@@ -24,18 +34,17 @@ class Sign : public Process {
     s16 scrollY;
     u16 width;
     u16 height;
-    u16 zoom;    // 0x200 unless the room is in the table at 0x083A0D2C
-    u16 centerX; // 120 unless the room is in the table at 0x083A0D2C
-    u16 centerY; // 80 unless the room is in the table at 0x083A0D2C
+    u16 zoom;    // 0x200 unless the room is in stru_83A0D2C
+    u16 centerX; // 120 unless the room is in stru_83A0D2C
+    u16 centerY; // 80 unless the room is in stru_83A0D2C
     u16 room;
-    struct Sprite* arrowUp;    // Shown unless scrollY is 0
-    struct Sprite* arrowRight; // Shown unless scrollX is width - 240
-    struct Sprite* arrowDown;  // Shown unless scrollY is height - 160
-    struct Sprite* arrowLeft;  // Shown unless scrollX is 0
-    s16* field_3C;
-    SignRenderer* renderer; // "SBDR"
-    Process* map;           // "S_MP"
-    Process* panm;          // "PANM", made by init_ybpa_process_8114B4C
+    // Scroll arrows: up (shown unless scrollY is 0), right (unless scrollX is width - 240), down
+    // (unless scrollY is height - 160) and left (unless scrollX is 0)
+    struct Sprite* arrows[4];
+    struct Sprite* field_3C; // Positioned at center - scroll
+    SignRenderer* renderer;  // "SBDR"
+    Process* map;            // "S_MP"
+    Process* panm;           // "PANM", made by init_ybpa_process_8114B4C
 
     Sign(u8 priority, char* label, u16 room);
     ~Sign();

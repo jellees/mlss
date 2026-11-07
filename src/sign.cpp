@@ -1,0 +1,196 @@
+#pragma implementation "sign.h"
+
+#include "global.h"
+#include "common.h"
+#include "heap.h"
+#include "process.h"
+#include "sign.h"
+
+Sign::Sign(u8 priority, char* label, u16 room) : Process(priority, label) {
+    struct SignMapEntry* entry;
+    Process* process;
+
+    BUFFER_REG_DISPCNT = 0;
+    gGameState.field_884 = 0;
+    this->room = room;
+    zoom = 0x200;
+    scrollX = 0;
+    scrollY = 0;
+    width = 0;
+    height = 0;
+    centerX = 120;
+    centerY = 80;
+
+    for (entry = stru_83A0D2C; entry->room != 0xFFFF; entry++) {
+        if (entry->room == room) {
+            zoom = entry->zoom;
+            centerX = entry->centerX;
+            centerY = entry->centerY;
+            break;
+        }
+    }
+
+    renderer = new (0, "SBDR", 1) SignRenderer(8, "SBDR");
+    renderer->parentProcess = this;
+    renderer->disable();
+
+    // This could possibly be an inline helper of some sort. We should keep an eye on this.
+    process = init_ybpa_process_8114B4C(operator new(0x5C, 0, "PANM", 0), 8, "PANM", 8);
+    panm = process;
+    process->parentProcess = this;
+    process->disable();
+
+    map = sub_80575C8(operator new(0x59C, 0, "S_MP", 0), 8, "S_MP", zoom, scrollX, scrollY, panm);
+    map->parentProcess = this;
+
+    sub_8020994(0x15C0, 0, 1, 0x80);
+}
+
+inline Sign::~Sign() {
+    sub_8021FD4();
+    if (map) {
+        sub_8057B58(map, 3);
+    }
+    if (renderer) {
+        delete renderer;
+    }
+    if (panm) {
+        sub_81166AC(panm, 3);
+    }
+}
+
+void Sign::update() {
+    int i;
+
+    switch (state) {
+        case 0:
+            if (*(s16*)((u8*)map + 0x1C) != 0) {
+                break;
+            }
+
+            for (i = 0; i < 4; i++) {
+                arrows[i] = sub_8020DD0(0, 0x80FE, 1, -1, -1, -1, -1);
+                sub_801E150(arrows[i], i, -1, 0, 0);
+                arrows[i]->xPosition = word_83A0E64[i * 2];
+                arrows[i]->yPosition = word_83A0E64[i * 2 + 1];
+            }
+
+            field_3C = sub_8020DD0(0, 0x80FD, 1, -1, -1, -1, -1);
+            sub_801E150(field_3C, 0, -1, 0, 0);
+            field_3C->field_1F_0 = 2;
+            renderer->enable();
+            sub_805A0EC(map, 2, &width, &height);
+            state = 1;
+            break;
+
+        case 1:
+            if (byte_3000C80 != 0) {
+                break;
+            }
+
+            panm->enable();
+            sprite_show_8020CBC(field_3C);
+            scrollX = centerX - 120;
+            scrollY = centerY - 88;
+            sub_8051ACC();
+            sub_8051A00();
+            state = 2;
+            break;
+
+        case 2:
+            if (field_3C->field_13_0 != 0) {
+                break;
+            }
+
+            gGameState.field_884 = 0xFFFFFFFF;
+            sub_81151E4(panm, 0, 0, 16, 0xFFFF, 0xFFFF, 0, 0);
+            BUFFER_REG_DISPCNT =
+                DISPCNT_OBJ_1D_MAP | DISPCNT_BG1_ON | DISPCNT_BG2_ON | DISPCNT_BG3_ON | DISPCNT_OBJ_ON;
+            state = 3;
+            break;
+
+        case 3:
+            if (sub_8116620(panm) == 0) {
+                state = 4;
+            }
+            break;
+
+        case 4:
+            if (gGameState.field_2A & B_BUTTON) {
+                sub_81151E4(panm, 4, 0, 16, 0xFFFF, 0xFFFF, 0, 0);
+                play_sfx_80195B4(0x61, -1);
+                state = 5;
+            } else {
+                int direction = (gGameState.inputPressed & DPAD_ANY) >> 4;
+                scrollX += byte_83A0E74[direction * 2];
+                scrollY += byte_83A0E74[direction * 2 + 1];
+            }
+            sub_8051ACC();
+            sub_8051A00();
+            break;
+
+        case 5:
+            if (sub_8116620(panm) == 0) {
+                parentProcess->enable();
+                delete this;
+            }
+            break;
+    }
+
+    if (state >= 3 && state <= 5) {
+        sub_8021F7C();
+    }
+}
+
+void Sign::sub_8051A00() {
+    field_3C->xPosition = centerX - scrollX;
+    field_3C->yPosition = centerY - scrollY;
+
+    if (scrollY == 0) {
+        sprite_hide_8021F20(arrows[0]);
+    } else {
+        sprite_show_8020CBC(arrows[0]);
+    }
+
+    if (scrollX == width - 240) {
+        sprite_hide_8021F20(arrows[1]);
+    } else {
+        sprite_show_8020CBC(arrows[1]);
+    }
+
+    if (scrollY == height - 160) {
+        sprite_hide_8021F20(arrows[2]);
+    } else {
+        sprite_show_8020CBC(arrows[2]);
+    }
+
+    if (scrollX == 0) {
+        sprite_hide_8021F20(arrows[3]);
+    } else {
+        sprite_show_8020CBC(arrows[3]);
+    }
+}
+
+void SignRenderer::update() {
+    int var1 = gGameState.field_880;
+    sub_8020A78();
+    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
+    gGameState.field_880 = var1;
+}
+
+void Sign::sub_8051ACC() {
+    if (scrollX < 0) {
+        scrollX = 0;
+    } else if (scrollX > width - 240) {
+        scrollX = width - 240;
+    }
+
+    if (scrollY < 0) {
+        scrollY = 0;
+    } else if (scrollY > height - 160) {
+        scrollY = height - 160;
+    }
+
+    sub_8057C9C(map, scrollX, scrollY);
+}
