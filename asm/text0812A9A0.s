@@ -11,7 +11,7 @@ sub_812A9A0:
 	ldr r6, [sp, #0x010]
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _0812AA5C @ =0x08CDC3F8
 	str r0, [r5, #0x18]
 	movs r0, #0x80
@@ -58,11 +58,11 @@ sub_812A9A0:
 	movs r1, #0x00
 	adds r2, r6, #0x0
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x08
 	adds r2, r6, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _0812AA6C @ =0x08CDC408
 	str r0, [r4, #0x18]
 	str r4, [r5, #0x1C]
@@ -71,7 +71,7 @@ sub_812A9A0:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	movs r3, #0x08
@@ -81,7 +81,7 @@ sub_812A9A0:
 	movs r0, #0x10
 	movs r1, #0x00
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_801B75C
 	str r0, [r5, #0x28]
 	ldr r0, [r5, #0x1C]
@@ -128,7 +128,7 @@ _0812AAAC:
 	ldr r0, [r4, #0x38]
 	cmp r0, #0x00
 	beq _0812AAB6
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0812AAB6:
 	adds r0, r4, #0x0
 	adds r0, #0xBD
@@ -138,12 +138,12 @@ _0812AAB6:
 	ldr r0, [r4, #0x58]
 	cmp r0, #0x00
 	beq _0812AACA
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0812AACA:
 	ldr r0, [r4, #0x54]
 	cmp r0, #0x00
 	beq _0812AAD4
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0812AAD4:
 	ldr r0, [r4, #0x40]
 	b _0812AB0E
@@ -160,37 +160,37 @@ _0812AAE0:
 	ldr r0, [r4, #0x50]
 	cmp r0, #0x00
 	beq _0812AAF8
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0812AAF8:
 	ldr r0, [r4, #0x4C]
 	cmp r0, #0x00
 	beq _0812AB02
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0812AB02:
 	ldr r0, [r4, #0x48]
 	cmp r0, #0x00
 	beq _0812AB0C
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0812AB0C:
 	ldr r0, [r4, #0x44]
 _0812AB0E:
 	cmp r0, #0x00
 	beq _0812AB2C
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 	b _0812AB2C
 _0812AB18:
 	ldr r0, [r4, #0x58]
 	cmp r0, #0x00
 	beq _0812AB22
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0812AB22:
 	ldr r0, [r4, #0x40]
 	cmp r0, #0x00
 	beq _0812AB2C
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0812AB2C:
 	ldr r0, [r4, #0x28]
-	bl free_heap_8018DA8
+	bl __builtin_delete
 	movs r5, #0x00
 	str r5, [r4, #0x28]
 	ldr r0, [r4, #0x20]
@@ -204,12 +204,12 @@ _0812AB42:
 	cmp r0, #0x00
 	beq _0812AB50
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 _0812AB50:
 	str r5, [r4, #0x1C]
 	adds r0, r4, #0x0
 	adds r1, r6, #0x0
-	bl process_remove
+	bl _._7Process
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -7819,7 +7819,7 @@ sub_812F5A4:
 	movs r1, #0x00
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	str r4, [sp, #0x000]
 	movs r1, #0x02
 	negs r1, r1
@@ -7844,7 +7844,7 @@ sub_812F5D8:
 	mov r10, r0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _0812F9C4 @ =0x08CDC418
 	mov r1, r10
 	str r0, [r1, #0x18]
@@ -7885,7 +7885,7 @@ sub_812F5D8:
 	ldr r2, _0812F9DC @ =0x082124EC
 	movs r1, #0x00
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	str r0, [r4, #0x00]
 	ldrb r1, [r0, #0x00]
 	movs r2, #0x01
@@ -7900,7 +7900,7 @@ sub_812F5D8:
 	ldr r2, _0812F9E8 @ =0x082124F4
 	movs r1, #0x00
 	movs r3, #0x01
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r4, #0x00]
 	ldr r1, _0812F9EC @ =0x0851F9E8
 	bl sub_81994EC
@@ -7911,7 +7911,7 @@ sub_812F5D8:
 	movs r0, #0x14
 	movs r1, #0x00
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	str r0, [r4, #0x00]
 	movs r4, #0xA2
 	lsls r4, r4, #0x02
@@ -7920,7 +7920,7 @@ sub_812F5D8:
 	ldr r2, _0812F9F8 @ =0x08212504
 	movs r1, #0x00
 	movs r3, #0x01
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r4, #0x00]
 	movs r2, #0xA3
 	lsls r2, r2, #0x02
@@ -7935,7 +7935,7 @@ sub_812F5D8:
 	ldr r2, _0812F9FC @ =0x0821250C
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r6, r0, #0x0
 	adds r3, r6, #0x0
 	movs r0, #0xF0
@@ -8003,7 +8003,7 @@ _0812F6DE:
 	cmp r6, #0x00
 	beq _0812F740
 	adds r0, r6, #0x0
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0812F740:
 	ldr r1, _0812FA0C @ =0x06008000
 	movs r2, #0xF0
@@ -8033,7 +8033,7 @@ _0812F740:
 	ldr r2, _0812FA18 @ =0x08212514
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r1, r0, #0x0
 	str r1, [r4, #0x00]
 	ldr r0, _0812FA1C @ =0x03000C84
@@ -8048,7 +8048,7 @@ _0812F740:
 	ldr r2, _0812FA20 @ =0x0821251C
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r6, #0x00]
 	movs r1, #0x9D
 	lsls r1, r1, #0x02
@@ -8388,11 +8388,11 @@ _0812FA90:
 	movs r1, #0x00
 	adds r2, r7, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x08
 	adds r2, r7, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _0812FBFC @ =0x08CDC428
 	str r0, [r4, #0x18]
 	str r4, [r6, #0x00]
@@ -8407,7 +8407,7 @@ _0812FA90:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	movs r3, #0x08
@@ -8416,7 +8416,7 @@ _0812FA90:
 	str r0, [r2, #0x00]
 	mov r6, r10
 	str r6, [r0, #0x14]
-	bl process_disable
+	bl disable__7Process
 	movs r6, #0xAF
 	lsls r6, r6, #0x02
 	add r6, r10
@@ -8425,7 +8425,7 @@ _0812FA90:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, _0812FC0C @ =0x00000207
 	mov r9, r1
 	movs r7, #0x00
@@ -9059,7 +9059,7 @@ _08130014:
 	lsls r3, r3, #0x02
 	adds r0, r7, r3
 	ldr r0, [r0, #0x00]
-	bl process_enable
+	bl enable__7Process
 	movs r2, #0x80
 	lsls r2, r2, #0x12
 	ldrh r0, [r2, #0x00]
@@ -14025,7 +14025,7 @@ sub_81347C0:
 	cmp r0, #0x00
 	beq _081347DE
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _081347DE:
 	pop {r4, r5}
 	pop {r0}
@@ -14221,7 +14221,7 @@ sub_8134A14:
 	cmp r0, #0x00
 	beq _08134A38
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08134A38:
 	pop {r4, r5}
 	pop {r0}
@@ -14358,7 +14358,7 @@ sub_8134B70:
 	cmp r0, #0x00
 	beq _08134B86
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08134B86:
 	pop {r0}
 	bx r0
@@ -15599,7 +15599,7 @@ _081355DA:
 _081355E4:
 	ldr r0, [r6, #0x00]
 	subs r0, #0x04
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 	movs r0, #0x00
 	str r0, [r6, #0x00]
 _081355F0:
@@ -15624,7 +15624,7 @@ _0813560A:
 _08135612:
 	ldr r0, [r5, #0x00]
 	subs r0, #0x04
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 	movs r0, #0x00
 	str r0, [r5, #0x00]
 _0813561E:
@@ -15645,7 +15645,7 @@ _0813561E:
 	cmp r0, #0x00
 	beq _08135644
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08135644:
 	add sp, #0x008
 	pop {r3, r4, r5}
@@ -16181,7 +16181,7 @@ sub_8136110:
 	cmp r0, #0x00
 	beq _08136126
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08136126:
 	pop {r0}
 	bx r0
@@ -16360,7 +16360,7 @@ sub_8136698:
 	cmp r0, #0x00
 	beq _081366AE
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _081366AE:
 	pop {r0}
 	bx r0
@@ -16459,7 +16459,7 @@ sub_81367AC:
 	push {lr}
 	ldr r2, _081367BC @ =0x08CDC4A0
 	str r2, [r0, #0x18]
-	bl process_remove
+	bl _._7Process
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00
@@ -16470,7 +16470,7 @@ sub_81367C0:
 	adds r4, r0, #0x0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _081367D8 @ =0x08CDC4A0
 	str r0, [r4, #0x18]
 	adds r0, r4, #0x0
@@ -16502,7 +16502,7 @@ _081367F8:
 	str r0, [r4, #0x18]
 	adds r0, r4, #0x0
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 _0813680C:
 	pop {r4}
 	pop {r0}
@@ -16828,7 +16828,7 @@ _08136ADE:
 	lsls r1, r1, #0x1D
 	lsrs r1, r1, #0x1D
 	adds r0, r4, #0x0
-	bl sub_8047364
+	bl sub_8047364__11FieldObjectUc
 	ldr r0, _08136B20 @ =0x0813B1E9
 	b _08136B26
 	.byte 0x00, 0x00
@@ -16997,17 +16997,17 @@ sub_8136C3C:
 	lsrs r4, r4, #0x1F
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_8047364
+	bl sub_8047364__11FieldObjectUc
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl sub_8047258
+	bl sub_8047258__11FieldObjecti
 	adds r0, r5, #0x0
 	adds r0, #0x21
 	ldrb r1, [r0, #0x00]
 	adds r1, #0x04
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r7, #0x01
 	lsls r4, r4, #0x06
 	ldrb r1, [r5, #0x11]
@@ -17448,7 +17448,7 @@ sub_8136FB4:
 	cmp r0, #0x00
 	beq _081370B4
 	adds r0, r4, #0x0
-	bl sub_80473DC
+	bl sub_80473DC__11FieldObject
 	movs r0, #0xCC
 	lsls r0, r0, #0x01
 	adds r1, r4, r0
@@ -17479,10 +17479,10 @@ sub_8136FB4:
 	bne _08137050
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r1, [r4, #0x0C]
 	ldr r2, [r4, #0x10]
 	movs r0, #0x80
@@ -17498,7 +17498,7 @@ sub_8136FB4:
 	str r0, [sp, #0x000]
 	str r6, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	b _081370AA
 _0813704C: .4byte sub_8139260
 _08137050:
@@ -17525,10 +17525,10 @@ _08137050:
 	bne _081370AA
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r1, [r4, #0x0C]
 	ldr r2, [r4, #0x10]
 	movs r0, #0x80
@@ -17543,7 +17543,7 @@ _08137050:
 	str r7, [sp, #0x000]
 	str r6, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 _081370AA:
 	movs r1, #0xBD
 	lsls r1, r1, #0x01
@@ -18102,7 +18102,7 @@ _081374DC:
 	add r0, sp
 	ldrb r1, [r0, #0x00]
 	adds r0, r5, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 	movs r3, #0xB3
 	lsls r3, r3, #0x02
 	adds r2, r5, r3
@@ -21064,7 +21064,7 @@ _08138CAE:
 	cmp r1, r0
 	bne _08138CDC
 	adds r0, r2, #0x0
-	bl sub_8046980
+	bl sub_8046980__11FieldObject
 	ldrh r1, [r4, #0x00]
 	adds r0, r5, #0x0
 	eors r0, r1
@@ -21775,10 +21775,10 @@ sub_8139260:
 	bl sub_8138F64
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_8047364
+	bl sub_8047364__11FieldObjectUc
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_8047258
+	bl sub_8047258__11FieldObjecti
 	adds r0, r4, #0x0
 	adds r0, #0x24
 	ldrb r1, [r0, #0x00]
@@ -21787,10 +21787,10 @@ sub_8139260:
 	adds r1, #0x04
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r4, #0x0
 	movs r1, #0x10
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	movs r0, #0xCC
 	lsls r0, r0, #0x01
 	adds r4, r4, r0
@@ -21816,7 +21816,7 @@ sub_81392CC:
 	cmp r0, #0x00
 	beq _081392E8
 	adds r0, r3, #0x0
-	bl sub_80473DC
+	bl sub_80473DC__11FieldObject
 _081392E8:
 	ldr r0, [r4, #0x04]
 	str r0, [r4, #0x00]
@@ -22199,7 +22199,7 @@ _081395E4:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r4, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _081395FC:
 	ldr r0, _08139610 @ =0x00000242
 	adds r1, r4, r0
@@ -22319,7 +22319,7 @@ sub_81396D8:
 	cmp r0, #0x00
 	beq _081396F6
 	adds r0, r4, #0x0
-	bl sub_80473DC
+	bl sub_80473DC__11FieldObject
 _081396F6:
 	ldr r3, [r5, #0x04]
 	adds r0, r6, #0x0
@@ -25362,7 +25362,7 @@ sub_813AF94:
 	ldrb r1, [r1, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0x85
 	lsls r2, r2, #0x02
 	adds r5, r5, r2
@@ -27979,7 +27979,7 @@ _0813C9F0:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r4, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _0813CA08:
 	movs r2, #0xA4
 	lsls r2, r2, #0x01
@@ -28278,7 +28278,7 @@ _0813CC50:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r5, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _0813CC68:
 	movs r2, #0xA4
 	lsls r2, r2, #0x01
@@ -28590,7 +28590,7 @@ sub_813CE8C:
 	lsrs r2, r2, #0x1E
 	adds r0, r7, #0x0
 	movs r1, #0x08
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	mov r0, r10
 	lsls r4, r0, #0x01
 	movs r1, #0x84
@@ -28600,19 +28600,19 @@ sub_813CE8C:
 	movs r1, #0x00
 	ldsb r1, [r0, r1]
 	adds r0, r7, #0x0
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	ldr r3, [sp, #0x010]
 	adds r4, r3, r4
 	movs r0, #0x00
 	ldsh r1, [r4, r0]
 	adds r0, r7, #0x0
-	bl sub_804794C
+	bl sub_804794C__11FieldObjectUs
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r7, r1
@@ -28693,7 +28693,7 @@ _0813CFA8:
 	str r0, [sp, #0x004]
 	adds r0, r7, #0x0
 	adds r1, r4, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	mov r0, r8
 	adds r0, #0x24
 	ldrb r1, [r0, #0x00]
@@ -28702,7 +28702,7 @@ _0813CFA8:
 	adds r1, #0x04
 	mov r0, r8
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0x85
 	lsls r2, r2, #0x02
 	add r2, r8
@@ -28794,10 +28794,10 @@ sub_813D048:
 	beq _0813D0BE
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -28815,7 +28815,7 @@ sub_813D048:
 	lsrs r1, r1, #0x1E
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xCC
 	lsls r0, r0, #0x01
 	b _0813D0DA
@@ -29318,10 +29318,10 @@ _0813D4BC: .4byte sub_813939C
 _0813D4C0:
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r5, r1
@@ -29339,7 +29339,7 @@ _0813D4C0:
 	lsrs r1, r1, #0x1E
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xA0
 	lsls r1, r1, #0x01
 	add r1, r9
@@ -29458,10 +29458,10 @@ sub_813D5B8:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0x83
 	lsls r1, r1, #0x02
 	adds r2, r4, r1
@@ -29484,7 +29484,7 @@ sub_813D5B8:
 	lsrs r1, r1, #0x1E
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xEB
 	lsls r1, r1, #0x01
 	adds r2, r5, r1
@@ -30081,7 +30081,7 @@ _0813DAC4:
 	adds r0, r6, #0x0
 	movs r1, #0x0C
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r3, #0x85
 	lsls r3, r3, #0x02
 	adds r2, r6, r3
@@ -30104,10 +30104,10 @@ _0813DAC4:
 	strb r0, [r2, #0x12]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_8044630
+	bl method15__11FieldObjectUc
 	ldr r2, _0813DC04 @ =0x00000217
 	adds r1, r6, r2
 	ldrb r0, [r1, #0x00]
@@ -30226,7 +30226,7 @@ _0813DCB0:
 	lsrs r1, r1, #0x1E
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -30305,7 +30305,7 @@ sub_813DD30:
 	adds r1, #0x04
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -30365,7 +30365,7 @@ _0813DDD0:
 	adds r1, #0x08
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldrb r1, [r5, #0x12]
 	movs r0, #0x07
 	negs r0, r0
@@ -30418,7 +30418,7 @@ sub_813DE14:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xE9
 	lsls r1, r1, #0x01
 	adds r0, r4, r1
@@ -30542,7 +30542,7 @@ sub_813DEE4:
 	strh r0, [r1, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r5, #0x0
 	adds r1, r4, #0x0
 	bl sub_813DFA4
@@ -31131,7 +31131,7 @@ _0813E414:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xBC
 	lsls r1, r1, #0x01
 	adds r0, r5, r1
@@ -31439,7 +31439,7 @@ sub_813E618:
 	ldrb r1, [r1, #0x00]
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	mov r0, r8
 	add r1, sp, #0x014
 	bl sub_80FBD44
@@ -31755,7 +31755,7 @@ _0813E8DE:
 	ldrb r1, [r0, #0x00]
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r0, r4, r2
@@ -32060,7 +32060,7 @@ _0813EB62:
 	lsrs r1, r1, #0x1E
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
 	adds r0, r7, r1
@@ -32209,7 +32209,7 @@ _0813EC60:
 	adds r0, r7, #0x0
 	mov r1, r8
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectiiPiN23
 	adds r6, r0, #0x0
 	movs r0, #0x92
 	lsls r0, r0, #0x01
@@ -32550,7 +32550,7 @@ _0813EF06:
 	adds r0, r7, #0x0
 	adds r1, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectiiPiN23
 	adds r6, r0, #0x0
 	movs r0, #0x92
 	lsls r0, r0, #0x01
@@ -32840,7 +32840,7 @@ _0813F13E:
 	adds r0, r7, #0x0
 	mov r1, r8
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectiiPiN23
 	adds r6, r0, #0x0
 	movs r0, #0x92
 	lsls r0, r0, #0x01
@@ -33129,7 +33129,7 @@ _0813F366:
 	adds r0, r7, #0x0
 	adds r1, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectiiPiN23
 	ldr r1, [sp, #0x008]
 	movs r0, #0xE0
 	lsls r0, r0, #0x08
@@ -33173,7 +33173,7 @@ _0813F3C4:
 	adds r0, r7, #0x0
 	adds r1, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectiiPiN23
 	ldr r1, [sp, #0x008]
 	movs r0, #0xE0
 	lsls r0, r0, #0x08
@@ -33300,7 +33300,7 @@ sub_813F6CC:
 	adds r1, #0x04
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r0, _0813F788 @ =0x0000033E
 	adds r2, r7, r0
 	ldrb r0, [r2, #0x00]
@@ -33381,7 +33381,7 @@ _0813F7AE:
 	str r0, [sp, #0x004]
 	adds r0, r5, #0x0
 	add r3, sp, #0x008
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectiiPiN23
 	ldr r1, [sp, #0x010]
 	movs r0, #0x01
 	negs r0, r0
@@ -33441,7 +33441,7 @@ _0813F7CC:
 	ldrb r1, [r1, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r0, _0813F858 @ =0x08142C19
 	str r0, [r6, #0x00]
 	add sp, #0x014
@@ -33546,7 +33546,7 @@ _0813F8A6:
 	ldrb r1, [r1, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r0, r5, r2
@@ -33792,7 +33792,7 @@ _0813FAE8:
 	lsrs r1, r1, #0x18
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xB5
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -33863,10 +33863,10 @@ sub_813FB44:
 	bne _0813FB9C
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	b _0813FBD2
 	.byte 0x00, 0x00
 _0813FB98: .4byte 0x0000033E
@@ -33879,7 +33879,7 @@ _0813FB9C:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r1, _0813FBDC @ =0x0000020D
 	adds r2, r4, r1
 	ldrb r1, [r2, #0x00]
@@ -34146,7 +34146,7 @@ _0813FD98:
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	mov r0, r10
 	adds r1, r5, #0x0
 	ldr r2, [sp, #0x02C]
@@ -34196,7 +34196,7 @@ _0813FE20:
 	add r0, sp, #0x020
 	str r0, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectiiPiN23
 	ldrb r1, [r0, #0x00]
 	movs r0, #0x80
 	ands r0, r1
@@ -34651,7 +34651,7 @@ _081401D4:
 _081401D6:
 	adds r0, r5, #0x0
 	movs r2, #0x07
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -34938,10 +34938,10 @@ _081403F8:
 	strb r0, [r1, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x1
 	lsls r0, r0, #0x18
 	lsrs r6, r0, #0x18
@@ -35219,7 +35219,7 @@ _08140614:
 	strh r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r1, [r6, #0x0C]
 	ldr r2, [r6, #0x10]
 	ldr r3, [r6, #0x14]
@@ -35230,7 +35230,7 @@ _08140614:
 	movs r0, #0x00
 	str r0, [sp, #0x004]
 	adds r0, r4, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -35303,10 +35303,10 @@ _081406E8:
 	strh r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r1, [r6, #0x0C]
 	ldr r2, [r6, #0x10]
 	ldr r3, [r6, #0x14]
@@ -35316,7 +35316,7 @@ _081406E8:
 	str r0, [sp, #0x000]
 	str r7, [sp, #0x004]
 	adds r0, r4, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x21
 	negs r1, r1
@@ -35439,7 +35439,7 @@ sub_81407A0:
 	adds r1, #0x04
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r0, _0814083C @ =0x08140841
 	str r0, [r6, #0x00]
 _08140828:
@@ -35790,7 +35790,7 @@ _08140B8E:
 	str r6, [sp, #0x004]
 	mov r0, r10
 	ldr r3, [sp, #0x054]
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectiiPiN23
 	adds r4, r0, #0x0
 	ldrb r1, [r4, #0x00]
 	movs r0, #0x80
@@ -35919,10 +35919,10 @@ _08140C90:
 	str r4, [r5, #0x00]
 	mov r0, r8
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	mov r0, r8
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	str r4, [r5, #0x00]
 	ldr r3, _08140DBC @ =0x0000020D
 	add r3, r8
@@ -35960,7 +35960,7 @@ _08140C90:
 	movs r5, #0x00
 	str r5, [sp, #0x004]
 	mov r0, r8
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	mov r2, r8
 	ldr r1, [r2, #0x14]
 	ldr r0, [r2, #0x18]
@@ -36093,7 +36093,7 @@ _08140DD4:
 	adds r1, r0, #0x0
 	mov r0, r10
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r3, [sp, #0x040]
 	movs r4, #0xBC
 	lsls r4, r4, #0x01
@@ -36593,7 +36593,7 @@ _08141318:
 	adds r1, #0x04
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xBF
 	lsls r0, r0, #0x01
 	adds r2, r6, r0
@@ -36726,7 +36726,7 @@ _08141408:
 	adds r1, r7, #0x4
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _0814143E:
 	movs r0, #0xBD
 	lsls r0, r0, #0x01
@@ -37124,7 +37124,7 @@ _0814173C:
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08141772:
 	bl sub_8199F30
 	adds r1, r0, #0x0
@@ -37458,7 +37458,7 @@ _08141A10:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xBF
 	lsls r2, r2, #0x01
 	add r2, r9
@@ -37598,7 +37598,7 @@ _08141B30:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xBC
 	lsls r0, r0, #0x01
 	add r0, r9
@@ -37829,7 +37829,7 @@ _08141D00:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xBC
 	lsls r1, r1, #0x01
 	adds r0, r5, r1
@@ -38036,7 +38036,7 @@ _08141E68:
 	adds r1, r1, r0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r0, _08141EE0 @ =0x08141EE5
 	ldr r1, [sp, #0x018]
 	str r0, [r1, #0x00]
@@ -38209,7 +38209,7 @@ _08141FCE:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xC8
 	lsls r2, r2, #0x01
 	adds r1, r5, r2
@@ -38297,7 +38297,7 @@ _0814205C:
 	adds r1, #0x04
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldrb r0, [r6, #0x00]
 	movs r1, #0x10
 	orrs r0, r1
@@ -38458,7 +38458,7 @@ _081421EC:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xBC
 	lsls r2, r2, #0x01
 	adds r0, r6, r2
@@ -38598,7 +38598,7 @@ _08142308:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xBC
 	lsls r0, r0, #0x01
 	add r0, r9
@@ -38755,7 +38755,7 @@ sub_8142400:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	mov r0, sp
 	adds r1, r5, #0x0
 	movs r2, #0x22
@@ -38905,7 +38905,7 @@ _081425B8:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0xBC
 	lsls r1, r1, #0x01
 	adds r0, r5, r1
@@ -38992,9 +38992,9 @@ sub_8142658:
 	adds r0, r4, #0x0
 	movs r1, #0x02
 	movs r2, #0x00
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	movs r0, #0xEB
 	lsls r0, r0, #0x01
 	adds r2, r4, r0
@@ -39522,7 +39522,7 @@ sub_8142A70:
 	strh r5, [r0, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r6, r0
@@ -40060,7 +40060,7 @@ sub_8142EFC:
 	cmp r0, #0x00
 	bne _08142F4E
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _08142F68
@@ -40073,9 +40073,9 @@ sub_8142EFC:
 	adds r0, r4, #0x0
 	movs r1, #0x02
 	movs r2, #0x00
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x01
 	orrs r0, r1
@@ -40083,7 +40083,7 @@ sub_8142EFC:
 	b _08142F68
 _08142F4E:
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _08142F68
@@ -40589,7 +40589,7 @@ sub_8143314:
 	adds r0, r6, #0x0
 	movs r1, #0x04
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r2, [r4, #0x00]
 	adds r0, r5, #0x0
 	adds r1, r6, #0x0
@@ -41082,7 +41082,7 @@ _08143748:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r5, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _08143760:
 	movs r2, #0xA4
 	lsls r2, r2, #0x01
@@ -41309,10 +41309,10 @@ sub_8143894:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r0, #0xCC
 	lsls r0, r0, #0x01
 	adds r1, r4, r0
@@ -41488,7 +41488,7 @@ _08143A48:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0xBC
 	lsls r0, r0, #0x01
 	add r0, r10
@@ -41766,7 +41766,7 @@ _08143CB8:
 	adds r0, #0x23
 	ldrb r2, [r0, #0x00]
 	adds r0, r4, #0x0
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08143CF8:
 	add sp, #0x004
 	pop {r4, r5, r6, r7}
@@ -41819,7 +41819,7 @@ sub_8143D0C:
 	movs r5, #0x00
 	str r5, [sp, #0x004]
 	adds r0, r4, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r2, [r4, #0x0C]
 	ldr r3, [r4, #0x10]
 	ldr r0, [r4, #0x14]
@@ -41927,7 +41927,7 @@ _08143E20:
 	strb r0, [r2, #0x11]
 _08143E30:
 	adds r0, r7, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r7, r1
@@ -42157,13 +42157,13 @@ _08143F9E:
 	orrs r0, r1
 	strb r0, [r3, #0x11]
 	mov r0, r8
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	mov r0, r8
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	mov r0, r8
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _0814401C @ =0x08144021
 	ldr r1, [sp, #0x00C]
 	str r0, [r1, #0x00]
@@ -42400,10 +42400,10 @@ _081441C8:
 	strb r0, [r2, #0x00]
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r1, [sp, #0x004]
 	movs r2, #0xBC
 	lsls r2, r2, #0x01
@@ -42661,10 +42661,10 @@ sub_81443D0:
 	adds r0, r4, #0x0
 	movs r1, #0x06
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r4, #0x0
 	movs r1, #0x10
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -42698,7 +42698,7 @@ sub_8144428:
 	adds r0, r4, #0x0
 	movs r1, #0x05
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -42912,7 +42912,7 @@ _081445DC:
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
 	adds r0, r5, #0x0
-	bl sub_80478AC
+	bl sub_80478AC__11FieldObjectUc
 _081445F4:
 	movs r4, #0xA4
 	lsls r4, r4, #0x01
@@ -43154,10 +43154,10 @@ _08144782:
 	adds r1, #0x04
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r6, #0x0
 	movs r1, #0x10
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	movs r1, #0xA0
 	lsls r1, r1, #0x01
 	add r1, r8
@@ -43402,7 +43402,7 @@ _08144986:
 	adds r1, #0x08
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldrh r0, [r4, #0x00]
 	adds r0, #0x01
 	strh r0, [r4, #0x00]
@@ -43472,21 +43472,21 @@ _081449FE:
 	adds r1, #0x0C
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r6, #0x0
 	movs r1, #0x0C
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	lsls r4, r4, #0x10
 	asrs r4, r4, #0x10
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
-	bl sub_804794C
+	bl sub_804794C__11FieldObjectUs
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r6, r1
@@ -43595,7 +43595,7 @@ _08144B52:
 	adds r0, r6, #0x0
 	adds r1, r2, #0x0
 	adds r2, r4, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	movs r1, #0xA0
 	lsls r1, r1, #0x01
 	add r1, r8
@@ -43669,10 +43669,10 @@ _08144BD2:
 	beq _08144C2C
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r5, r1
@@ -44050,7 +44050,7 @@ _08144ECE:
 	adds r1, r0, #0x0
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r0, r6, r2
@@ -44204,7 +44204,7 @@ sub_8144FF0:
 	movs r1, #0x04
 	strb r1, [r0, #0x00]
 	adds r0, r6, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	ldr r0, [r4, #0x00]
 	adds r0, #0x20
 	movs r1, #0x10
@@ -44476,7 +44476,7 @@ _0814525E:
 	cmp r6, r0
 	beq _0814527A
 	mov r0, r9
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	b _0814527A
 _08145276:
 	ldr r0, _0814528C @ =0x08145291
@@ -44584,7 +44584,7 @@ _08145324:
 	orrs r0, r1
 	strb r0, [r2, #0x12]
 	adds r0, r4, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	ldr r0, _0814534C @ =0x08145351
 	str r0, [r5, #0x00]
 	pop {r4, r5}
@@ -44753,7 +44753,7 @@ _08145480:
 	strb r1, [r0, #0x00]
 _08145482:
 	adds r0, r5, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
@@ -45074,7 +45074,7 @@ sub_814569C:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	add r0, sp, #0x010
 	adds r1, r5, #0x0
 	movs r2, #0x22
@@ -45437,10 +45437,10 @@ _081459AC:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r0, #0x00
 	str r0, [r5, #0x00]
 	b _081459F6
@@ -45859,7 +45859,7 @@ _08145D04:
 	beq _08145D3A
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08145D3A:
 	bl sub_8199F30
 	adds r1, r0, #0x0
@@ -46084,7 +46084,7 @@ _08145ED4:
 	adds r1, r0, #0x0
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x1E
 _08145F18:
 	strh r0, [r5, #0x00]
@@ -46179,7 +46179,7 @@ _08145FAC:
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08145FE2:
 	movs r0, #0xBF
 	lsls r0, r0, #0x01
@@ -46294,7 +46294,7 @@ sub_814608C:
 	beq _081460E2
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r2, #0xB7
 	lsls r2, r2, #0x02
 	adds r0, r4, r2
@@ -46308,7 +46308,7 @@ sub_814608C:
 _081460E2:
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -46369,7 +46369,7 @@ _08146146:
 	bne _08146162
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, [r6, #0x08]
 	str r0, [r6, #0x00]
 _08146162:
@@ -46408,7 +46408,7 @@ sub_814616C:
 	strb r0, [r2, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xE8
 	lsls r1, r1, #0x01
 	adds r0, r6, r1
@@ -46701,7 +46701,7 @@ _081463E2:
 	str r7, [sp, #0x004]
 _081463E8:
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	b _08146408
 _081463F0: .4byte 0xFFFFE000
 _081463F4:
@@ -46713,7 +46713,7 @@ _081463F4:
 	str r7, [sp, #0x000]
 	str r7, [sp, #0x004]
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 _08146408:
 	movs r1, #0xA4
 	lsls r1, r1, #0x02
@@ -46770,7 +46770,7 @@ _08146468:
 	str r0, [sp, #0x000]
 	str r0, [sp, #0x004]
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r0, _08146494 @ =0x08146499
 	ldr r2, [sp, #0x020]
 	str r0, [r2, #0x00]
@@ -46818,7 +46818,7 @@ sub_8146498:
 	beq _081464EE
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r2, #0xB7
 	lsls r2, r2, #0x02
 	adds r0, r4, r2
@@ -46832,7 +46832,7 @@ sub_8146498:
 _081464EE:
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -46893,7 +46893,7 @@ _08146552:
 	bne _0814659E
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -47025,7 +47025,7 @@ _08146664:
 	adds r1, #0x04
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xBC
 	lsls r2, r2, #0x01
 	adds r0, r6, r2
@@ -47110,10 +47110,10 @@ _081466F2:
 	bl sub_8146DC8
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	cmp r6, #0x01
 	beq _08146796
 	cmp r6, #0x01
@@ -47139,10 +47139,10 @@ _08146752:
 	blt _08146780
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _0814677C @ =0x08146005
 	mov r2, r10
 	str r0, [r2, #0x00]
@@ -47172,10 +47172,10 @@ _08146796:
 	bgt _081467BC
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _081467B8 @ =0x08146005
 	b _08146ADE
 _081467B8: .4byte sub_8146004
@@ -47202,10 +47202,10 @@ _081467D4:
 	bgt _081467FC
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _081467F8 @ =0x08146005
 	b _08146ADE
 	.byte 0x00, 0x00
@@ -47225,7 +47225,7 @@ _0814680E:
 	str r0, [sp, #0x004]
 _08146812:
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	b _08146864
 _0814681A:
 	ldr r0, [r4, #0x0C]
@@ -47236,10 +47236,10 @@ _0814681A:
 	blt _08146844
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08146840 @ =0x08146005
 	b _08146ADE
 	.byte 0x00, 0x00
@@ -47260,13 +47260,13 @@ _08146844:
 	movs r0, #0x00
 	str r0, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 _08146864:
 	adds r1, r6, #0x0
 	adds r1, #0x08
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r5, r1
@@ -47645,7 +47645,7 @@ sub_8146AFC:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldrb r0, [r6, #0x00]
 	movs r1, #0x10
 	orrs r0, r1
@@ -47718,13 +47718,13 @@ _08146BCE:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xBD
 	lsls r1, r1, #0x01
 	add r1, r8
@@ -47807,7 +47807,7 @@ sub_8146C78:
 	beq _08146CD4
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -47823,7 +47823,7 @@ _08146CD0: .4byte 0x00000242
 _08146CD4:
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -47885,7 +47885,7 @@ _08146D3A:
 	bne _08146DB6
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -48027,7 +48027,7 @@ sub_8146E40:
 	str r0, [sp, #0x000]
 	str r0, [sp, #0x004]
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	movs r0, #0xB7
 	lsls r0, r0, #0x02
 	adds r1, r6, r0
@@ -48381,7 +48381,7 @@ sub_81470F8:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08147190 @ =0x0000020F
 	adds r2, r4, r0
 	ldrb r1, [r2, #0x00]
@@ -48575,7 +48575,7 @@ _081472B0:
 	str r5, [sp, #0x000]
 	str r4, [sp, #0x004]
 	ldr r0, [sp, #0x028]
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	b _0814738A
 _081472E2:
 	movs r0, #0xA4
@@ -48658,7 +48658,7 @@ _081472E2:
 	str r5, [sp, #0x000]
 	str r4, [sp, #0x004]
 	ldr r0, [sp, #0x028]
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 _0814738A:
 	movs r5, #0xA5
 	lsls r5, r5, #0x02
@@ -48688,10 +48688,10 @@ _0814738A:
 	strb r0, [r1, #0x00]
 	ldr r0, [r4, #0x00]
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r0, [r4, #0x00]
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r2, [r4, #0x00]
 	movs r3, #0x85
 	lsls r3, r3, #0x02
@@ -48877,7 +48877,7 @@ _08147528:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08147584 @ =0x0000020F
 	adds r2, r5, r0
 	ldrb r0, [r2, #0x00]
@@ -49533,7 +49533,7 @@ _08147A44:
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 _08147A7A:
 	movs r3, #0x85
 	lsls r3, r3, #0x02
@@ -49757,7 +49757,7 @@ _08147BE0:
 	ldrb r1, [r1, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -49880,7 +49880,7 @@ _08147CDA:
 	adds r1, #0x10
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -49917,7 +49917,7 @@ _08147D74:
 	adds r1, r6, r2
 	strh r0, [r1, #0x00]
 	adds r0, r5, #0x0
-	bl sub_8047928
+	bl sub_8047928__11FieldObject
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -49978,7 +49978,7 @@ sub_8147DC4:
 	adds r1, #0x04
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r7, r0
@@ -50092,7 +50092,7 @@ _08147EB2:
 	adds r1, #0x08
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	ldr r2, [r5, #0x00]
 	ldrb r1, [r2, #0x12]
 	movs r0, #0x07
@@ -50225,7 +50225,7 @@ _08147FD0:
 	adds r1, #0x0C
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -50376,7 +50376,7 @@ _0814811A:
 	str r0, [sp, #0x004]
 _0814811E:
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	b _08148148
 _08148126:
 	ldr r1, [r7, #0x0C]
@@ -50394,14 +50394,14 @@ _08148126:
 	movs r0, #0x00
 	str r0, [sp, #0x004]
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 _08148148:
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -50491,7 +50491,7 @@ _08148148:
 	adds r1, #0x10
 	adds r0, r7, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r7, r0
@@ -51009,7 +51009,7 @@ _081485FA:
 	bne _08148626
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r3, [sp, #0x00C]
 	ldr r0, _081486EC @ =0x0000020D
 	adds r2, r3, r0
@@ -51332,10 +51332,10 @@ _0814886E:
 	ble _081488B4
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r4, [sp, #0x000]
 	ldr r0, _081488E8 @ =0x0000020D
 	adds r2, r4, r0
@@ -51461,7 +51461,7 @@ _0814899E:
 	str r0, [sp, #0x004]
 _081489A2:
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	b _081489D2
 _081489AA:
 	ldr r1, [r4, #0x0C]
@@ -51482,7 +51482,7 @@ _081489AA:
 	movs r0, #0x00
 	str r0, [sp, #0x004]
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 _081489D2:
 	add sp, #0x008
 	pop {r4, r5, r6}
@@ -51879,10 +51879,10 @@ sub_8148CF8:
 	bls _08148D32
 	ldr r0, [r4, #0x00]
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r0, [r4, #0x00]
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08148D3C @ =0x08147441
 	str r0, [r5, #0x00]
 _08148D32:
@@ -51946,10 +51946,10 @@ sub_8148DA4:
 	add sp, #-0x004
 	adds r4, r0, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _08148E1C @ =0x0000020D
 	adds r2, r4, r0
 	ldrb r1, [r2, #0x00]
@@ -52039,7 +52039,7 @@ sub_8148E2C:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r1, _08148E90 @ =0x0000020F
 	adds r2, r4, r1
 	ldrb r1, [r2, #0x00]
@@ -52153,7 +52153,7 @@ _08148F12:
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	movs r2, #0x02
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r3, r5, r0
@@ -52504,7 +52504,7 @@ _08149172:
 	mov r0, r8
 	movs r1, #0x00
 	movs r2, #0x02
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r3, #0x85
 	lsls r3, r3, #0x02
 	add r3, r8
@@ -53529,7 +53529,7 @@ sub_8149B80:
 	strh r0, [r6, #0x00]
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r0, #0xA5
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
@@ -53689,7 +53689,7 @@ _08149CBE:
 	movs r5, #0x00
 	str r5, [sp, #0x004]
 	adds r0, r7, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	mov r0, r8
 	ldr r1, [r0, #0x0C]
 	ldr r0, [r7, #0x0C]
@@ -56405,7 +56405,7 @@ _0814B352:
 _0814B354:
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	b _0814B436
 _0814B35E:
 	cmp r2, #0x0A
@@ -56775,7 +56775,7 @@ sub_814B67C:
 	strh r0, [r1, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, _0814B6C4 @ =0x0000020E
 	adds r4, r4, r0
 	ldrb r1, [r4, #0x00]
@@ -57023,7 +57023,7 @@ sub_814B86C:
 	strb r0, [r2, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xEE
 	lsls r1, r1, #0x01
 	adds r0, r6, r1
@@ -57044,7 +57044,7 @@ sub_814B86C:
 	str r0, [sp, #0x000]
 	str r0, [sp, #0x004]
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r0, _0814B8C4 @ =0x0814BD09
 	str r0, [r5, #0x00]
 	add sp, #0x008
@@ -57968,7 +57968,7 @@ sub_814C04C:
 	str r0, [sp, #0x000]
 	str r0, [sp, #0x004]
 	adds r0, r4, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r0, _0814C0BC @ =0x0000020E
 	adds r2, r4, r0
 	ldrb r1, [r2, #0x00]
@@ -58071,7 +58071,7 @@ sub_814C0CC:
 	ldrb r1, [r1, #0x00]
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r6, r0
@@ -58416,7 +58416,7 @@ _0814C380:
 	ldrb r1, [r1, #0x00]
 	mov r0, r8
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0x85
 	lsls r2, r2, #0x02
 	add r2, r8
@@ -58670,7 +58670,7 @@ _0814C5F6:
 	ldr r4, [r0, #0x28]
 	adds r0, r5, #0x0
 	movs r1, #0x28
-	bl sub_804790C
+	bl sub_804790C__11FieldObjectUc
 	ldr r1, [r4, #0x0C]
 	ldr r0, [r5, #0x0C]
 	subs r2, r1, r0
@@ -58733,7 +58733,7 @@ _0814C65E:
 	adds r1, #0x04
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r5, r0
@@ -58970,7 +58970,7 @@ _0814C82A:
 	adds r1, #0x08
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x02
@@ -59072,7 +59072,7 @@ _0814C902:
 	adds r1, #0x0C
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x0C
 	strh r0, [r7, #0x00]
 	b _0814C9D6
@@ -59275,10 +59275,10 @@ _0814CAA8:
 _0814CABA:
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r1, [r7, #0x0C]
 	ldr r2, [r7, #0x10]
 	cmp r4, #0x01
@@ -59325,7 +59325,7 @@ _0814CB06:
 	movs r5, #0x00
 	str r5, [sp, #0x004]
 	adds r0, r6, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	movs r1, #0x9E
 	lsls r1, r1, #0x02
 	adds r0, r6, r1
@@ -59475,10 +59475,10 @@ _0814CC3C:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, [r6, #0x04]
 	str r0, [r6, #0x00]
 _0814CC5C:
@@ -59517,10 +59517,10 @@ sub_814CC84:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
 	adds r0, r6, r1
@@ -59554,7 +59554,7 @@ _0814CCE2:
 	movs r4, #0x00
 	str r4, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	movs r1, #0x9E
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
@@ -59751,7 +59751,7 @@ _0814CE34:
 _0814CE88:
 	mov r0, r12
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x02
@@ -59860,7 +59860,7 @@ _0814CF5C:
 	str r0, [sp, #0x004]
 	adds r0, r5, #0x0
 	adds r1, r7, #0x0
-	bl sub_80457E8
+	bl sub_80457E8__11FieldObjectiiPiN23
 	ldr r0, [sp, #0x00C]
 	ldr r1, _0814CFB0 @ =0x7FFFFFFF
 	cmp r0, r1
@@ -59940,7 +59940,7 @@ _0814D006:
 	str r0, [r6, #0x18]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x02
@@ -60019,7 +60019,7 @@ sub_814D068:
 	str r0, [r4, #0x18]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0xCE
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -60072,7 +60072,7 @@ _0814D0D0:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, [r7, #0x08]
 	str r0, [r7, #0x00]
 _0814D126:
@@ -60127,7 +60127,7 @@ sub_814D1F8:
 	beq _0814D288
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -60149,15 +60149,15 @@ sub_814D1F8:
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r5, #0x0
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	str r4, [sp, #0x000]
 	adds r0, r6, #0x0
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r5, #0x0
-	bl sub_8046B30
+	bl sub_8046B30__11FieldObjectiiUsUs
 	adds r0, r6, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r0, _0814D294 @ =0x0814D299
 	str r0, [r7, #0x00]
 _0814D288:
@@ -60173,12 +60173,12 @@ sub_814D298:
 	adds r4, r1, #0x0
 	adds r6, r2, #0x0
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0814D2BE
 	adds r0, r4, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	movs r0, #0xEB
 	lsls r0, r0, #0x01
 	adds r2, r4, r0
@@ -60188,7 +60188,7 @@ sub_814D298:
 	strb r0, [r2, #0x00]
 _0814D2BE:
 	adds r0, r4, #0x0
-	bl sub_8047A1C
+	bl sub_8047A1C__11FieldObject
 	lsls r0, r0, #0x18
 	movs r1, #0xEB
 	lsls r1, r1, #0x01
@@ -60196,7 +60196,7 @@ _0814D2BE:
 	cmp r0, #0x00
 	bne _0814D2DE
 	adds r0, r4, #0x0
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x08
 	orrs r0, r1
@@ -60304,7 +60304,7 @@ _0814D39E:
 	movs r1, #0x00
 	movs r2, #0x0E
 	movs r3, #0x02
-	bl sub_804173C
+	bl sub_804173C__11FieldObjectiUcUcUc
 	ldr r0, _0814D3B4 @ =0x0814DC6D
 	b _0814D4FC
 	.byte 0x00, 0x00
@@ -60728,7 +60728,7 @@ _0814D6E6:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r1, r5, r0
@@ -61201,7 +61201,7 @@ _0814DAA4:
 	adds r1, r0, #0x0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -62402,7 +62402,7 @@ _0814E5D4:
 	str r0, [sp, #0x000]
 	str r6, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	negs r1, r7
 	ldr r2, _0814E624 @ =0x00000242
 	adds r0, r5, r2
@@ -62430,7 +62430,7 @@ _0814E628:
 	str r0, [sp, #0x000]
 	str r6, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r1, _0814E65C @ =0x00000242
 	adds r0, r5, r1
 	strh r7, [r0, #0x00]
@@ -62461,7 +62461,7 @@ _0814E660:
 	movs r4, #0x00
 	str r4, [sp, #0x004]
 	adds r0, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r1, _0814E6D4 @ =0x00000242
 	adds r0, r5, r1
 	strh r4, [r0, #0x00]
@@ -62489,10 +62489,10 @@ _0814E698:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -63056,7 +63056,7 @@ _0814EC0C:
 	lsrs r1, r1, #0x1E
 	adds r0, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	bl sub_815033C
@@ -63085,7 +63085,7 @@ sub_814EC48:
 	bne _0814EC9C
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -63099,21 +63099,21 @@ sub_814EC48:
 	adds r0, r4, #0x0
 	movs r1, #0x02
 	movs r2, #0x00
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x04
 	orrs r0, r1
 	strb r0, [r5, #0x00]
 _0814EC9C:
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0814ECD2
 	adds r0, r4, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -63168,24 +63168,24 @@ sub_814ECE0:
 	movs r1, #0x02
 	movs r2, #0x00
 	movs r3, #0x10
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldrb r0, [r5, #0x00]
 	movs r1, #0x04
 	orrs r0, r1
 	strb r0, [r5, #0x00]
 _0814ED2C:
 	adds r0, r4, #0x0
-	bl sub_8047A3C
+	bl sub_8047A3C__11FieldObject
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0814ED9E
 	adds r0, r4, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r2, #0xEE
 	lsls r2, r2, #0x01
 	adds r0, r4, r2
@@ -64065,19 +64065,19 @@ _0814F3D4:
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r6, #0x0
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	ldr r0, [r7, #0x00]
 	str r4, [sp, #0x000]
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r6, #0x0
-	bl sub_8046B30
+	bl sub_8046B30__11FieldObjectiiUsUs
 	ldr r0, [r7, #0x00]
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r0, [r7, #0x00]
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	ldr r0, [r7, #0x00]
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	ldr r2, [r7, #0x00]
 	movs r3, #0x85
 	lsls r3, r3, #0x02
@@ -64167,19 +64167,19 @@ _0814F48C:
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r4, #0x0
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	ldr r0, [r7, #0x00]
 	str r5, [sp, #0x000]
 	movs r1, #0x02
 	movs r2, #0x00
 	adds r3, r4, #0x0
-	bl sub_8046B30
+	bl sub_8046B30__11FieldObjectiiUsUs
 	ldr r0, [r7, #0x00]
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r0, [r7, #0x00]
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	ldr r0, [r7, #0x00]
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -64327,7 +64327,7 @@ _0814F614:
 	movs r1, #0x02
 	movs r2, #0x00
 	movs r3, #0x05
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	movs r0, #0x03
 	bl sub_8150244
 	lsls r0, r0, #0x10
@@ -64341,7 +64341,7 @@ _0814F614:
 	movs r1, #0x02
 	movs r2, #0x00
 	movs r3, #0x05
-	bl sub_8046B30
+	bl sub_8046B30__11FieldObjectiiUsUs
 	movs r1, #0xE8
 	lsls r1, r1, #0x01
 	add r1, r9
@@ -64731,7 +64731,7 @@ _0814F958:
 	adds r0, r0, r2
 	str r0, [r1, #0x18]
 	ldr r0, [r4, #0x00]
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r1, [r4, #0x00]
 	movs r5, #0xA5
 	lsls r5, r5, #0x02
@@ -64742,7 +64742,7 @@ _0814F958:
 	cmp r0, #0xA0
 	bgt _0814F9BE
 	adds r0, r1, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	ldr r0, [sp, #0x01C]
 	movs r1, #0xBF
 	lsls r1, r1, #0x01
@@ -64760,7 +64760,7 @@ _0814F9BE:
 	cmp r0, #0xA0
 	bgt _0814F9E2
 	adds r0, r1, #0x0
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	ldr r3, [sp, #0x01C]
 	movs r6, #0xBF
 	lsls r6, r6, #0x01
@@ -64840,7 +64840,7 @@ _0814FA4A:
 	adds r0, r0, r1
 	str r0, [r5, #0x10]
 	adds r0, r5, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	ldr r1, [r7, #0x00]
 	movs r4, #0xA5
 	lsls r4, r4, #0x02
@@ -64851,7 +64851,7 @@ _0814FA4A:
 	cmp r0, #0xA0
 	bgt _0814FA94
 	adds r0, r1, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	movs r2, #0xEB
 	lsls r2, r2, #0x01
 	add r2, r9
@@ -64868,7 +64868,7 @@ _0814FA94:
 	cmp r0, #0xA0
 	bgt _0814FAB6
 	adds r0, r1, #0x0
-	bl sub_8047994
+	bl sub_8047994__11FieldObject
 	movs r2, #0xEB
 	lsls r2, r2, #0x01
 	add r2, r9
@@ -64937,13 +64937,13 @@ _0814FAFC:
 	str r4, [sp, #0x000]
 	movs r4, #0x00
 	str r4, [sp, #0x004]
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	ldr r0, [r5, #0x00]
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	ldr r0, [r5, #0x00]
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -64987,10 +64987,10 @@ _0814FB8C:
 	beq _0814FC20
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	ldr r0, [r7, #0x00]
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	movs r1, #0xE9
 	lsls r1, r1, #0x01
 	add r1, r9
@@ -65081,7 +65081,7 @@ sub_814FC88:
 	movs r5, #0x00
 	str r5, [sp, #0x004]
 	adds r0, r7, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r7, r0
@@ -65439,7 +65439,7 @@ _0814FF58:
 _0814FF7A:
 	adds r0, r6, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	movs r2, #0xA5
 	lsls r2, r2, #0x02
 	adds r0, r6, r2
@@ -65597,7 +65597,7 @@ _08150096:
 	adds r0, r7, #0x0
 	adds r1, r6, #0x0
 	adds r2, r5, #0x0
-	bl sub_8047F60
+	bl sub_8047F60__11FieldObjectiiiii
 	mov r1, r8
 	cmp r1, #0x00
 	beq _081500D8
@@ -65634,10 +65634,10 @@ _081500F0:
 	bl sub_801E68C
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	add sp, #0x008
 	pop {r3}
 	mov r8, r3
@@ -66120,7 +66120,7 @@ sub_815041C:
 	adds r0, r6, #0x0
 	adds r1, r4, #0x0
 	movs r2, #0x00
-	bl sub_8047154
+	bl sub_8047154__11FieldObjectii
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -66192,14 +66192,14 @@ sub_81504F4:
 	movs r1, #0x02
 	movs r2, #0x00
 	movs r3, #0x10
-	bl sub_8046A90
+	bl sub_8046A90__11FieldObjectiiUsUs
 	adds r0, r4, #0x0
-	bl sub_8046D18
+	bl sub_8046D18__11FieldObject
 	adds r0, r4, #0x0
-	bl sub_80479A8
+	bl sub_80479A8__11FieldObject
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	movs r2, #0xEE
 	lsls r2, r2, #0x01
 	adds r1, r4, r2
@@ -66249,10 +66249,10 @@ sub_8150590:
 	push {r4, lr}
 	adds r4, r0, #0x0
 	movs r1, #0x00
-	bl sub_804776C
+	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl sub_804761C
+	bl sub_804761C__11FieldObjecti
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -66711,7 +66711,7 @@ sub_8150A44:
 	ldr r2, _08150AC4 @ =0x082125C8
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r4, #0x00]
 	movs r2, #0xEF
 	movs r3, #0x9F
@@ -67346,14 +67346,14 @@ _08150F70:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _08150F7A
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _08150F7A:
 	movs r0, #0x01
 	ands r0, r5
 	cmp r0, #0x00
 	beq _08150F88
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08150F88:
 	pop {r4, r5}
 	pop {r0}
@@ -67657,7 +67657,7 @@ sub_81511E4:
 	adds r7, r0, #0x0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08151248 @ =0x08CDC4B0
 	str r0, [r7, #0x18]
 	adds r0, r7, #0x0
@@ -67786,11 +67786,11 @@ _08151260:
 	movs r1, #0x01
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x08
 	adds r2, r5, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _081513EC @ =0x08CDC4C0
 	str r0, [r4, #0x18]
 	str r4, [r6, #0x00]
@@ -67835,7 +67835,7 @@ _08151260:
 	ldr r2, _08151414 @ =0x082125D8
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r5, r0, #0x0
 	ldr r0, _08151418 @ =0x03000C84
 	ldr r2, [r0, #0x00]
@@ -67851,7 +67851,7 @@ _08151260:
 	cmp r5, #0x00
 	beq _08151398
 	adds r0, r5, #0x0
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _08151398:
 	ldr r0, _0815141C @ =0x0300034C
 	ldr r4, _08151420 @ =0x00000888
@@ -68110,7 +68110,7 @@ _08151598:
 	lsls r1, r1, #0x03
 	ldr r2, _08151630 @ =0x082125E0
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r4, #0x00]
 	ldr r1, _08151634 @ =0x00001CB4
 	adds r4, r7, r1
@@ -68118,7 +68118,7 @@ _08151598:
 	movs r0, #0x44
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8150A44
 	str r0, [r4, #0x00]
 	ldr r1, _08151620 @ =0x0300034C
@@ -68138,7 +68138,7 @@ _08151598:
 	movs r0, #0x08
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	bl sub_8158198
 	ldr r0, _0815164C @ =0x08CDC590
@@ -68210,7 +68210,7 @@ sub_8151650:
 	cmp r0, #0x00
 	beq _081516AE
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 _081516AE:
 	ldr r5, _08151740 @ =0x03001014
 	ldr r0, [r5, #0x00]
@@ -68225,7 +68225,7 @@ _081516AE:
 	bl sub_8150F60
 _081516C8:
 	ldr r0, [r5, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	ldr r1, _08151748 @ =0x0300034C
 	ldr r0, _0815174C @ =0x0000FFFF
 	strh r0, [r1, #0x02]
@@ -68237,7 +68237,7 @@ _081516C8:
 	ands r0, r2
 	strb r0, [r1, #0x00]
 	ldr r0, [r4, #0x14]
-	bl process_enable
+	bl enable__7Process
 	bl sub_8150A38
 	movs r1, #0x80
 	lsls r1, r1, #0x12
@@ -68258,7 +68258,7 @@ _081516C8:
 	bl sub_8160EA4
 	adds r0, r4, #0x0
 	adds r1, r6, #0x0
-	bl process_remove
+	bl _._7Process
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -68592,7 +68592,7 @@ _0815186E:
 	movs r0, #0x20
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8158220
 	str r0, [r4, #0x00]
 	ldr r1, _08151A88 @ =0x00001CA4
@@ -68601,7 +68601,7 @@ _0815186E:
 	movs r0, #0x18
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8161954
 	str r0, [r4, #0x00]
 	ldr r2, _08151A90 @ =0x00001CB0
@@ -68610,7 +68610,7 @@ _0815186E:
 	movs r0, #0x38
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8154B24
 	adds r2, r0, #0x0
 	str r2, [r4, #0x00]
@@ -68641,7 +68641,7 @@ _08151A1C:
 	movs r0, #0xA4
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0D
 	str r1, [sp, #0x000]
 	movs r1, #0x00
@@ -73087,7 +73087,7 @@ _08154F38:
 	movs r0, #0x50
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_81580F8
 	ldr r2, _08154F68 @ =0x00001CAC
 	adds r1, r7, r2
@@ -73102,7 +73102,7 @@ _08154F6C:
 	movs r0, #0x28
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_815817C
 	ldr r3, _08154F98 @ =0x00001CAC
 	adds r1, r7, r3
@@ -74449,7 +74449,7 @@ _08158022:
 	cmp r0, #0x00
 	beq _08158034
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08158034:
 	pop {r4, r5}
 	pop {r0}
@@ -74479,7 +74479,7 @@ sub_8158044:
 	movs r0, #0x34
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8161AAC
 	str r0, [r4, #0x0C]
 	b _08158096
@@ -74491,7 +74491,7 @@ _08158084:
 	movs r0, #0x34
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8161698
 	str r0, [r4, #0x08]
 _08158096:
@@ -74661,7 +74661,7 @@ _0815820C:
 	cmp r0, #0x00
 	beq _0815821A
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815821A:
 	pop {r4, r5}
 	pop {r0}
@@ -74834,7 +74834,7 @@ _08158354:
 	cmp r0, #0x00
 	beq _08158362
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08158362:
 	pop {r4, r5}
 	pop {r0}
@@ -76417,7 +76417,7 @@ sub_8159378:
 	cmp r0, #0x00
 	beq _0815938E
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815938E:
 	pop {r0}
 	bx r0
@@ -76436,7 +76436,7 @@ sub_81593B8:
 	cmp r0, #0x00
 	beq _081593CE
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _081593CE:
 	pop {r0}
 	bx r0
@@ -76454,7 +76454,7 @@ sub_81593DC:
 	cmp r0, #0x00
 	beq _081593F2
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _081593F2:
 	pop {r0}
 	bx r0
@@ -76472,7 +76472,7 @@ sub_8159400:
 	cmp r0, #0x00
 	beq _08159416
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08159416:
 	pop {r0}
 	bx r0
@@ -76491,7 +76491,7 @@ sub_8159440:
 	cmp r0, #0x00
 	beq _08159456
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08159456:
 	pop {r0}
 	bx r0
@@ -76509,7 +76509,7 @@ sub_8159464:
 	cmp r0, #0x00
 	beq _0815947A
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815947A:
 	pop {r0}
 	bx r0
@@ -77276,7 +77276,7 @@ _08159A78:
 	cmp r0, #0x00
 	beq _08159A86
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08159A86:
 	pop {r4, r5}
 	pop {r0}
@@ -77871,7 +77871,7 @@ _0815A2E6:
 	cmp r0, #0x00
 	beq _0815A2F6
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 _0815A2F6:
 	ldr r1, _0815A37C @ =0x00001CBC
 	adds r0, r4, r1
@@ -77883,7 +77883,7 @@ _0815A2F6:
 _0815A306:
 	ldr r0, _0815A380 @ =0x0300101C
 	ldr r0, [r0, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	ldr r1, _0815A384 @ =0x0300034C
 	ldr r0, _0815A388 @ =0x0000FFFF
 	strh r0, [r1, #0x02]
@@ -77895,7 +77895,7 @@ _0815A306:
 	ands r0, r2
 	strb r0, [r1, #0x00]
 	ldr r0, [r4, #0x14]
-	bl process_enable
+	bl enable__7Process
 	bl sub_8150A38
 	ldr r1, _0815A390 @ =0x00001064
 	adds r0, r4, r1
@@ -77912,7 +77912,7 @@ _0815A306:
 	bl sub_8160EA4
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
-	bl process_remove
+	bl _._7Process
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -78137,7 +78137,7 @@ _0815A474:
 	movs r0, #0x4C
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_815D658
 	str r0, [r4, #0x00]
 	ldr r0, _0815A5C0 @ =0x00001E8C
@@ -78146,7 +78146,7 @@ _0815A474:
 	movs r0, #0x60
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_815D8CC
 	str r0, [r4, #0x00]
 	ldr r1, _0815A5C8 @ =0x00001E90
@@ -83223,7 +83223,7 @@ _0815DDC4:
 	movs r0, #0x28
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_815E9EC
 	ldr r2, _0815DE2C @ =0x00001E94
 	adds r1, r7, r2
@@ -83346,7 +83346,7 @@ sub_815E114:
 	movs r0, #0x1C
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r1, r5, #0x0
 	bl sub_815E1A0
 	ldr r2, _0815E158 @ =0x00001E94
@@ -83369,7 +83369,7 @@ _0815E15C:
 	movs r0, #0x18
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	bl sub_815EA08
 	ldr r0, _0815E198 @ =0x08CDCA70
@@ -83933,7 +83933,7 @@ _0815E5F0:
 	movs r0, #0x08
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	bl sub_815EA08
 	ldr r0, _0815E634 @ =0x08CDCAF0
@@ -84182,7 +84182,7 @@ _0815EB2E:
 	cmp r0, #0x00
 	beq _0815EB3C
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815EB3C:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -84226,7 +84226,7 @@ _0815EBAA:
 	cmp r0, #0x00
 	beq _0815EBB8
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815EBB8:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -84322,7 +84322,7 @@ _0815ECCC:
 	cmp r0, #0x00
 	beq _0815ECE0
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815ECE0:
 	pop {r4, r5}
 	pop {r0}
@@ -85501,7 +85501,7 @@ sub_815F7FC:
 	cmp r0, #0x00
 	beq _0815F812
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815F812:
 	pop {r0}
 	bx r0
@@ -85520,7 +85520,7 @@ sub_815F838:
 	cmp r0, #0x00
 	beq _0815F84E
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815F84E:
 	pop {r0}
 	bx r0
@@ -85538,7 +85538,7 @@ sub_815F85C:
 	cmp r0, #0x00
 	beq _0815F872
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815F872:
 	pop {r0}
 	bx r0
@@ -85557,7 +85557,7 @@ sub_815F898:
 	cmp r0, #0x00
 	beq _0815F8AE
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815F8AE:
 	pop {r0}
 	bx r0
@@ -85575,7 +85575,7 @@ sub_815F8BC:
 	cmp r0, #0x00
 	beq _0815F8D2
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815F8D2:
 	pop {r0}
 	bx r0
@@ -85881,7 +85881,7 @@ sub_815FB14:
 	cmp r0, #0x00
 	beq _0815FB32
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0815FB32:
 	pop {r4, r5}
 	pop {r0}
@@ -85924,7 +85924,7 @@ sub_815FB88:
 	movs r1, #0x01
 	adds r2, r6, #0x0
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r5, #0x00]
 	ldr r1, _0815FD60 @ =0x0000080C
 	adds r1, r1, r7
@@ -85934,7 +85934,7 @@ sub_815FB88:
 	movs r1, #0x01
 	adds r2, r6, #0x0
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	mov r2, r8
 	str r0, [r2, #0x00]
 	ldr r0, _0815FD64 @ =0x03000C84
@@ -87382,7 +87382,7 @@ sub_8160E6C:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _08160E82
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _08160E82:
@@ -87391,7 +87391,7 @@ _08160E82:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _08160E94
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _08160E94:
@@ -87412,7 +87412,7 @@ sub_8160EA4:
 	cmp r0, #0x00
 	beq _08160EBC
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08160EBC:
 	pop {r4, r5}
 	pop {r0}
@@ -87448,7 +87448,7 @@ sub_8160EDC:
 	cmp r0, #0x00
 	beq _08160F00
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 _08160F00:
 	ldr r2, [r4, #0x20]
 	cmp r2, #0x00
@@ -87463,7 +87463,7 @@ _08160F00:
 _08160F16:
 	adds r0, r4, #0x0
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 	b _08160F70
 _08160F20: .4byte 0x0300034C
 _08160F24: .4byte 0x08CDCFB0
@@ -87486,7 +87486,7 @@ _08160F28:
 	cmp r0, #0x00
 	beq _08160F52
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 _08160F52:
 	ldr r2, [r4, #0x20]
 	cmp r2, #0x00
@@ -87501,7 +87501,7 @@ _08160F52:
 _08160F68:
 	adds r0, r4, #0x0
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 _08160F70:
 	pop {r4}
 	pop {r0}
@@ -87562,7 +87562,7 @@ sub_8161080:
 	ldr r2, _08161104 @ =0x082127C0
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r5, r0, #0x0
 	ldr r0, _08161108 @ =0x03000C84
 	ldr r2, [r0, #0x00]
@@ -87578,7 +87578,7 @@ sub_8161080:
 	cmp r5, #0x00
 	beq _081610BA
 	adds r0, r5, #0x0
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _081610BA:
 	ldr r0, _0816110C @ =0x0800CE10
 	ldr r4, _08161110 @ =0x02000080
@@ -87842,7 +87842,7 @@ _08161346:
 	cmp r0, #0x00
 	beq _08161354
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08161354:
 	pop {r4, r5}
 	pop {r0}
@@ -87877,7 +87877,7 @@ _081613EC:
 	adds r0, r4, #0x0
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8160EC4
 	str r0, [r6, #0x2C]
 	ldr r1, _081614A4 @ =0x08002D30
@@ -87893,7 +87893,7 @@ _081613EC:
 	adds r0, r4, #0x0
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8160EC4
 	str r0, [r6, #0x30]
 	ldr r1, _081614B0 @ =0x08005C60
@@ -87911,7 +87911,7 @@ _081613EC:
 	movs r0, #0x34
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, _081614BC @ =0x082127F0
 	ldr r2, [r6, #0x2C]
 	movs r3, #0x14
@@ -88028,7 +88028,7 @@ sub_816154C:
 	cmp r0, #0x00
 	beq _08161562
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08161562:
 	pop {r0}
 	bx r0
@@ -88055,7 +88055,7 @@ sub_8161580:
 	cmp r0, #0x00
 	beq _08161596
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08161596:
 	pop {r0}
 	bx r0
@@ -88074,7 +88074,7 @@ sub_81615B4:
 	cmp r0, #0x00
 	beq _081615CA
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _081615CA:
 	pop {r0}
 	bx r0
@@ -88119,7 +88119,7 @@ _08161624:
 	cmp r0, #0x00
 	beq _08161632
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08161632:
 	pop {r4, r5}
 	pop {r0}
@@ -88139,7 +88139,7 @@ sub_816166C:
 	cmp r0, #0x00
 	beq _08161682
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08161682:
 	pop {r0}
 	bx r0
@@ -88342,7 +88342,7 @@ sub_81617F4:
 	cmp r0, #0x00
 	beq _0816180E
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0816180E:
 	pop {r4, r5}
 	pop {r0}
@@ -88504,7 +88504,7 @@ _0816193E:
 	cmp r0, #0x00
 	beq _0816194C
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0816194C:
 	pop {r4, r5}
 	pop {r0}
@@ -88649,7 +88649,7 @@ sub_8161A38:
 	cmp r0, #0x00
 	beq _08161A52
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08161A52:
 	pop {r4, r5}
 	pop {r0}
@@ -88884,7 +88884,7 @@ sub_8161C08:
 	cmp r0, #0x00
 	beq _08161C22
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08161C22:
 	pop {r4, r5}
 	pop {r0}
@@ -89596,7 +89596,7 @@ _081629B0:
 	movs r1, #0x00
 	ldr r2, _08162A28 @ =0x08212814
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x00
 	bl sub_8161C28
 	adds r4, r0, #0x0
@@ -89783,7 +89783,7 @@ _08162B3A:
 	movs r1, #0x00
 	ldr r2, _08162BF8 @ =0x0821281C
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x00
 	bl sub_8161C28
 	adds r4, r0, #0x0
@@ -90001,7 +90001,7 @@ _08162D0C:
 	movs r1, #0x00
 	ldr r2, _08162DEC @ =0x08212824
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x00
 	bl sub_8161C28
 	adds r4, r0, #0x0
@@ -90693,7 +90693,7 @@ sub_8163280:
 	cmp r0, #0x00
 	beq _08163292
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08163292:
 	pop {r0}
 	bx r0
@@ -90764,7 +90764,7 @@ sub_8163308:
 	cmp r0, #0x00
 	beq _0816331A
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0816331A:
 	pop {r0}
 	bx r0
@@ -91079,7 +91079,7 @@ _08163586:
 	cmp r0, #0x00
 	beq _08163594
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08163594:
 	pop {r4, r5}
 	pop {r0}
@@ -91305,7 +91305,7 @@ _08163724:
 	cmp r0, #0x00
 	beq _0816373A
 	mov r0, r8
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0816373A:
 	pop {r3, r4}
 	mov r8, r3
@@ -91459,7 +91459,7 @@ _0816384E:
 	cmp r0, #0x00
 	beq _0816385C
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0816385C:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -91500,7 +91500,7 @@ sub_8163888:
 	cmp r0, #0x00
 	beq _081638A6
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _081638A6:
 	pop {r4, r5}
 	pop {r0}
@@ -91880,7 +91880,7 @@ _08163B7E:
 	cmp r0, #0x00
 	beq _08163B90
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08163B90:
 	pop {r4, r5}
 	pop {r0}
@@ -92122,7 +92122,7 @@ sub_8163D10:
 	cmp r0, #0x00
 	beq _08163D2E
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08163D2E:
 	pop {r4, r5}
 	pop {r0}
@@ -92141,7 +92141,7 @@ sub_8163D4C:
 	cmp r0, #0x00
 	beq _08163D62
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08163D62:
 	pop {r0}
 	bx r0
@@ -92188,7 +92188,7 @@ sub_8163DB8:
 	ldr r2, _08163E04 @ =0x0821280C
 	movs r0, #0x01
 	adds r1, r6, #0x0
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r4, r0, #0x0
 	ldr r0, _08163E08 @ =0x03000C84
 	ldr r2, [r0, #0x00]
@@ -92203,7 +92203,7 @@ sub_8163DB8:
 	movs r3, #0x10
 	bl sub_8018218
 	adds r0, r4, #0x0
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	add sp, #0x004
 	pop {r3}
 	mov r8, r3
@@ -92439,7 +92439,7 @@ _08164044:
 	ldr r2, _081640A4 @ =0x08212AE0
 	movs r0, #0x01
 _0816404A:
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x00]
 	ldr r1, [r7, #0x00]
 	adds r1, #0x1F
@@ -92460,7 +92460,7 @@ _0816404A:
 	ldr r1, _081640AC @ =0x00000403
 	ldr r2, _081640B0 @ =0x08212AE8
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x08]
 	adds r0, #0x03
 	movs r1, #0x04
@@ -92695,7 +92695,7 @@ _0816423C:
 	adds r1, r5, #0x3
 	ldr r2, _08164290 @ =0x08212AF0
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r4, r0, #0x0
 	str r4, [r7, #0x1C]
 	adds r4, #0x03
@@ -92754,7 +92754,7 @@ sub_8164294:
 	lsls r1, r1, #0x01
 	ldr r2, _08164318 @ =0x08212AF8
 	movs r0, #0x01
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x24]
 	ldr r1, _0816431C @ =0x08212B30
 	adds r0, r7, #0x0
@@ -92857,7 +92857,7 @@ _08164380:
 	ldr r1, _0816448C @ =0x0000301F
 	ldr r2, _08164490 @ =0x08212B00
 	movs r0, #0x01
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x1C]
 	cmp r0, #0x00
 	bne _0816439C
@@ -93048,7 +93048,7 @@ _08164514:
 	ldr r2, _0816462C @ =0x08212B08
 	movs r0, #0x00
 	adds r1, r4, #0x0
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r7, #0x44]
 	movs r0, #0x00
@@ -93076,7 +93076,7 @@ _08164514:
 	adds r1, r6, #0x3
 	ldr r2, _08164644 @ =0x08212B00
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	str r0, [r7, #0x48]
 	cmp r0, #0x00
 	beq _08164608
@@ -94141,22 +94141,22 @@ sub_8165144:
 	ldr r0, [r4, #0x48]
 	cmp r0, #0x00
 	beq _0816516A
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _0816516A:
 	ldr r0, [r4, #0x44]
 	cmp r0, #0x00
 	beq _08165174
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _08165174:
 	ldr r0, [r4, #0x1C]
 	cmp r0, #0x00
 	beq _0816517E
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _0816517E:
 	ldr r0, [r4, #0x24]
 	cmp r0, #0x00
 	beq _08165188
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _08165188:
 	bl sub_80E8D74
 	movs r0, #0x01
@@ -94164,7 +94164,7 @@ _08165188:
 	cmp r0, #0x00
 	beq _0816519A
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0816519A:
 	pop {r4, r5}
 	pop {r0}
@@ -94365,20 +94365,20 @@ sub_8165454:
 	adds r4, r0, #0x0
 	adds r5, r1, #0x0
 	ldr r0, [r4, #0x1C]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	ldr r0, [r4, #0x08]
 	cmp r0, #0x00
 	beq _0816546A
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 _0816546A:
 	ldr r0, [r4, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	movs r0, #0x01
 	ands r0, r5
 	cmp r0, #0x00
 	beq _0816547E
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0816547E:
 	pop {r4, r5}
 	pop {r0}
@@ -94550,7 +94550,7 @@ sub_81655B0:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x03
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -94561,7 +94561,7 @@ sub_81655B0:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x04
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -94572,7 +94572,7 @@ sub_81655B0:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x05
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -94583,7 +94583,7 @@ sub_81655B0:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x06
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -94667,7 +94667,7 @@ sub_81656D8:
 	str r0, [sp, #0x010]
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08165754 @ =0x08CDD128
 	ldr r1, [sp, #0x010]
 	str r0, [r1, #0x18]
@@ -94683,7 +94683,7 @@ sub_81656D8:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x20
 	str r1, [sp, #0x000]
 	movs r1, #0x08
@@ -94798,7 +94798,7 @@ _08165814:
 	movs r0, #0x10
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_81638B0
 	ldr r2, [sp, #0x010]
 	str r0, [r2, #0x1C]
@@ -94806,7 +94806,7 @@ _08165814:
 	movs r0, #0xA4
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0D
 	str r1, [sp, #0x000]
 	movs r1, #0x01
@@ -94823,7 +94823,7 @@ _08165814:
 	movs r0, #0x38
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0E
 	str r1, [sp, #0x000]
 	movs r2, #0x00
@@ -94871,11 +94871,11 @@ _08165814:
 	movs r1, #0x00
 	adds r2, r6, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x08
 	adds r2, r6, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08165C0C @ =0x08CDD140
 	str r0, [r4, #0x18]
 	movs r0, #0x00
@@ -94888,7 +94888,7 @@ _08165814:
 	movs r0, #0x10
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8162968
 	ldr r2, [sp, #0x010]
 	str r0, [r2, #0x38]
@@ -94896,7 +94896,7 @@ _08165814:
 	movs r0, #0x30
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	bl sub_8163298
 	ldr r1, [sp, #0x010]
@@ -95072,7 +95072,7 @@ _08165814:
 	movs r0, #0x14
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r2, [sp, #0x010]
 	ldr r1, [r2, #0x1C]
 	bl sub_81655B0
@@ -95082,7 +95082,7 @@ _08165814:
 	movs r0, #0x1C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8162AD4
 	ldr r2, [sp, #0x010]
 	str r0, [r2, #0x34]
@@ -95098,7 +95098,7 @@ _08165AC2:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	ldr r6, _08165C40 @ =0x08214574
 	movs r1, #0x01
@@ -95141,7 +95141,7 @@ _08165AC2:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	ldr r6, _08165C4C @ =0x08214582
 	movs r1, #0x01
@@ -95182,7 +95182,7 @@ _08165AC2:
 	movs r0, #0x70
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	ldr r6, _08165C54 @ =0x0821425A
 	movs r1, #0x00
@@ -95260,7 +95260,7 @@ _08165C60:
 	movs r0, #0x70
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	ldr r6, _08165CE8 @ =0x08214268
 	movs r1, #0x00
@@ -95322,7 +95322,7 @@ _08165D00:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	ldr r6, _081660EC @ =0x08214590
 	movs r1, #0x01
@@ -95364,7 +95364,7 @@ _08165D00:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	ldr r6, _081660F8 @ =0x0821459E
 	movs r1, #0x01
@@ -95405,7 +95405,7 @@ _08165D00:
 	movs r0, #0x70
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	ldr r6, _08166100 @ =0x08214236
 	movs r1, #0x00
@@ -95453,7 +95453,7 @@ _08165D00:
 	movs r0, #0x70
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	ldr r6, _08166114 @ =0x08214248
 	movs r1, #0x00
@@ -95503,7 +95503,7 @@ _08165EAE:
 	ldr r2, _08166124 @ =0x08212C20
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	str r0, [sp, #0x030]
 	ldr r0, _08166128 @ =0x080022A4
 	ldr r6, _0816612C @ =0x08001DF8
@@ -95511,7 +95511,7 @@ _08165EAE:
 	adds r1, r7, #0x3
 	ldr r2, _08166130 @ =0x08212B90
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r4, r0, #0x0
 	ldr r2, [sp, #0x030]
 	movs r1, #0x8C
@@ -95833,9 +95833,9 @@ _0816618A:
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
 	ldr r0, [r0, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	adds r0, r4, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _081661A2:
 	ldr r0, [r5, #0x34]
 	cmp r0, #0x00
@@ -95902,14 +95902,14 @@ _0816620A:
 _08166220:
 	bl sub_8150A38
 	ldr r0, [r5, #0x14]
-	bl process_enable
+	bl enable__7Process
 	adds r0, r5, #0x0
 	adds r0, #0x50
 	movs r1, #0x02
 	bl sub_8163308
 	adds r0, r5, #0x0
 	adds r1, r6, #0x0
-	bl process_remove
+	bl _._7Process
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -97145,7 +97145,7 @@ sub_8167E9C:
 	cmp r0, #0x00
 	beq _08167EB2
 	adds r0, r2, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08167EB2:
 	pop {r0}
 	bx r0
@@ -97254,7 +97254,7 @@ sub_8168294:
 	push {lr}
 	ldr r2, _081682A4 @ =0x08CDD140
 	str r2, [r0, #0x18]
-	bl process_remove
+	bl _._7Process
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00
@@ -97412,7 +97412,7 @@ sub_8168390:
 	movs r0, #0x80
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r6, #0x12
 	negs r6, r6
@@ -97440,7 +97440,7 @@ sub_8168390:
 	movs r0, #0x80
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r6, #0x12
 	movs r1, #0x01
@@ -97467,7 +97467,7 @@ sub_8168390:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x02
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -97509,7 +97509,7 @@ sub_8168390:
 	movs r1, #0x00
 	ldr r2, _0816857C @ =0x08215768
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x07
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -97544,7 +97544,7 @@ sub_8168390:
 	movs r1, #0x00
 	ldr r2, _0816857C @ =0x08215768
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x07
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -97787,7 +97787,7 @@ _081686F0:
 	movs r0, #0x84
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, [r5, #0x00]
 	adds r1, #0x18
 	adds r2, r5, #0x0
@@ -97820,7 +97820,7 @@ _08168740:
 	movs r0, #0x84
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, [r5, #0x04]
 	adds r1, #0x18
 	adds r2, r5, #0x0
@@ -98531,7 +98531,7 @@ sub_8169440:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x00
 	bl sub_8161C28
 	str r0, [r4, #0x0C]
@@ -98553,7 +98553,7 @@ sub_8169440:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x00
 	bl sub_8161C28
 	str r0, [r4, #0x10]
@@ -99179,7 +99179,7 @@ sub_816994C:
 	adds r6, r0, #0x0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08169B58 @ =0x08CDD198
 	str r0, [r6, #0x18]
 	adds r4, r6, #0x0
@@ -99194,7 +99194,7 @@ sub_816994C:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x20
 	str r1, [sp, #0x000]
 	movs r1, #0x08
@@ -99317,14 +99317,14 @@ _08169A26:
 	movs r0, #0x10
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_81638B0
 	str r0, [r6, #0x1C]
 	ldr r2, _08169B8C @ =0x08215798
 	movs r0, #0xA4
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0D
 	str r1, [sp, #0x000]
 	movs r1, #0x01
@@ -99340,11 +99340,11 @@ _08169A26:
 	movs r1, #0x00
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x08
 	adds r2, r5, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08169B94 @ =0x08CDD1B0
 	str r0, [r4, #0x18]
 	str r7, [r4, #0x20]
@@ -99355,27 +99355,27 @@ _08169A26:
 	movs r0, #0x10
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8162968
 	str r0, [r6, #0x28]
 	ldr r2, _08169B9C @ =0x082157B0
 	movs r0, #0x04
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	str r0, [r6, #0x24]
 	ldr r2, _08169BA0 @ =0x082157B8
 	movs r0, #0x14
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8169440
 	str r0, [r6, #0x3C]
 	ldr r2, _08169BA4 @ =0x082157C0
 	movs r0, #0x10
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_8162CC0
 	str r0, [r6, #0x6C]
 	ldr r0, _08169BA8 @ =0x08215D9F
@@ -99452,7 +99452,7 @@ _08169BD4:
 	movs r0, #0x60
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, [r6, #0x1C]
 	movs r2, #0x80
 	lsls r2, r2, #0x08
@@ -99464,7 +99464,7 @@ _08169BD4:
 	movs r0, #0x30
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x04
 	bl sub_8163298
 	str r0, [r6, #0x30]
@@ -99601,7 +99601,7 @@ _08169D34:
 	ldr r0, [r4, #0x20]
 	cmp r0, #0x00
 	beq _08169D3E
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08169D3E:
 	ldr r0, [r4, #0x6C]
 	cmp r0, #0x00
@@ -99635,12 +99635,12 @@ _08169D66:
 	bl _call_via_r2
 _08169D7C:
 	adds r0, r5, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08169D82:
 	ldr r0, [r4, #0x24]
 	cmp r0, #0x00
 	beq _08169D8C
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08169D8C:
 	ldr r0, [r4, #0x28]
 	cmp r0, #0x00
@@ -99678,14 +99678,14 @@ _08169DBA:
 _08169DD0:
 	bl sub_8150A38
 	ldr r0, [r4, #0x14]
-	bl process_enable
+	bl enable__7Process
 	adds r0, r4, #0x0
 	adds r0, #0x70
 	movs r1, #0x02
 	bl sub_8163308
 	adds r0, r4, #0x0
 	adds r1, r6, #0x0
-	bl process_remove
+	bl _._7Process
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -100854,7 +100854,7 @@ sub_816B3C4:
 	push {lr}
 	ldr r2, _0816B3D4 @ =0x08CDD1B0
 	str r2, [r0, #0x18]
-	bl process_remove
+	bl _._7Process
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00
@@ -101053,7 +101053,7 @@ _0816B5CC:
 	movs r1, #0x00
 	ldr r2, _0816B688 @ =0x08216AA4
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -101078,7 +101078,7 @@ _0816B5CC:
 	movs r1, #0x00
 	ldr r2, _0816B688 @ =0x08216AA4
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -101529,7 +101529,7 @@ sub_816B9B0:
 	movs r0, #0x7C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r5, #0x01
 	movs r0, #0xA0
@@ -101566,7 +101566,7 @@ sub_816B9B0:
 	movs r0, #0x7C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r0, #0xA0
 	lsls r0, r0, #0x08
@@ -101845,7 +101845,7 @@ sub_816BC4C:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x03
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -101866,7 +101866,7 @@ sub_816BC4C:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x04
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -101884,7 +101884,7 @@ sub_816BC4C:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x05
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -102586,7 +102586,7 @@ sub_816C21C:
 	adds r7, r0, #0x0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _0816C344 @ =0x08CDD208
 	str r0, [r7, #0x18]
 	adds r4, r7, #0x0
@@ -102605,7 +102605,7 @@ sub_816C21C:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x20
 	str r1, [sp, #0x000]
 	movs r1, #0x08
@@ -102632,14 +102632,14 @@ _0816C290:
 	movs r0, #0x10
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_81638B0
 	str r0, [r7, #0x1C]
 	ldr r2, _0816C35C @ =0x08216AE4
 	movs r0, #0xA4
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0D
 	str r1, [sp, #0x000]
 	movs r1, #0x01
@@ -102654,7 +102654,7 @@ _0816C290:
 	movs r0, #0x30
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	bl sub_8163298
 	str r0, [r7, #0x40]
@@ -102895,11 +102895,11 @@ _0816C3A0:
 	movs r1, #0x00
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x08
 	adds r2, r5, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _0816C724 @ =0x08CDD220
 	str r0, [r4, #0x18]
 	movs r0, #0x00
@@ -102916,7 +102916,7 @@ _0816C3A0:
 	movs r0, #0x8C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, [r7, #0x1C]
 	bl sub_816B9B0
 	adds r1, r0, #0x0
@@ -102928,7 +102928,7 @@ _0816C3A0:
 	movs r0, #0x90
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, [r7, #0x1C]
 	movs r2, #0x80
 	str r2, [sp, #0x000]
@@ -102945,7 +102945,7 @@ _0816C3A0:
 	movs r0, #0x90
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, [r7, #0x1C]
 	movs r2, #0xF0
 	lsls r2, r2, #0x08
@@ -102963,7 +102963,7 @@ _0816C3A0:
 	movs r0, #0x54
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, [r7, #0x1C]
 	adds r2, r6, #0x0
 	bl sub_816B5B0
@@ -102972,7 +102972,7 @@ _0816C3A0:
 	movs r0, #0x20
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	ldr r1, [r7, #0x1C]
 	mov r8, r1
@@ -102986,7 +102986,7 @@ _0816C3A0:
 	movs r1, #0x00
 	ldr r2, _0816C73C @ =0x08216A9C
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x09
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -103016,7 +103016,7 @@ _0816C3A0:
 	movs r1, #0x00
 	ldr r2, _0816C73C @ =0x08216A9C
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x09
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -103049,7 +103049,7 @@ _0816C3A0:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x07
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -103075,7 +103075,7 @@ _0816C3A0:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0A
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -103625,7 +103625,7 @@ _0816CEAC:
 	movs r0, #0x80
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x06
 	bl sub_8161C28
@@ -104106,12 +104106,12 @@ sub_816D580:
 	ldr r0, [r4, #0x3C]
 	cmp r0, #0x00
 	beq _0816D594
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0816D594:
 	ldr r0, [r4, #0x38]
 	cmp r0, #0x00
 	beq _0816D59E
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0816D59E:
 	ldr r2, [r4, #0x20]
 	cmp r2, #0x00
@@ -104149,14 +104149,14 @@ _0816D5CC:
 _0816D5E2:
 	bl sub_8150A38
 	ldr r0, [r4, #0x14]
-	bl process_enable
+	bl enable__7Process
 	adds r0, r4, #0x0
 	adds r0, #0x4C
 	movs r1, #0x02
 	bl sub_8163308
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
-	bl process_remove
+	bl _._7Process
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -104332,7 +104332,7 @@ sub_816D96C:
 	push {lr}
 	ldr r2, _0816D97C @ =0x08CDD220
 	str r2, [r0, #0x18]
-	bl process_remove
+	bl _._7Process
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00
@@ -104532,7 +104532,7 @@ sub_816DB10:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x02
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -104565,7 +104565,7 @@ sub_816DB10:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x03
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -105740,7 +105740,7 @@ _0816E422:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x00
 	bl sub_8161C28
 	adds r4, r0, #0x0
@@ -109306,7 +109306,7 @@ sub_81700E4:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0B
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -109337,7 +109337,7 @@ sub_81700E4:
 	movs r0, #0x6C
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0C
 	bl sub_8161C28
 	adds r1, r0, #0x0
@@ -109484,7 +109484,7 @@ sub_8170264:
 	adds r7, r0, #0x0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _0817045C @ =0x08CDD278
 	str r0, [r7, #0x18]
 	adds r4, r7, #0x0
@@ -109500,7 +109500,7 @@ sub_8170264:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x20
 	str r1, [sp, #0x000]
 	movs r1, #0x08
@@ -109646,14 +109646,14 @@ _081702EC:
 	movs r0, #0x10
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	bl sub_81638B0
 	str r0, [r7, #0x1C]
 	ldr r2, _08170474 @ =0x08218EF8
 	movs r0, #0xA4
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0E
 	str r1, [sp, #0x000]
 	movs r1, #0x01
@@ -109749,11 +109749,11 @@ _081704BC:
 	movs r1, #0x00
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x08
 	adds r2, r5, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _081706D4 @ =0x08CDD290
 	str r0, [r4, #0x18]
 	str r6, [r4, #0x20]
@@ -109768,7 +109768,7 @@ _081704BC:
 	movs r0, #0x78
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x00
 	bl sub_8161C28
@@ -109815,7 +109815,7 @@ _081704BC:
 	movs r0, #0x78
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x01
 	bl sub_8161C28
@@ -109857,7 +109857,7 @@ _081704BC:
 	movs r0, #0x74
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, [r7, #0x1C]
 	bl sub_81700E4
 	adds r1, r0, #0x0
@@ -109869,7 +109869,7 @@ _081704BC:
 	movs r0, #0x78
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	adds r4, r0, #0x0
 	movs r1, #0x0D
 	bl sub_8161C28
@@ -109887,7 +109887,7 @@ _081704BC:
 	movs r0, #0x30
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x0D
 	bl sub_8163298
 	str r0, [r7, #0x38]
@@ -109896,7 +109896,7 @@ _081704BC:
 	ldr r2, _08170704 @ =0x08218F28
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r1, [r7, #0x1C]
 	bl sub_816DB10
 	str r0, [r7, #0x30]
@@ -110501,7 +110501,7 @@ sub_8171B60:
 	ldr r0, [r4, #0x30]
 	cmp r0, #0x00
 	beq _08171B80
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _08171B80:
 	ldr r0, [r4, #0x38]
 	cmp r0, #0x00
@@ -110539,14 +110539,14 @@ _08171BAE:
 _08171BC4:
 	bl sub_8150A38
 	ldr r0, [r4, #0x14]
-	bl process_enable
+	bl enable__7Process
 	adds r0, r4, #0x0
 	adds r0, #0x40
 	movs r1, #0x02
 	bl sub_8163308
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
-	bl process_remove
+	bl _._7Process
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -110766,7 +110766,7 @@ sub_8171FC0:
 	push {lr}
 	ldr r2, _08171FD0 @ =0x08CDD290
 	str r2, [r0, #0x18]
-	bl process_remove
+	bl _._7Process
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00
@@ -214509,242 +214509,3 @@ _081DD5A4:
 	subs r0, r1, r5
 	pop {r4, r5, pc}
 	.byte 0x00, 0x00
-	thumb_func_start sub_81DD5B0
-sub_81DD5B0:
-	push {lr}
-	adds r3, r0, #0x0
-	movs r0, #0xCE
-	lsls r0, r0, #0x02
-	adds r2, r3, r0
-	ldr r0, _081DD5D0 @ =0x08CDBDE8
-	str r0, [r2, #0x00]
-	movs r0, #0x01
-	ands r0, r1
-	cmp r0, #0x00
-	beq _081DD5CC
-	adds r0, r3, #0x0
-	bl free_heap_8018DA8
-_081DD5CC:
-	pop {r0}
-	bx r0
-_081DD5D0: .4byte 0x08CDBDE8
-	thumb_func_start sub_81DD5D4
-sub_81DD5D4:
-	push {lr}
-	adds r3, r0, #0x0
-	movs r0, #0xCE
-	lsls r0, r0, #0x02
-	adds r2, r3, r0
-	ldr r0, _081DD5F4 @ =0x08CDBDE8
-	str r0, [r2, #0x00]
-	movs r0, #0x01
-	ands r0, r1
-	cmp r0, #0x00
-	beq _081DD5F0
-	adds r0, r3, #0x0
-	bl free_heap_8018DA8
-_081DD5F0:
-	pop {r0}
-	bx r0
-_081DD5F4: .4byte 0x08CDBDE8
-	thumb_func_start sub_81DD5F8
-sub_81DD5F8:
-	push {lr}
-	adds r3, r0, #0x0
-	movs r0, #0xCE
-	lsls r0, r0, #0x02
-	adds r2, r3, r0
-	ldr r0, _081DD618 @ =0x08CDBDE8
-	str r0, [r2, #0x00]
-	movs r0, #0x01
-	ands r0, r1
-	cmp r0, #0x00
-	beq _081DD614
-	adds r0, r3, #0x0
-	bl free_heap_8018DA8
-_081DD614:
-	pop {r0}
-	bx r0
-_081DD618: .4byte 0x08CDBDE8
-	thumb_func_start sub_81DD61C
-sub_81DD61C:
-	push {lr}
-	adds r3, r0, #0x0
-	movs r0, #0xCE
-	lsls r0, r0, #0x02
-	adds r2, r3, r0
-	ldr r0, _081DD63C @ =0x08CDBDE8
-	str r0, [r2, #0x00]
-	movs r0, #0x01
-	ands r0, r1
-	cmp r0, #0x00
-	beq _081DD638
-	adds r0, r3, #0x0
-	bl free_heap_8018DA8
-_081DD638:
-	pop {r0}
-	bx r0
-_081DD63C: .4byte 0x08CDBDE8
-	.byte 0x70, 0x47, 0x00, 0x00, 0x70, 0x47, 0x00, 0x00
-	thumb_func_start sub_81DD648
-sub_81DD648:
-	push {lr}
-	adds r2, r0, #0x0
-	ldr r0, _081DD664 @ =0x08CDCA30
-	str r0, [r2, #0x04]
-	movs r0, #0x01
-	ands r0, r1
-	cmp r0, #0x00
-	beq _081DD65E
-	adds r0, r2, #0x0
-	bl free_heap_8018DA8
-_081DD65E:
-	pop {r0}
-	bx r0
-	.byte 0x00, 0x00
-_081DD664: .4byte 0x08CDCA30
-	.byte 0x70, 0x47, 0x00, 0x00, 0x70, 0x47, 0x00, 0x00
-	thumb_func_start sub_81DD670
-sub_81DD670:
-	push {lr}
-	adds r2, r0, #0x0
-	ldr r0, _081DD68C @ =0x08CDCF50
-	str r0, [r2, #0x04]
-	movs r0, #0x01
-	ands r0, r1
-	cmp r0, #0x00
-	beq _081DD686
-	adds r0, r2, #0x0
-	bl free_heap_8018DA8
-_081DD686:
-	pop {r0}
-	bx r0
-	.byte 0x00, 0x00
-_081DD68C: .4byte 0x08CDCF50
-	thumb_func_start sub_81DD690
-sub_81DD690:
-	push {lr}
-	bl sub_8161330
-	pop {r0}
-	bx r0
-	.byte 0x00, 0x00
-	thumb_func_start sub_81DD69C
-sub_81DD69C:
-	ldr r1, _081DD6AC @ =0x08CDD0D0
-	str r1, [r0, #0x0C]
-	movs r1, #0x00
-	str r1, [r0, #0x04]
-	str r1, [r0, #0x00]
-	str r1, [r0, #0x08]
-	bx lr
-	.byte 0x00, 0x00
-_081DD6AC: .4byte 0x08CDD0D0
-	thumb_func_start sub_81DD6B0
-sub_81DD6B0:
-	push {r4, r5, r6, lr}
-	add sp, #-0x004
-	adds r5, r0, #0x0
-	adds r6, r1, #0x0
-	ldr r2, _081DD6E8 @ =0x08212804
-	movs r0, #0x0C
-	movs r1, #0x01
-	movs r3, #0x00
-	bl alloc_Zero
-	adds r4, r0, #0x0
-	adds r0, #0x08
-	bl sub_816168C
-	ldr r0, [r4, #0x08]
-	str r0, [sp, #0x000]
-	ldr r0, [r5, #0x04]
-	cmp r0, #0x00
-	bne _081DD6EC
-	ldr r0, [r5, #0x00]
-	cmp r0, #0x00
-	bne _081DD6EC
-	str r4, [r5, #0x04]
-	str r4, [r5, #0x00]
-	str r0, [r4, #0x00]
-	str r4, [r4, #0x04]
-	b _081DD6FA
-	.byte 0x00, 0x00
-_081DD6E8: .4byte 0x08212804
-_081DD6EC:
-	ldr r0, [r5, #0x04]
-	str r4, [r0, #0x04]
-	ldr r0, [r5, #0x04]
-	str r0, [r4, #0x00]
-	movs r0, #0x00
-	str r0, [r4, #0x04]
-	str r4, [r5, #0x04]
-_081DD6FA:
-	ldr r0, [r5, #0x08]
-	adds r0, #0x01
-	str r0, [r5, #0x08]
-	adds r0, r6, #0x0
-	movs r1, #0x02
-	bl sub_816166C
-	add sp, #0x004
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	thumb_func_start sub_81DD710
-sub_81DD710:
-	push {r4, r5, r6, lr}
-	adds r5, r0, #0x0
-	adds r6, r1, #0x0
-	ldr r0, _081DD764 @ =0x08CDD0D0
-	str r0, [r5, #0x0C]
-	ldr r4, [r5, #0x00]
-	cmp r4, #0x00
-	beq _081DD748
-_081DD720:
-	ldr r2, [r4, #0x08]
-	adds r0, r4, #0x0
-	adds r0, #0x08
-	movs r3, #0x08
-	ldsh r1, [r2, r3]
-	adds r0, r0, r1
-	ldr r2, [r2, #0x0C]
-	movs r1, #0x02
-	bl _call_via_r2
-	cmp r4, #0x00
-	beq _081DD742
-	ldr r0, _081DD768 @ =0x08CDD0B8
-	str r0, [r4, #0x08]
-	adds r0, r4, #0x0
-	bl free_heap_8018DA8
-_081DD742:
-	ldr r4, [r4, #0x04]
-	cmp r4, #0x00
-	bne _081DD720
-_081DD748:
-	movs r0, #0x00
-	str r0, [r5, #0x04]
-	str r0, [r5, #0x00]
-	str r0, [r5, #0x08]
-	movs r0, #0x01
-	ands r0, r6
-	cmp r0, #0x00
-	beq _081DD75E
-	adds r0, r5, #0x0
-	bl free_heap_8018DA8
-_081DD75E:
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-_081DD764: .4byte 0x08CDD0D0
-_081DD768: .4byte 0x08CDD0B8
-	thumb_func_start sub_81DD76C
-sub_81DD76C:
-	bx pc
-	.byte 0xC0, 0x46, 0x22, 0xCA, 0x35, 0xEA
-	thumb_func_start sub_81DD774
-sub_81DD774:
-	bx pc
-	.byte 0xC0, 0x46, 0xE2, 0x8B, 0xF8, 0xEA
-	thumb_func_start sub_81DD77C
-sub_81DD77C:
-	bx pc
-	.byte 0xC0, 0x46, 0x25, 0xEF, 0xFE, 0xEA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.byte 0x00, 0x00
-	

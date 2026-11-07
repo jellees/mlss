@@ -615,7 +615,7 @@ sub_801B820:
 	str r0, [r4, #0x18]
 	adds r0, r4, #0x0
 	movs r1, #0x03
-	bl process_remove
+	bl _._7Process
 _0801B852:
 	pop {r4}
 	pop {r0}
@@ -626,7 +626,7 @@ sub_801B85C:
 	push {lr}
 	ldr r2, _0801B86C @ =0x08CDBD98
 	str r2, [r0, #0x18]
-	bl process_remove
+	bl _._7Process
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00
@@ -642,7 +642,7 @@ sub_801B870:
 	lsls r0, r0, #0x10
 	lsrs r5, r0, #0x10
 	adds r0, r4, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _0801B8AC @ =0x08CDBD98
 	str r0, [r4, #0x18]
 	cmp r5, #0x00
@@ -1164,11 +1164,11 @@ sub_801BC98:
 	ldr r0, [r4, #0x1C]
 	cmp r0, #0x00
 	beq _0801BCAC
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0801BCAC:
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
-	bl process_remove
+	bl _._7Process
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -1180,7 +1180,7 @@ time_init:
 	adds r5, r0, #0x0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _0801BD20 @ =0x08CDBDA8
 	str r0, [r5, #0x18]
 	ldr r4, _0801BD24 @ =0x081E23CD
@@ -1189,7 +1189,7 @@ time_init:
 	ldr r2, _0801BD28 @ =0x081E23C8
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r1, r0, #0x0
 	str r1, [r5, #0x1C]
 	ldr r0, _0801BD2C @ =0x03000C84
@@ -1254,13 +1254,13 @@ sub_801BD50:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	lsls r1, r5, #0x18
 	lsrs r1, r1, #0x18
 	adds r2, r4, #0x0
 	bl time_init
 	str r0, [r6, #0x00]
-	bl process_disable
+	bl disable__7Process
 _0801BD7A:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -1294,7 +1294,7 @@ sub_801BD88:
 	ldr r2, _0801BE60 @ =0x081E254C
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r5, #0x00]
 	movs r1, #0xA0
 	lsls r1, r1, #0x07
@@ -1305,7 +1305,7 @@ sub_801BD88:
 	ldr r2, _0801BE64 @ =0x081E2554
 	movs r1, #0x00
 	movs r3, #0x01
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r5, #0x08]
 	ldr r4, _0801BE68 @ =0x08000AF0
 	ldr r0, _0801BE6C @ =0x0800098C
@@ -1315,7 +1315,7 @@ sub_801BD88:
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r1, r0, #0x0
 	str r1, [r5, #0x14]
 	lsrs r4, r4, #0x02
@@ -1335,7 +1335,7 @@ sub_801BD88:
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r1, r0, #0x0
 	str r1, [r5, #0x18]
 	lsrs r4, r4, #0x02
@@ -3237,22 +3237,22 @@ sub_801DF14:
 	ldr r0, [r7, #0x18]
 	cmp r0, #0x00
 	beq _0801DF68
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0801DF68:
 	ldr r0, [r7, #0x14]
 	cmp r0, #0x00
 	beq _0801DF72
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0801DF72:
 	ldr r0, [r7, #0x08]
 	cmp r0, #0x00
 	beq _0801DF7C
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0801DF7C:
 	ldr r0, [r7, #0x00]
 	cmp r0, #0x00
 	beq _0801DF86
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0801DF86:
 	movs r0, #0x01
 	mov r1, r8
@@ -3260,7 +3260,7 @@ _0801DF86:
 	cmp r0, #0x00
 	beq _0801DF96
 	adds r0, r7, #0x0
-	bl free_heap_8018DA8
+	bl __builtin_delete
 _0801DF96:
 	pop {r3}
 	mov r8, r3
@@ -3300,7 +3300,7 @@ sub_801DFB0:
 	adds r1, r1, r4
 	ldr r2, _0801E0AC @ =0x081E256C
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r7, #0x00]
 	lsrs r2, r5, #0x02
@@ -3365,7 +3365,7 @@ _0801E054:
 	add r0, r9
 	ldr r2, [r0, #0x00]
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r5, #0x00]
 	mov r2, r8
@@ -3416,7 +3416,7 @@ _0801E0D2:
 	adds r0, r2, r0
 	ldr r2, [r0, #0x00]
 	movs r0, #0x00
-	bl alloc_heap_8018CEC
+	bl alloc_heap_8018CEC__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r5, #0x04]
 	mov r2, r8
@@ -3821,7 +3821,7 @@ sub_801E3EC:
 	ldr r2, _0801E5C0 @ =0x081E25A4
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	mov r9, r0
 	movs r0, #0x01
 	ldr r1, [sp, #0x000]
@@ -4105,7 +4105,7 @@ _0801E670:
 	cmp r2, #0x00
 	beq _0801E67C
 	mov r0, r9
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _0801E67C:
 	add sp, #0x028
 	pop {r3, r4, r5}
@@ -8689,7 +8689,7 @@ sub_80208F4:
 	push {r4, r5, r6, r7, lr}
 	ldr r4, _08020980 @ =0x03000D48
 	ldr r0, [r4, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	movs r1, #0x00
 	str r1, [r4, #0x00]
 	ldr r0, _08020984 @ =0x03000D4C
@@ -8711,7 +8711,7 @@ _0802090C:
 	ldr r0, [r4, #0x00]
 	subs r0, #0x01
 	str r0, [r4, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _0802092E:
@@ -8727,7 +8727,7 @@ _0802092E:
 	ldr r0, [r4, #0x00]
 	subs r0, #0x01
 	str r0, [r4, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _0802094E:
@@ -8743,7 +8743,7 @@ _0802094E:
 	ldr r0, [r4, #0x00]
 	subs r0, #0x01
 	str r0, [r4, #0x00]
-	bl free_heap_memory_8018C68
+	bl free_heap_memory_8018C68__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _0802096E:
@@ -8846,7 +8846,7 @@ _080209F4:
 	eors r1, r2
 	ldr r2, _08020A74 @ =0x081E25AC
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r7, #0x3C]
 	mov r0, r9
 	bl sub_801DFB0
@@ -11616,7 +11616,7 @@ sub_8021FD4:
 	ldr r0, [r0, #0x3C]
 	cmp r0, #0x00
 	beq _08021FE2
-	bl free_heap_8018D9C
+	bl __builtin_vec_delete
 _08021FE2:
 	bl sub_80208F4
 	ldr r1, _08021FF4 @ =0x03000D74

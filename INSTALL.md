@@ -14,10 +14,10 @@ Install the **devkitARM** toolchain of [devkitPro](https://devkitpro.org/wiki/Ge
 To set up the repository:
 
 	git clone https://github.com/jellees/mlss
-	git clone https://github.com/jiangzhengwenjz/agbcc
+	git clone https://github.com/notyourav/agbcc
 
 	cd ./agbcc
-    git checkout new_newlib_pret
+	git checkout cp
 	./build.sh
 	./install.sh ../mlss
 
@@ -26,7 +26,3 @@ To set up the repository:
 To build run
 
     make
-
-# Notes
-
-For this project I opted to use `jiangzhengwenjz/agbcc` for the debug_line fix. This project should also compile matching with `pret/agbcc`.

@@ -2,10 +2,21 @@
 #define SAVE_MENU_H
 
 #include "process.h"
+#include "asm_processes.h"
 
-struct SaveMenu {
-    struct Process process;
-    struct Process* tsdr;
+#pragma interface
+
+// Renderer process of the save menu ("TSDR").
+class SaveMenuRenderer : public Process {
+  public:
+    SaveMenuRenderer(u8 priority, char* label) : Process(priority, label) {
+    }
+    virtual void update();
+};
+
+class SaveMenu : public Process {
+  public:
+    Process* tsdr;
     struct Process* fade;
     struct Tmev* tmev;
     struct Sprite* cursor;
@@ -66,19 +77,19 @@ struct SaveMenu {
     u8 pad11C[4];
     void* field_120;
     void* field_124;
-};
 
-struct SaveMenu* sub_8127EF8(struct SaveMenu*, u8, char*, int);
-void sub_8127FC4(struct SaveMenu*, int);
-void sub_812936C(struct SaveMenu*);
-void sub_812804C(struct SaveMenu*);
-u8 sub_8128D74(struct SaveMenu*);
-void* sub_8129B4C(struct SaveMenu*, void*);
-void sub_8129C98(struct SaveMenu*);
-void sub_812A42C(struct SaveMenu*);
-void sub_812A7A0(struct Process*);
-u8 sub_812A888(struct SaveMenu*);
-void sub_812A8AC(struct SaveMenu*, u16);
-void sub_812A8E0(struct SaveMenu*);
+    SaveMenu(u8 priority, char* label, int arg3);
+    ~SaveMenu();
+    virtual void update();
+    u8 sub_8128D74();
+    void sub_812936C();
+    void* sub_8129B4C(void* buf);
+    void sub_8129C98();
+    void sub_812A42C();
+    u8 sub_812A888();
+    void sub_812A8AC(u16 color);
+    void sub_812A8E0();
+    void* sub_812A930(void* buf);
+};
 
 #endif

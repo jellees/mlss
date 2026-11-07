@@ -42,14 +42,16 @@ if __name__ == "__main__":
 
     with open("mlss.map", "r") as f:
         content = f.read()
-        matches = re.findall(r'^ \.(\w+)\s+0x[0-9a-f]+\s+(0x[0-9a-f]+) (\w+)\/.+\.o', content, re.MULTILINE)
+        # Long section names (g++'s .gnu.linkonce.* for vtables and weak inline functions) wrap the
+        # address and size onto the next line.
+        matches = re.findall(r'^ \.([\w.]+)\s+0x[0-9a-f]+\s+(0x[0-9a-f]+) (\w+)\/.+\.o', content, re.MULTILINE)
         for match in matches:
-            if match[0] == 'text':
+            if match[0] == 'text' or match[0].startswith('gnu.linkonce.t.'):
                 if match[2] == 'src':
                     src += int(match[1], 0)
                 elif match[2] == 'asm':
                     asm += int(match[1], 0)
-            elif match[0] == 'data':
+            elif match[0] == 'data' or match[0].startswith('gnu.linkonce.d.'):
                 if match[2] == 'src':
                     src += int(match[1], 0)
 

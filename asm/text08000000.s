@@ -6163,13 +6163,13 @@ _08017A22:
 	str r2, [r0, #0x00]
 	ldr r0, _08017D78 @ =0x03007FFC
 	str r4, [r0, #0x00]
-	bl init_heap
+	bl init_heap__Fv
 	movs r0, #0x80
 	lsls r0, r0, #0x04
 	ldr r2, _08017D7C @ =0x081DD790
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	adds r1, r0, #0x0
 	str r1, [r6, #0x04]
 	mov r3, r9
@@ -6282,7 +6282,7 @@ _08017B10:
 	ldr r2, _08017DA4 @ =0x081DD798
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r5, #0x00]
 _08017BDC:
 	ldr r0, [r5, #0x00]
@@ -6298,7 +6298,7 @@ _08017BDC:
 	ldr r2, _08017DB4 @ =0x081DD7A0
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r5, #0x00]
 _08017BFE:
 	ldr r0, [r5, #0x00]
@@ -6313,7 +6313,7 @@ _08017BFE:
 	ldr r2, _08017DBC @ =0x081DD7A8
 	movs r1, #0x01
 	movs r3, #0x00
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r5, #0x00]
 _08017C1E:
 	ldr r0, [r5, #0x00]
@@ -6432,10 +6432,10 @@ _08017CE4:
 	movs r0, #0x40
 	movs r1, #0x00
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r2, _08017DE0 @ =0x081DD7B8
 	movs r1, #0x08
-	bl mario_bros_save_error_create
+	bl __18MarioBrosSaveErrorUcPc
 	b _08017E1C
 _08017D24: .4byte 0x04000204
 _08017D28: .4byte 0x00004014
@@ -6491,11 +6491,11 @@ _08017DE4:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x08
 	adds r2, r4, #0x0
 	movs r3, #0x02
-	bl title_screen_create
+	bl __11TitleScreenUcPci
 	b _08017E1C
 	.byte 0x00, 0x00
 _08017E00: .4byte 0x081DD7B8
@@ -6505,13 +6505,13 @@ _08017E04:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	ldr r3, _08017E30 @ =0x0801B035
 	movs r1, #0x01
 	adds r2, r4, #0x0
-	bl gbpl_init
+	bl __17GameBoyPlayerLogoUcPcPFv_v
 _08017E1C:
-	bl process_execute_all
+	bl executeAll__7Process
 	bl sub_81DD774
 	bl sub_8017E34
 	b _08017E1C

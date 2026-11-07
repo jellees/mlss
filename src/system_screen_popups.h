@@ -1,11 +1,15 @@
 #ifndef SYSTEM_SCREEN_POPUPS_H
 #define SYSTEM_SCREEN_POPUPS_H
 
-struct SaveClearScreen;
-struct OptionsMenu;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void save_clear_show_popup(struct SaveClearScreen* bclr, int width, int height);
-void options_show_save_error_popup(struct OptionsMenu* optn);
-void options_show_info_popup(struct OptionsMenu* optn, int width, int height);
+// The popup functions are members of SaveClearScreen and OptionsMenu (system_screens.h,
+// options_menu.h), defined in system_screen_popups.cpp.
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

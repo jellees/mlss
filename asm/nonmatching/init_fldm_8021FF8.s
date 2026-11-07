@@ -11,8 +11,8 @@
 
 	.text
 
-	thumb_func_start init_fldm_8021FF8
-init_fldm_8021FF8: @ 08021FF8
+	thumb_func_start __12FieldManagerUcPcibT4
+__12FieldManagerUcPcibT4: @ 08021FF8
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9
@@ -30,7 +30,7 @@ init_fldm_8021FF8: @ 08021FF8
 	ldrb r3, [r3, #0x00]
 	str r3, [sp, #0x004]
 	adds r0, r7, #0x0
-	bl process_add
+	bl __7ProcessUcPc
 	ldr r0, _08022404 @ =0x08CDBDB8
 	str r0, [r7, #0x18]
 	movs r2, #0x00
@@ -62,7 +62,7 @@ _0802202E:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x01
 	movs r2, #0x07
 	adds r3, r4, #0x0
@@ -70,7 +70,7 @@ _0802202E:
 	str r0, [r5, #0x00]
 	ldr r0, [r0, #0x00]
 	str r7, [r0, #0x14]
-	bl process_disable
+	bl disable__7Process
 	movs r3, #0xC7
 	lsls r3, r3, #0x02
 	adds r5, r7, r3
@@ -79,7 +79,7 @@ _0802202E:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	movs r1, #0x01
 	movs r2, #0x06
 	adds r3, r4, #0x0
@@ -87,7 +87,7 @@ _0802202E:
 	str r0, [r5, #0x00]
 	ldr r0, [r0, #0x00]
 	str r7, [r0, #0x14]
-	bl process_disable
+	bl disable__7Process
 	ldr r1, _08022410 @ =0x0300034C
 	movs r2, #0x8D
 	lsls r2, r2, #0x04
@@ -114,13 +114,13 @@ _0802202E:
 	ldr r2, _0802241C @ =0x081E25C4
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	str r0, [r7, #0x1C]
 	ldr r0, _08022420 @ =0x00000574
 	ldr r2, _08022424 @ =0x081E25CC
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_Zero
+	bl __nw__FUliPcUc
 	str r0, [r7, #0x20]
 	movs r0, #0x8F
 	lsls r0, r0, #0x02
@@ -130,14 +130,14 @@ _0802202E:
 	lsls r0, r0, #0x05
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r4, #0x00]
 	movs r0, #0x80
 	lsls r0, r0, #0x03
 	ldr r2, _0802242C @ =0x081E25DC
 	movs r1, #0x01
 	movs r3, #0x01
-	bl alloc_zero_8018DB4
+	bl __vn__FUliPcUc
 	str r0, [r7, #0x24]
 	ldr r2, [sp, #0x008]
 	ldrb r1, [r2, #0x00]
