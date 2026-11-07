@@ -17,7 +17,7 @@ To set up the repository:
 	git clone https://github.com/notyourav/agbcc
 
 	cd ./agbcc
-	git checkout cp
+	git checkout tags/cp
 	./build.sh
 	./install.sh ../mlss
 
