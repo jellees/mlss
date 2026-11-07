@@ -15,7 +15,8 @@ jobs:
       - name: Checkout agbcc
         uses: actions/checkout@master
         with:
-          repository: 'pret/agbcc'
+          repository: 'notyourav/agbcc'
+          ref: 'cp'
           path: 'agbcc'
 
       - name: Install binutils
