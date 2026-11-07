@@ -17,7 +17,7 @@ class FieldObjectSubclass4 : public FieldObject {
     u8 pad_340[0x4];
     FieldObject* owner;
 
-    FieldObjectSubclass4(int room, int index, u8 arg3, FieldObject* owner); // 0x080504BC
+    FieldObjectSubclass4(int roomId, int index, u8 arg3, FieldObject* owner); // 0x080504BC
 };
 
 class FieldMonster : public FieldObject {
@@ -38,7 +38,7 @@ class FieldMonster : public FieldObject {
     s8 field_340;
     FieldObjectSubclass4* field_344;
 
-    FieldMonster(int room, int index); // 0x0804FEC8
+    FieldMonster(int roomId, int index); // 0x0804FEC8
     void sub_804FFCC();                // 0x0804FFCC
     void sub_8050078();                // 0x08050078
     void sub_80501EC();                // 0x080501EC

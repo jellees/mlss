@@ -9,7 +9,7 @@
 
 class FieldObjectSubclass2 : public FieldObject {
   public:
-    FieldObjectSubclass2(int room, int index);
+    FieldObjectSubclass2(int roomId, int index);
 };
 
 #endif

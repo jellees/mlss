@@ -135,7 +135,7 @@ class FieldManager : public Process {
     u16 field_120_13 : 1;
     u16 field_120_14 : 2;
     u16 field_122;
-    u16 field_124;
+    u16 roomId;
     u16 field_126;
     u16 field_128;
     u8 field_12A;
@@ -249,7 +249,7 @@ class FieldManager : public Process {
     u8 field_2D8_0 : 5;
     u8 field_2D8_5 : 3;
     u8 pad_2D9;
-    u16 field_2DA;
+    u16 followerRoomId;
     s32 field_2DC;
     s32 field_2E0;
     s32 field_2E4;
@@ -264,7 +264,7 @@ class FieldManager : public Process {
     struct EventScriptProcess* evts;
     struct EventScriptProcess* bevs;
 
-    FieldManager(u8 priority, char* label, int room, bool arg4, bool arg5);
+    FieldManager(u8 priority, char* label, int roomId, bool arg4, bool arg5);
     ~FieldManager();
     virtual void update();
     void sub_80254C0();
@@ -280,7 +280,7 @@ class FieldManager : public Process {
     void sub_802641C(int arg1, int arg2, int arg3, int arg4);
     void sub_80264F4(u16 arg1);
     void sub_80265EC();
-    void make_field_objects_80267C0(int room);
+    void make_field_objects_80267C0(int roomId);
     void sub_8026C78();
     void sub_8026E94();
     void sub_8027030(int mode, int arg2, u16 arg3, u16 arg4, u16 arg5);

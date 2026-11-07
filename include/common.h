@@ -77,12 +77,21 @@ struct GameState {
     void* field_8D0;
 };
 
+// Background job queued with sub_8019808 (status 2 while queued, 0 when done)
+struct BackgroundJob {
+    u32 status;
+    void* src;
+    void* dest;
+    u32 field_C;
+};
+
 // Map header of the current room? (used by the map file at 0x080575C8)
 struct struc_3000DD0 {
     u8 field_0;
     u8 field_1;
     u8 field_2;
-    u8 pad3[9];
+    u8 field_3; // Index into byte_83AAA6C
+    u8 pad4[8];
     u16 field_C;
     u8 padE[4];
     u16 field_12;
@@ -243,7 +252,7 @@ struct TmevData {
 };
 
 struct SaveSlotPlayer {
-    u16 field_0;
+    u16 roomId;
     u8 field_2_0 : 3;
     u8 field_2_3 : 5;
     u8 pad3;
@@ -450,6 +459,7 @@ void sub_8021ED8(struct Sprite*);
 u16* sub_80FB790(u16, u8*);
 void sub_8020994(u16, int, int, int);
 void sub_80184F4(void*);
+void sub_8019808(struct BackgroundJob*);
 void sub_8020A78(void);
 void sprite_show_8020CBC(struct Sprite*);
 struct Sprite* sub_8020DD0(int, int, int, int, int, int, int);
@@ -517,10 +527,10 @@ void sub_80F0184(struct EventScriptProcess*);
 void sub_80F032C(struct EventScriptProcess*);
 u8 sub_80E98C0(void*, int, int);
 void sub_80E9958(void*, int, int, int);
-void get_field_object_count(u16 room, u8* count);
-void init_fobj_with_data_80FB128(u16 room, u8 index, void* object);
-u8 get_field_object_type(u16 room, u8 index);
-u8 sub_80FB6D4(u16 room, u8* arg1, void* object);
+void get_field_object_count(u16 roomId, u8* count);
+void init_fobj_with_data_80FB128(u16 roomId, u8 index, void* object);
+u8 get_field_object_type(u16 roomId, u8 index);
+u8 sub_80FB6D4(u16 roomId, u8* arg1, void* object);
 void sub_80FB448(u8 arg0, void* owner, void* object);
 void sub_80F034C(struct EventScriptProcess*, u32);
 void sub_80F0420(struct EventScriptProcess*, u32);
@@ -559,6 +569,7 @@ extern struct struc_3000FF4* dword_3000FF4;
 extern struct LoadMenuItem* dword_3000FF8;
 extern u8 byte_3000C80;
 extern struct struc_3000DD0 stru_3000DD0;
+extern struct BackgroundJob stru_3000DC0;
 extern struct struc_3000D40 stru_3000D40;
 extern struct FieldManager* dword_3000D7C;
 extern struct struc_3000D44* dword_3000D44;
@@ -578,6 +589,8 @@ extern void (*dword_3001034)(int, void*, int);
 extern int (*dword_3001038)();
 
 // ROM
+extern u8 byte_83AAA6C[];   // 3 archive entries per room (0xFF: none) + 1 unused?
+extern u32 dword_86527F4[]; // Archive: offsets from its start
 extern struct SignMapEntry stru_83A0D2C[]; // Sign zoom and center per room
 extern u16 word_83A0E64[];                // Sign arrow positions (x, y)
 extern s8 byte_83A0E74[];                 // Sign scroll steps (x, y) per D-pad state

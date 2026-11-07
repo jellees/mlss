@@ -258,7 +258,7 @@ class FieldObject {
     void* field_334;
     // The vtable pointer follows at 0x338.
 
-    FieldObject(int room, int index);
+    FieldObject(int roomId, int index);
     void jumpToHeight(int jumpHeight = -1, int gravity = -1, int arg3 = -1);
     void startAirborne(int jumpVelocity = -1, int gravity = -1, int arg3 = -1);
     void updateAirborne();

@@ -6,14 +6,14 @@
 #include "process.h"
 #include "sign.h"
 
-Sign::Sign(u8 priority, char* label, u16 room) : Process(priority, label) {
+Sign::Sign(u8 priority, char* label, u16 roomId) : Process(priority, label) {
     struct SignMapEntry* entry;
     Process* process;
 
     BUFFER_REG_DISPCNT = 0;
     gGameState.field_884 = 0;
-    this->room = room;
-    zoom = 0x200;
+    this->roomId = roomId;
+    mapRoomId = 0x200;
     scrollX = 0;
     scrollY = 0;
     width = 0;
@@ -21,9 +21,9 @@ Sign::Sign(u8 priority, char* label, u16 room) : Process(priority, label) {
     centerX = 120;
     centerY = 80;
 
-    for (entry = stru_83A0D2C; entry->room != 0xFFFF; entry++) {
-        if (entry->room == room) {
-            zoom = entry->zoom;
+    for (entry = stru_83A0D2C; entry->roomId != 0xFFFF; entry++) {
+        if (entry->roomId == roomId) {
+            mapRoomId = entry->mapRoomId;
             centerX = entry->centerX;
             centerY = entry->centerY;
             break;
@@ -40,7 +40,7 @@ Sign::Sign(u8 priority, char* label, u16 room) : Process(priority, label) {
     process->parentProcess = this;
     process->disable();
 
-    map = new (0, "S_MP", 0) S_MP(8, "S_MP", zoom, scrollX, scrollY, panm);
+    map = new (0, "S_MP", 0) S_MP(8, "S_MP", mapRoomId, scrollX, scrollY, panm);
     map->parentProcess = this;
 
     sub_8020994(0x15C0, 0, 1, 0x80);

@@ -16,11 +16,11 @@ void sub_804FE68(FieldObject* object) {
     }
 }
 
-FieldMonster::FieldMonster(int room, int index) : FieldObject(room, index) {
+FieldMonster::FieldMonster(int roomId, int index) : FieldObject(roomId, index) {
     u8 arg;
 
     field_210_0 = 0;
-    if (sub_80FB6D4(room, &arg, this)) {
+    if (sub_80FB6D4(roomId, &arg, this)) {
         field_344 = new (1, "FMCH", 1) FieldObjectSubclass4(-1, index, arg, this);
     }
     field_33C_0 = 1;
@@ -154,8 +154,8 @@ void FieldMonster::sub_80503CC() {
     }
 }
 
-FieldObjectSubclass4::FieldObjectSubclass4(int room, int index, u8 arg3, FieldObject* owner)
-    : FieldObject(room, index) {
+FieldObjectSubclass4::FieldObjectSubclass4(int roomId, int index, u8 arg3, FieldObject* owner)
+    : FieldObject(roomId, index) {
     sub_80FB448(arg3, owner, this);
     field_20C_0 = 0;
     field_20C_25 = 0;

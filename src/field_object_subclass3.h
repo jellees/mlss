@@ -19,8 +19,8 @@ class FieldObjectSubclass3 : public FieldObject {
     u16 field_33C_10 : 6;
     u8 pad_33E[0x12];
 
-    FieldObjectSubclass3(int room, int index);
-    FieldObjectSubclass3(u8* data, u16 dataIndex, int room, int index); // sub_8050940
+    FieldObjectSubclass3(int roomId, int index);
+    FieldObjectSubclass3(u8* data, u16 dataIndex, int roomId, int index); // sub_8050940
 };
 
 #endif

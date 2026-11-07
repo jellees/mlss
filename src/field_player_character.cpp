@@ -4,7 +4,7 @@
 #include "field_player_character.h"
 #include "field_monster.h"
 
-FieldPlayerCharacter::FieldPlayerCharacter(int room, int index) : FieldObject(room, index) {
+FieldPlayerCharacter::FieldPlayerCharacter(int roomId, int index) : FieldObject(roomId, index) {
     field_355 = 0;
     field_33C_0 = 0x7F;
     field_33D_0 = 0x7F;

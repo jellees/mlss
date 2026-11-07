@@ -12,7 +12,7 @@
 class S_MP : public Process {
   public:
     s16 field_1C;
-    u16 field_1E;
+    u16 roomId; // Bit 15 is a flag; sub_8059EC8 loads the room header of roomId & 0x7FFF
     u16 field_20;
     s16 scrollX;
     s16 scrollY;
@@ -42,15 +42,33 @@ class S_MP : public Process {
     u8* mpcl;     // "MPCL"
     u8 padAC[0x4CC];
     u8 field_578;
+    u8 field_579; // Set when MAPW must be copied to VRAM
+    u8 pad57A[2];
     Process* panm; // 0x57C
     u8 pad580[0x4];
     u8 field_584; // Set while sub_805C6B8 has something to clean up
-    u8 pad585[0x17];
+    u8 pad585[0x14];
+    u8 field_599;
+    u8 pad59A[2];
 
-    S_MP(u8 priority, char* label, u16 arg2, s16 scrollX, s16 scrollY, Process* panm);
+    S_MP(u8 priority, char* label, u16 roomId, s16 scrollX, s16 scrollY, Process* panm);
     ~S_MP();
     virtual void update();
-    void sub_8059EC8(u16 arg1);
+    void sub_8059EC8(u16 roomId);
+    void sub_8057FCC();
+    void sub_8058148();
+    void sub_8059F24();
+    void sub_8059F80();
+    void sub_8059FE4();
+    void sub_805A00C();
+    void load_col_set_to_dest();
+    void sub_805B154();
+    void sub_805B31C();
+    void sub_805B590();
+    void sub_805B7F0();
+    void sub_805B8BC();
+    void sub_805B9D4();
+    void sub_805C14C();
     void sub_8057BE4();
     u8 sub_8057C9C(s16 x, s16 y);
     void sub_805C6B8();

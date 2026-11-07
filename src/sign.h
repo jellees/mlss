@@ -23,8 +23,8 @@ class SignRenderer : public Process {
 // Entries of stru_83A0D2C, terminated by room 0xFFFF.
 // Should check where these entries are stored in rom later. Maybe they are part of this file.
 struct SignMapEntry {
-    u16 room;
-    u16 zoom;
+    u16 roomId;
+    u16 mapRoomId;
     u16 centerX;
     u16 centerY;
 };
@@ -35,10 +35,10 @@ class Sign : public Process {
     s16 scrollY;
     u16 width;
     u16 height;
-    u16 zoom;    // 0x200 unless the room is in stru_83A0D2C
+    u16 mapRoomId;   // Room whose map is shown: 0x200 unless roomId is in stru_83A0D2C
     u16 centerX; // 120 unless the room is in stru_83A0D2C
     u16 centerY; // 80 unless the room is in stru_83A0D2C
-    u16 room;
+    u16 roomId;
     // Scroll arrows: up (shown unless scrollY is 0), right (unless scrollX is width - 240), down
     // (unless scrollY is height - 160) and left (unless scrollX is 0)
     struct Sprite* arrows[4];
@@ -47,7 +47,7 @@ class Sign : public Process {
     S_MP* map;               // "S_MP"
     Process* panm;           // "PANM", made by init_ybpa_process_8114B4C
 
-    Sign(u8 priority, char* label, u16 room);
+    Sign(u8 priority, char* label, u16 roomId);
     ~Sign();
     virtual void update();
     void sub_8051A00();

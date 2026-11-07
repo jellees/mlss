@@ -130,7 +130,7 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_384;
     u8 pad_386[0x6];
 
-    FieldPlayerCharacter(int room, int index);                    // 0x08048064
+    FieldPlayerCharacter(int roomId, int index);                    // 0x08048064
     void sub_8048174(int arg);                                    // 0x08048174
     void sub_8049000(u16 animation);                              // 0x08049000
     void sub_80490CC(u8 arg);                                     // 0x080490CC

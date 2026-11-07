@@ -5,7 +5,7 @@
 #include "field_player_character.h"
 #include "field_object_subclass3.h"
 
-FieldObject::FieldObject(int room, int index) {
+FieldObject::FieldObject(int roomId, int index) {
     field_1 = 0xFF;
     field_29 = -1;
     field_20C_0 = 1;
@@ -32,8 +32,8 @@ FieldObject::FieldObject(int room, int index) {
     field_26E = 0xFF;
     savedDefaultGravity = -1;
     sub_8047EFC(0x200, 0x200, 0x52C, 0x75);
-    if (room != -1) {
-        init_fobj_with_data_80FB128(room, index, this);
+    if (roomId != -1) {
+        init_fobj_with_data_80FB128(roomId, index, this);
     }
 }
 

@@ -484,13 +484,13 @@ u8 SaveMenu::sub_8128D74() {
             gGameState.field_88A_3 = 0;
             if (this->save->slots[stru_3000D40.slot]
                     .data.field_4[this->save->slots[stru_3000D40.slot].data.luigiLeads]
-                    .field_0
+                    .roomId
                 == 0x113) {
                 this->field_AF |= 2;
             }
             name = sub_8123308(this->save->slots[stru_3000D40.slot]
                                    .data.field_4[this->save->slots[stru_3000D40.slot].data.luigiLeads]
-                                   .field_0);
+                                   .roomId);
             this->field_B6 = 0;
             this->field_B5 = 0;
             if (name) {
@@ -555,7 +555,7 @@ u8 SaveMenu::sub_8128D74() {
                 name =
                     sub_8123308(this->save->slots[stru_3000D40.slot]
                                     .data.field_4[this->save->slots[stru_3000D40.slot].data.luigiLeads]
-                                    .field_0);
+                                    .roomId);
 
                 if (name1 && name) {
                     if (name1 == name) {
@@ -1030,7 +1030,7 @@ void SaveMenu::sub_8129C98() {
                 name =
                     sub_8123308(this->save->slots[stru_3000D40.slot]
                                     .data.field_4[this->save->slots[stru_3000D40.slot].data.luigiLeads]
-                                    .field_0);
+                                    .roomId);
                 this->field_B2 = 1;
                 //! Possible fake match: `!(x & 1)` gives different code in C++ (bool), so `== 0`.
             } else if ((this->field_B0 & 1) == 0) {

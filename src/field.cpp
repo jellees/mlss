@@ -9,7 +9,7 @@
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/init_fldm_8021FF8.s\"");
 #else
-FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool arg5)
+FieldManager::FieldManager(u8 priority, char* label, int roomId, bool arg4, bool arg5)
     : Process(priority, label) {
     FieldManager* fldm = this;
     u8 flag4 = arg4;
@@ -18,7 +18,7 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     struct EventScriptProcess** script;
     void** buffer;
 
-    fldm->field_F8_1 = (room == -1);
+    fldm->field_F8_1 = (roomId == -1);
 
     script = &fldm->bevs;
     *script = bevs_process_init_80F048C(operator new(sizeof(struct EventScriptProcess), 0, "BEVS", 0),
@@ -62,7 +62,7 @@ FieldManager::FieldManager(u8 priority, char* label, int room, bool arg4, bool a
     fldm->field_120_12 = 0;
     fldm->field_120_13 = 0;
     fldm->field_122 = 0;
-    fldm->field_124 = room;
+    fldm->roomId = roomId;
     fldm->field_128 = 0;
     fldm->field_FC_7 = 15;
     fldm->field_FC_11 = 0;
@@ -486,7 +486,7 @@ void FieldManager::sub_8025F28() {
     data->field_0_20 = word_3000D3C;
 
     leaderData = &data->field_4[luigiLeads];
-    leaderData->field_0 = field_124;
+    leaderData->roomId = roomId;
     leaderData->field_2_0 = leader->direction;
     leaderData->field_4 = leader->x / 256;
     leaderData->field_6 = leader->y / 256;
@@ -495,14 +495,14 @@ void FieldManager::sub_8025F28() {
 
     followerData = &data->field_4[luigiLeads ^ 1];
     if (field_2D8_0 == 31) {
-        followerData->field_0 = field_124;
+        followerData->roomId = roomId;
         followerData->field_2_0 = follower->direction;
         followerData->field_4 = follower->x / 256;
         followerData->field_6 = follower->y / 256;
         followerData->field_8 = follower->z / 256;
         followerData->field_A = follower->height / 256;
     } else {
-        followerData->field_0 = field_2DA;
+        followerData->roomId = followerRoomId;
         followerData->field_2_0 = field_2D8_5;
         followerData->field_4 = field_2DC / 256;
         followerData->field_6 = field_2E0 / 256;
@@ -677,11 +677,11 @@ void FieldManager::sub_80265EC() {
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/make_field_objects_80267C0__12FieldManageri.s\"");
 #else
-void FieldManager::make_field_objects_80267C0(int room) {
+void FieldManager::make_field_objects_80267C0(int roomId) {
     FieldObject* object;
     int i;
 
-    get_field_object_count(room, &field_10B);
+    get_field_object_count(roomId, &field_10B);
     field_10E = 0;
     field_10F = 0;
     field_112 = 0;
@@ -697,9 +697,9 @@ void FieldManager::make_field_objects_80267C0(int room) {
     field_110 = 0;
     field_111 = 0;
     for (i = 0; i < field_10B; i++) {
-        switch (get_field_object_type(room, i)) {
+        switch (get_field_object_type(roomId, i)) {
             case 0: {
-                FieldPlayerCharacter* player = new (1, "FPC", 1) FieldPlayerCharacter(room, i);
+                FieldPlayerCharacter* player = new (1, "FPC", 1) FieldPlayerCharacter(roomId, i);
 
                 if (field_FA_10) {
                     player->sub_8047EFC(0x100, 0x100, 0xD2, 13);
@@ -711,7 +711,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
                 break;
             }
             case 1:
-                object = new (1, "FCHR", 1) FieldObject(room, i);
+                object = new (1, "FCHR", 1) FieldObject(roomId, i);
                 objects[i] = object;
                 if (field_10E == 0) {
                     field_10E = i;
@@ -719,7 +719,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
                 field_10F++;
                 break;
             case 2:
-                object = new (1, "FBRD", 1) FieldObject(room, i);
+                object = new (1, "FBRD", 1) FieldObject(roomId, i);
                 objects[i] = object;
                 if (field_110 == 0) {
                     field_110 = i;
@@ -727,7 +727,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
                 field_111++;
                 break;
             case 3: {
-                FieldMonster* object = new (1, "FMON", 1) FieldMonster(room, i);
+                FieldMonster* object = new (1, "FMON", 1) FieldMonster(roomId, i);
 
                 objects[i] = object;
                 if (object->field_344 != 0) {
@@ -740,7 +740,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
                 break;
             }
             case 4:
-                object = new (1, "FBRL", 1) FieldObject(room, i);
+                object = new (1, "FBRL", 1) FieldObject(roomId, i);
                 objects[i] = object;
                 if (field_114 == 0) {
                     field_114 = i;
@@ -748,7 +748,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
                 field_115++;
                 break;
             case 5: {
-                FieldObject* object = new (1, "FRCK", 1) FieldObject(room, i);
+                FieldObject* object = new (1, "FRCK", 1) FieldObject(roomId, i);
 
                 if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, object->field_22C_10 + 0x1160) == 1) {
                     object->field_20C_0 = 0;
@@ -763,7 +763,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
                 break;
             }
             case 6:
-                object = new (1, "FSPL", 1) FieldObjectSubclass2(room, i);
+                object = new (1, "FSPL", 1) FieldObjectSubclass2(roomId, i);
                 objects[i] = object;
                 if (field_118 == 0) {
                     field_118 = i;
@@ -771,7 +771,7 @@ void FieldManager::make_field_objects_80267C0(int room) {
                 field_119++;
                 break;
             case 7:
-                object = new (1, "FBLK", 1) FieldObjectSubclass3(room, i);
+                object = new (1, "FBLK", 1) FieldObjectSubclass3(roomId, i);
                 objects[i] = object;
                 if (field_11A == 0) {
                     field_11A = i;
@@ -1105,7 +1105,7 @@ void FieldManager::sub_8027688() {
     if (dword_3000C78 == NULL) {
         dword_3000C78 = sub_800063C;
     }
-    new (0, "SIGN", 0) Sign(8, "SIGN", field_124);
+    new (0, "SIGN", 0) Sign(8, "SIGN", roomId);
 }
 
 // Like sub_8027688, but ends with sub_812F5A4 instead of the "SIGN" process.

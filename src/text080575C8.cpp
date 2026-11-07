@@ -4,7 +4,7 @@
 #include "process.h"
 #include "text080575C8.h"
 
-S_MP::S_MP(u8 priority, char* label, u16 arg2, s16 scrollX, s16 scrollY, Process* panm)
+S_MP::S_MP(u8 priority, char* label, u16 roomId, s16 scrollX, s16 scrollY, Process* panm)
     : Process(priority, label) {
     s16 i;
     u8 bg1Priority;
@@ -14,7 +14,7 @@ S_MP::S_MP(u8 priority, char* label, u16 arg2, s16 scrollX, s16 scrollY, Process
 
     this->panm = panm;
     field_1C = -5;
-    field_1E = arg2;
+    this->roomId = roomId;
     this->scrollX = scrollX;
     this->scrollY = scrollY;
 
@@ -32,7 +32,7 @@ S_MP::S_MP(u8 priority, char* label, u16 arg2, s16 scrollX, s16 scrollY, Process
     CpuFastFill(0, midt, 0x400);
     CpuFastFill(0, cmpw, 0x2000);
 
-    sub_8059EC8(field_1E & 0x7FFF);
+    sub_8059EC8(this->roomId & 0x7FFF);
 
     offsetX[2] = 0;
     offsetY[2] = 0;
@@ -275,3 +275,104 @@ u8 S_MP::sub_8057C9C(s16 x, s16 y) {
     field_6C[layer] = y - layerY[layer];
     return edges;
 }
+
+// https://decomp.me/scratch/TODO
+// Only differs in case -5: agbcp expands `field_579 = 1` as (x & 0) | 1 and CSE reuses that 0 for
+// the job's status/field_C, so it lives across the sub_8059F80 call in r5. The original
+// rematerializes it (movs r3, #0) after the call.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/update__4S_MP.s\"");
+#else
+void S_MP::update() {
+    u8* archive = (u8*)dword_86527F4;
+    u32* offsets = dword_86527F4;
+    u8 index = stru_3000DD0.field_3;
+
+    field_599 = 0;
+
+    switch (field_1C) {
+        case -5:
+            field_579 = 1;
+            sub_8059F80();
+            stru_3000DC0.status = 0;
+            if (byte_83AAA6C[index * 4] != 0xFF) {
+                stru_3000DC0.src = archive + offsets[byte_83AAA6C[index * 4]];
+                stru_3000DC0.dest = cmpw;
+                stru_3000DC0.field_C = 0;
+                sub_8019808(&stru_3000DC0);
+            }
+            field_1C++;
+            break;
+
+        case -4:
+            if (stru_3000DC0.status != 0) {
+                break;
+            }
+            CpuFastSet(cmpw, (void*)(VRAM + 0x4000), 0x800);
+            stru_3000DC0.status = 0;
+            if (byte_83AAA6C[index * 4 + 1] != 0xFF) {
+                stru_3000DC0.src = archive + offsets[byte_83AAA6C[index * 4 + 1]];
+                stru_3000DC0.dest = cmpw;
+                stru_3000DC0.field_C = 0;
+                sub_8019808(&stru_3000DC0);
+            }
+            field_1C++;
+            break;
+
+        case -3:
+            if (stru_3000DC0.status != 0) {
+                break;
+            }
+            CpuFastSet(cmpw, (void*)(VRAM + 0x6000), 0x800);
+            stru_3000DC0.status = 0;
+            if (byte_83AAA6C[index * 4 + 2] != 0xFF) {
+                stru_3000DC0.src = archive + offsets[byte_83AAA6C[index * 4 + 2]];
+                stru_3000DC0.dest = cmpw;
+                stru_3000DC0.field_C = 0;
+                sub_8019808(&stru_3000DC0);
+                field_1C++;
+            } else {
+                field_1C = -1;
+            }
+            break;
+
+        case -2:
+            if (stru_3000DC0.status != 0) {
+                break;
+            }
+            CpuFastSet(cmpw, (void*)(VRAM + 0x8000), 0x800);
+            field_1C++;
+            break;
+
+        case -1:
+            if (field_578 == 0) {
+                sub_8059FE4();
+            }
+            sub_805B31C();
+            sub_805B7F0();
+            load_col_set_to_dest();
+            sub_805A00C();
+            sub_805B9D4();
+            sub_805B590();
+            field_584 = 0;
+            field_1C++;
+            break;
+
+        default:
+            sub_8057FCC();
+            sub_8058148();
+            sub_805B154();
+            sub_805B8BC();
+            sub_8059F24();
+            if (field_584) {
+                sub_805C14C();
+            }
+            break;
+    }
+
+    if (field_579) {
+        sub_8018218(mapw, (void*)VRAM, 0x3000, 0x20, 0);
+        field_579 = 0;
+    }
+}
+#endif
