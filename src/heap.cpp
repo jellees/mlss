@@ -2,23 +2,13 @@
 #include "common.h"
 #include "heap.h"
 
-//! Possible fake match: the labels are copied with a loop because C++ folds "FREE"[0] to a
-//! constant, while the original loads the bytes from the string (as COPY_LABEL does in C).
-
-// Close but not matching: only the registers of the IWRAM heap end (r5) and heap + 0x200 (r6) are
-// swapped. The EWRAM heap is an integer address: as a symbol, its label would be stored relative to
-// the heap register instead of through its own address constant.
-// https://decomp.me/scratch/Cp7pf
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/init_heap.s\"");
-#else
 void init_heap() {
     int i;
 
-    CpuFill32(0, &gIwramHeap, (u32)gIwramHeapEnd - (u32)((u8*)&gIwramHeap + 0x200));
+    CpuFill32(0, &gIwramHeap, (u32)gIwramHeapEnd - 0x200 - (u32)&gIwramHeap);
     gIwramHeap.previous = NULL;
     gIwramHeap.next = NULL;
-    gIwramHeap.size = ((u32)gIwramHeapEnd - (u32)((u8*)&gIwramHeap + 0x200)) | HEAP_BLOCK_FREE;
+    gIwramHeap.size = ((u32)gIwramHeapEnd - 0x200 - (u32)&gIwramHeap) | HEAP_BLOCK_FREE;
     for (i = 0; i < 4; i++) {
         gIwramHeap.label[i] = "FREE"[i];
     }
@@ -34,7 +24,6 @@ void init_heap() {
         }
     }
 }
-#endif
 
 void free_heap_memory_8018C68(void* p) {
     int i;
