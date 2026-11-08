@@ -385,7 +385,7 @@ void FieldManager::update() {
             break;
 
         case 5:
-            sub_802955C(this);
+            sub_802955C();
             state = 6;
             break;
 
@@ -689,7 +689,7 @@ void FieldManager::update() {
             field_20C[0].field_6 = luigiLeads == 0 ? 0x100 : 0x200;
             sub_803C788(this, leader);
             if (leader->field_368->field_17_7) {
-                sub_8018218(field_1C->field_10->field_8 + 0x1100,
+                sub_8018218(field_1C->field_0[4]->field_8 + 0x1100,
                             (void*)(leader->field_54 * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
             }
 
@@ -697,7 +697,7 @@ void FieldManager::update() {
             field_20C[1].field_6 = luigiLeads == 0 ? 0x200 : 0x100;
             sub_803C788(this, follower);
             if (follower->field_368->field_17_7) {
-                sub_8018218(field_1C->field_10->field_8 + 0x1100,
+                sub_8018218(field_1C->field_0[4]->field_8 + 0x1100,
                             (void*)(follower->field_54 * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
             }
 
@@ -1273,7 +1273,7 @@ void FieldManager::update_field_8023DD4() {
             leader->sub_8049C38(field_246_2 == 3 ? &objects[1] : objects,
                                 field_246_2 == 3 ? field_10B - 1 : field_10B);
         }
-        sub_8029624(this);
+        sub_8029624();
         sub_8021F7C();
         if (leader->field_350_0 || leader->field_350_4) {
             field_11E = field_D0->field_0;
@@ -3087,8 +3087,8 @@ void FieldManager::sub_80293F8(u16 id) {
 }
 
 void FieldManager::sub_8029460() {
-    sub_8018218(field_1C->field_0->field_8, (void*)0x6010400, 0x4C0, 0x20, 0);
-    sub_8018218(field_1C->field_C->field_8, (void*)0x60108C0, 0x500, 0x20, 0);
+    sub_8018218(field_1C->field_0[0]->field_8, (void*)0x6010400, 0x4C0, 0x20, 0);
+    sub_8018218(field_1C->field_0[3]->field_8, (void*)0x60108C0, 0x500, 0x20, 0);
 }
 
 void FieldManager::sub_80294A0() {
@@ -3098,5 +3098,42 @@ void FieldManager::sub_80294A0() {
     for (i = 0; i < 11; i++) {
         field_1C->field_2C[i] = sub_80214A4(0, *entry, -1, 1);
         entry++;
+    }
+}
+
+void FieldManager::sub_802955C() {
+    u16* entry;
+    int i;
+
+    dword_3000C78 = NULL;
+    entry = word_839F5CC;
+    for (i = 0; i < 11; i++) {
+        field_1C->field_0[i] = (FieldStruct5*)sub_80213A0(0, *entry, -1, 1);
+        entry++;
+    }
+    dword_3000C78 = sub_800063C;
+}
+
+void FieldManager::sub_8029624() {
+    FieldStruct2* fmex = field_1C;
+    FieldStruct1* entry = fmex->field_25C;
+    int i;
+
+    for (i = 0; i < 4; i++, entry++) {
+        if (!entry->sprite->field_12_5) {
+            entry->sprite->xPosition = entry->field_4 - field_27E;
+            entry->sprite->yPosition = entry->field_6 - field_280;
+        }
+    }
+}
+
+void FieldManager::sub_80296D0() {
+    FieldStruct2* fmex = field_1C;
+    int i;
+
+    for (i = 0; i < 4; i++) {
+        if (!fmex->field_25C[i].sprite->field_12_5) {
+            sub_8020D40(fmex->field_25C[i].sprite);
+        }
     }
 }

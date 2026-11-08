@@ -31,11 +31,7 @@ struct FieldStruct5 {
 
 // "FMEX" buffer (FieldManager::field_1C).
 struct FieldStruct2 {
-    struct FieldStruct5* field_0;
-    u8 pad_4[0x8];
-    struct FieldStruct5* field_C;
-    struct FieldStruct5* field_10;
-    u8 pad_14[0x18];
+    struct FieldStruct5* field_0[11];
     void* field_2C[11];
     u8 pad_58[0x4];
     void* field_5C[64];
@@ -402,6 +398,9 @@ class FieldManager : public Process {
     void sub_80293F8(u16 id);
     void sub_8029460();
     void sub_80294A0();
+    void sub_802955C();
+    void sub_8029624();
+    void sub_80296D0();
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
     void sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,
