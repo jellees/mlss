@@ -21617,7 +21617,7 @@ _0803CB7E:
 	adds r0, r5, #0x0
 	bl sub_8028C40__12FieldManager
 	adds r0, r5, #0x0
-	bl sub_8028E70
+	bl sub_8028E70__12FieldManager
 	movs r1, #0x01
 	ands r1, r0
 	lsls r1, r1, #0x06

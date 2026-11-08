@@ -196,10 +196,10 @@ void FieldManager::update() {
 
     if (field_2A8_6 && state == 2) {
         if (field_2B4 >= 0) {
-            make_btl_8028F54(this);
+            make_btl_8028F54();
         } else if (field_2B2 >= -1) {
-            sub_80290CC(this, field_2B2);
-            sub_8029080(this);
+            sub_80290CC(field_2B2);
+            sub_8029080();
             field_2B2 = -2;
             return;
         } else if (field_2B1_0 == 2 && !field_2A9_0) {
@@ -784,7 +784,7 @@ void FieldManager::update_field_8023DD4() {
     int layer;
 
     if (field_12B != -1) {
-        sub_8028FBC(this);
+        sub_8028FBC();
         return;
     }
     if (field_2A8_6) {
@@ -812,7 +812,7 @@ void FieldManager::update_field_8023DD4() {
         return;
     }
     if (field_12D_5) {
-        sub_8028EF4(this);
+        sub_8028EF4();
         return;
     }
 
@@ -825,7 +825,7 @@ void FieldManager::update_field_8023DD4() {
     field_20A_4 = field_20A_3;
     if (!field_291_0 && field_2A9_6) {
         sub_8028C40();
-        field_2A9_6 = sub_8028E70(this);
+        field_2A9_6 = sub_8028E70();
     }
 
     switch (field_12A) {
@@ -918,7 +918,7 @@ void FieldManager::update_field_8023DD4() {
 
         case 4:
             sub_8028C40();
-            if (!sub_8028E70(this)) {
+            if (!sub_8028E70()) {
                 if (follower->field_368->field_14 != -1) {
                     follower->field_368->field_10[0] = follower->field_368->field_14;
                     follower->field_368->field_14 = 0xFF;
@@ -993,37 +993,37 @@ void FieldManager::update_field_8023DD4() {
                     field_2B8_6 = field_12A == 8;
                     break;
                 case 9:
-                    sub_8029024(this, 0);
-                    sub_8028FBC(this);
+                    sub_8029024(0);
+                    sub_8028FBC();
                     field_F9_4 = 1;
                     break;
                 case 11:
-                    sub_80290CC(this, -1);
+                    sub_80290CC(-1);
                     sub_8027558();
                     field_F9_4 = 1;
                     break;
                 case 12:
-                    sub_8029070(this);
+                    sub_8029070();
                     sub_80275F4();
                     field_F9_4 = 1;
                     break;
                 case 13:
-                    sub_8029060(this);
+                    sub_8029060();
                     sub_8027688();
                     field_F9_4 = 1;
                     break;
                 case 14:
-                    sub_8029030(this, 0, 0);
+                    sub_8029030(0, 0);
                     sub_802772C();
                     field_F9_4 = 1;
                     break;
                 case 15:
-                    sub_8028F40(this);
+                    sub_8028F40();
                     sub_802814C();
                     return;
                 case 16:
-                    sub_8028F2C(this);
-                    sub_8028EF4(this);
+                    sub_8028F2C();
+                    sub_8028EF4();
                     return;
                 case 17: {
                     int oldRoomId;
@@ -2818,7 +2818,7 @@ void FieldManager::sub_8028C40() {
             done |= 2;
         }
         if (done == 3) {
-            sub_8028E4C(this);
+            sub_8028E4C();
         }
     }
 }
@@ -2847,4 +2847,115 @@ void FieldManager::sub_8028D6C(u16 mask) {
         gGameState.field_3C.field_6 = gGameState.field_2E & enabled;
     }
     field_F8_5 = 1;
+}
+
+void FieldManager::sub_8028E14(int arg1, int arg2, int arg3) {
+    int buffer;
+
+    if (arg3 != -1) {
+        sub_802191C(arg3);
+    }
+    sub_8021574(arg1, arg2, 0, 0, 0, &buffer, arg3);
+}
+
+void FieldManager::sub_8028E4C() {
+    field_2F8 = 0;
+    field_2FC = 0;
+    field_F9_0 = 0;
+}
+
+bool FieldManager::sub_8028E70() {
+    return field_F9_0;
+}
+
+void FieldManager::get_fobj_screen_pos(int index, int* x, int* y) {
+    FieldObject* object = objects[index];
+
+    *x = object->x / 256 - field_27E;
+    *y = (object->y - object->z - object->height) / 256 - field_280;
+}
+
+void FieldManager::sub_8028ED8() {
+    field_F8_6 = 0;
+}
+
+void FieldManager::sub_8028EE8() {
+    field_F8_6 = 1;
+}
+
+void FieldManager::sub_8028EF4() {
+    sub_801A6B0();
+    delete this;
+    sub_812F5D8(operator new(0x4AC, 0, "ENDD", 0), 8, "ENDD");
+}
+
+void FieldManager::sub_8028F2C() {
+    field_12D_5 = 1;
+}
+
+void FieldManager::sub_8028F40() {
+    field_12D_4 = 1;
+}
+
+void FieldManager::make_btl_8028F54() {
+    field_2AC = field_2B4;
+    field_2B4 = -1;
+    disable();
+    state = 2;
+    byte_3000C24 = 1;
+    if (dword_3000C78 == NULL) {
+        dword_3000C78 = sub_800063C;
+    }
+    init_btl_process_80FC25C(operator new(0x1C, 0, "BTL ", 0), 8, "BTL ", &field_2AC);
+}
+
+void FieldManager::sub_8028FBC() {
+    sub_801A6B0();
+    sub_8019628(0);
+    sub_80273E4();
+    sub_80E8DC0();
+    if (field_304 != NULL) {
+        delete field_304;
+        field_304 = NULL;
+    }
+    runtime_install_interrupt_callback(2, NULL);
+    state = 1;
+    if (dword_3000C78 == NULL) {
+        dword_3000C78 = sub_800063C;
+    }
+    sub_815085C(field_12B);
+    field_12B = -1;
+}
+
+void FieldManager::sub_8029024(int value) {
+    field_12B = value;
+}
+
+void FieldManager::sub_8029030(int arg1, int arg2) {
+    field_12D_0 = 1;
+    field_12D_1 = arg1;
+    field_12D_2 = arg2;
+}
+
+void FieldManager::sub_8029060() {
+    field_12C_1 = 1;
+}
+
+void FieldManager::sub_8029070() {
+    field_12C_0 = 1;
+}
+
+void FieldManager::sub_8029080() {
+    disable();
+    state = 2;
+    byte_3000C24 = 2;
+    if (dword_3000C78 == NULL) {
+        dword_3000C78 = sub_800063C;
+    }
+    sub_8122BA0(field_12C_2, 0);
+    field_12C_2 = -2;
+}
+
+void FieldManager::sub_80290CC(int value) {
+    field_12C_2 = value;
 }

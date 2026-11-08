@@ -313,7 +313,8 @@ class FieldManager : public Process {
     u8 pad_2F0[0x2];
     s16 field_2F2; // Camera pan target
     s16 field_2F4;
-    u8 pad_2F6[0x4];
+    u8 pad_2F6[0x2];
+    u16 field_2F8;
     u16 field_2FA;
     u16 field_2FC;
     u8 field_2FE;
@@ -366,6 +367,23 @@ class FieldManager : public Process {
     void sub_8028AFC(int mode, int relative, int x, int y, u16 speed);
     void sub_8028C40();
     void sub_8028D6C(u16 mask);
+    void sub_8028E14(int arg1, int arg2, int arg3);
+    void sub_8028E4C();
+    bool sub_8028E70();
+    void get_fobj_screen_pos(int index, int* x, int* y);
+    void sub_8028ED8();
+    void sub_8028EE8();
+    void sub_8028EF4();
+    void sub_8028F2C();
+    void sub_8028F40();
+    void make_btl_8028F54();
+    void sub_8028FBC();
+    void sub_8029024(int value);
+    void sub_8029030(int arg1, int arg2);
+    void sub_8029060();
+    void sub_8029070();
+    void sub_8029080();
+    void sub_80290CC(int value);
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
     void sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,

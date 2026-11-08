@@ -22,7 +22,7 @@ update_field_8023DD4__12FieldManager: @ 08023DD4
 	cmp r1, r0
 	beq _08023E00
 	mov r0, r10
-	bl sub_8028FBC
+	bl sub_8028FBC__12FieldManager
 	bl _080254A2
 _08023DFC: .4byte 0x0000012B
 _08023E00:
@@ -150,7 +150,7 @@ _08023EC4:
 	mov r0, r10
 	bl sub_8028C40__12FieldManager
 	mov r0, r10
-	bl sub_8028E70
+	bl sub_8028E70__12FieldManager
 	adds r1, r5, #0x0
 	ands r1, r0
 	lsls r1, r1, #0x06
@@ -477,7 +477,7 @@ _080241C4:
 	mov r0, r10
 	bl sub_8028C40__12FieldManager
 	mov r0, r10
-	bl sub_8028E70
+	bl sub_8028E70__12FieldManager
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
 	cmp r4, #0x00
@@ -848,27 +848,27 @@ _080244CC: .4byte 0x00000351
 _080244D0:
 	mov r0, r10
 	movs r1, #0x00
-	bl sub_8029024
+	bl sub_8029024__12FieldManageri
 	mov r0, r10
-	bl sub_8028FBC
+	bl sub_8028FBC__12FieldManager
 	b _0802451E
 _080244E0:
 	movs r1, #0x01
 	negs r1, r1
 	mov r0, r10
-	bl sub_80290CC
+	bl sub_80290CC__12FieldManageri
 	mov r0, r10
 	bl sub_8027558__12FieldManager
 	b _0802451E
 _080244F2:
 	mov r0, r10
-	bl sub_8029070
+	bl sub_8029070__12FieldManager
 	mov r0, r10
 	bl sub_80275F4__12FieldManager
 	b _0802451E
 _08024500:
 	mov r0, r10
-	bl sub_8029060
+	bl sub_8029060__12FieldManager
 	mov r0, r10
 	bl sub_8027688__12FieldManager
 	b _0802451E
@@ -876,7 +876,7 @@ _0802450E:
 	mov r0, r10
 	movs r1, #0x00
 	movs r2, #0x00
-	bl sub_8029030
+	bl sub_8029030__12FieldManagerii
 	mov r0, r10
 	bl sub_802772C__12FieldManager
 _0802451E:
@@ -887,17 +887,17 @@ _0802451E:
 	b _080246B8
 _08024528:
 	mov r0, r10
-	bl sub_8028F40
+	bl sub_8028F40__12FieldManager
 _0802452E:
 	mov r0, r10
 	bl sub_802814C__12FieldManager
 	bl _080254A2
 _08024538:
 	mov r0, r10
-	bl sub_8028F2C
+	bl sub_8028F2C__12FieldManager
 _0802453E:
 	mov r0, r10
-	bl sub_8028EF4
+	bl sub_8028EF4__12FieldManager
 	bl _080254A2
 _08024548:
 	movs r3, #0x80

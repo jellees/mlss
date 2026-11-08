@@ -285347,7 +285347,7 @@ sub_80ED6A8:
 	orrs r0, r3
 	strh r0, [r1, #0x00]
 	ldr r0, [r4, #0x14]
-	bl sub_8028EE8
+	bl sub_8028EE8__12FieldManager
 	b _080ED708
 _080ED6D0: .4byte 0xFFFFFC1F
 _080ED6D4:
@@ -287024,7 +287024,7 @@ _080EE5D6:
 	ldr r1, [r5, #0x04]
 	add r3, sp, #0x00C
 	add r2, sp, #0x008
-	bl get_fobj_screen_pos
+	bl get_fobj_screen_pos__12FieldManageriPiT2
 	ldr r0, [r4, #0x14]
 	ldr r1, [r5, #0x00]
 	asrs r1, r1, #0x01
@@ -287291,7 +287291,7 @@ script_cmd_start_dialogue: @ 080EE7D4
 	mov r10, r2
 	add r3, sp, #0x01C
 	add r2, sp, #0x018
-	bl get_fobj_screen_pos
+	bl get_fobj_screen_pos__12FieldManageriPiT2
 	ldr r0, [sp, #0x018]
 	lsls r0, r0, #0x10
 	lsrs r6, r0, #0x10
@@ -287357,7 +287357,7 @@ _080EE85A:
 	ldr r4, [r2, #0x28]
 	add r2, sp, #0x020
 	add r3, sp, #0x024
-	bl get_fobj_screen_pos
+	bl get_fobj_screen_pos__12FieldManageriPiT2
 	ldr r1, _080EE8B8 @ =0x00000283
 	add r1, r10
 	ldrb r0, [r1, #0x00]
@@ -287785,7 +287785,7 @@ script_cmd_show_reaction_bubble: @ 080EEB80
 	add r3, sp, #0x010
 	adds r0, r2, #0x0
 	add r2, sp, #0x00C
-	bl get_fobj_screen_pos
+	bl get_fobj_screen_pos__12FieldManageriPiT2
 	ldr r1, _080EEC0C @ =0x00000283
 	adds r0, r4, r1
 	ldrb r1, [r0, #0x00]
@@ -288851,7 +288851,7 @@ _080EF722:
 	ldr r4, [r2, #0x00]
 	mov r2, sp
 	add r3, sp, #0x004
-	bl get_fobj_screen_pos
+	bl get_fobj_screen_pos__12FieldManageriPiT2
 	ldr r0, _080EF798 @ =0x00000283
 	adds r4, r4, r0
 	ldrb r1, [r4, #0x00]
@@ -289441,7 +289441,7 @@ _080EFC24:
 	mov r1, r8
 	ldr r0, [r1, #0x00]
 	ldr r0, [r0, #0x14]
-	bl sub_8028E70
+	bl sub_8028E70__12FieldManager
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _080EFC46
@@ -289546,7 +289546,7 @@ _080EFCF0:
 	mov r2, r8
 	ldr r0, [r2, #0x00]
 	ldr r0, [r0, #0x14]
-	bl sub_8028E70
+	bl sub_8028E70__12FieldManager
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _080EFD16
@@ -290383,7 +290383,7 @@ sub_80F03C8:
 	beq _080F03FE
 	ldr r0, [r6, #0x00]
 	ldr r0, [r0, #0x14]
-	bl sub_8028E70
+	bl sub_8028E70__12FieldManager
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _080F03FE
@@ -291054,11 +291054,11 @@ sub_80F0914:
 	b _080F0930
 _080F0922:
 	ldr r0, [r0, #0x14]
-	bl sub_8028F40
+	bl sub_8028F40__12FieldManager
 	b _080F0930
 _080F092A:
 	ldr r0, [r0, #0x14]
-	bl sub_8028F2C
+	bl sub_8028F2C__12FieldManager
 _080F0930:
 	movs r0, #0x01
 	pop {r1}
@@ -291074,11 +291074,11 @@ sub_80F0938:
 	cmp r1, r0
 	beq _080F094E
 	ldr r0, [r3, #0x14]
-	bl sub_80290CC
+	bl sub_80290CC__12FieldManageri
 	b _080F0954
 _080F094E:
 	ldr r0, [r3, #0x14]
-	bl sub_8029070
+	bl sub_8029070__12FieldManager
 _080F0954:
 	movs r0, #0x00
 	pop {r1}
@@ -291528,7 +291528,7 @@ _080F0CEA:
 	lsrs r1, r1, #0x1F
 	add r3, sp, #0x00C
 	add r2, sp, #0x008
-	bl get_fobj_screen_pos
+	bl get_fobj_screen_pos__12FieldManageriPiT2
 	ldr r0, [r5, #0x14]
 	ldr r1, [r4, #0x00]
 	adds r1, #0x01
