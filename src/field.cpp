@@ -2386,10 +2386,13 @@ void FieldManager::sub_8027D64() {
     field_E4 = NULL;
 }
 
-// https://decomp.me/scratch/RTq1A
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8027E90__12FieldManagerUsUsUciiiiiScb.s\"");
-#else
+// A helper to match sub_8027E90. We need to see if this is emitted at the end of the file or whether
+// this is really just a static inline like this. It cannot be part of the class definition because then
+// it would be emitted.
+static inline u8 getUnk10B(FieldManager* manager) {
+    return manager->field_10B;
+}
+
 void FieldManager::sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height,
                                int arg8, s8 arg9, bool arg10) {
     int i;
@@ -2407,7 +2410,7 @@ void FieldManager::sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y,
         field_2E8 = follower->height;
     }
 
-    for (i = 0; i < field_10B; i++) {
+    for (i = 0; i < getUnk10B(this); i++) {
         delete objects[i];
     }
     for (i = 0; i < 8; i++) {
@@ -2463,7 +2466,6 @@ void FieldManager::sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y,
     field_F8_1 = 0;
     state = 0;
 }
-#endif
 
 void FieldManager::sub_802814C() {
     u8 result;
