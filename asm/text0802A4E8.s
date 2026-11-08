@@ -7459,7 +7459,7 @@ _0802ED2C:
 	adds r0, r5, #0x0
 	movs r1, #0x01
 	movs r2, #0x00
-	bl sub_8028AFC
+	bl sub_8028AFC__12FieldManageriiiiUs
 	b _0802ED5E
 _0802ED44: .4byte 0x0000028F
 _0802ED48:
@@ -21560,7 +21560,7 @@ _0803CB14:
 	adds r0, r6, #0x0
 	movs r1, #0x01
 	movs r2, #0x00
-	bl sub_8028AFC
+	bl sub_8028AFC__12FieldManageriiiiUs
 	b _0803CB3E
 _0803CB2C: .4byte 0x0000028F
 _0803CB30:

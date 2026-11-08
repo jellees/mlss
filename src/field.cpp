@@ -752,8 +752,7 @@ void FieldManager::update() {
                 }
                 x = leader->x / 256 - 120;
                 y = (leader->y - floor) / 256;
-                sub_8028AFC(this, 1, 0, x, y - (leader->airFrames != -1 ? field_28D : field_28F),
-                            0xC00);
+                sub_8028AFC(1, 0, x, y - (leader->airFrames != -1 ? field_28D : field_28F), 0xC00);
                 field_2A9_6 = 1;
             }
             state = 15;
@@ -2761,4 +2760,38 @@ void FieldManager::sub_80289BC(FieldPlayerCharacter* player, FieldObject* other)
 
     sub_80EF874(evts, (s8)(player->field_33C_0 << 1) >> 1, *(u32*)((u8*)other + 0x22C), direction, arg5,
                 (s8)player->field_344 != 0x10, (s8)player->field_344);
+}
+
+void FieldManager::sub_8028AFC(int mode, int relative, int x, int y, u16 speed) {
+    if (relative == 1) {
+        x += (s16)field_27A;
+        y += (s16)field_27C;
+    }
+    if (x < 0) {
+        x = 0;
+    } else if (x > field_286 - 240) {
+        x = field_286 - 240;
+    }
+    if (y < 0) {
+        y = 0;
+    } else if (y > field_288 - 160) {
+        y = field_288 - 160;
+    }
+
+    field_2EC = field_27A;
+    field_2EE = field_27C;
+    field_2F2 = x;
+    field_2F4 = y;
+    if (mode == 1) {
+        int dx = field_2F2 - field_2EC;
+        int dy = field_2F4 - field_2EE;
+
+        field_2FC = (((int (*)(int))dword_3001038)(dx * dx + dy * dy) << 8) / (s16)speed;
+        field_2FC += 1;
+    } else {
+        field_2FC = speed;
+    }
+    field_2FA = 0;
+    field_2FE = (u32)sub_81DA690((s16)(field_2EE - field_2F4), (s16)(field_2F2 - field_2EC)) >> 8;
+    field_F9_0 = mode;
 }

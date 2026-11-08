@@ -287043,7 +287043,7 @@ _080EE5D6:
 	ldsh r2, [r5, r4]
 	str r2, [sp, #0x004]
 	movs r2, #0x01
-	bl sub_8028AFC
+	bl sub_8028AFC__12FieldManageriiiiUs
 	adds r2, r6, #0x0
 	adds r2, #0xA0
 	ldrh r1, [r2, #0x00]
@@ -291541,7 +291541,7 @@ _080F0CEA:
 	ldsh r2, [r4, r5]
 	str r2, [sp, #0x004]
 	movs r2, #0x01
-	bl sub_8028AFC
+	bl sub_8028AFC__12FieldManageriiiiUs
 	adds r2, r6, #0x0
 	adds r2, #0xA0
 	ldrh r1, [r2, #0x00]
@@ -291665,7 +291665,7 @@ _080F0DE0:
 	movs r7, #0x10
 	ldsh r4, [r5, r7]
 	str r4, [sp, #0x004]
-	bl sub_8028AFC
+	bl sub_8028AFC__12FieldManageriiiiUs
 	adds r2, r6, #0x0
 	adds r2, #0xA0
 	ldrh r1, [r2, #0x00]

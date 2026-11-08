@@ -579,7 +579,6 @@ int sub_8019610(int);
 void sub_803C788(struct FieldManager*, void*);
 void sub_802F834(struct FieldManager*);
 void sub_80297B8(struct FieldManager*);
-void sub_8028AFC(struct FieldManager*, int, int, int, int, int);
 u8 sub_802DC0C(struct FieldManager*, void*);
 void sub_8028FBC(struct FieldManager*);
 void init_btl_process_80FC25C(void*, u8, char*, void*);
