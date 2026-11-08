@@ -166,7 +166,7 @@ FieldManager::~FieldManager() {
     if (field_304) {
         delete field_304;
     }
-    sub_80292EC(this);
+    sub_80292EC();
     operator delete(field_1C);
     operator delete(field_20);
     operator delete(field_23C);
@@ -393,13 +393,13 @@ void FieldManager::update() {
             if (byte_3000C80 != 0) {
                 break;
             }
-            sub_80294A0(this);
-            sub_8029460(this);
+            sub_80294A0();
+            sub_8029460();
             state = 7;
             break;
 
         case 7:
-            sub_80293F8(this, field_126);
+            sub_80293F8(field_126);
             state = 8;
             break;
 
@@ -407,7 +407,7 @@ void FieldManager::update() {
             if (byte_3000C80 != 0) {
                 break;
             }
-            sub_80293B8(this);
+            sub_80293B8();
             state = 9;
             break;
 
@@ -2006,7 +2006,7 @@ void FieldManager::sub_8027030(int mode, int arg2, u16 arg3, u16 arg4, u16 arg5)
             sub_8026E94();
         case 2:
             field_128 = arg3;
-            sub_80291EC(this, mode != 1 ? 4 : 0, arg2, arg3, arg4, arg5);
+            sub_80291EC(mode != 1 ? 4 : 0, arg2, arg3, arg4, arg5);
             break;
         case 4:
             if (field_F0 != 0) {
@@ -2991,5 +2991,112 @@ void FieldManager::sub_8029120(u16 high, u16 low) {
         destination += 0x20;
         bit <<= 1;
         mask >>= 1;
+    }
+}
+
+void FieldManager::sub_8029170(int arg) {
+    switch (field_FC_3) {
+        case 1:
+            sub_81165CC(field_314, arg);
+            field_FC_3 = arg + 1;
+            break;
+        case 2:
+            sub_81165CC(field_314, arg);
+            field_FC_3 = 2 - arg;
+            break;
+    }
+}
+
+void FieldManager::sub_80291C8() {
+    switch (field_FC_3) {
+        case 1:
+        case 2:
+            sub_8116610(field_314);
+            break;
+    }
+}
+
+void FieldManager::sub_80291EC(int mode, int arg2, u16 arg3, u16 low, u16 high) {
+    gGameState.field_884 |= (high << 16) | low;
+    if (mode == 0) {
+        if (field_F0 != 0) {
+            sub_80290E0();
+        }
+    } else {
+        sub_8029120(high, low);
+    }
+    field_F4 = low;
+    field_F6 = high;
+    sub_81151E4(field_314, mode, arg3, arg2, low, high, low & 1 ? dword_3000E00 : 0,
+                low & 1 ? dword_3000E04 : 0);
+}
+
+// Called by the "WIPE" process when it ends. wipeParameters is the pointer given to sub_8079D1C:
+// &FieldManager::field_102, so index 3 is field_108 (the wipe mode).
+void sub_80292A0(s16* wipeParameters) {
+    gGameState.field_888_6 = 0;
+    if (wipeParameters[3] == 6) {
+        dword_3001034(0, (void*)(VRAM + 0xC000), 0x20);
+        BUFFER_REG_BG0CNT = 0x1508;
+    }
+}
+
+void FieldManager::sub_80292EC() {
+    int i;
+
+    for (i = 0; i < field_10B; i++) {
+        delete objects[i];
+    }
+    for (i = 0; i < 8; i++) {
+        delete shotBullets[i];
+    }
+}
+
+void FieldManager::sub_8029380() {
+    if (field_112 != 0) {
+        FieldObject** object = &objects[2];
+        int i;
+
+        for (i = 0; i < field_113; i++) {
+            //! Possible fake match: the target calls the out-of-line copy of this inline.
+            sub_80507E0__12FieldMonster((FieldMonster*)*object++);
+        }
+    }
+}
+
+void FieldManager::sub_80293B8() {
+    u16* entry = field_C8;
+    int i;
+
+    for (i = 0; i < field_10C; i++, entry++) {
+        field_1C->field_15C[i] = sub_80214A4(0, *entry, -1, 1);
+    }
+}
+
+void FieldManager::sub_80293F8(u16 id) {
+    u16* entry;
+    int i;
+
+    field_C8 = sub_80FB7BC(id, &field_10C);
+    dword_3000C78 = NULL;
+    entry = field_C8;
+    for (i = 0; i < field_10C; i++, entry++) {
+        field_1C->field_5C[i] = sub_80213A0(0, *entry, -1, 1);
+    }
+    dword_3000C78 = sub_800063C;
+}
+
+void FieldManager::sub_8029460() {
+    sub_8018218(field_1C->field_0->field_8, (void*)0x6010400, 0x4C0, 0x20, 0);
+    sub_8018218(field_1C->field_C->field_8, (void*)0x60108C0, 0x500, 0x20, 0);
+}
+
+void FieldManager::sub_80294A0() {
+    u16* entry = word_839F5E2;
+    int i;
+
+    for (i = 0; i < 11; i++) {
+        field_1C->field_2C[i] = sub_80214A4(0, *entry, -1, 1);
+        entry++;
     }
 }

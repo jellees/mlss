@@ -31,9 +31,15 @@ struct FieldStruct5 {
 
 // "FMEX" buffer (FieldManager::field_1C).
 struct FieldStruct2 {
-    u8 pad_0[0x10];
+    struct FieldStruct5* field_0;
+    u8 pad_4[0x8];
+    struct FieldStruct5* field_C;
     struct FieldStruct5* field_10;
-    u8 pad_14[0x248];
+    u8 pad_14[0x18];
+    void* field_2C[11];
+    u8 pad_58[0x4];
+    void* field_5C[64];
+    void* field_15C[64];
     struct FieldStruct1 field_25C[4];
     u8 field_27C[0x44];
 };
@@ -101,7 +107,8 @@ class FieldManager : public Process {
     u32 field_E8;
     u32 field_EC;
     u32 field_F0;
-    u8 pad_F4[0x4];
+    u16 field_F4;
+    u16 field_F6;
     u8 field_F8_0 : 1;
     u8 field_F8_1 : 1;
     u8 field_F8_2 : 1;
@@ -137,7 +144,7 @@ class FieldManager : public Process {
     u16 field_108; // Mode passed to sub_8027168
     s8 field_10A;
     u8 field_10B;
-    u8 pad_10C;
+    u8 field_10C;
     u8 field_10D;
     u8 field_10E;
     u8 field_10F;
@@ -386,6 +393,15 @@ class FieldManager : public Process {
     void sub_80290CC(int value);
     void sub_80290E0();
     void sub_8029120(u16 high, u16 low);
+    void sub_8029170(int arg);
+    void sub_80291C8();
+    void sub_80291EC(int mode, int arg2, u16 arg3, u16 low, u16 high);
+    void sub_80292EC();
+    void sub_8029380();
+    void sub_80293B8();
+    void sub_80293F8(u16 id);
+    void sub_8029460();
+    void sub_80294A0();
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
     void sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,
@@ -394,7 +410,6 @@ class FieldManager : public Process {
 
 extern "C" {
 void sub_8029934(FieldManager*);
-void sub_80292EC(FieldManager*);
 }
 
 #endif

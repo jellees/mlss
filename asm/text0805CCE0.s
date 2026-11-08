@@ -290782,7 +290782,7 @@ sub_80F06EC:
 	cmp r0, #0x00
 	bne _080F06FC
 	ldr r0, [r1, #0x14]
-	bl sub_8029380
+	bl sub_8029380__12FieldManager
 _080F06FC:
 	movs r0, #0x01
 	pop {r1}
@@ -291097,11 +291097,11 @@ sub_80F095C:
 	b _080F097C
 _080F096E:
 	ldr r0, [r0, #0x14]
-	bl sub_8029170
+	bl sub_8029170__12FieldManageri
 	b _080F097C
 _080F0976:
 	ldr r0, [r0, #0x14]
-	bl sub_80291C8
+	bl sub_80291C8__12FieldManager
 _080F097C:
 	movs r0, #0x01
 	pop {r1}
