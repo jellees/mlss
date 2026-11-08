@@ -503,8 +503,7 @@ void FieldManager::update() {
             if (field_2B8_0) {
                 s16 value = leader->field_368->field_0;
                 if ((u8)(value - 3) <= 1 || value == 0xE || value == 0xF || value == 0x10
-                    || value == 0x11
-                    || field_246_2 == 5 || field_246_2 == 6) {
+                    || value == 0x11 || field_246_2 == 5 || field_246_2 == 6) {
                     field_246_2 = 0;
                     sub_8029A0C(this, 0, 0);
                 }
@@ -604,10 +603,8 @@ void FieldManager::update() {
                     follower->z = leader->z;
                     follower->height = leader->height;
                     if ((u8)follower->sub_8045A94(1, 0, leader->x / 256, leader->y / 256,
-                                                  leader->z / 256,
-                                                  field_100)) {
-                        while (getDistance(follower, leader) > 0x1000
-                               || sub_802DC0C(this, follower)) {
+                                                  leader->z / 256, field_100)) {
+                        while (getDistance(follower, leader) > 0x1000 || sub_802DC0C(this, follower)) {
                             follower->sub_80461B4(objects);
                             if (!follower->sub_8047B78()) {
                                 break;
@@ -655,7 +652,8 @@ void FieldManager::update() {
             none = -1;
 
             if (field_246_2 == 7) {
-                leader->field_230 = leader->field_234 = follower->field_230 = follower->field_234 = none;
+                leader->field_230 = leader->field_234 = follower->field_230 = follower->field_234 =
+                    none;
             }
 
             if (field_2A8_6) {
@@ -692,8 +690,7 @@ void FieldManager::update() {
             sub_803C788(this, leader);
             if (leader->field_368->field_17_7) {
                 sub_8018218(field_1C->field_10->field_8 + 0x1100,
-                            (void*)(leader->field_54 * 0x400 + 0x6010FC0),
-                            0x80, 0x20, 0);
+                            (void*)(leader->field_54 * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
             }
 
             field_20C[1].field_4 = luigiLeads == 0 ? 2 : 1;
@@ -701,8 +698,7 @@ void FieldManager::update() {
             sub_803C788(this, follower);
             if (follower->field_368->field_17_7) {
                 sub_8018218(field_1C->field_10->field_8 + 0x1100,
-                            (void*)(follower->field_54 * 0x400 + 0x6010FC0),
-                            0x80, 0x20, 0);
+                            (void*)(follower->field_54 * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
             }
 
             state = 15;
@@ -756,7 +752,8 @@ void FieldManager::update() {
                 }
                 x = leader->x / 256 - 120;
                 y = (leader->y - floor) / 256;
-                sub_8028AFC(this, 1, 0, x, y - (leader->airFrames != -1 ? field_28D : field_28F), 0xC00);
+                sub_8028AFC(this, 1, 0, x, y - (leader->airFrames != -1 ? field_28D : field_28F),
+                            0xC00);
                 field_2A9_6 = 1;
             }
             state = 15;
@@ -1048,7 +1045,8 @@ void FieldManager::update_field_8023DD4() {
                     field_2E8 = follower->height;
                     leader->field_350_14 = 0;
                     follower->field_350_14 = 0;
-                    sub_8027E90(this, oldRoomId, 0, oldDirection, oldX, oldY, oldZ + oldHeight, 0, 0, -1, true);
+                    sub_8027E90(this, oldRoomId, 0, oldDirection, oldX, oldY, oldZ + oldHeight, 0, 0,
+                                -1, true);
                     leader->field_352_7 = 1;
                     follower->field_352_7 = 0;
                     break;
@@ -1063,8 +1061,8 @@ void FieldManager::update_field_8023DD4() {
                 if (!sub_803E9F0(this)) {
                     field_F9_6 = 1;
                     if (field_291_2) {
-                        sub_8027A04(this, field_2AA, field_2A8_0, field_2A8_5, field_2A9_2, -1, -1, 0, 0, 0,
-                                    field_2A9_5);
+                        sub_8027A04(this, field_2AA, field_2A8_0, field_2A8_5, field_2A9_2, -1, -1, 0,
+                                    0, 0, field_2A9_5);
                         start_battle_8027AC4(this);
                         field_12A = 0;
                         return;

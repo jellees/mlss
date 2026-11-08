@@ -9,7 +9,7 @@ void init_heap() {
     gIwramHeap.previous = NULL;
     gIwramHeap.next = NULL;
     gIwramHeap.size = ((u32)gIwramHeapEnd - 0x200 - (u32)&gIwramHeap) | HEAP_BLOCK_FREE;
-    
+
     for (i = 0; i < 4; i++) {
         gIwramHeap.label[i] = "FREE"[i];
     }
