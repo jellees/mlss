@@ -781,7 +781,7 @@ void FieldManager::update_field_8023DD4() {
     FieldObject** object;
     FieldPlayerCharacter* player;
     FieldObject* other;
-    u32 layer;
+    int layer;
 
     if (field_12B != -1) {
         sub_8028FBC(this);
@@ -1191,8 +1191,7 @@ void FieldManager::update_field_8023DD4() {
                 objects[i]->method9();
             }
         } else {
-            count = field_10B;
-            for (i = 0; i < count; i++) {
+            for (count = field_10B, i = 0; count != 0; count--, i++) {
                 objects[i]->method8(field_27E, field_280, objects);
                 objects[i]->method9();
             }
@@ -1213,9 +1212,11 @@ void FieldManager::update_field_8023DD4() {
         }
         if ((s8)leader->field_1 != -1) {
             other = objects[(s8)leader->field_1];
-            layer = other->sprite->field_1F_2;
-            if (layer > other->sprite->field_1F_0) {
-                layer = other->sprite->field_1F_0;
+            {
+                u32 low = other->sprite->field_1F_0;
+                u32 high = other->sprite->field_1F_2;
+
+                layer = high > low ? low : high;
             }
             if ((int)layer < leader->sprite->field_1F_0) {
                 leader->sprite->field_1F_0 = layer;
@@ -1238,9 +1239,11 @@ void FieldManager::update_field_8023DD4() {
         }
         if ((s8)follower->field_1 != -1) {
             other = objects[(s8)follower->field_1];
-            layer = other->sprite->field_1F_2;
-            if (layer > other->sprite->field_1F_0) {
-                layer = other->sprite->field_1F_0;
+            {
+                u32 low = other->sprite->field_1F_0;
+                u32 high = other->sprite->field_1F_2;
+
+                layer = high > low ? low : high;
             }
             if ((int)layer < follower->sprite->field_1F_0) {
                 follower->sprite->field_1F_0 = layer;
@@ -1279,7 +1282,7 @@ void FieldManager::update_field_8023DD4() {
 
     field_304->sub_8057C9C(field_27E, field_280);
     if (field_FC_2) {
-        sub_80EF618(evts, field_FC_1 ? 0x74 : 4, field_1C->field_27C, 0);
+        sub_80EF618(evts, field_FC_1 == 0 ? 4 : 0x74, field_1C->field_27C, 0);
         field_FC_2 = 0;
     }
 }
