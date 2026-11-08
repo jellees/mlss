@@ -2822,3 +2822,29 @@ void FieldManager::sub_8028C40() {
         }
     }
 }
+
+//! Possible fake match: the value has to pass through an inline that returns it.
+//! https://decomp.me/scratch/NW173
+static inline u16 identity(u16 value) {
+    return value;
+}
+
+void FieldManager::sub_8028D6C(u16 mask) {
+    u16 enabled = ~mask & 0x3FF;
+    u16 previous = gGameState.field_3C.field_3C_0 & enabled;
+
+    gGameState.field_3C.field_3C_0 = identity(enabled);
+    if (!field_F8_5) {
+        gGameState.field_3C.field_0 |= mask;
+        sub_8018818();
+        gGameState.field_3C.field_2 &= previous;
+        gGameState.field_3C.field_4 &= previous;
+        gGameState.field_3C.field_6 &= previous;
+    } else {
+        gGameState.field_3C.field_0 = gGameState.inputPressed & enabled;
+        gGameState.field_3C.field_2 = gGameState.field_2A & enabled;
+        gGameState.field_3C.field_4 = gGameState.field_2C & enabled;
+        gGameState.field_3C.field_6 = gGameState.field_2E & enabled;
+    }
+    field_F8_5 = 1;
+}

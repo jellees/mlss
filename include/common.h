@@ -472,6 +472,7 @@ void sub_80210A8(struct Sprite*, int, int, int, int, int, int, int);
 void sub_80213A0(int, int, int, int);
 void sprite_hide_8021F20(struct Sprite*);
 void sub_8021F7C(void);
+void sub_8018818(void);
 void sub_812418C(void);
 u16 sub_8124270(u16, int);
 void sub_8021FD4(void);

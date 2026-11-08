@@ -284005,7 +284005,7 @@ _080EB76A:
 	bne _080EB82A
 	ldr r0, [r6, #0x14]
 	ldr r1, _080EB79C @ =0x000003FF
-	bl sub_8028D6C
+	bl sub_8028D6C__12FieldManagerUs
 	b _080EB82A
 	.byte 0x00, 0x00
 _080EB788: .4byte 0x03000FD0
@@ -284353,7 +284353,7 @@ _080EBA16:
 	ldr r2, [sp, #0x000]
 	ldr r0, [r2, #0x14]
 	movs r1, #0x00
-	bl sub_8028D6C
+	bl sub_8028D6C__12FieldManagerUs
 	b _080EBAAC
 	.byte 0x00, 0x00
 _080EBA40: .4byte 0x0000FFFE
@@ -284377,7 +284377,7 @@ _080EBA50:
 	ldr r4, _080EBAC0 @ =0x00000554
 	adds r1, r2, r4
 	ldrh r1, [r1, #0x00]
-	bl sub_8028D6C
+	bl sub_8028D6C__12FieldManagerUs
 	ldr r2, _080EBAC4 @ =0x03000FD0
 	ldr r3, [r2, #0x00]
 	adds r4, r3, r4
@@ -284917,7 +284917,7 @@ _080ECC26:
 	bne _080ECC98
 	ldr r0, [r6, #0x14]
 	ldr r1, _080ECC54 @ =0x000003FF
-	bl sub_8028D6C
+	bl sub_8028D6C__12FieldManagerUs
 	b _080ECC98
 _080ECC40: .4byte 0x03000FD0
 _080ECC44: .4byte 0x0000020D
@@ -285723,7 +285723,7 @@ sub_80ED9A4:
 	ldr r0, [r4, #0x14]
 	lsls r1, r1, #0x10
 	lsrs r1, r1, #0x10
-	bl sub_8028D6C
+	bl sub_8028D6C__12FieldManagerUs
 	cmp r5, #0x01
 	bne _080EDA24
 	mov r0, r8
@@ -285794,7 +285794,7 @@ _080EDA54: .4byte 0x03000FD0
 _080EDA58:
 	ldr r0, [r4, #0x14]
 	ldrh r1, [r2, #0x00]
-	bl sub_8028D6C
+	bl sub_8028D6C__12FieldManagerUs
 	ldr r2, [r6, #0x00]
 	ldr r1, _080EDAA8 @ =0x00000554
 	adds r0, r2, r1
@@ -288926,7 +288926,7 @@ sub_80EF79C:
 	strb r0, [r2, #0x00]
 	ldr r0, [r5, #0x00]
 	ldr r0, [r0, #0x14]
-	bl sub_8028D6C
+	bl sub_8028D6C__12FieldManagerUs
 	ldr r0, [r5, #0x00]
 	ldr r0, [r0, #0x14]
 	ldr r2, _080EF86C @ =0x0000010B

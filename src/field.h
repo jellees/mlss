@@ -365,6 +365,7 @@ class FieldManager : public Process {
     void sub_80289BC(FieldPlayerCharacter* player, FieldObject* other);
     void sub_8028AFC(int mode, int relative, int x, int y, u16 speed);
     void sub_8028C40();
+    void sub_8028D6C(u16 mask);
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
     void sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,
