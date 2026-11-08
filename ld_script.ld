@@ -28,7 +28,7 @@ SECTIONS
         src/game_mode.o(.text);
         asm/text0801B0B8.o(.text);
         src/field.o(.text);
-        asm/text0802A4E8.o(.text);
+        asm/field.o(.text);
         asm/text0803EA00.o(.text);
         src/field_object.o(.text);
         src/field_player_character.o(.text);
@@ -61,7 +61,7 @@ SECTIONS
         src/game_mode.o(.rodata);
         asm/rodata081E23B8.o(.rodata);
         src/field.o(.rodata);
-        asm/rodata081E269C.o(.rodata);
+        asm/field.o(.rodata);
         src/field_monster.o(.rodata);
         src/sign.o(.rodata);
         src/system_screens.o(.rodata);
