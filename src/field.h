@@ -117,7 +117,7 @@ class FieldManager : public Process {
     u16 field_104; // Wipe center y
     u16 field_106; // Wipe radius
     u16 field_108; // Mode passed to sub_8027168
-    u8 field_10A;
+    s8 field_10A;
     u8 field_10B;
     u8 pad_10C;
     u8 field_10D;
@@ -214,11 +214,13 @@ class FieldManager : public Process {
     u8 field_26B_0 : 5;
     u8 shotBulletIndex : 3; // Next shotBullets slot: counts up for jets, down from 3 for bubbles
     u8 field_26C;
-    u8 pad_26D[0xD];
+    u8 pad_26D;
+    s16 field_26E;
+    u8 pad_270[0xA];
     u16 field_27A;
     u16 field_27C;
-    u16 field_27E;
-    u16 field_280;
+    s16 field_27E;
+    s16 field_280;
     u16 field_282;
     u16 field_284;
     u16 field_286;
@@ -229,10 +231,11 @@ class FieldManager : public Process {
     u8 field_28D;
     u8 field_28E;
     u8 field_28F;
-    u8 pad_290;
+    s8 field_290;
     u8 field_291_0 : 1;
     u8 field_291_1 : 1;
-    u8 field_291_2 : 6;
+    u8 field_291_2 : 1;
+    u8 field_291_3 : 5;
     u8 pad_292[0x2];
     u16 field_294;
     u8 pad_296[0x12];
@@ -260,7 +263,9 @@ class FieldManager : public Process {
     u8 field_2B8_6 : 1;
     u8 field_2B8_7 : 1;
     s8 field_2B9;
-    u8 pad_2BA[0x12];
+    u8 field_2BA;
+    u8 field_2BB;
+    u8 pad_2BC[0x10];
     u32 field_2CC;
     u8 pad_2D0[0x8];
     u8 field_2D8_0 : 5;
@@ -309,6 +314,7 @@ class FieldManager : public Process {
     void sub_8027688();
     void sub_802772C();
     void sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMonster* monster, bool arg4);
+    void update_field_8023DD4();
 };
 
 extern "C" {

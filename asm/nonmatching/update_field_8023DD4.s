@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start update_field_8023DD4
-update_field_8023DD4: @ 08023DD4
+	thumb_func_start update_field_8023DD4__12FieldManager
+update_field_8023DD4__12FieldManager: @ 08023DD4
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9

@@ -20,7 +20,7 @@ struct FieldStruct4 {
     u8 field_10[2]; // Indexed by !FieldPlayerCharacter::field_352_7
     u8 field_12;
     s8 field_13;
-    u8 field_14;
+    s8 field_14;
     u8 pad_15;
     u8 field_16_0 : 7;
     u8 field_16_7 : 1;

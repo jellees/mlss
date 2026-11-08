@@ -2889,7 +2889,7 @@ _08023DB2:
 	strb r0, [r7, #0x00]
 _08023DB6:
 	adds r0, r7, #0x0
-	bl update_field_8023DD4
+	bl update_field_8023DD4__12FieldManager
 _08023DBC:
 	add sp, #0x058
 	pop {r3, r4, r5}

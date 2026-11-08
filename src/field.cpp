@@ -201,7 +201,7 @@ void FieldManager::update() {
         if (field_2B4 >= 0) {
             make_btl_8028F54(this);
         } else if (field_2B2 >= -1) {
-            sub_80290CC(this);
+            sub_80290CC(this, field_2B2);
             sub_8029080(this);
             field_2B2 = -2;
             return;
@@ -291,7 +291,7 @@ void FieldManager::update() {
                     follower->field_20C_6 = follower->field_20C_7 = brothersTogether ^ 1;
                     field_2D8_0 = 31;
                 } else {
-                    field_2D8_0 = !luigiLeads;
+                    field_2D8_0 = luigiLeads ^ 1;
                     followerRoomId = saved->roomId;
                     field_2D8_5 = saved->field_2_0;
                     field_2DC = saved->field_4 << 8;
@@ -763,13 +763,524 @@ void FieldManager::update() {
             // fallthrough
 
         case 15:
-            update_field_8023DD4(this);
+            update_field_8023DD4();
             break;
     }
 }
 #endif
 
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/update_field_8023DD4.s\"");
+#else
+void FieldManager::update_field_8023DD4() {
+    int i;
+    int count;
+    FieldObject** object;
+    FieldPlayerCharacter* player;
+    FieldObject* other;
+    u32 layer;
+
+    if (field_12B != -1) {
+        sub_8028FBC(this);
+        return;
+    }
+    if (field_2A8_6) {
+        start_battle_8027AC4(this);
+        return;
+    }
+    if (field_12C_2 != -2) {
+        sub_8027558();
+        return;
+    }
+    if (field_12C_0) {
+        sub_80275F4();
+        return;
+    }
+    if (field_12C_1) {
+        sub_8027688();
+        return;
+    }
+    if (field_12D_0) {
+        sub_802772C();
+        return;
+    }
+    if (field_12D_4) {
+        sub_802814C(this);
+        return;
+    }
+    if (field_12D_5) {
+        sub_8028EF4(this);
+        return;
+    }
+
+    if (field_10A > 0) {
+        field_10A--;
+        if ((u8)(field_12A - 1) <= 4 && field_10A == 0) {
+            field_FC_2 = 1;
+        }
+    }
+    field_20A_4 = field_20A_3;
+    if (!field_291_0 && field_2A9_6) {
+        sub_8028C40(this);
+        field_2A9_6 = sub_8028E70(this);
+    }
+
+    switch (field_12A) {
+        case 0:
+            break;
+
+        case 1:
+            if (!sub_8027378() && !field_2B8_4) {
+                field_12A = 2;
+                field_F9_4 = 0;
+                field_F9_5 = 0;
+            }
+            break;
+
+        case 2:
+            if (field_FC_11 && !sub_8027378()) {
+                word_2000272 = field_FE;
+                field_FC_11 = 0;
+                gGameState.field_2 |= 0x8000;
+            }
+            sub_801B084();
+            sub_8025E94();
+            if (!leader->field_358_3 && sub_8025D24(6)) {
+                sub_803C720(this, 3);
+            }
+            if (!field_209_0 && !field_20B_4) {
+                sub_802D544(this, field_D0);
+                sub_802D46C(this, field_D0);
+            }
+            break;
+
+        case 3:
+            follower->sub_80461B4(objects);
+            if (!follower->sub_8047B78()) {
+                {
+                    FieldPlayerCharacter* first = leader;
+                    FieldPlayerCharacter* second = follower;
+                    second->velocityY = 0;
+                    second->velocityX = 0;
+                    first->velocityY = 0;
+                    first->velocityX = 0;
+                }
+                {
+                    FieldPlayerCharacter* first = leader;
+                    FieldPlayerCharacter* second = follower;
+                    second->field_2B6_7 = 0;
+                    second->field_2B6_6 = 0;
+                    first->field_2B6_7 = 0;
+                    first->field_2B6_6 = 0;
+                }
+                {
+                    FieldPlayerCharacter* first = leader;
+                    FieldPlayerCharacter* second = follower;
+                    second->field_350_14 = 0;
+                    first->field_350_14 = 0;
+                }
+                {
+                    FieldPlayerCharacter* second = follower;
+                    FieldPlayerCharacter* first = leader;
+                    first->field_23E = first->field_260;
+                    second->field_23E = first->field_260;
+                }
+                brothersTogether = 1;
+                sub_802DF80(this, 0);
+                switch (field_246_2) {
+                    case 2:
+                        if (follower->field_54 == 0) {
+                            field_20B_4 = 1;
+                            sub_8035974(this);
+                        }
+                        break;
+                    case 3:
+                        if (follower->field_54 == 1) {
+                            field_20B_4 = 1;
+                            sub_8033B98(this, follower);
+                        }
+                        break;
+                    case 4:
+                        if (follower->field_54 == 1) {
+                            field_20B_4 = 1;
+                            sub_8034870(this, follower);
+                            leader->field_2B6_6 = 1;
+                        }
+                        break;
+                }
+                field_12A = 2;
+                field_F9_4 = 0;
+            }
+            break;
+
+        case 4:
+            sub_8028C40(this);
+            if (!sub_8028E70(this)) {
+                if (follower->field_368->field_14 != -1) {
+                    follower->field_368->field_10[0] = follower->field_368->field_14;
+                    follower->field_368->field_14 = 0xFF;
+                }
+                leader->field_368->field_14 = leader->field_368->field_10[0];
+                leader->field_368->field_10[0] = 0;
+                if (field_FA_5 == luigiLeads) {
+                    field_FA_5 ^= 1;
+                }
+                luigiLeads ^= 1;
+                dword_3000FD0->field_528 = luigiLeads;
+                dword_3000FD0->field_530 = field_FA_5;
+                leader = (FieldPlayerCharacter*)objects[luigiLeads];
+                follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
+                leader->field_352_7 = 1;
+                follower->field_352_7 = 0;
+                leader->field_368->field_4 = 1;
+                leader->field_368->field_6 = 0x100;
+                follower->field_368->field_4 = 2;
+                follower->field_368->field_6 = 0x200;
+                leader->field_350_14 = 0;
+                follower->field_350_14 = 0;
+                sub_802DDB4(this, leader, 0, 0);
+                sub_802DDB4(this, follower, 0, 0);
+                {
+                    u32 temp = field_E8;
+                    field_E8 = field_EC;
+                    field_EC = temp;
+                }
+                field_12A = 2;
+                field_F9_4 = 0;
+            }
+            break;
+
+        case 5:
+            if (--field_26E <= 0) {
+                sub_8029A0C(this, 1, 0);
+                leader->field_350_14 = 0;
+                follower->field_350_14 = 0;
+                field_12A = 2;
+            }
+            break;
+
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+        case 17:
+            if (!field_F9_6) {
+                if (!sub_8027378()) {
+                    sub_8029888(0, 0);
+                    DmaStop(0);
+                    field_F9_6 = 1;
+                }
+                break;
+            }
+            switch (field_12A) {
+                case 7:
+                case 8:
+                    if (field_246_2 == 7 && field_12A != 8) {
+                        field_2BB = leader->direction;
+                        field_2BA = leader->angle;
+                    }
+                    leader->field_350_14 = 0;
+                    sub_8027D64(this);
+                    field_2B8_6 = field_12A == 8;
+                    break;
+                case 9:
+                    sub_8029024(this, 0);
+                    sub_8028FBC(this);
+                    field_F9_4 = 1;
+                    break;
+                case 11:
+                    sub_80290CC(this, -1);
+                    sub_8027558();
+                    field_F9_4 = 1;
+                    break;
+                case 12:
+                    sub_8029070(this);
+                    sub_80275F4();
+                    field_F9_4 = 1;
+                    break;
+                case 13:
+                    sub_8029060(this);
+                    sub_8027688();
+                    field_F9_4 = 1;
+                    break;
+                case 14:
+                    sub_8029030(this, 0, 0);
+                    sub_802772C();
+                    field_F9_4 = 1;
+                    break;
+                case 15:
+                    sub_8028F40(this);
+                    sub_802814C(this);
+                    return;
+                case 16:
+                    sub_8028F2C(this);
+                    sub_8028EF4(this);
+                    return;
+                case 17: {
+                    int oldRoomId;
+                    int oldDirection;
+                    s32 oldX, oldY, oldZ, oldHeight;
+
+                    sub_802DDB4(this, leader, 0, 0);
+                    sub_802DDB4(this, follower, 0, 0);
+                    luigiLeads ^= 1;
+                    dword_3000FD0->field_528 = luigiLeads;
+                    follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
+                    oldRoomId = followerRoomId;
+                    oldDirection = field_2D8_5;
+                    oldX = field_2DC;
+                    oldY = field_2E0;
+                    oldZ = field_2E4;
+                    oldHeight = field_2E8;
+                    field_2D8_0 = luigiLeads ^ 1;
+                    followerRoomId = roomId;
+                    field_2D8_5 = follower->direction;
+                    field_2DC = follower->x;
+                    field_2E0 = follower->y;
+                    field_2E4 = follower->z;
+                    field_2E8 = follower->height;
+                    leader->field_350_14 = 0;
+                    follower->field_350_14 = 0;
+                    sub_8027E90(this, oldRoomId, 0, oldDirection, oldX, oldY, oldZ + oldHeight, 0, 0, -1, true);
+                    leader->field_352_7 = 1;
+                    follower->field_352_7 = 0;
+                    break;
+                }
+            }
+            field_12A = 0;
+            return;
+
+        case 10:
+            if (!field_F9_6) {
+                sub_803CB5C(this);
+                if (!sub_803E9F0(this)) {
+                    field_F9_6 = 1;
+                    if (field_291_2) {
+                        sub_8027A04(this, field_2AA, field_2A8_0, field_2A8_5, field_2A9_2, -1, -1, 0, 0, 0,
+                                    field_2A9_5);
+                        start_battle_8027AC4(this);
+                        field_12A = 0;
+                        return;
+                    }
+                }
+            }
+            break;
+    }
+
+    sub_802A608(this);
+    sub_802C390(this);
+
+    if (field_12A == 2) {
+        if (sub_8025D24(4) && !field_209_0 && leader->airFrames == -1 && follower->airFrames == -1
+            && leader->state <= 1 && follower->state <= 1) {
+            if (field_208_0) {
+                if (brothersTogether) {
+                    if (!leader->sub_8047C18(follower)) {
+                        play_sfx_80195B4(luigiLeads == 0 ? 0x1B : 9, -1);
+                        sub_802E854(this, 0);
+                    }
+                } else {
+                    if (field_2D8_0 == 0x1F) {
+                        play_sfx_80195B4(luigiLeads == 0 ? 0x1B : 9, -1);
+                    } else if (follower->field_368->field_14 != -1) {
+                        follower->field_368->field_10[0] = follower->field_368->field_14;
+                        follower->field_368->field_14 = 0xFF;
+                    }
+                    sub_802EC64(this, 0);
+                    if (field_2D8_0 != 0x1F) {
+                        leader->field_368->field_14 = leader->field_368->field_10[0];
+                        leader->field_368->field_10[0] = 0;
+                    }
+                }
+            } else {
+                sub_8029878(this);
+            }
+        }
+        if (sub_8025D24(5) && sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x224)) {
+            if (!field_20B_7) {
+                sub_8027030(2, 8, 0, 0xFFFF, 0xFFFF);
+                play_sfx_80195B4(0x54, -1);
+                field_12A = 11;
+            } else {
+                sub_8029878(this);
+            }
+        }
+    }
+
+    if (!field_291_0 || field_290 < 0) {
+        object = objects;
+        for (count = field_10B; count != 0; count--, object++) {
+            if (*object != NULL) {
+                (*object)->method11();
+                (*object)->method17();
+            }
+        }
+        if (field_11A != 0) {
+            object = &objects[field_11A];
+            for (count = field_11B; count != 0; count--, object++) {
+                if (!(*object)->field_214_21) {
+                    sub_8051208(*object, frames);
+                }
+            }
+        }
+        if (field_11C != 0) {
+            object = &objects[field_11C];
+            for (count = field_11D; count != 0; count--, object++) {
+                if (!(*object)->field_2B5_3) {
+                    (*object)->updateAirborne();
+                }
+            }
+        }
+        if (field_209_0) {
+            sub_803C5A4(this);
+        }
+        if (!field_2A9_6) {
+            if (field_291_0) {
+                sub_803CF64(this);
+            } else if (leader->field_358_3) {
+                sub_802F938(this);
+            } else {
+                sub_802A740(this);
+            }
+        }
+        sub_802FD70(this);
+        leader->sub_8048174(field_246_2);
+        follower->sub_8048174(field_246_2);
+        if (field_113 != 0) {
+            object = &objects[field_112];
+            for (count = field_113; count != 0; count--, object++) {
+                ((FieldMonster*)*object)->sub_8050078();
+            }
+        }
+        for (i = 0; i < 8; i++) {
+            shotBullets[i]->sub_804E33C(objects, field_10B);
+        }
+    }
+
+    if (!field_291_0 || field_290 <= 0) {
+        if ((u8)(field_12A - 7) > 1 && field_F8_6 && field_F9_0 == 0) {
+            sub_80286AC(this, field_FA_5);
+        }
+        field_27E = field_27A + field_12E;
+        field_280 = field_27C + field_130;
+        if (field_27E < 0) {
+            field_27E = 0;
+        } else if (field_27E > field_286 - 240) {
+            field_27E = field_286 - 240;
+        }
+        if (field_280 < 0) {
+            field_280 = 0;
+        } else if (field_280 > field_288 - 160) {
+            field_280 = field_288 - 160;
+        }
+        if (!field_291_0) {
+            count = field_10B;
+            for (i = 0; i < count; i++) {
+                objects[i]->method8(field_27E, field_280, objects);
+                objects[i]->method6(0);
+                objects[i]->method9();
+            }
+        } else {
+            count = field_10B;
+            for (i = 0; i < count; i++) {
+                objects[i]->method8(field_27E, field_280, objects);
+                objects[i]->method9();
+            }
+        }
+        for (i = 0; i < 8; i++) {
+            shotBullets[i]->sub_804FA94(field_27E, field_280);
+            shotBullets[i]->sub_804E450();
+        }
+    }
+
+    if (!field_291_0 || field_290 < 0) {
+        if (brothersTogether && leader->y == follower->y) {
+            if (field_209_7 == 1) {
+                leader->sprite->field_E--;
+            } else if (field_209_7 == 2) {
+                follower->sprite->field_E--;
+            }
+        }
+        if ((s8)leader->field_1 != -1) {
+            other = objects[(s8)leader->field_1];
+            layer = other->sprite->field_1F_2;
+            if (layer > other->sprite->field_1F_0) {
+                layer = other->sprite->field_1F_0;
+            }
+            if ((int)layer < leader->sprite->field_1F_0) {
+                leader->sprite->field_1F_0 = layer;
+            }
+            if ((int)layer < leader->sprite->field_1F_2) {
+                leader->sprite->field_1F_2 = layer;
+            }
+            if ((int)layer < leader->field_36C->field_1F_0) {
+                leader->field_36C->field_1F_0 = layer;
+            }
+            if ((int)layer < leader->field_36C->field_1F_2) {
+                leader->field_36C->field_1F_2 = layer;
+            }
+            if (leader->sprite->field_E >= other->sprite->field_E) {
+                leader->sprite->field_E = other->sprite->field_E - 1;
+            }
+            if (leader->field_36C->field_E >= other->sprite->field_E) {
+                leader->field_36C->field_E = other->sprite->field_E - 1;
+            }
+        }
+        if ((s8)follower->field_1 != -1) {
+            other = objects[(s8)follower->field_1];
+            layer = other->sprite->field_1F_2;
+            if (layer > other->sprite->field_1F_0) {
+                layer = other->sprite->field_1F_0;
+            }
+            if ((int)layer < follower->sprite->field_1F_0) {
+                follower->sprite->field_1F_0 = layer;
+            }
+            if ((int)layer < follower->sprite->field_1F_2) {
+                follower->sprite->field_1F_2 = layer;
+            }
+            if ((int)layer < follower->field_36C->field_1F_0) {
+                follower->field_36C->field_1F_0 = layer;
+            }
+            if ((int)layer < follower->field_36C->field_1F_2) {
+                follower->field_36C->field_1F_2 = layer;
+            }
+            if (follower->sprite->field_E >= other->sprite->field_E) {
+                follower->sprite->field_E = other->sprite->field_E - 1;
+            }
+            if (follower->field_36C->field_E >= other->sprite->field_E) {
+                follower->field_36C->field_E = other->sprite->field_E - 1;
+            }
+        }
+        if (leader->y / 256 < follower->y / 256
+            || (leader->y / 256 == follower->y / 256 && field_209_7 == 2)) {
+            leader->sub_8049C38(objects, field_10B);
+            follower->sub_8049C38(objects, field_10B);
+        } else {
+            follower->sub_8049C38(objects, field_10B);
+            leader->sub_8049C38(field_246_2 == 3 ? &objects[1] : objects,
+                                field_246_2 == 3 ? field_10B - 1 : field_10B);
+        }
+        sub_8029624(this);
+        sub_8021F7C();
+        if (leader->field_350_0 || leader->field_350_4) {
+            field_11E = field_D0->field_0;
+        }
+    }
+
+    field_304->sub_8057C9C(field_27E, field_280);
+    if (field_FC_2) {
+        sub_80EF618(evts, field_FC_1 ? 0x74 : 4, field_1C->field_27C, 0);
+        field_FC_2 = 0;
+    }
+}
+#endif
 
 void FieldManager::sub_80254C0() {
     CpuCopy32(dword_3000FC0, field_20->data, 0x574);
