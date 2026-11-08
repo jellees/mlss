@@ -35,7 +35,7 @@ _08023E00:
 	cmp r0, #0x00
 	beq _08023E1A
 	mov r0, r10
-	bl start_battle_8027AC4
+	bl start_battle_8027AC4__12FieldManager
 	bl _080254A2
 _08023E1A:
 	movs r0, #0x96
@@ -821,7 +821,7 @@ _0802447E:
 	ands r0, r2
 	strb r0, [r1, #0x00]
 	mov r0, r10
-	bl sub_8027D64
+	bl sub_8027D64__12FieldManager
 	movs r3, #0x00
 	movs r0, #0x95
 	lsls r0, r0, #0x01
@@ -1149,9 +1149,9 @@ _080246D8:
 	lsrs r4, r4, #0x1F
 	str r4, [sp, #0x018]
 	mov r0, r10
-	bl sub_8027A04
+	bl sub_8027A04__12FieldManagerUsUcUciiiiiii
 	mov r0, r10
-	bl start_battle_8027AC4
+	bl start_battle_8027AC4__12FieldManager
 	movs r0, #0x95
 	lsls r0, r0, #0x01
 	add r0, r10

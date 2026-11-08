@@ -788,7 +788,7 @@ void FieldManager::update_field_8023DD4() {
         return;
     }
     if (field_2A8_6) {
-        start_battle_8027AC4(this);
+        start_battle_8027AC4();
         return;
     }
     if (field_12C_2 != -2) {
@@ -989,7 +989,7 @@ void FieldManager::update_field_8023DD4() {
                         field_2BA = leader->angle;
                     }
                     leader->field_350_14 = 0;
-                    sub_8027D64(this);
+                    sub_8027D64();
                     field_2B8_6 = field_12A == 8;
                     break;
                 case 9:
@@ -1066,9 +1066,9 @@ void FieldManager::update_field_8023DD4() {
                 if (!sub_803E9F0(this)) {
                     field_F9_6 = 1;
                     if (field_291_2) {
-                        sub_8027A04(this, field_2AA, field_2A8_0, field_2A8_5, field_2A9_2, -1, -1, 0,
-                                    0, 0, field_2A9_5);
-                        start_battle_8027AC4(this);
+                        sub_8027A04(field_2AA, field_2A8_0, field_2A8_5, field_2A9_2, -1, -1, 0, 0, 0,
+                                    field_2A9_5);
+                        start_battle_8027AC4();
                         field_12A = 0;
                         return;
                     }
@@ -2277,3 +2277,111 @@ void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMons
     sub_803C8A4(this, 0, 1);
 }
 #endif
+
+void FieldManager::sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6,
+                               int arg7, int arg8, int arg9, int arg10) {
+    int value = arg3;
+
+    field_2AC = arg1;
+    field_2AE = arg5;
+    field_2AF = arg6;
+    field_2A8_7 = arg7;
+    field_2A9_1 = arg8;
+    field_2A9_0 = arg9;
+    field_2A8_0 = monsterIndex;
+    field_2A8_5 = value;
+    field_2A9_2 = mode;
+    field_2A9_5 = arg10;
+    field_2A8_6 = 1;
+}
+
+void FieldManager::start_battle_8027AC4() {
+    int i;
+
+    sub_801A6B0();
+    field_2B0 = field_2A9_2;
+    if (brothersTogether) {
+        field_2B1_2 = luigiLeads;
+    } else if (field_208_6) {
+        field_2B1_2 = 0;
+    } else {
+        field_2B1_2 = field_2A9_5 + 2;
+    }
+    field_2B1_4 = field_2A9_5;
+    field_2B4 = -1;
+    sub_8019628(0);
+
+    for (i = 0; i < 2; i++) {
+        FieldPlayerCharacter* player = i == 0 ? leader : follower;
+
+        if (player->field_298_0) {
+            player->field_218 = player->field_356;
+            player->direction = player->field_358_0;
+            player->sprite->field_11_6 = player->field_298_1;
+            player->sprite->field_1F_0 = player->field_298_2;
+            player->sprite->field_1F_2 = player->field_298_4;
+            player->sprite->field_12_1 = player->field_298_6;
+            player->sprite->field_12_3 = player->field_299_0;
+            player->sprite->field_12_4 = player->field_299_1;
+            player->sprite->field_20[1] = player->field_29B;
+            player->sprite->field_23 = player->field_29C;
+            player->sprite->field_2A = player->field_29E;
+            player->sprite->field_2C = player->field_2A0;
+            player->sprite->xScale = player->field_2A2;
+            player->sprite->yScale = player->field_2A4;
+            player->field_298_0 = 0;
+            player->field_212_5 = 0;
+        }
+    }
+
+    sub_80273E4();
+    if (field_304 != NULL) {
+        delete field_304;
+        field_304 = NULL;
+    }
+    runtime_install_interrupt_callback(2, NULL);
+    state = 2;
+    byte_3000C24 = 1;
+    if (dword_3000C78 == NULL) {
+        dword_3000C78 = sub_800063C;
+    }
+    init_btl_process_80FC25C(operator new(0x1C, 0, "BTL ", 0), 8, "BTL ", &field_2AC);
+}
+
+void FieldManager::sub_8027D64() {
+    int x;
+    int y;
+    u32 i;
+
+    if (!field_E4->field_4_0) {
+        switch ((u32)field_E4->direction) {
+            case 0:
+            case 4:
+                x = field_2D0;
+                y = 0xF00;
+                break;
+            case 2:
+            case 6:
+                x = 0x800;
+                y = field_2D4;
+                break;
+        }
+        x += field_E4->cellX << 12;
+        y += field_E4->cellY << 12;
+    } else {
+        x = (field_E4->cellX << 12) + ((field_E4->offsetX + 8) << 8);
+        y = (field_E4->cellY << 12) + ((field_E4->offsetY * 16 + 0xF0) << 4);
+    }
+
+    for (i = 0; i < 8; i++) {
+        if (follower->state == word_839F610[i]) {
+            sub_8029A0C(this, 0, 0);
+            break;
+        }
+    }
+
+    sub_8027E90(this, field_E4->roomId, field_E4->field_A_0, field_E4->direction, x, y,
+                field_E4->field_4_5 == 0 ? -1 : -2, leader->height > 0x1E00 ? 0x1E00 : leader->height,
+                0, -3, true);
+    field_E4 = NULL;
+}

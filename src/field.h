@@ -51,6 +51,24 @@ struct FieldStruct3 {
     u8* field_8;
 };
 
+// FieldManager::field_E4: where sub_8027D64 sends the player (arguments of sub_8027E90).
+struct FieldStruct7 {
+    u8 pad_0[0x4];
+    u16 field_4_0 : 1;
+    u16 direction : 3;
+    u16 field_4_4 : 1;
+    u16 field_4_5 : 1;
+    u16 roomId : 9;
+    u16 field_4_15 : 1;
+    u8 pad_6;
+    u8 cellX;
+    u8 cellY;
+    u8 offsetX : 4;
+    u8 offsetY : 4;
+    u8 field_A_0 : 1;
+    u8 field_A_1 : 7;
+};
+
 // "FMBK" buffer (FieldManager::field_20): a copy of the field state.
 struct FieldBackup {
     u8 field_0_0 : 1;
@@ -79,7 +97,7 @@ class FieldManager : public Process {
     u8* field_D8;
     u8* field_DC; // Count, first index and offset of the 8-byte entries read by sub_8026C78
     void* field_E0;
-    u32 field_E4;
+    struct FieldStruct7* field_E4;
     u32 field_E8;
     u32 field_EC;
     u32 field_F0;
@@ -250,9 +268,14 @@ class FieldManager : public Process {
     u8 field_2A9_6 : 1;
     u8 field_2A9_7 : 1;
     u16 field_2AA;
-    u8 pad_2AC[0x5];
+    u16 field_2AC;
+    s8 field_2AE;
+    s8 field_2AF;
+    u8 field_2B0;
     u8 field_2B1_0 : 2;
-    u8 field_2B1_2 : 6;
+    u8 field_2B1_2 : 2;
+    u8 field_2B1_4 : 1;
+    u8 field_2B1_5 : 3;
     s16 field_2B2;
     s16 field_2B4;
     u8 pad_2B6[0x2];
@@ -267,7 +290,8 @@ class FieldManager : public Process {
     u8 field_2BB;
     u8 pad_2BC[0x10];
     u32 field_2CC;
-    u8 pad_2D0[0x8];
+    s32 field_2D0;
+    s32 field_2D4;
     u8 field_2D8_0 : 5;
     u8 field_2D8_5 : 3;
     u8 pad_2D9;
@@ -315,6 +339,10 @@ class FieldManager : public Process {
     void sub_802772C();
     void sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMonster* monster, bool arg4);
     void update_field_8023DD4();
+    void start_battle_8027AC4();
+    void sub_8027D64();
+    void sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,
+                     int arg8, int arg9, int arg10);
 };
 
 extern "C" {
