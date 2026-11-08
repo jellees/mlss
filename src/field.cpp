@@ -6,6 +6,7 @@
 #include "field.h"
 #include "sign.h"
 #include "game_mode.h"
+#include "load_menu.h"
 
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/init_fldm_8021FF8.s\"");
@@ -202,7 +203,7 @@ void FieldManager::update() {
             field_2B2 = -2;
             return;
         } else if (field_2B1_0 == 2 && !field_2A9_0) {
-            sub_802814C(this);
+            sub_802814C();
             return;
         }
     }
@@ -808,7 +809,7 @@ void FieldManager::update_field_8023DD4() {
         return;
     }
     if (field_12D_4) {
-        sub_802814C(this);
+        sub_802814C();
         return;
     }
     if (field_12D_5) {
@@ -1019,7 +1020,7 @@ void FieldManager::update_field_8023DD4() {
                     break;
                 case 15:
                     sub_8028F40(this);
-                    sub_802814C(this);
+                    sub_802814C();
                     return;
                 case 16:
                     sub_8028F2C(this);
@@ -2464,3 +2465,37 @@ void FieldManager::sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y,
     state = 0;
 }
 #endif
+
+void FieldManager::sub_802814C() {
+    u8 result;
+
+    sub_801A6B0();
+    if (field_12D_4) {
+        sub_80273E4();
+        if (field_304 != NULL) {
+            delete field_304;
+            field_304 = NULL;
+        }
+        runtime_install_interrupt_callback(2, NULL);
+        field_12D_4 = 0;
+    }
+
+    result = sub_80E99E0(0x1BE5);
+    if (result != 0) {
+        disable();
+        state = 2;
+        sub_8054378(operator new(0x68, 0, "OVER", 0), 8, "OVER", result);
+    } else {
+        delete this;
+        sub_8123340();
+        dword_3001034(0, dword_3000FC0, 0x570);
+        if (sub_81251F0()) {
+            stru_3000D40.field_0_1 = 1;
+            sub_80FC198();
+            sub_812335C();
+            make_fldm_801AF5C(1);
+        } else {
+            new (0, "LOAD", 0) LoadMenu(8, "LOAD", 0);
+        }
+    }
+}

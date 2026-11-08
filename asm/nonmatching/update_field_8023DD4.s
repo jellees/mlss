@@ -890,7 +890,7 @@ _08024528:
 	bl sub_8028F40
 _0802452E:
 	mov r0, r10
-	bl sub_802814C
+	bl sub_802814C__12FieldManager
 	bl _080254A2
 _08024538:
 	mov r0, r10
