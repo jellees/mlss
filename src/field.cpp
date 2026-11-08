@@ -182,10 +182,6 @@ FieldManager::~FieldManager() {
     gGameState.field_88A_5 = 0;
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/update__12FieldManager.s\"");
-#else
 static inline int getDistance(FieldObject* a, FieldObject* b) {
     int dx = a->x - b->x;
     int dy = a->y - b->y;
@@ -213,6 +209,8 @@ void FieldManager::update() {
 
     switch (state) {
         case 0: {
+            bool flag;
+
             *(vu16*)0x2000080 = field_128;
             *(vu16*)PLTT = field_128;
             BUFFER_REG_DISPCNT = 0;
@@ -257,7 +255,8 @@ void FieldManager::update() {
 
             dword_3000FD0->field_530 = dword_3000FD0->field_528;
             field_D4 = &stru_83A78D4[roomId];
-            field_FA_10 = (field_D4->field_2 & 0x10) != 0;
+            flag = (field_D4->field_2 & 0x10) != 0;
+            field_FA_10 = flag;
             field_126 = field_D4->field_10;
             field_D8 = sub_80FB7E0(field_D4->field_E);
             field_DC = sub_80FB7F0(field_D4->field_16);
@@ -269,6 +268,7 @@ void FieldManager::update() {
             if (field_F8_1) {
                 struct SaveSlotData* data = &dword_3000FFC->slots[stru_3000D40.slot].data;
                 struct SaveSlotPlayer* saved = &data->field_4[luigiLeads];
+                struct SaveSlotPlayer* followerSaved;
 
                 leader = (FieldPlayerCharacter*)objects[luigiLeads];
                 follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
@@ -280,26 +280,25 @@ void FieldManager::update() {
                 leader->field_20C_5 = 0;
                 leader->field_20C_6 = leader->field_20C_7 = brothersTogether ^ 1;
 
-                saved = &data->field_4[luigiLeads ^ 1];
-                if (saved->roomId == roomId) {
-                    follower->initialDirection = saved->field_2_0;
-                    follower->x = saved->field_4 << 8;
-                    follower->y = saved->field_6 << 8;
-                    follower->z = saved->field_8 << 8;
-                    follower->height = saved->field_A << 8;
+                followerSaved = &data->field_4[luigiLeads ^ 1];
+                if (followerSaved->roomId == roomId) {
+                    follower->initialDirection = followerSaved->field_2_0;
+                    follower->x = followerSaved->field_4 << 8;
+                    follower->y = followerSaved->field_6 << 8;
+                    follower->z = followerSaved->field_8 << 8;
+                    follower->height = followerSaved->field_A << 8;
                     follower->field_20C_5 = 0;
                     follower->field_20C_6 = follower->field_20C_7 = brothersTogether ^ 1;
                     field_2D8_0 = 31;
                 } else {
                     field_2D8_0 = luigiLeads ^ 1;
-                    followerRoomId = saved->roomId;
-                    field_2D8_5 = saved->field_2_0;
-                    field_2DC = saved->field_4 << 8;
-                    field_2E0 = saved->field_6 << 8;
-                    field_2E4 = saved->field_8 << 8;
-                    field_2E8 = saved->field_A << 8;
-                    follower->field_20C_25 = 0;
-                    follower->field_20C_0 = 0;
+                    followerRoomId = followerSaved->roomId;
+                    field_2D8_5 = followerSaved->field_2_0;
+                    field_2DC = followerSaved->field_4 << 8;
+                    field_2E0 = followerSaved->field_6 << 8;
+                    field_2E4 = followerSaved->field_8 << 8;
+                    field_2E8 = followerSaved->field_A << 8;
+                    follower->field_20C_0 = follower->field_20C_25 = 0;
                 }
 
                 if (field_246_2 != 0) {
@@ -764,9 +763,15 @@ void FieldManager::update() {
             break;
     }
 }
-#endif
 
-// https://decomp.me/scratch/TODO
+// Unreferenced data that follows update's strings in .rodata. Probably a string (it ends in '%') from
+// an expression the compiler removed.
+asm_unified(".section .rodata\n"
+            ".align 2, 0\n"
+            ".byte 0xFF, 0x0B, 0x01, 0xFF, 0x35, 0xFF, 0x41, 0xFF, 0x25, 0x00, 0x00, 0x00\n"
+            ".text");
+
+// https://decomp.me/scratch/p5m2d
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/update_field_8023DD4.s\"");
 #else

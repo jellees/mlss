@@ -8671,8 +8671,8 @@ _0805CB44: .4byte 0x0000FDF0
 _0805CB48: .4byte 0x06003000
 _0805CB4C: .4byte 0x02000008
 _0805CB50: .4byte 0x02000010
-	thumb_func_start sub_805CB54
-sub_805CB54:
+	thumb_func_start sub_805CB54__4S_FX
+sub_805CB54__4S_FX:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -8849,8 +8849,8 @@ _0805CCD2:
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00
-	thumb_func_start sub_805CCD8
-sub_805CCD8:
+	thumb_func_start __4S_FX
+__4S_FX:
 	movs r1, #0x00
 	strb r1, [r0, #0x0A]
 	bx lr
