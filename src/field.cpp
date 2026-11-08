@@ -1050,8 +1050,8 @@ void FieldManager::update_field_8023DD4() {
                     field_2E8 = follower->height;
                     leader->field_350_14 = 0;
                     follower->field_350_14 = 0;
-                    sub_8027E90(this, oldRoomId, 0, oldDirection, oldX, oldY, oldZ + oldHeight, 0, 0,
-                                -1, true);
+                    sub_8027E90(oldRoomId, 0, oldDirection, oldX, oldY, oldZ + oldHeight, 0, 0, -1,
+                                true);
                     leader->field_352_7 = 1;
                     follower->field_352_7 = 0;
                     break;
@@ -2113,7 +2113,7 @@ bool FieldManager::sub_8027378() {
 void FieldManager::sub_80273E4() {
     int i;
 
-    sub_803C610();
+    sub_803C610(this);
     sub_802563C();
     sub_8025ACC();
     field_120_0 = gGameState.field_3C.field_3C_0;
@@ -2380,8 +2380,87 @@ void FieldManager::sub_8027D64() {
         }
     }
 
-    sub_8027E90(this, field_E4->roomId, field_E4->field_A_0, field_E4->direction, x, y,
+    sub_8027E90(field_E4->roomId, field_E4->field_A_0, field_E4->direction, x, y,
                 field_E4->field_4_5 == 0 ? -1 : -2, leader->height > 0x1E00 ? 0x1E00 : leader->height,
                 0, -3, true);
     field_E4 = NULL;
 }
+
+// https://decomp.me/scratch/RTq1A
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8027E90__12FieldManagerUsUsUciiiiiScb.s\"");
+#else
+void FieldManager::sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height,
+                               int arg8, s8 arg9, bool arg10) {
+    int i;
+
+    sub_803C610(this);
+    sub_801A6B0();
+
+    if (arg10 == true && !brothersTogether && !field_208_6 && field_2D8_0 == 0x1F) {
+        field_2D8_0 = luigiLeads ^ 1;
+        followerRoomId = this->roomId;
+        field_2D8_5 = follower->direction;
+        field_2DC = follower->x;
+        field_2E0 = follower->y;
+        field_2E4 = follower->z;
+        field_2E8 = follower->height;
+    }
+
+    for (i = 0; i < field_10B; i++) {
+        delete objects[i];
+    }
+    for (i = 0; i < 8; i++) {
+        delete shotBullets[i];
+    }
+
+    if (field_310) {
+        delete field_310;
+        field_310 = NULL;
+    }
+    if (field_30C) {
+        delete field_30C;
+        field_30C = NULL;
+    }
+    sub_80F0184(evts);
+    sub_80E8DC0();
+    if (field_308) {
+        sub_805C73C(field_308, 3);
+        field_308 = NULL;
+    }
+    if (field_314) {
+        sub_81166AC(field_314, 3);
+        field_314 = NULL;
+    }
+    if (field_1FC) {
+        sub_805CCC0(field_1FC, 3);
+        field_1FC = NULL;
+    }
+    if (field_304) {
+        delete field_304;
+        field_304 = NULL;
+    }
+    runtime_install_interrupt_callback(2, NULL);
+    evts->process->disable();
+    bevs->process->disable();
+
+    field_2B8_4 = arg2;
+    field_2B8_1 = direction;
+    field_2BC = x;
+    field_2C0 = y;
+    field_2C4 = z;
+    field_2C8 = height;
+    field_2CC = arg8;
+    field_2B9 = arg9;
+    if (field_F8_0) {
+        sub_8021FD4();
+        field_F8_0 = 0;
+    }
+    field_2B8_0 = 1;
+    field_2B8_6 = 0;
+    this->roomId = roomId;
+    field_F9_3 = 1;
+    field_F8_1 = 0;
+    state = 0;
+}
+#endif

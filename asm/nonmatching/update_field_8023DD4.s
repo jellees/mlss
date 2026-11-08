@@ -1065,7 +1065,7 @@ _08024548:
 	strb r2, [r0, #0x00]
 	mov r0, r10
 	movs r2, #0x00
-	bl sub_8027E90
+	bl sub_8027E90__12FieldManagerUsUsUciiiiiScb
 	ldr r3, [sp, #0x01C]
 	ldr r2, [r3, #0x00]
 	ldr r3, _080246D4 @ =0x00000352

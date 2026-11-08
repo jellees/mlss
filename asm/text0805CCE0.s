@@ -291727,7 +291727,7 @@ _080F0E40:
 	ands r5, r6
 	add r4, sp, #0x018
 	strb r5, [r4, #0x00]
-	bl sub_8027E90
+	bl sub_8027E90__12FieldManagerUsUsUciiiiiScb
 	movs r0, #0x00
 	add sp, #0x01C
 	pop {r4, r5, r6, r7}
@@ -291783,7 +291783,7 @@ _080F0EAE:
 	ands r5, r6
 	add r4, sp, #0x018
 	strb r5, [r4, #0x00]
-	bl sub_8027E90
+	bl sub_8027E90__12FieldManagerUsUsUciiiiiScb
 	movs r0, #0x00
 	add sp, #0x01C
 	pop {r4, r5, r6, r7}
