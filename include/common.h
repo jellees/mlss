@@ -8,6 +8,7 @@ extern "C" {
 // Defined in src/process.h.
 struct Process;
 struct FieldManager;
+struct FieldObject;
 struct SignMapEntry;
 
 struct struc_3000388 {

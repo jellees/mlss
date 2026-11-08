@@ -34,12 +34,12 @@ class S_MP : public Process {
     u8 layerFlags[3]; // 0x80: locked to the scroll position
     u8 pad8D[3];
     u8 field_90[3];
-    u8* mapw;     // "MAPW"
-    u8* mpdw;     // "MPDW"
-    u8* mids;     // "MIDS"
-    u8* midt;     // "MIDT"
-    u8* cmpw;     // "CMPW"
-    u8* mpcl;     // "MPCL"
+    u8* mapw; // "MAPW"
+    u8* mpdw; // "MPDW"
+    u8* mids; // "MIDS"
+    u8* midt; // "MIDT"
+    u8* cmpw; // "CMPW"
+    u8* mpcl; // "MPCL"
     u8 padAC[0x4CC];
     u8 field_578;
     u8 field_579; // Set when MAPW must be copied to VRAM

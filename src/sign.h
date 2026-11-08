@@ -48,9 +48,9 @@ class Sign : public Process {
     // (unless scrollY is height - 160) and left (unless scrollX is 0)
     struct Sprite* arrows[4];
     struct Sprite* youAreHere; // Miniature sign board at mapPosition - scroll
-    SignRenderer* renderer;  // "SBDR"
-    S_MP* map;               // "S_MP"
-    Process* panm;           // "PANM", made by init_ybpa_process_8114B4C
+    SignRenderer* renderer;    // "SBDR"
+    S_MP* map;                 // "S_MP"
+    Process* panm;             // "PANM", made by init_ybpa_process_8114B4C
 
     Sign(u8 priority, char* label, u16 roomId);
     ~Sign();
