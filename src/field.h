@@ -129,7 +129,7 @@ class FieldManager : public Process {
     u16 field_FC_1 : 1;
     u16 field_FC_2 : 1;
     u16 field_FC_3 : 4;
-    u16 field_FC_7 : 4;
+    s16 field_FC_7 : 4;
     u16 field_FC_11 : 1;
     u16 field_FC_12 : 4;
     u16 field_FE;
@@ -401,14 +401,21 @@ class FieldManager : public Process {
     void sub_802955C();
     void sub_8029624();
     void sub_80296D0();
+    void sub_802973C(FieldObject* object, int type, bool arg3, int offset, bool playSound);
+    void sub_8029788();
+    void sub_80297B8();
+    void sub_80297D8(int arg);
+    void sub_8029804();
+    void sub_8029830();
+    void sub_8029878();
+    void sub_8029934();
+    void sub_8029A0C(int mode, int arg2);
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
     void sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,
                      int arg8, int arg9, int arg10);
 };
 
-extern "C" {
-void sub_8029934(FieldManager*);
-}
+extern "C" {}
 
 #endif

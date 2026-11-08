@@ -626,7 +626,7 @@ _08022470:
 	adds r0, r7, r2
 	str r5, [r0, #0x00]
 	adds r0, r7, #0x0
-	bl sub_8029934
+	bl sub_8029934__12FieldManager
 	ldr r3, _08022548 @ =0x0300034C
 	ldr r0, _0802254C @ =0x0000088A
 	adds r2, r3, r0

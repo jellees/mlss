@@ -13,15 +13,17 @@
 struct FieldStruct4 {
     u8 field_0;
     u8 field_1; // Previous field_0 (FieldPlayerCharacter::sub_8049BD8)
-    u8 pad_2[0x2];
+    u8 field_2;
+    u8 pad_3;
     u16 field_4;
     u16 field_6;
-    u8 pad_8[0x8];
+    u32 field_8;
+    u32 field_C;
     u8 field_10[2]; // Indexed by !FieldPlayerCharacter::field_352_7
-    u8 field_12;
-    s8 field_13;
-    s8 field_14;
-    u8 pad_15;
+    s8 field_12 : 8;
+    s8 field_13 : 8;
+    s8 field_14 : 8;
+    s8 field_15 : 8;
     u8 field_16_0 : 7;
     u8 field_16_7 : 1;
     u8 field_17_0 : 7; // FieldPlayerCharacter::method5's copy of field_16_0
@@ -99,7 +101,10 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_35A_2 : 1;
     u16 field_35A_3 : 8;
     u16 field_35A_11 : 1;
-    u16 field_35A_12 : 4;
+    u16 field_35A_12 : 1;
+    u16 field_35A_13 : 1;
+    u16 field_35A_14 : 1;
+    u16 field_35A_15 : 1;
     u8 pad_35C[0x6];
     s16 field_362; // method5's copy of velocityX
     s16 field_364; // method5's copy of velocityY

@@ -144,7 +144,7 @@ FieldManager::FieldManager(u8 priority, char* label, int roomId, bool arg4, bool
     fldm->field_1F8 = 0;
     fldm->field_2B2 = -2;
     fldm->field_318 = 0;
-    sub_8029934(fldm);
+    fldm->sub_8029934();
     gGameState.field_88A_5 = 1;
     dword_3000FD0->field_528 = 0;
     dword_3000FD0->field_530 = 0;
@@ -507,7 +507,7 @@ void FieldManager::update() {
                     || leader->field_368->field_0 == 0x10 || leader->field_368->field_0 == 0x11
                     || field_246_2 == 5 || field_246_2 == 6) {
                     field_246_2 = 0;
-                    sub_8029A0C(this, 0, 0);
+                    sub_8029A0C(0, 0);
                 }
             }
 
@@ -544,14 +544,14 @@ void FieldManager::update() {
                         break;
                     case 1: {
                         u8 savedIndex = shotBulletIndex;
-                        sub_8029A0C(this, field_246_2, 0);
+                        sub_8029A0C(field_246_2, 0);
                         shotBulletIndex = savedIndex;
                         break;
                     }
                     case 2:
                     case 3:
                     case 4:
-                        sub_8029A0C(this, field_246_2, 0);
+                        sub_8029A0C(field_246_2, 0);
                         if (leaderStruct.field_0 == 10) {
                             leader->sub_8049000(0x1045);
                             field_209_7 = 2;
@@ -599,7 +599,7 @@ void FieldManager::update() {
                         follower->height = 0;
                     }
                 }
-                sub_8029A0C(this, 0, 0);
+                sub_8029A0C(0, 0);
                 leader->method7(1);
                 if (brothersTogether) {
                     follower->z = leader->z;
@@ -731,7 +731,7 @@ void FieldManager::update() {
             field_12D_0 = 0;
             field_12D_4 = 0;
             field_12C_2 = -2;
-            sub_80297B8(this);
+            sub_80297B8();
             sub_801A548();
             dword_3000C78 = NULL;
             byte_3000C24 = 0;
@@ -957,7 +957,7 @@ void FieldManager::update_field_8023DD4() {
 
         case 5:
             if (--field_26E <= 0) {
-                sub_8029A0C(this, 1, 0);
+                sub_8029A0C(1, 0);
                 leader->field_350_14 = 0;
                 follower->field_350_14 = 0;
                 field_12A = 2;
@@ -1105,7 +1105,7 @@ void FieldManager::update_field_8023DD4() {
                     }
                 }
             } else {
-                sub_8029878(this);
+                sub_8029878();
             }
         }
         if (sub_8025D24(5) && sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x224)) {
@@ -1114,7 +1114,7 @@ void FieldManager::update_field_8023DD4() {
                 play_sfx_80195B4(0x54, -1);
                 field_12A = 11;
             } else {
-                sub_8029878(this);
+                sub_8029878();
             }
         }
     }
@@ -1978,7 +1978,7 @@ void FieldManager::sub_8026E94() {
                 sub_802EF18(this);
             } else if (field_246_2 == 5) {
                 field_246_2 = 0;
-                sub_8029A0C(this, 0, 0);
+                sub_8029A0C(0, 0);
             }
         }
         field_2B8_0 = 0;
@@ -2372,12 +2372,12 @@ void FieldManager::sub_8027D64() {
         y += field_E4->cellY << 12;
     } else {
         x = (field_E4->cellX << 12) + ((field_E4->offsetX + 8) << 8);
-        y = (field_E4->cellY << 12) + ((field_E4->offsetY * 16 + 0xF0) << 4);
+        y = (field_E4->cellY << 12) + ((field_E4->offsetY * 16 + 240) * 16);
     }
 
     for (i = 0; i < 8; i++) {
         if (follower->state == word_839F610[i]) {
-            sub_8029A0C(this, 0, 0);
+            sub_8029A0C(0, 0);
             break;
         }
     }
@@ -3139,3 +3139,440 @@ void FieldManager::sub_80296D0() {
         }
     }
 }
+
+void FieldManager::sub_802973C(FieldObject* object, int type, bool arg3, int offset, bool playSound) {
+    sub_80262CC(object->x, object->y, object->z, object->height + ((offset * 16 + 240) * 16), type,
+                arg3, playSound);
+}
+
+static inline int get_Field_FC_7(FieldManager* manager) {
+    return manager->field_FC_7;
+}
+
+void FieldManager::sub_8029788() {
+    if (get_Field_FC_7(this) == 0) {
+        field_304->sub_805C6B8();
+    }
+    field_FC_7 = -1;
+}
+
+void FieldManager::sub_80297B8() {
+    if (get_Field_FC_7(this) == 0) {
+        sub_805BFF0(field_304);
+    }
+}
+
+void FieldManager::sub_80297D8(int arg) {
+    if (arg == 0) {
+        sub_805BED8(field_304);
+        field_FC_7 = 0;
+    }
+}
+
+void FieldManager::sub_8029804() {
+    field_208_1 = 0;
+    leader->field_350_14 = 1;
+}
+
+void FieldManager::sub_8029830() {
+    field_208_1 = 1;
+    leader->field_23E = field_100;
+    leader->field_350_14 = 0;
+}
+
+void FieldManager::sub_8029878() {
+    play_sfx_80195B4(0x50, -1);
+}
+
+void sub_8029888(void (*callback)(void), int index) {
+    if (dword_3000D80[index] != callback) {
+        REG_IME = 0;
+        dword_3000D80[index] = callback;
+        REG_IME = 1;
+    }
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80298B0.s\"");
+#else
+void sub_80298B0(void) {
+    void (**callback)(void) = &dword_3000D80[1];
+
+    do {
+        *callback = NULL;
+        callback--;
+    } while ((int)callback >= (int)dword_3000D80);
+    runtime_install_interrupt_callback(2, sub_8029910);
+}
+#endif
+
+void sub_8029910(void) {
+    int i;
+
+    for (i = 0; i < 2; i++) {
+        if (dword_3000D80[i] != NULL) {
+            dword_3000D80[i]();
+        }
+    }
+}
+
+void FieldManager::sub_8029934() {
+    int i;
+
+    dword_3001034(0, field_20C, 0x30);
+    for (i = 0; i < 2; i++) {
+        field_20C[i].field_0 = 0;
+        field_20C[i].field_8 = dword_839F900[i][0];
+        field_20C[i].field_C = dword_839F900[i][1];
+        field_20C[i].field_10[0] = 0;
+        field_20C[i].field_10[1] = 0;
+        field_20C[i].field_12 = -1;
+        field_20C[i].field_13 = -1;
+        field_20C[i].field_14 = -1;
+        field_20C[i].field_15 = -1;
+        field_20C[i].field_2 = 0;
+        field_20C[i].field_16_0 = 0;
+    }
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8029A0C__12FieldManagerii.s\"");
+#else
+void FieldManager::sub_8029A0C(int mode, int arg2) {
+    FieldPlayerCharacter* mario;
+    FieldPlayerCharacter* luigi;
+    u8 buffer[4];
+
+    field_246_2 = mode;
+    field_208_0 = brothersTogether ^ 1;
+    field_20B_7 = 0;
+    field_209_5 = 0;
+    leader->field_352_6 = 0;
+    if (leader->field_54 == 0) {
+        mario = leader;
+        luigi = follower;
+    } else {
+        luigi = leader;
+        mario = follower;
+    }
+    shotBulletIndex = 0;
+    sub_803C610(this);
+
+    switch (mode) {
+        case 0:
+            if (arg2 && sub_802DC0C(this, follower)) {
+                follower->x = leader->x;
+                follower->y = leader->y;
+                follower->z = leader->z;
+                follower->height = leader->height;
+                follower->previousX = leader->previousX;
+                follower->previousY = leader->previousY;
+                follower->previousZ = leader->previousZ;
+                follower->previousHeight = leader->previousHeight;
+            }
+            {
+                FieldStruct4* data = leader->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 0;
+                } else {
+                    data->field_0 = 0;
+                }
+            }
+            {
+                FieldPlayerCharacter* player = leader;
+
+                player->field_240 = field_100;
+                player->field_23E = field_100;
+                player->field_260 = field_100;
+            }
+            leader->field_358_3 = 0;
+            leader->field_350_14 = 0;
+            leader->field_210_1 = 1;
+            leader->field_210_2 = 1;
+            leader->field_20C_13 = 0;
+            leader->field_20C_14 = 1;
+            leader->sub_8049000(leader->field_54 == 0 ? 0x1001 : 0x1002);
+            leader->sprite->xScale = leader->sprite->yScale = 0x100;
+            leader->field_212_6 = 0;
+            leader->field_23B = 0;
+            leader->field_35A_11 = 0;
+            leader->field_35A_12 = 0;
+            leader->field_35A_13 = 0;
+            leader->field_35A_14 = 0;
+            leader->field_350_15 = 0;
+            follower->field_35A_0 = 0;
+            follower->field_35A_1 = 0;
+            if (leader->field_368->field_12 != -1) {
+                leader->field_368->field_10[0] = leader->field_368->field_12;
+                leader->field_368->field_12 = -1;
+            }
+            field_208_0 = 1;
+            field_20B_4 = 0;
+            {
+                FieldStruct4* data = follower->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 0;
+                } else {
+                    data->field_0 = 0;
+                }
+            }
+            follower->field_358_3 = 0;
+            follower->field_350_14 = 0;
+            follower->field_20C_13 = 0;
+            follower->field_20C_14 = 1;
+            follower->sub_8049000(follower->field_54 == 0 ? 0x1001 : 0x1002);
+            follower->sprite->xScale = follower->sprite->yScale = 0x100;
+            follower->field_212_6 = 0;
+            follower->field_23B = 0;
+            follower->field_35A_1 = 0;
+            if (brothersTogether) {
+                if (follower->field_368->field_12 != -1) {
+                    follower->field_368->field_10[0] = follower->field_368->field_12;
+                    follower->field_368->field_12 = -1;
+                }
+            } else if (follower->field_368->field_12 != -1) {
+                follower->field_368->field_14 = follower->field_368->field_12;
+                follower->field_368->field_12 = -1;
+            }
+            follower->field_35A_11 = 0;
+            follower->field_35A_12 = 0;
+            follower->field_35A_13 = 0;
+            follower->field_35A_14 = 0;
+            follower->field_350_15 = 0;
+            if (brothersTogether) {
+                FieldPlayerCharacter* player = follower;
+
+                player->field_240 = field_100;
+                player->field_23E = field_100;
+                player->field_260 = field_100;
+            }
+            break;
+
+        case 1: {
+            int speed;
+
+            if (mario->field_35A_2) {
+                mario->sub_80492DC();
+            }
+            sub_8021574(0, 0x1004, 0, 0, 0, buffer, 12);
+            {
+                FieldStruct4* data = mario->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 5;
+                } else {
+                    data->field_0 = 5;
+                }
+            }
+            speed = 0x100 >> field_FA_10;
+            mario->field_240 = speed;
+            mario->field_23E = speed;
+            mario->field_260 = speed;
+            mario->field_35A_11 = 0;
+            mario->field_35A_13 = 1;
+            mario->sub_8049000(0x102E);
+            if (shotBulletIndex == 0) {
+                shotBulletIndex = 3;
+            }
+            if (!brothersTogether && field_2D8_0 == 0x1F) {
+                sub_802E4C8(this, 0);
+            }
+            if (mario->field_368->field_12 == -1) {
+                mario->field_368->field_12 = mario->field_368->field_10[0];
+            }
+            mario->field_368->field_10[0] = 0;
+            {
+                FieldStruct4* data = luigi->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 5;
+                } else {
+                    data->field_0 = 5;
+                }
+            }
+            luigi->field_35A_12 = 0;
+            luigi->field_35A_14 = 0;
+            luigi->field_350_15 = 0;
+            if (brothersTogether) {
+                speed = 0x100 >> field_FA_10;
+                luigi->field_240 = speed;
+                luigi->field_23E = speed;
+                luigi->field_260 = speed;
+            }
+            break;
+        }
+
+        case 2: {
+            int speed;
+
+            if (mario->field_35A_2) {
+                mario->sub_80492DC();
+            }
+            {
+                FieldStruct4* data = mario->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 11;
+                } else {
+                    data->field_0 = 11;
+                }
+            }
+            speed = 0x200 >> field_FA_10;
+            mario->field_240 = speed;
+            mario->field_23E = speed;
+            mario->field_260 = speed;
+            mario->field_35A_11 = 1;
+            mario->field_35A_13 = 0;
+            mario->sub_8049000(0x1028);
+            {
+                FieldStruct4* data = luigi->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 11;
+                } else {
+                    data->field_0 = 11;
+                }
+            }
+            luigi->field_35A_12 = 0;
+            luigi->field_35A_14 = 0;
+            luigi->field_350_15 = 0;
+            if (brothersTogether) {
+                speed = 0x200 >> field_FA_10;
+                luigi->field_240 = speed;
+                luigi->field_23E = speed;
+                luigi->field_260 = speed;
+            }
+            break;
+        }
+
+        case 3: {
+            int speed;
+
+            if (luigi->field_35A_2) {
+                luigi->sub_80492DC();
+            }
+            {
+                FieldStruct4* data = luigi->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 6;
+                } else {
+                    data->field_0 = 6;
+                }
+            }
+            speed = 0x100 >> field_FA_10;
+            luigi->field_240 = speed;
+            luigi->field_23E = speed;
+            luigi->field_260 = speed;
+            luigi->sub_8049000(0x1043);
+            luigi->field_35A_12 = 1;
+            luigi->field_35A_14 = 0;
+            luigi->field_20C_13 = 1;
+            luigi->field_210_1 = 0;
+            luigi->field_210_2 = 0;
+            luigi->field_352_6 = 1;
+            luigi->field_350_15 = 0;
+            if (brothersTogether || luigi->field_352_7) {
+                if (luigi->field_368->field_12 == -1) {
+                    luigi->field_368->field_12 = luigi->field_368->field_10[0];
+                }
+            } else {
+                if (luigi->field_368->field_14 != -1) {
+                    luigi->field_368->field_12 = luigi->field_368->field_14;
+                }
+                luigi->field_368->field_14 = luigi->field_368->field_10[0];
+            }
+            luigi->field_368->field_10[0] = 0;
+            {
+                FieldStruct4* data = mario->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 6;
+                } else {
+                    data->field_0 = 6;
+                }
+            }
+            mario->field_35A_11 = 0;
+            mario->field_35A_13 = 0;
+            if (brothersTogether) {
+                speed = 0x100 >> field_FA_10;
+                mario->field_240 = speed;
+                mario->field_23E = speed;
+                mario->field_260 = speed;
+            }
+            break;
+        }
+
+        case 4: {
+            int speed;
+
+            if (luigi->field_35A_2) {
+                luigi->sub_80492DC();
+            }
+            {
+                FieldStruct4* data = luigi->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 9;
+                } else {
+                    data->field_0 = 9;
+                }
+            }
+            speed = 0x100 >> field_FA_10;
+            luigi->field_240 = speed;
+            luigi->field_23E = speed;
+            luigi->field_260 = speed;
+            luigi->field_35A_12 = 0;
+            luigi->field_35A_14 = 1;
+            luigi->field_350_15 = 1;
+            luigi->sub_8049000(0x1046);
+            if (brothersTogether || luigi->field_352_7) {
+                if (luigi->field_368->field_12 == -1) {
+                    luigi->field_368->field_12 = luigi->field_368->field_10[0];
+                }
+            } else {
+                if (luigi->field_368->field_14 != -1) {
+                    luigi->field_368->field_12 = luigi->field_368->field_14;
+                }
+                luigi->field_368->field_14 = luigi->field_368->field_10[0];
+            }
+            luigi->field_368->field_10[0] = 0;
+            {
+                FieldStruct4* data = mario->field_368;
+
+                if ((u8)(data->field_0 - 1) <= 1) {
+                    data->field_1 = 9;
+                } else {
+                    data->field_0 = 9;
+                }
+            }
+            mario->field_35A_11 = 0;
+            mario->field_35A_13 = 0;
+            if (brothersTogether) {
+                speed = 0x100 >> field_FA_10;
+                mario->field_240 = speed;
+                mario->field_23E = speed;
+                mario->field_260 = speed;
+            }
+            break;
+        }
+    }
+
+    field_20A_3 = 0;
+    leader->state = 0;
+    leader->field_214_0 = 3;
+    if (brothersTogether || follower->state > 12) {
+        follower->state = 0;
+        follower->field_214_0 = 3;
+    }
+    sub_8020D40(leader->field_36C);
+    sub_8020D40(follower->field_36C);
+    sub_802DDB4(this, leader, 0, 0);
+    sub_802DDB4(this, follower, brothersTogether, 0);
+    sub_802DF80(this, 0);
+}
+#endif

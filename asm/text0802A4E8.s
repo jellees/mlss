@@ -4510,7 +4510,7 @@ _0802D4EE:
 _0802D520: .4byte 0x00000291
 _0802D524:
 	adds r0, r4, #0x0
-	bl sub_8029878
+	bl sub_8029878__12FieldManager
 _0802D52A:
 	movs r1, #0x80
 	lsls r1, r1, #0x02
@@ -4654,7 +4654,7 @@ _0802D634: .4byte 0x000002B5
 _0802D638: .4byte 0x0300034C
 _0802D63C:
 	adds r0, r5, #0x0
-	bl sub_8029878
+	bl sub_8029878__12FieldManager
 	b _0802D8D4
 _0802D644:
 	movs r1, #0x81
@@ -4851,7 +4851,7 @@ _0802D8F6:
 	cmp r0, #0x00
 	beq _0802D91C
 	adds r0, r5, #0x0
-	bl sub_8029878
+	bl sub_8029878__12FieldManager
 _0802D91C:
 	pop {r3}
 	mov r8, r3
@@ -5646,7 +5646,7 @@ _0802DF64:
 	cmp r6, #0x00
 	beq _0802DF6E
 	ldr r0, [sp, #0x004]
-	bl sub_8029878
+	bl sub_8029878__12FieldManager
 _0802DF6E:
 	add sp, #0x010
 	pop {r3, r4, r5}
@@ -6742,7 +6742,7 @@ _0802E790:
 	adds r0, r7, #0x0
 	movs r1, #0x00
 	movs r2, #0x00
-	bl sub_8029A0C
+	bl sub_8029A0C__12FieldManagerii
 _0802E79A:
 	movs r0, #0x82
 	lsls r0, r0, #0x02
@@ -21332,7 +21332,7 @@ _0803C894: .4byte 0x0000010B
 sub_803C898:
 	push {lr}
 	movs r2, #0x01
-	bl sub_8029A0C
+	bl sub_8029A0C__12FieldManagerii
 	pop {r0}
 	bx r0
 	thumb_func_start sub_803C8A4

@@ -682,7 +682,7 @@ _08024362:
 	mov r0, r10
 	movs r1, #0x01
 	movs r2, #0x00
-	bl sub_8029A0C
+	bl sub_8029A0C__12FieldManagerii
 	movs r0, #0x80
 	lsls r0, r0, #0x02
 	add r0, r10
@@ -1322,7 +1322,7 @@ _08024874:
 	b _080248B2
 _080248AC:
 	mov r0, r10
-	bl sub_8029878
+	bl sub_8029878__12FieldManager
 _080248B2:
 	mov r0, r10
 	movs r1, #0x05
@@ -1372,7 +1372,7 @@ _08024914: .4byte 0x0000020B
 _08024918: .4byte 0x0000FFFF
 _0802491C:
 	mov r0, r10
-	bl sub_8029878
+	bl sub_8029878__12FieldManager
 _08024922:
 	ldr r0, _08024C28 @ =0x00000291
 	add r0, r10

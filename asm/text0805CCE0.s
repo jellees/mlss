@@ -290850,11 +290850,11 @@ _080F075C:
 _080F0768:
 	ldr r0, [r0, #0x14]
 	movs r1, #0x00
-	bl sub_80297D8
+	bl sub_80297D8__12FieldManageri
 	b _080F0778
 _080F0772:
 	ldr r0, [r0, #0x14]
-	bl sub_8029788
+	bl sub_8029788__12FieldManager
 _080F0778:
 	movs r0, #0x01
 	pop {r1}
@@ -290896,7 +290896,7 @@ _080F07AC: .4byte 0x080F07B0
 _080F0806:
 	ldr r0, [r3, #0x14]
 	movs r2, #0x00
-	bl sub_8029A0C
+	bl sub_8029A0C__12FieldManagerii
 	movs r0, #0x01
 	pop {r1}
 	bx r1
@@ -292958,12 +292958,12 @@ _080F1824:
 _080F182C:
 	ldr r4, [r4, #0x00]
 	ldr r0, [r5, #0x14]
-	bl sub_8029830
+	bl sub_8029830__12FieldManager
 	b _080F183E
 _080F1836:
 	movs r4, #0xFF
 	ldr r0, [r5, #0x14]
-	bl sub_8029804
+	bl sub_8029804__12FieldManager
 _080F183E:
 	ldr r0, _080F1854 @ =0x03000FD0
 	ldr r0, [r0, #0x00]
