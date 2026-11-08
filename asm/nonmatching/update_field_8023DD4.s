@@ -1946,7 +1946,7 @@ _08024D84:
 	lsls r1, r1, #0x16
 	lsrs r1, r1, #0x1B
 	mov r0, r10
-	bl sub_80286AC
+	bl sub_80286AC__12FieldManageri
 _08024DB6:
 	ldr r1, _08024E04 @ =0x0000027A
 	add r1, r10

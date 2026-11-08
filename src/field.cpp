@@ -1170,7 +1170,7 @@ void FieldManager::update_field_8023DD4() {
 
     if (!field_291_0 || field_290 <= 0) {
         if ((u8)(field_12A - 7) > 1 && field_F8_6 && field_F9_0 == 0) {
-            sub_80286AC(this, field_FA_5);
+            sub_80286AC(field_FA_5);
         }
         field_27E = field_27A + field_12E;
         field_280 = field_27C + field_130;
@@ -2588,7 +2588,7 @@ void FieldManager::sub_80284B0(int index, int arg2) {
         if ((s16)screenY < field_28C || (s16)screenY > field_28D) {
             field_27C = (s16)screenY + field_27C - 96;
         }
-        sub_80286AC(this, -1);
+        sub_80286AC(-1);
 
         if (arg2) {
             sub_805952C(field_304, field_27A, field_27C);
@@ -2620,3 +2620,145 @@ void FieldManager::sub_80284B0(int index, int arg2) {
     field_280 = field_27C + field_130;
 }
 #endif
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80286AC__12FieldManageri.s\"");
+#else
+void FieldManager::sub_80286AC(int index) {
+    if (index >= 0) {
+        FieldObject* object = objects[index];
+        u16 oldX = field_274;
+        u16 left;
+        u16 right;
+        int leftMargin;
+        int rightMargin;
+        int oldScreenY;
+        int newFloor;
+        int oldFloor;
+        int oldScreenBase;
+        int screenBase;
+        u16 top;
+        s16 topMargin;
+        s16 bottomMargin;
+        int moved;
+
+        field_274 = object->x / 256;
+        left = field_274 - field_27A - object->field_282 / 2;
+        right = left + object->field_282;
+        leftMargin = field_F9_2 ? 120 : field_28A;
+        rightMargin = field_F9_2 ? 120 : field_28B;
+        if ((s16)left < leftMargin) {
+            if ((s16)field_274 < (s16)oldX) {
+                field_27A -= (s16)oldX - field_274;
+            }
+        } else if ((s16)right > rightMargin) {
+            if ((s16)field_274 > (s16)oldX) {
+                field_27A += field_274 - (s16)oldX;
+            }
+        }
+
+        oldScreenY = field_276;
+        newFloor = object->airFrames >= 0 ? object->airStartZ : object->z + object->height;
+        oldFloor =
+            object->airFrames >= 0 ? object->airStartZ : object->previousZ + object->previousHeight;
+        oldScreenBase = (object->previousY - oldFloor) / 256;
+        screenBase = (object->y - newFloor) / 256;
+        field_278 = screenBase;
+        field_276 = screenBase - (object->z + object->height - newFloor) / 256;
+        top = field_276 - field_27C;
+        if (object->airFrames >= 0) {
+            topMargin = field_28E;
+            bottomMargin = field_28F;
+            top -= object->field_283;
+        } else {
+            topMargin = field_F9_2 ? 100 : field_28C;
+            bottomMargin = field_F9_2 ? 100 : field_28D;
+        }
+
+        moved = 0;
+        if ((s16)top < topMargin && field_276 < oldScreenY) {
+            field_27C -= oldScreenY - field_276;
+            moved = 1;
+        }
+        if (!moved) {
+            if (object->y > object->previousY) {
+                if ((s16)(field_276 - field_27C) > bottomMargin) {
+                    if (object->height > 0) {
+                        field_27C += field_276 - oldScreenY;
+                    } else {
+                        field_27C += field_278 - oldScreenBase;
+                    }
+                } else if (object->airFrames >= 0 && object->z == object->airStartZ
+                           && (s16)(field_278 - field_27C) > bottomMargin) {
+                    field_27C += field_278 - oldScreenBase;
+                }
+            } else if (object->z + object->height < object->previousZ + object->previousHeight
+                       && (s16)(field_276 - field_27C) > bottomMargin) {
+                field_27C += field_276 - oldScreenY;
+            }
+        }
+    }
+
+    if ((s16)field_27A < 0) {
+        field_27A = 0;
+    } else if ((s16)field_27A > field_286 - 240) {
+        field_27A = field_286 - 240;
+    }
+    if ((s16)field_27C < 0) {
+        field_27C = 0;
+    } else if ((s16)field_27C > field_288 - 160) {
+        field_27C = field_288 - 160;
+    }
+}
+#endif
+
+void FieldManager::sub_80289BC(FieldPlayerCharacter* player, FieldObject* other) {
+    int direction = 0;
+    int arg5 = 0;
+
+    switch ((u32)player->field_350_0) {
+        case 1:
+            direction = 4;
+            break;
+        case 2:
+            direction = 6;
+            break;
+        case 4:
+            break;
+        case 8:
+            direction = 2;
+            break;
+    }
+    switch (player->field_350_4) {
+        case 1:
+            arg5 = 2;
+            break;
+        case 2:
+            arg5 = 1;
+            break;
+    }
+
+    if ((s8)player->field_342 == 3) {
+        player->field_344 = 0x19;
+    } else {
+        switch ((s8)player->field_344) {
+            case 7:
+            case 9:
+            case 10:
+                if ((s8)player->field_342 == -1) {
+                    player->field_344 = 0;
+                }
+                break;
+            case 12:
+            case 14:
+                if ((s8)player->field_342 == -1) {
+                    player->field_344 = 11;
+                }
+                break;
+        }
+    }
+
+    sub_80EF874(evts, (s8)(player->field_33C_0 << 1) >> 1, *(u32*)((u8*)other + 0x22C), direction, arg5,
+                (s8)player->field_344 != 0x10, (s8)player->field_344);
+}

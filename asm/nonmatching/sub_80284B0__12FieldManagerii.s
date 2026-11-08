@@ -97,7 +97,7 @@ _08028552:
 	movs r1, #0x01
 	negs r1, r1
 	adds r0, r4, #0x0
-	bl sub_80286AC
+	bl sub_80286AC__12FieldManageri
 	mov r0, r10
 	cmp r0, #0x00
 	beq _08028584
