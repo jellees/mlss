@@ -7472,7 +7472,7 @@ _0802ED48:
 	eors r1, r0
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_80284B0
+	bl sub_80284B0__12FieldManagerii
 _0802ED5E:
 	movs r2, #0x95
 	lsls r2, r2, #0x01

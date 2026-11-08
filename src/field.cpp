@@ -523,7 +523,7 @@ void FieldManager::update() {
             }
 
             if ((field_2B8_0 || field_F8_1) && field_F8_6) {
-                sub_80284B0(this, field_FA_5, 1);
+                sub_80284B0(field_FA_5, 1);
             } else {
                 sub_805952C(field_304, field_27A, field_27C);
             }
@@ -2567,3 +2567,56 @@ void FieldManager::sub_8028248() {
         leader->angle = field_2BA;
     }
 }
+
+// https://decomp.me/scratch/4UywW
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80284B0__12FieldManagerii.s\"");
+#else
+void FieldManager::sub_80284B0(int index, int arg2) {
+    if (index >= 0) {
+        u16 oldX = field_27A;
+        u16 oldY = field_27C;
+        FieldObject* object = objects[index];
+        u16 screenX = object->x / 256 - oldX;
+        u16 screenY = (object->y - object->z - object->height) / 256 - oldY;
+        int floor;
+        s16 y;
+
+        if ((s16)screenX < field_28A || (s16)screenX > field_28B) {
+            field_27A = (s16)screenX + oldX - 120;
+        }
+        if ((s16)screenY < field_28C || (s16)screenY > field_28D) {
+            field_27C = (s16)screenY + field_27C - 96;
+        }
+        sub_80286AC(this, -1);
+
+        if (arg2) {
+            sub_805952C(field_304, field_27A, field_27C);
+        } else if ((s16)oldX != (s16)field_27A || (s16)oldY != (s16)field_27C) {
+            u16 dx = oldX - field_27A;
+            u16 dy = oldY - field_27C;
+
+            if ((s16)dx < -0x1F || (s16)dx > 0x1F || (s16)dy < -0x1F || (s16)dy > 0x1F) {
+                sub_805952C(field_304, field_27A, field_27C);
+            } else {
+                field_304->sub_8057C9C(field_27A, field_27C);
+            }
+        }
+
+        field_274 = screenX;
+        if (object->airFrames >= 0) {
+            floor = object->airStartZ;
+        } else {
+            floor = object->z;
+        }
+        if (object->height < 0) {
+            floor += object->height;
+        }
+        y = (object->y - floor) / 256;
+        field_278 = y;
+        field_276 = y - (object->z + object->height - floor) / 256;
+    }
+    field_27E = field_27A + field_12E;
+    field_280 = field_27C + field_130;
+}
+#endif

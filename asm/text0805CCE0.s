@@ -285393,7 +285393,7 @@ _080ED708:
 	lsrs r1, r1, #0x1B
 	adds r0, r2, #0x0
 	movs r2, #0x00
-	bl sub_80284B0
+	bl sub_80284B0__12FieldManagerii
 _080ED72A:
 	ldr r0, _080ED74C @ =0x03000FD0
 	ldr r1, [r0, #0x00]
@@ -292166,7 +292166,7 @@ sub_80F11D0:
 	bne _080F1226
 	adds r0, r2, #0x0
 	movs r2, #0x00
-	bl sub_80284B0
+	bl sub_80284B0__12FieldManagerii
 _080F1226:
 	movs r0, #0x00
 	add sp, #0x008
@@ -292245,7 +292245,7 @@ _080F12A8:
 	adds r1, #0x54
 	ldrb r1, [r1, #0x00]
 	movs r2, #0x00
-	bl sub_80284B0
+	bl sub_80284B0__12FieldManagerii
 _080F12BE:
 	movs r0, #0x00
 	add sp, #0x008
