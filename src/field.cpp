@@ -183,6 +183,10 @@ FieldManager::~FieldManager() {
     gGameState.field_88A_5 = 0;
 }
 
+static inline u8 get_Field_2(FieldManager* manager) {
+    return (manager->field_D4->field_2 & 0x10) != 0;
+}
+
 static inline int getDistance(FieldObject* a, FieldObject* b) {
     int dx = a->x - b->x;
     int dy = a->y - b->y;
@@ -210,8 +214,6 @@ void FieldManager::update() {
 
     switch (state) {
         case 0: {
-            bool flag;
-
             *(vu16*)0x2000080 = field_128;
             *(vu16*)PLTT = field_128;
             BUFFER_REG_DISPCNT = 0;
@@ -256,8 +258,7 @@ void FieldManager::update() {
 
             dword_3000FD0->field_530 = dword_3000FD0->field_528;
             field_D4 = &stru_83A78D4[roomId];
-            flag = (field_D4->field_2 & 0x10) != 0;
-            field_FA_10 = flag;
+            field_FA_10 = get_Field_2(this);
             field_126 = field_D4->field_10;
             field_D8 = sub_80FB7E0(field_D4->field_E);
             field_DC = sub_80FB7F0(field_D4->field_16);
@@ -501,9 +502,10 @@ void FieldManager::update() {
             follower->field_388 = leader;
 
             if (field_2B8_0) {
-                s16 value = leader->field_368->field_0;
-                if ((u8)(value - 3) <= 1 || value == 0xE || value == 0xF || value == 0x10
-                    || value == 0x11 || field_246_2 == 5 || field_246_2 == 6) {
+                if (leader->field_368->field_0 == 3 || leader->field_368->field_0 == 4
+                    || leader->field_368->field_0 == 0xE || leader->field_368->field_0 == 0xF
+                    || leader->field_368->field_0 == 0x10 || leader->field_368->field_0 == 0x11
+                    || field_246_2 == 5 || field_246_2 == 6) {
                     field_246_2 = 0;
                     sub_8029A0C(this, 0, 0);
                 }
