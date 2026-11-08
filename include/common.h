@@ -552,7 +552,6 @@ void sub_801BD30(void);
 void sub_801BC40(struct struc_3000D44*, u16, u8);
 void sub_8029A0C(struct FieldManager*, int, int);
 void sub_802EF18(struct FieldManager*);
-void sub_80290E0(struct FieldManager*);
 u8 sub_80E99E0(int);
 void sub_8054378(void*, u8, char*, u8);
 void sub_8123340(void);

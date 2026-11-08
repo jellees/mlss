@@ -71,7 +71,7 @@ _080271D4:
 	adds r0, r0, r3
 	str r2, [r0, #0x00]
 	adds r0, r7, #0x0
-	bl sub_80290E0
+	bl sub_80290E0__12FieldManager
 	b _08027212
 _080271F4: .4byte 0x0300034C
 _080271F8: .4byte 0x00000884

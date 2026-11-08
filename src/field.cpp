@@ -2013,7 +2013,7 @@ void FieldManager::sub_8027030(int mode, int arg2, u16 arg3, u16 arg4, u16 arg5)
                 gGameState.field_0 = field_F0 >> 16;
                 gGameState.field_2 = field_F0;
                 gGameState.field_884 = field_F0;
-                sub_80290E0(this);
+                sub_80290E0();
             } else {
                 gGameState.field_0 = 0xFFFF;
                 gGameState.field_2 = (u16)-1;
@@ -2054,7 +2054,7 @@ void FieldManager::sub_8027168(int mode, int arg2, u16 x, u16 y) {
                 gGameState.field_0 = field_F0 >> 16;
                 gGameState.field_2 = field_F0;
                 gGameState.field_884 = field_F0;
-                sub_80290E0(this);
+                sub_80290E0();
             } else {
                 gGameState.field_0 = 0xFFFF;
                 gGameState.field_2 = (u16)-1;
@@ -2958,4 +2958,38 @@ void FieldManager::sub_8029080() {
 
 void FieldManager::sub_80290CC(int value) {
     field_12C_2 = value;
+}
+
+void FieldManager::sub_80290E0() {
+    if (field_F0 != 0) {
+        u8* source = (u8*)field_24;
+        u8* destination = (u8*)0x2000080;
+
+        do {
+            if (field_F0 & 1) {
+                CpuFastCopy(source, destination, 0x20);
+            }
+            source += 0x20;
+            destination += 0x20;
+            field_F0 >>= 1;
+        } while (field_F0 != 0);
+    }
+}
+
+void FieldManager::sub_8029120(u16 high, u16 low) {
+    u32 mask = low | (high << 16);
+    u8* source = (u8*)0x2000080;
+    u8* destination = (u8*)field_24;
+    u32 bit = 1;
+
+    while (mask != 0) {
+        if (mask & 1) {
+            CpuFastCopy(source, destination, 0x20);
+            field_F0 |= bit;
+        }
+        source += 0x20;
+        destination += 0x20;
+        bit <<= 1;
+        mask >>= 1;
+    }
 }
