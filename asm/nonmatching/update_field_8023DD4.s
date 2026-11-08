@@ -148,7 +148,7 @@ _08023EC4:
 	cmp r0, #0x00
 	beq _08023F16
 	mov r0, r10
-	bl sub_8028C40
+	bl sub_8028C40__12FieldManager
 	mov r0, r10
 	bl sub_8028E70
 	adds r1, r5, #0x0
@@ -475,7 +475,7 @@ _080241AC:
 _080241C0: .4byte 0x0000020B
 _080241C4:
 	mov r0, r10
-	bl sub_8028C40
+	bl sub_8028C40__12FieldManager
 	mov r0, r10
 	bl sub_8028E70
 	lsls r0, r0, #0x18

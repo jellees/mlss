@@ -21615,7 +21615,7 @@ _0803CB7E:
 	cmp r0, #0x00
 	beq _0803CBAC
 	adds r0, r5, #0x0
-	bl sub_8028C40
+	bl sub_8028C40__12FieldManager
 	adds r0, r5, #0x0
 	bl sub_8028E70
 	movs r1, #0x01

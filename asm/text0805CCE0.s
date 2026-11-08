@@ -283747,7 +283747,7 @@ _080EB444:
 	bne _080EB468
 	mov r1, r8
 	ldr r0, [r1, #0x14]
-	bl sub_8028C40
+	bl sub_8028C40__12FieldManager
 _080EB468:
 	lsls r0, r6, #0x10
 	ldr r2, _080EB48C @ =0xFFFF0000
@@ -288390,7 +288390,7 @@ bevs_update: @ 080EF34C
 	beq _080EF390
 	ldr r0, [r6, #0x00]
 	ldr r0, [r0, #0x14]
-	bl sub_8028C40
+	bl sub_8028C40__12FieldManager
 	b _080EF3EC
 	.byte 0x00, 0x00
 _080EF38C: .4byte 0x03000FD0
@@ -288593,7 +288593,7 @@ _080EF526:
 	beq _080EF54C
 	ldr r0, [r6, #0x00]
 	ldr r0, [r0, #0x14]
-	bl sub_8028C40
+	bl sub_8028C40__12FieldManager
 	adds r4, #0xA8
 	mov r9, r4
 	b _080EF5AE

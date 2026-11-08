@@ -824,7 +824,7 @@ void FieldManager::update_field_8023DD4() {
     }
     field_20A_4 = field_20A_3;
     if (!field_291_0 && field_2A9_6) {
-        sub_8028C40(this);
+        sub_8028C40();
         field_2A9_6 = sub_8028E70(this);
     }
 
@@ -917,7 +917,7 @@ void FieldManager::update_field_8023DD4() {
             break;
 
         case 4:
-            sub_8028C40(this);
+            sub_8028C40();
             if (!sub_8028E70(this)) {
                 if (follower->field_368->field_14 != -1) {
                     follower->field_368->field_10[0] = follower->field_368->field_14;
@@ -2796,4 +2796,29 @@ void FieldManager::sub_8028AFC(int mode, int relative, int x, int y, u16 speed) 
     field_2FA = 0;
     field_2FE = (u32)sub_81DA690((s16)(field_2EE - field_2F4), (s16)(field_2F2 - field_2EC)) >> 8;
     field_F9_0 = mode;
+}
+
+void FieldManager::sub_8028C40() {
+    if (field_F9_0 != 0) {
+        int done;
+
+        field_2FA++;
+        field_27A = field_2EC + (field_2F2 - field_2EC) * field_2FA / field_2FC;
+        field_27C = field_2EE + (field_2F4 - field_2EE) * field_2FA / field_2FC;
+
+        done = 0;
+        if ((field_2F2 >= field_2EC && field_2F2 <= (s16)field_27A)
+            || (field_2F2 <= field_2EC && field_2F2 >= (s16)field_27A)) {
+            field_27A = field_2F2;
+            done = 1;
+        }
+        if ((field_2F4 >= field_2EE && field_2F4 <= (s16)field_27C)
+            || (field_2F4 <= field_2EE && field_2F4 >= (s16)field_27C)) {
+            field_27C = field_2F4;
+            done |= 2;
+        }
+        if (done == 3) {
+            sub_8028E4C(this);
+        }
+    }
 }
