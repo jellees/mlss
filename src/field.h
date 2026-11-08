@@ -226,7 +226,9 @@ class FieldManager : public Process {
     u8 field_246_1 : 1;
     u8 field_246_2 : 3;
     u8 field_246_5 : 3;
-    u8 pad_247[0x21];
+    u8 pad_247[0x1A];
+    s8 field_261;
+    u8 pad_262[0x6];
     u16 field_268;
     u8 pad_26A;
     u8 field_26B_0 : 5;
@@ -345,6 +347,7 @@ class FieldManager : public Process {
     void start_battle_8027AC4();
     void sub_8027D64();
     void sub_802814C();
+    void sub_8028248();
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
     void sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,

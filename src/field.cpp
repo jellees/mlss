@@ -514,7 +514,7 @@ void FieldManager::update() {
                     sub_802DF80(this, 0);
                 }
             } else if (field_2B8_0) {
-                sub_8028248(this);
+                sub_8028248();
             } else if (field_F8_4 && field_F9_3) {
                 follower->x = leader->x;
                 follower->y = leader->y;
@@ -2497,5 +2497,73 @@ void FieldManager::sub_802814C() {
         } else {
             new (0, "LOAD", 0) LoadMenu(8, "LOAD", 0);
         }
+    }
+}
+
+void FieldManager::sub_8028248() {
+    FieldPlayerCharacter* follower = this->follower;
+    FieldPlayerCharacter* leader = this->leader;
+    int x;
+    int y;
+
+    x = field_2BC;
+    leader->x = x;
+    y = field_2C0;
+    leader->y = y;
+    leader->height = field_2C8;
+    if (field_2C4 >= 0) {
+        leader->z = field_2C4;
+    } else {
+        int floor;
+        int ceiling;
+        int top;
+        struct Coldef* coldef;
+        int z;
+
+        leader->field_290 = field_304;
+        coldef = sub_803FBA4(field_304, x, y, &floor, &ceiling, &top, true, true);
+        if (field_2C4 == -2) {
+            z = top;
+            leader->field_26_1 = 1;
+        } else {
+            z = floor;
+            leader->field_26_1 = 0;
+        }
+        leader->z = z;
+        leader->coldef = coldef;
+    }
+
+    leader->previousX = leader->x;
+    leader->previousY = leader->y;
+    leader->previousZ = leader->z;
+    leader->previousHeight = leader->height;
+    leader->direction = field_2B8_1;
+    leader->angle = field_2B8_1 << 5;
+    leader->method6(1);
+
+    if (follower != NULL) {
+        follower->height = leader->height;
+        if (brothersTogether || field_208_6) {
+            follower->direction = leader->direction;
+            brothersTogether = 0;
+            sub_802E4C8(this, 1);
+            follower->method6(1);
+            field_2D8_0 = 0x1F;
+        } else if (!field_208_6 && field_2D8_0 != 0x1F) {
+            if (followerRoomId == roomId) {
+                follower->sub_8047F60(field_2DC, field_2E0, field_2E4 + field_2E8, 1, 0);
+                follower->direction = field_2D8_5;
+                field_2D8_0 = 0x1F;
+            } else {
+                follower->sub_804761C(0);
+                follower->sub_804776C(0);
+            }
+        }
+    }
+
+    if (field_246_2 == 7 && field_261 != 0) {
+        leader->direction = follower->direction = field_2BB;
+        follower->angle = field_2BA;
+        leader->angle = field_2BA;
     }
 }

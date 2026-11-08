@@ -568,7 +568,6 @@ void sub_80293B8(struct FieldManager*);
 void sub_80EFA14(struct EventScriptProcess*, int, int);
 void sub_80F01D4(struct EventScriptProcess*, int, int);
 void sub_802DF80(struct FieldManager*, int);
-void sub_8028248(struct FieldManager*);
 void sub_802E4C8(struct FieldManager*, int);
 void sub_80284B0(struct FieldManager*, int, int);
 void sub_805952C(struct Process*, u16, u16);
