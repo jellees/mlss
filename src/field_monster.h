@@ -28,7 +28,8 @@ class FieldMonster : public FieldObject {
     u32 field_33C_4 : 3;
     u32 field_33C_7 : 1;
     u32 field_33D_0 : 3;
-    u32 field_33D_3 : 5;
+    u32 field_33D_3 : 1;
+    u32 field_33D_4 : 4;
     u32 field_33E_0 : 2;
     u32 field_33E_2 : 1;
     u32 field_33E_3 : 1;

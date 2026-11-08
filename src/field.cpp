@@ -5,6 +5,7 @@
 #include "heap.h"
 #include "field.h"
 #include "sign.h"
+#include "game_mode.h"
 
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/init_fldm_8021FF8.s\"");
@@ -181,7 +182,592 @@ FieldManager::~FieldManager() {
     gGameState.field_88A_5 = 0;
 }
 
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/update__12FieldManager.s\"");
+#else
+static inline int getDistance(FieldObject* a, FieldObject* b) {
+    int dx = a->x - b->x;
+    int dy = a->y - b->y;
+    return ((int (*)(int))dword_3001038)(dx * dx + dy * dy);
+}
+
+void FieldManager::update() {
+    if (field_1FC != NULL && field_1FC->field_A != 0) {
+        field_1FC->sub_805CB54();
+    }
+
+    if (field_2A8_6 && state == 2) {
+        if (field_2B4 >= 0) {
+            make_btl_8028F54(this);
+        } else if (field_2B2 >= -1) {
+            sub_80290CC(this);
+            sub_8029080(this);
+            field_2B2 = -2;
+            return;
+        } else if (field_2B1_0 == 2 && !field_2A9_0) {
+            sub_802814C(this);
+            return;
+        }
+    }
+
+    switch (state) {
+        case 0: {
+            *(vu16*)0x2000080 = field_128;
+            *(vu16*)PLTT = field_128;
+            BUFFER_REG_DISPCNT = 0;
+            gGameState.field_884 = 0;
+            field_FA_10 = 0;
+            field_12E = 0;
+            field_130 = 0;
+            field_27A = 0;
+            field_27C = 0;
+            field_27E = 0;
+            field_280 = 0;
+            field_208_1 = 1;
+            field_F8_6 = 1;
+            field_FA_5 = luigiLeads;
+            field_E8 = 0;
+            field_EC = 0;
+            field_20A_2 = 0;
+            field_20B_3 = 0;
+
+            if (field_F8_1) {
+                struct SaveSlotData* data = &dword_3000FFC->slots[stru_3000D40.slot].data;
+
+                field_F8_6 = data->field_0_0;
+                field_208_0 = data->field_0_1;
+                field_208_1 = data->field_0_2;
+                luigiLeads = data->luigiLeads;
+                field_208_3 = data->field_0_4;
+                brothersTogether = data->brothersTogether;
+                shotBulletIndex = data->field_0_6;
+                field_246_2 = data->field_0_10;
+                field_FA_5 = data->field_0_13;
+                field_208_6 = data->field_0_18;
+                field_208_7 = data->field_0_19;
+                sub_801B0AC(data->field_0_20);
+                dword_3000FD0->field_528 = luigiLeads;
+                dword_3000FD0->field_530 = field_FA_5;
+                {
+                    struct SaveSlotPlayer* saved = &data->field_4[luigiLeads];
+                    roomId = saved->roomId;
+                }
+            }
+
+            dword_3000FD0->field_530 = dword_3000FD0->field_528;
+            field_D4 = &stru_83A78D4[roomId];
+            field_FA_10 = (field_D4->field_2 & 0x10) != 0;
+            field_126 = field_D4->field_10;
+            field_D8 = sub_80FB7E0(field_D4->field_E);
+            field_DC = sub_80FB7F0(field_D4->field_16);
+            field_E0 = sub_8059EF0(roomId);
+            sub_80EFB18(evts);
+            dword_3001034(0, objects, 0x80);
+            make_field_objects_80267C0(field_126);
+
+            if (field_F8_1) {
+                struct SaveSlotData* data = &dword_3000FFC->slots[stru_3000D40.slot].data;
+                struct SaveSlotPlayer* saved = &data->field_4[luigiLeads];
+
+                leader = (FieldPlayerCharacter*)objects[luigiLeads];
+                follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
+                leader->initialDirection = saved->field_2_0;
+                leader->x = saved->field_4 << 8;
+                leader->y = saved->field_6 << 8;
+                leader->z = saved->field_8 << 8;
+                leader->height = saved->field_A << 8;
+                leader->field_20C_5 = 0;
+                leader->field_20C_6 = leader->field_20C_7 = brothersTogether ^ 1;
+
+                saved = &data->field_4[luigiLeads ^ 1];
+                if (saved->roomId == roomId) {
+                    follower->initialDirection = saved->field_2_0;
+                    follower->x = saved->field_4 << 8;
+                    follower->y = saved->field_6 << 8;
+                    follower->z = saved->field_8 << 8;
+                    follower->height = saved->field_A << 8;
+                    follower->field_20C_5 = 0;
+                    follower->field_20C_6 = follower->field_20C_7 = brothersTogether ^ 1;
+                    field_2D8_0 = 31;
+                } else {
+                    field_2D8_0 = !luigiLeads;
+                    followerRoomId = saved->roomId;
+                    field_2D8_5 = saved->field_2_0;
+                    field_2DC = saved->field_4 << 8;
+                    field_2E0 = saved->field_6 << 8;
+                    field_2E4 = saved->field_8 << 8;
+                    field_2E8 = saved->field_A << 8;
+                    follower->field_20C_25 = 0;
+                    follower->field_20C_0 = 0;
+                }
+
+                if (field_246_2 != 0) {
+                    switch (field_246_2) {
+                        case 1:
+                            field_20C[0].field_12 = 0;
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            field_20C[1].field_12 = 0;
+                            break;
+                        case 4:
+                            field_20C[0].field_12 = 0;
+                            break;
+                    }
+                }
+
+                if (!brothersTogether) {
+                    field_20C[luigiLeads ^ 1].field_14 = 0;
+                }
+            }
+
+            field_100 = field_FA_10 ? 0x100 : 0x200;
+            field_FA_11 = 0x10 >> field_FA_10;
+            sub_8026C78();
+            state = 1;
+            break;
+        }
+
+        case 1:
+            BUFFER_REG_DISPCNT = 0;
+            gGameState.field_884 = 0;
+            sub_80E8DE4();
+            state = 2;
+            break;
+
+        case 2:
+            BUFFER_REG_DISPCNT = 0;
+            gGameState.field_884 = 0;
+            if (field_304 != NULL) {
+                field_304->disable();
+            }
+            field_314 = new (0, "PANM", 0) PANM(8, "PANM", 8);
+            field_314->disable();
+            state = 3;
+            break;
+
+        case 3:
+            BUFFER_REG_DISPCNT = 0;
+            gGameState.field_884 = 0;
+            field_FA_0 = 0;
+            field_F0 = 0;
+            gGameState.field_3C.field_3C_0 = field_120_0;
+            gGameState.field_3C.field_3C_10 = field_120_10;
+            gGameState.field_3C.field_3C_12 = field_120_12;
+            gGameState.field_3C.field_3C_13 = field_120_13;
+            field_120_0 = 0;
+            field_120_10 = 0;
+            field_120_12 = 0;
+            field_120_13 = 0;
+            if (dword_3000C78 == NULL) {
+                dword_3000C78 = sub_800063C;
+            }
+            if (field_304 != NULL) {
+                field_304->sub_8057BE4();
+                field_304->enable();
+            } else {
+                field_304 = new (0, "S_MP", 0) S_MP(8, "S_MP", roomId, 0, 0, field_314);
+            }
+            sub_8020994(0x15C0, 0, 1, 0xBE);
+            field_F8_0 = 1;
+            state = 4;
+            break;
+
+        case 4:
+            if (field_304->field_1C != 0) {
+                break;
+            }
+            field_1FC = new (0, "S_FX", 0) S_FX;
+            sub_805A0EC(field_304, 2, &field_286, &field_288);
+            state = 5;
+            break;
+
+        case 5:
+            sub_802955C(this);
+            state = 6;
+            break;
+
+        case 6:
+            if (byte_3000C80 != 0) {
+                break;
+            }
+            sub_80294A0(this);
+            sub_8029460(this);
+            state = 7;
+            break;
+
+        case 7:
+            sub_80293F8(this, field_126);
+            state = 8;
+            break;
+
+        case 8:
+            if (byte_3000C80 != 0) {
+                break;
+            }
+            sub_80293B8(this);
+            state = 9;
+            break;
+
+        case 9:
+            sub_80264F4(field_126);
+            state = 10;
+            break;
+
+        case 10:
+            sub_80265EC(field_126);
+            sub_8020A78();
+            state = 11;
+            break;
+
+        case 11:
+            sub_80EFA14(evts, 0xA800, 0xB000);
+            sub_80F01D4(evts, 0x7000, 0xF);
+            state = 12;
+            break;
+
+        case 12:
+            if (byte_3000C80 != 0) {
+                break;
+            }
+            state = 13;
+            break;
+
+        case 13: {
+            int i;
+            struct FieldStruct4 leaderStruct;
+            struct FieldStruct4 followerStruct;
+            int none;
+
+            if (roomId == 0x1C1) {
+                u8* graphics = new (1, "CGDW", 0) u8[sub_80198B0(dword_839EF80)];
+                dword_3000C84(dword_839EF80, graphics);
+                CpuFastCopy(graphics, (void*)(VRAM + 0xC000), sub_80198B0(dword_839EF80));
+                delete[] graphics;
+                sub_8018218(dword_839F024, (void*)(VRAM + 0xF000), 0x500, 0x20, 0);
+                BUFFER_REG_BG0CNT = 0x1E0C;
+                field_F9_2 = 1;
+            } else {
+                field_F9_2 = 0;
+            }
+
+            if (field_2A8_6) {
+                FieldMonster* monster;
+
+                if (objects[field_2A8_0]->field_20C_19 == 3) {
+                    monster = (FieldMonster*)objects[field_2A8_0];
+                    if (monster->field_33D_3) {
+                        monster->field_344->field_20C_0 = 0;
+                        monster->field_344->field_20C_25 = 0;
+                    }
+                }
+
+                monster = (FieldMonster*)objects[field_2A8_0];
+                switch (field_2B1_0) {
+                    case 0:
+                        if (!field_2A8_7) {
+                            monster->sub_80501EC();
+                            field_F9_4 = 1;
+                        }
+                        break;
+                    case 1:
+                        if (!field_2A9_1 && field_2A8_0 != 0) {
+                            monster->sub_80502C8();
+                            field_F9_4 = 1;
+                        }
+                        break;
+                    case 2:
+                        if (!field_2A9_0) {
+                            field_F9_4 = 1;
+                        }
+                        break;
+                }
+            }
+
+            for (i = 0; i < field_10B; i++) {
+                if (objects[i]->field_20C_25) {
+                    objects[i]->method4();
+                }
+            }
+
+            field_30C = new (0, "FMDR", 0) FMDR(8, "FMDR");
+            field_310 = new (0, "FMPR", 0) FieldProcess803EA00(5, "FMPR");
+
+            leader = (FieldPlayerCharacter*)objects[luigiLeads];
+            follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
+            leader->field_388 = follower;
+            follower->field_388 = leader;
+
+            if (field_2B8_0) {
+                s16 value = leader->field_368->field_0;
+                if ((u8)(value - 3) <= 1 || value == 0xE || value == 0xF || value == 0x10
+                    || value == 0x11
+                    || field_246_2 == 5 || field_246_2 == 6) {
+                    field_246_2 = 0;
+                    sub_8029A0C(this, 0, 0);
+                }
+            }
+
+            if (field_F8_1) {
+                if (brothersTogether) {
+                    sub_802DF80(this, 0);
+                }
+            } else if (field_2B8_0) {
+                sub_8028248(this);
+            } else if (field_F8_4 && field_F9_3) {
+                follower->x = leader->x;
+                follower->y = leader->y;
+                follower->z = leader->z;
+                sub_802E4C8(this, 1);
+            }
+
+            if ((field_2B8_0 || field_F8_1) && field_F8_6) {
+                sub_80284B0(this, field_FA_5, 1);
+            } else {
+                sub_805952C(field_304, field_27A, field_27C);
+            }
+
+            field_242 = 0xAE;
+            field_244 = 0;
+
+            if (field_2B8_0 || field_F8_1) {
+                if (field_2B8_0) {
+                    leaderStruct = *((FieldPlayerCharacter*)objects[0])->field_368;
+                    followerStruct = *((FieldPlayerCharacter*)objects[1])->field_368;
+                }
+
+                switch (field_246_2) {
+                    case 0:
+                        break;
+                    case 1: {
+                        u8 savedIndex = shotBulletIndex;
+                        sub_8029A0C(this, field_246_2, 0);
+                        shotBulletIndex = savedIndex;
+                        break;
+                    }
+                    case 2:
+                    case 3:
+                    case 4:
+                        sub_8029A0C(this, field_246_2, 0);
+                        if (leaderStruct.field_0 == 10) {
+                            leader->sub_8049000(0x1045);
+                            field_209_7 = 2;
+                            field_246_1 = 0;
+                            follower->x = leader->x;
+                            follower->y = leader->y;
+                            follower->z = leader->z;
+                            follower->height = leader->height + 0x1700;
+                            follower->state = leader->state = 0x55;
+                            follower->field_350_14 = leader->field_350_14 = 1;
+                            follower->field_358_3 = leader->field_358_3 = 1;
+                            follower->field_20C_26 = 0;
+                        }
+                        break;
+                    case 7:
+                        follower->field_368->field_0 = leader->field_368->field_0 = 0x13;
+                        follower->state = leader->state = 0xA4;
+                        follower->field_358_3 = leader->field_358_3 = 1;
+                        follower->field_20C_13 = leader->field_20C_13 = 1;
+                        follower->field_210_3 = leader->field_210_3 = 0;
+                        follower->field_214_0 = leader->field_214_0 = 1;
+                        field_268 = 0;
+                        follower->angle = leader->angle;
+                        follower->direction = leader->direction;
+                        follower->sub_8049000(0x1038);
+                        leader->sub_8049000(0x1050);
+                        leader->z = leader->height = follower->z = follower->height = 0;
+                        field_209_7 = 2;
+                        break;
+                }
+
+                if (field_2B8_0) {
+                    *((FieldPlayerCharacter*)objects[0])->field_368 = leaderStruct;
+                    *((FieldPlayerCharacter*)objects[1])->field_368 = followerStruct;
+                }
+            } else if (field_246_0) {
+                field_246_2 = 0;
+                leader->land();
+                if (leader->height > 0) {
+                    leader->height = 0;
+                }
+                if (brothersTogether) {
+                    follower->land();
+                    if (follower->height > 0) {
+                        follower->height = 0;
+                    }
+                }
+                sub_8029A0C(this, 0, 0);
+                leader->method7(1);
+                if (brothersTogether) {
+                    follower->z = leader->z;
+                    follower->height = leader->height;
+                    if ((u8)follower->sub_8045A94(1, 0, leader->x / 256, leader->y / 256,
+                                                  leader->z / 256,
+                                                  field_100)) {
+                        while (getDistance(follower, leader) > 0x1000
+                               || sub_802DC0C(this, follower)) {
+                            follower->sub_80461B4(objects);
+                            if (!follower->sub_8047B78()) {
+                                break;
+                            }
+                        }
+                        follower->sub_8046980();
+                    }
+                    follower->previousX = follower->x;
+                    follower->previousY = follower->y;
+                    follower->previousZ = follower->z;
+                    follower->previousHeight = follower->height;
+                    follower->method7(1);
+                }
+                field_246_0 = 0;
+            }
+
+            sub_80298B0();
+            field_304->enable();
+            field_314->enable();
+
+            if (!field_F9_7) {
+                sub_80EF79C(evts, field_F9_3 ? (field_2CC != 0
+                                                    ? (void*)field_2CC
+                                                    : (void*)((field_D8[3] << 24) | (field_D8[2] << 16)
+                                                              | (field_D8[1] << 8) | field_D8[0]))
+                                             : (void*)dword_821F808);
+            } else {
+                field_F9_7 = 0;
+            }
+
+            for (i = 0; i < field_10B; i++) {
+                objects[i]->field_290 = field_304;
+                if (objects[i]->field_20C_19 == 3 && ((FieldMonster*)objects[i])->field_344 != NULL) {
+                    ((FieldMonster*)objects[i])->field_344->field_290 = field_304;
+                }
+                if (field_2B8_0 || field_F8_1 || field_F8_4) {
+                    objects[i]->method15(1);
+                }
+            }
+
+            for (i = 0; i < 8; i++) {
+                shotBullets[i]->map = field_304;
+            }
+
+            none = -1;
+
+            if (field_246_2 == 7) {
+                leader->field_230 = leader->field_234 = follower->field_230 = follower->field_234 = none;
+            }
+
+            if (field_2A8_6) {
+                sub_8019650(0, none, 0x10);
+            } else if (field_2B8_0 || field_F8_1 || field_F8_4) {
+                switch (field_2B9) {
+                    case -2:
+                        break;
+                    case 0:
+                        sub_8019628(0);
+                        break;
+                    case -3:
+                        if (sub_80195F8(0) && field_D4->field_14 == sub_8019610(0)) {
+                            break;
+                        }
+                    case -1:
+                        sub_8019308(0, field_D4->field_14, 0);
+                        break;
+                    default:
+                        sub_8019308(0, field_2B9, -1);
+                        break;
+                }
+                if (field_2B9 != 0) {
+                    sub_80193B4(0, 0xFF, 0x10);
+                }
+            }
+
+            field_F8_4 = 0;
+            field_F9_3 = 0;
+            field_F9_6 = 0;
+
+            field_20C[0].field_4 = luigiLeads == 0 ? 1 : 2;
+            field_20C[0].field_6 = luigiLeads == 0 ? 0x100 : 0x200;
+            sub_803C788(this, leader);
+            if (leader->field_368->field_17_7) {
+                sub_8018218(field_1C->field_10->field_8 + 0x1100,
+                            (void*)(leader->field_54 * 0x400 + 0x6010FC0),
+                            0x80, 0x20, 0);
+            }
+
+            field_20C[1].field_4 = luigiLeads == 0 ? 2 : 1;
+            field_20C[1].field_6 = luigiLeads == 0 ? 0x200 : 0x100;
+            sub_803C788(this, follower);
+            if (follower->field_368->field_17_7) {
+                sub_8018218(field_1C->field_10->field_8 + 0x1100,
+                            (void*)(follower->field_54 * 0x400 + 0x6010FC0),
+                            0x80, 0x20, 0);
+            }
+
+            state = 15;
+            if (field_12A != 3) {
+                field_12A = 0;
+            }
+
+            if (field_2A8_6 && brothersTogether) {
+                sub_802DF80(this, 0);
+            }
+
+            sub_802F834(this);
+
+            if (field_F9_4) {
+                if (field_12C_2 != -2) {
+                    sub_80193B4(0, 0xFF, 8);
+                }
+                state = 14;
+            } else {
+                evts->process->enable();
+                bevs->process->enable();
+                state = 15;
+            }
+
+            field_2A8_6 = 0;
+            field_12C_0 = 0;
+            field_12C_1 = 0;
+            field_12D_0 = 0;
+            field_12D_4 = 0;
+            field_12C_2 = -2;
+            sub_80297B8(this);
+            sub_801A548();
+            dword_3000C78 = NULL;
+            byte_3000C24 = 0;
+            break;
+        }
+
+        case 14:
+            sub_8027030(1, 8, 0, 0xFFFF, 0xFFFF);
+            evts->process->enable();
+            bevs->process->enable();
+            if (field_2A9_7) {
+                int floor;
+                int x;
+                int y;
+
+                if (leader->field_238 != -1) {
+                    floor = objects[leader->field_238]->z + objects[leader->field_238]->height;
+                } else {
+                    floor = leader->z;
+                }
+                x = leader->x / 256 - 120;
+                y = (leader->y - floor) / 256;
+                sub_8028AFC(this, 1, 0, x, y - (leader->airFrames != -1 ? field_28D : field_28F), 0xC00);
+                field_2A9_6 = 1;
+            }
+            state = 15;
+            // fallthrough
+
+        case 15:
+            update_field_8023DD4(this);
+            break;
+    }
+}
+#endif
 
 asm_unified(".include \"asm/nonmatching/update_field_8023DD4.s\"");
 
@@ -647,7 +1233,7 @@ void FieldManager::sub_80264F4(u16 arg1) {
     sub_8021574(0, 0x8001, 0, 0, 0, buffer, 15);
 }
 
-void FieldManager::sub_80265EC() {
+void FieldManager::sub_80265EC(u16 arg1) {
     FieldObject* follower;
     int i;
 

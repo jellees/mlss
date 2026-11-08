@@ -93,8 +93,12 @@ struct struc_3000DD0 {
     u8 field_3; // Index into byte_83AAA6C
     u8 pad4[8];
     u16 field_C;
-    u8 padE[4];
+    u16 field_E;
+    u16 field_10;
     u16 field_12;
+    u8 field_14;
+    u8 pad15;
+    u16 field_16;
 };
 
 struct struc_3000D18 {
@@ -522,7 +526,7 @@ struct EventScriptProcess* evts_process_init_80EF3FC(void*, int, u8, char*);
 void sub_819A138(void*, u32);
 void sub_805A0EC(struct Process*, int, u16*, u16*);
 void sub_805C73C(struct Process*, u32);
-void sub_805CCC0(struct Process*, u32);
+void sub_805CCC0(void*, u32);
 void sub_80F0184(struct EventScriptProcess*);
 void sub_80F032C(struct EventScriptProcess*);
 u8 sub_80E98C0(void*, int, int);
@@ -544,8 +548,40 @@ void sub_801BC40(struct struc_3000D44*, u16, u8);
 void sub_8029A0C(struct FieldManager*, int, int);
 void sub_802EF18(struct FieldManager*);
 void sub_80290E0(struct FieldManager*);
+void make_btl_8028F54(struct FieldManager*);
+void sub_80290CC(struct FieldManager*);
+void sub_8029080(struct FieldManager*);
+void sub_802814C(struct FieldManager*);
+u8* sub_80FB7E0(u16);
+u8* sub_80FB7F0(u16);
+void* sub_8059EF0(u16);
+void sub_80EFB18(struct EventScriptProcess*);
+void sub_802955C(struct FieldManager*);
+void sub_80294A0(struct FieldManager*);
+void sub_8029460(struct FieldManager*);
+void sub_80293F8(struct FieldManager*, u16);
+void sub_80293B8(struct FieldManager*);
+void sub_80EFA14(struct EventScriptProcess*, int, int);
+void sub_80F01D4(struct EventScriptProcess*, int, int);
+void sub_802DF80(struct FieldManager*, int);
+void sub_8028248(struct FieldManager*);
+void sub_802E4C8(struct FieldManager*, int);
+void sub_80284B0(struct FieldManager*, int, int);
+void sub_805952C(struct Process*, u16, u16);
+void sub_80298B0(void);
+void sub_80EF79C(struct EventScriptProcess*, void*);
+void sub_8019650(int, int, int);
+void sub_8019628(int);
+u8 sub_80195F8(int);
+int sub_8019610(int);
+void sub_803C788(struct FieldManager*, void*);
+void sub_802F834(struct FieldManager*);
+void sub_80297B8(struct FieldManager*);
+void sub_8028AFC(struct FieldManager*, int, int, int, int, int);
+u8 sub_802DC0C(struct FieldManager*, void*);
+void update_field_8023DD4(struct FieldManager*);
 void sub_80291EC(struct FieldManager*, int, int, u16, u16, u16);
-void sub_805C9DC(struct Process*, u8);
+void sub_805C9DC(void*, u8);
 struct Process* sub_8079D1C(void*, int, char*, u8, u16, u16*, int, int, void (*)(struct FieldManager*));
 void sub_80292A0(struct FieldManager*);
 void sub_801BD50(int);
@@ -589,6 +625,10 @@ extern void (*dword_3001034)(int, void*, int);
 extern int (*dword_3001038)();
 
 // ROM
+extern struct struc_3000DD0 stru_83A78D4[]; // Header of each room
+extern u8 dword_839EF80[];
+extern u8 dword_839F024[];
+extern u8 dword_821F808[];
 extern u8 byte_83AAA6C[];   // 3 archive entries per room (0xFF: none) + 1 unused?
 extern u32 dword_86527F4[]; // Archive: offsets from its start
 extern struct SignMapEntry stru_83A0D2C[]; // Sign zoom and center per room

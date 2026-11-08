@@ -20,7 +20,8 @@ struct FieldStruct4 {
     u8 field_10[2]; // Indexed by !FieldPlayerCharacter::field_352_7
     u8 field_12;
     s8 field_13;
-    u8 pad_14[0x2];
+    u8 field_14;
+    u8 pad_15;
     u8 field_16_0 : 7;
     u8 field_16_7 : 1;
     u8 field_17_0 : 7; // FieldPlayerCharacter::method5's copy of field_16_0
@@ -128,7 +129,8 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_380;
     u16 field_382;
     u16 field_384;
-    u8 pad_386[0x6];
+    u8 pad_386[0x2];
+    FieldPlayerCharacter* field_388; // The other player character
 
     FieldPlayerCharacter(int roomId, int index);                    // 0x08048064
     void sub_8048174(int arg);                                    // 0x08048174
@@ -255,7 +257,7 @@ class FieldPlayerShotBullet {
     u16 hitHeight;
     u16 hitDepth;
     s8 frame;  // Animation frame to restore (sub_804DFE8)
-    void* map; // The owner's collision map (FieldObject::field_290)
+    S_MP* map; // The owner's collision map (FieldObject::field_290)
     struct Sprite* sprite;
     FieldObject* owner;
 

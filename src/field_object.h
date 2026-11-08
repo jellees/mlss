@@ -8,6 +8,8 @@
 // first, method4 last), then the ones defined in this class (~FieldObject).
 #pragma interface
 
+#include "text080575C8.h"
+
 // FieldObject::state. The base class only sets the generic values below (sub_804034C, from the
 // physics); subclasses use higher values for their own actions (FieldPlayerCharacter: 4, 5 = hammer, 7
 // = hammer hits, 10, ...). method6 re-applies the animation when it changes.
@@ -185,7 +187,7 @@ class FieldObject {
     s32 field_284; // Collision box left, top and bottom (FieldPlayerCharacter::sub_804B028)
     s32 field_288;
     s32 field_28C;
-    void* field_290;
+    S_MP* field_290;
     struct Sprite* sprite;
     u32 field_298_0 : 1;
     u32 field_298_1 : 1;

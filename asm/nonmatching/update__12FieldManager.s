@@ -1139,7 +1139,7 @@ _08022FA2:
 	adds r0, r7, r1
 	ldrh r1, [r0, #0x00]
 	adds r0, r7, #0x0
-	bl sub_80265EC__12FieldManager
+	bl sub_80265EC__12FieldManagerUs
 	bl sub_8020A78
 	movs r0, #0x0B
 	strb r0, [r7, #0x00]

@@ -24,9 +24,16 @@ struct FieldStruct1 {
     s16 field_6;
 };
 
+struct FieldStruct5 {
+    u8 pad_0[0x8];
+    u8* field_8;
+};
+
 // "FMEX" buffer (FieldManager::field_1C).
 struct FieldStruct2 {
-    u8 pad_0[0x25C];
+    u8 pad_0[0x10];
+    struct FieldStruct5* field_10;
+    u8 pad_14[0x248];
     struct FieldStruct1 field_25C[4];
     u8 field_27C[0x44];
 };
@@ -68,11 +75,13 @@ class FieldManager : public Process {
     u16* field_C8;
     u16* field_CC;
     struct struc_3000388* field_D0;
-    u8 pad_D4[0x8];
+    struct struc_3000DD0* field_D4; // Header of the current room
+    u8* field_D8;
     u8* field_DC; // Count, first index and offset of the 8-byte entries read by sub_8026C78
-    u8 pad_E0[0x4];
+    void* field_E0;
     u32 field_E4;
-    u8 pad_E8[0x8];
+    u32 field_E8;
+    u32 field_EC;
     u32 field_F0;
     u8 pad_F4[0x4];
     u8 field_F8_0 : 1;
@@ -103,7 +112,7 @@ class FieldManager : public Process {
     u16 field_FC_11 : 1;
     u16 field_FC_12 : 4;
     u16 field_FE;
-    u8 pad_100[0x2];
+    u16 field_100;
     u16 field_102; // Wipe center x
     u16 field_104; // Wipe center y
     u16 field_106; // Wipe radius
@@ -159,7 +168,7 @@ class FieldManager : public Process {
     u8 field_1F8;
     u8 pad_1F9;
     u16 field_1FA;
-    Process* field_1FC;
+    S_FX* field_1FC;
     FieldPlayerCharacter* leader;
     FieldPlayerCharacter* follower;
     u32 field_208_0 : 1;
@@ -184,7 +193,8 @@ class FieldManager : public Process {
     u32 field_20A_5 : 2;
     u32 field_20A_7 : 2;
     u32 field_20B_1 : 1;
-    u32 field_20B_2 : 2;
+    u32 field_20B_2 : 1;
+    u32 field_20B_3 : 1;
     u32 field_20B_4 : 1;
     u32 field_20B_5 : 1;
     u32 field_20B_6 : 1;
@@ -198,7 +208,9 @@ class FieldManager : public Process {
     u8 field_246_1 : 1;
     u8 field_246_2 : 3;
     u8 field_246_5 : 3;
-    u8 pad_247[0x24];
+    u8 pad_247[0x21];
+    u16 field_268;
+    u8 pad_26A;
     u8 field_26B_0 : 5;
     u8 shotBulletIndex : 3; // Next shotBullets slot: counts up for jets, down from 3 for bubbles
     u8 field_26C;
@@ -209,7 +221,8 @@ class FieldManager : public Process {
     u16 field_280;
     u16 field_282;
     u16 field_284;
-    u8 pad_286[0x4];
+    u16 field_286;
+    u16 field_288;
     u8 field_28A;
     u8 field_28B;
     u8 field_28C;
@@ -227,22 +240,26 @@ class FieldManager : public Process {
     u8 field_2A8_5 : 1;
     u8 field_2A8_6 : 1;
     u8 field_2A8_7 : 1;
-    u8 field_2A9_0 : 2;
+    u8 field_2A9_0 : 1;
+    u8 field_2A9_1 : 1;
     u8 field_2A9_2 : 3; // Battle: mode passed to sub_80277C4
     u8 field_2A9_5 : 1;
     u8 field_2A9_6 : 1;
     u8 field_2A9_7 : 1;
     u16 field_2AA;
-    u8 pad_2AC[0x6];
+    u8 pad_2AC[0x5];
+    u8 field_2B1_0 : 2;
+    u8 field_2B1_2 : 6;
     s16 field_2B2;
-    u8 pad_2B4[0x4];
+    s16 field_2B4;
+    u8 pad_2B6[0x2];
     u8 field_2B8_0 : 1;
     u8 field_2B8_1 : 3;
     u8 field_2B8_4 : 1;
     u8 field_2B8_5 : 1;
     u8 field_2B8_6 : 1;
     u8 field_2B8_7 : 1;
-    u8 field_2B9;
+    s8 field_2B9;
     u8 pad_2BA[0x12];
     u32 field_2CC;
     u8 pad_2D0[0x8];
@@ -259,7 +276,7 @@ class FieldManager : public Process {
     Process* field_308;
     Process* field_30C;
     FieldProcess803EA00* field_310;
-    Process* field_314;
+    PANM* field_314;
     Process* field_318; // "WIPE"
     struct EventScriptProcess* evts;
     struct EventScriptProcess* bevs;
@@ -279,7 +296,7 @@ class FieldManager : public Process {
     void sub_80262CC(int x, int y, int z, int height, int type, bool arg6, bool playSound);
     void sub_802641C(int arg1, int arg2, int arg3, int arg4);
     void sub_80264F4(u16 arg1);
-    void sub_80265EC();
+    void sub_80265EC(u16 arg1);
     void make_field_objects_80267C0(int roomId);
     void sub_8026C78();
     void sub_8026E94();
