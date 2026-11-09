@@ -3,6 +3,9 @@
 
 #include "field_object.h"
 
+// FSPL, most likely stands for FieldSpecial. This object contains the shirts/toys (from the field mini
+// games). Tutorial icons etc.
+
 // "FSPL". Implemented in asm/text0805139C.s (from 0x0805139C). Interface-only, so that no file emits
 // its vtable or inline members.
 #pragma interface
