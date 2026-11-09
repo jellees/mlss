@@ -8,7 +8,8 @@
 
 inline void* SaveMenu::sub_812A930(void* buf) {
     if (this->field_B1) {
-        buf = sub_8122198(buf, dword_3000FF4->field_30, dword_3000FF4->field_6C, this->field_AF & 2);
+        buf =
+            sub_8122198(buf, dword_3000FF4[0].field_30, dword_3000FF4[1].field_30, this->field_AF & 2);
     } else {
         buf = sub_8122198(buf, this->entry.field_14, this->entry.field_15, this->field_AF & 1);
     }

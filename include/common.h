@@ -309,11 +309,13 @@ struct EeprStruct1 {
     struct SaveSlot slots[3];
 };
 
+// One entry per brother, indexed by FieldObject::field_54
 struct struc_3000FF4 {
-    u8 pad0[0x30];
+    u8 pad0[0xE];
+    u16 field_E;
+    u8 pad10[0x20];
     u8 field_30;
-    u8 pad31[0x3B];
-    u8 field_6C;
+    u8 pad31[0xB];
 };
 
 struct struc_8021EA8 {
@@ -460,6 +462,7 @@ void sub_801A548(void);
 void sub_81994EC(int*, void*);
 void sub_801A6B0(void);
 void sub_801ABE8(u16, u16, int);
+void sub_801AD3C(void);
 void sub_801E150(struct Sprite*, int, int, int, int);
 void sub_8021ED8(struct Sprite*);
 u16* sub_80FB790(u16, u8*);
@@ -593,7 +596,6 @@ void sub_805BFF0(struct Process*);
 void sub_805BED8(struct Process*);
 void sub_803CB5C(struct FieldManager*);
 u8 sub_803E9F0(struct FieldManager*);
-void sub_802A608(struct FieldManager*);
 void sub_802C390(struct FieldManager*);
 void sub_802E854(struct FieldManager*, int);
 void sub_802EC64(struct FieldManager*, int);
@@ -601,7 +603,6 @@ void sub_8051208(struct FieldObject*, u32);
 void sub_803C5A4(struct FieldManager*);
 void sub_803CF64(struct FieldManager*);
 void sub_802F938(struct FieldManager*);
-void sub_802A740(struct FieldManager*);
 void sub_802FD70(struct FieldManager*);
 void sub_80EF618(struct EventScriptProcess*, int, void*, int);
 void sub_80EF874(struct EventScriptProcess*, u8, u32, int, int, int, u16);

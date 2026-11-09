@@ -1162,7 +1162,7 @@ _08024764: .4byte 0x000002AA
 _08024768: .4byte 0x000002A9
 _0802476C:
 	mov r0, r10
-	bl sub_802A608
+	bl sub_802A608__12FieldManager
 	mov r0, r10
 	bl sub_802C390
 	movs r0, #0x95
@@ -1794,7 +1794,7 @@ _08024C48:
 	b _08024C6E
 _08024C68:
 	mov r0, r10
-	bl sub_802A740
+	bl sub_802A740__12FieldManager
 _08024C6E:
 	mov r0, r10
 	bl sub_802FD70

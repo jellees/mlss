@@ -1079,7 +1079,7 @@ void FieldManager::update_field_8023DD4() {
             break;
     }
 
-    sub_802A608(this);
+    sub_802A608();
     sub_802C390(this);
 
     if (field_12A == 2) {
@@ -1152,7 +1152,7 @@ void FieldManager::update_field_8023DD4() {
             } else if (leader->field_358_3) {
                 sub_802F938(this);
             } else {
-                sub_802A740(this);
+                sub_802A740();
             }
         }
         sub_802FD70(this);
@@ -3576,5 +3576,398 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
     sub_802DDB4(this, leader, 0, 0);
     sub_802DDB4(this, follower, brothersTogether, 0);
     sub_802DF80(this, 0);
+}
+#endif
+
+void FieldManager::sub_802A4E8() {
+    u8 direction = follower->angle >> 5;
+
+    if (leader->field_353_4 != 0) {
+        if (leader->field_26_2 == 3) {
+            if (leader->field_353_4 == 1) {
+                if (follower->field_26_2 != 3) {
+                    follower->field_353_4 = 0;
+                } else if (leader->airFrames == -1) {
+                    if (direction == 6 || direction == 2) {
+                        follower->field_353_4 = 0;
+                    } else {
+                        follower->field_353_4 = 1;
+                    }
+                } else if (direction == 6 || direction == 2) {
+                    follower->field_353_4 = leader->field_353_4;
+                } else {
+                    follower->field_353_4 = leader->field_353_4 + 1;
+                }
+            } else if (follower->field_26_2 == 3) {
+                if (direction == 6 || direction == 2) {
+                    follower->field_353_4 = 1;
+                } else {
+                    follower->field_353_4 = 2;
+                }
+            } else {
+                follower->field_353_4 = 1;
+            }
+        } else {
+            follower->field_353_4 = leader->field_353_4;
+        }
+    } else if (follower->field_26_2 == 3) {
+        if (direction == 6 || direction == 2) {
+            follower->field_353_4 = leader->field_353_4;
+        } else {
+            follower->field_353_4 = leader->field_353_4 + 1;
+        }
+    } else {
+        follower->field_353_4 = 0;
+    }
+}
+
+static inline u16 get_3000FF4_Field_E(FieldPlayerCharacter* player) {
+    struct struc_3000FF4* entry = dword_3000FF4;
+
+    entry += player->field_54;
+    return entry->field_E;
+}
+
+void FieldManager::sub_802A608() {
+    if (leader->field_358_3 || (gGameState.field_3C.field_3C_0 & 0xF3) != 0xF3) {
+        if (leader->field_35A_2) {
+            leader->sub_80492DC();
+        }
+        if (follower->field_35A_2) {
+            follower->sub_80492DC();
+        }
+        return;
+    }
+
+    if (!leader->field_35A_11 && !leader->field_35A_12 && !leader->field_35A_13 && !leader->field_35A_14
+        && leader->state == 0 && get_3000FF4_Field_E(leader) <= 1) {
+        leader->sub_804FD3C();
+    } else if (leader->field_35A_2) {
+        leader->sub_80492DC();
+    }
+
+    if (!follower->field_35A_11 && !follower->field_35A_12 && !follower->field_35A_13
+        && !follower->field_35A_14 && follower->state == 0 && get_3000FF4_Field_E(follower) <= 1) {
+        follower->sub_804FD3C();
+    } else if (follower->field_35A_2) {
+        follower->sub_80492DC();
+    }
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_802A740__12FieldManager.s\"");
+#else
+static inline void setField_16_0(FieldManager* manager, u8 value) {
+    manager->leader->field_368->field_16_0 = value;
+    manager->follower->field_368->field_16_0 = value;
+}
+
+void FieldManager::sub_802A740() {
+    u8 field_2B8_4Copy;
+    int start;
+
+    if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x2A2)) {
+        setField_16_0(this, 0x7F);
+    } else {
+        setField_16_0(this, 0);
+    }
+    field_2B8_4Copy = field_2B8_4;
+
+    if (field_12A != 0) {
+        if (field_2B8_4) {
+            sub_802F498();
+            if (!leader->field_353_1) {
+                leader->sub_804FB64(objects, 0, !field_FA_10);
+            }
+            if (brothersTogether && !follower->field_353_1) {
+                follower->sub_804FB64(objects, 0, !field_FA_10);
+            }
+            if (follower->previousHeight < 0 && follower->height == 0) {
+                follower->height = leader->height;
+            }
+        }
+        {
+            int i;
+            for (i = 2; i < field_10B; i++) {
+                objects[i]->sub_80418E8(objects);
+            }
+        }
+        sub_802563C();
+        sub_8025ACC();
+        objects[0]->sub_80418E8(objects);
+        objects[1]->sub_80418E8(objects);
+    }
+
+    if (field_FA_10 && !leader->field_2B5_0 && !leader->field_2B5_3 && !follower->field_2B5_0
+        && !follower->field_2B5_3) {
+        if (leader->state <= 1) {
+            leader->field_35C = leader->z + 0x1E00;
+        }
+        if (follower->state <= 1) {
+            follower->field_35C = follower->z + 0x1E00;
+        }
+        if (leader->state == 4 && follower->state == 4) {
+            leader->field_260 = 0x200;
+            follower->field_260 = 0x200;
+        } else if (leader->state <= 1 || follower->state <= 1) {
+            leader->field_260 = 0x100;
+            follower->field_260 = 0x100;
+        }
+        if ((s16)leader->field_23E < (s16)leader->field_260) {
+            leader->field_23E += 16;
+            if ((s16)leader->field_23E > (s16)leader->field_260) {
+                leader->field_23E = leader->field_260;
+            }
+        } else if ((s16)leader->field_23E > (s16)leader->field_260) {
+            leader->field_23E -= 8;
+            if ((s16)leader->field_23E < (s16)leader->field_260) {
+                leader->field_23E = leader->field_260;
+            }
+        }
+        follower->field_23E = leader->field_23E;
+    }
+
+    if ((field_12A >= 1 && field_12A <= 5) || field_12A == 10 || field_12A == 11 || field_12A == 12
+        || field_12A == 13 || field_12A == 14) {
+        switch (leader->state) {
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 58:
+            case 62:
+            case 63:
+            case 70:
+            case 71:
+            case 72:
+                sub_802C774(leader);
+                break;
+            default:
+                sub_802C068(field_D0);
+                if ((u16)(leader->state - 3) <= 1) {
+                    int velocityZ = field_FA_10 ? -0x200 : 0;
+                    if (velocityZ != 0 && leader->velocityZ < velocityZ) {
+                        leader->velocityZ = velocityZ;
+                    }
+                }
+                sub_804FE68(leader, objects);
+                if (leader->state == 4 && !leader->field_2B5_0 && !leader->field_2B5_3) {
+                    if (leader->field_214_0 == 4 && leader->sprite->field_12_3
+                        && --leader->field_355 == 0) {
+                        leader->field_214_0 = 5;
+                    }
+                    if (leader->z + leader->height > leader->field_35C) {
+                        leader->height = leader->field_35C - leader->z;
+                    }
+                }
+                break;
+        }
+
+        if (!field_2B8_4) {
+            sub_802B654(leader);
+        }
+
+        if (leader->field_35A_11 && leader->state <= 4) {
+            int result = sub_80261C0(leader);
+            if (result != -1) {
+                if (leader->field_36C->field_12_5 || leader->field_36C->field_16 != 0x54) {
+                    leader->sub_80497A8();
+                    sub_801ABE8(0, 0x1E, 0);
+                }
+                if (result & 0x80) {
+                    leader->field_36C->xScale = 0xB3;
+                    leader->field_36C->yScale = 0xB3;
+                } else {
+                    leader->field_36C->xScale = 0x100;
+                    leader->field_36C->yScale = 0x100;
+                }
+            } else if (!leader->field_36C->field_12_5 && leader->field_36C->field_16 == 0x54) {
+                sub_8020D40(leader->field_36C);
+                sub_801AD3C();
+            }
+        }
+
+        sub_803C7D8(leader);
+        if (!field_2B8_4) {
+            if (!field_2B8_4Copy) {
+                sub_802E2F4();
+            }
+            if (!field_2B8_4 && leader->field_353_3 && leader->airFrames == -1
+                && !leader->field_2B5_0) {
+                leader->sub_804FC30();
+            }
+        }
+
+        if (brothersTogether && !follower->field_214_7 && !follower->field_214_8) {
+            struct Sprite* sprite = follower->sprite;
+            u8 frame;
+
+            if (follower->state == 1) {
+                frame = (s16)follower->field_23E / 32;
+            } else {
+                frame = field_FA_11;
+            }
+            sprite->field_20[0] = frame;
+            follower->field_239 = frame;
+        }
+
+        switch (follower->state) {
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 58:
+            case 62:
+            case 63:
+            case 70:
+            case 71:
+            case 72:
+                sub_802C774(follower);
+                break;
+            default:
+                sub_802C208();
+                if ((u16)(follower->state - 3) <= 1) {
+                    int velocityZ = field_FA_10 ? -0x200 : 0;
+                    if (velocityZ != 0 && follower->velocityZ < velocityZ) {
+                        follower->velocityZ = velocityZ;
+                    }
+                }
+                sub_804FE68(follower, objects);
+                if (follower->state == 4 && !follower->field_2B5_0 && !follower->field_2B5_3) {
+                    if (follower->field_214_0 == 4 && follower->sprite->field_12_3
+                        && --follower->field_355 == 0) {
+                        follower->field_214_0 = 5;
+                    }
+                    if (follower->z + follower->height > follower->field_35C) {
+                        follower->height = follower->field_35C - follower->z;
+                    }
+                }
+                break;
+        }
+
+        if (!brothersTogether) {
+            sub_802B654(follower);
+            if (!field_2B8_4 && follower->field_353_3) {
+                follower->sub_804FC30();
+            }
+            sub_803C834(leader);
+            sub_803C834(follower);
+        } else if (!field_2B8_4) {
+            u8 resetHeight;
+
+            if (follower->field_20C_5 || follower->field_20C_6) {
+                follower->method12(&objects[luigiLeads], 1, 0);
+            }
+            if (field_246_2 == 3 && field_10E != 0) {
+                follower->method12(&objects[field_10E], field_10F, 0);
+            }
+            if (field_110 != 0) {
+                follower->method12(&objects[field_110], field_111, 0);
+            }
+            if (field_114 != 0) {
+                start = field_114;
+            } else if (field_116 != 0) {
+                start = field_116;
+            } else if (field_11A != 0) {
+                start = field_11A;
+            } else {
+                start = 0;
+            }
+            if (start > 0) {
+                follower->method12(&objects[start], field_10B - start, 0);
+            }
+            if (follower->field_353_3 && follower->airFrames == -1) {
+                follower->sub_8046A10();
+                follower->field_23E = leader->field_23E;
+            }
+            follower->method13();
+            resetHeight = sub_802BD2C();
+            follower->sub_804FB64(objects, 0, 0);
+            if (!leader->field_26_2 && !follower->field_26_2
+                && (leader->field_4E_2 == 3 || follower->field_4E_2 == 3)) {
+                follower->x = follower->previousX;
+                follower->y = follower->previousY;
+                sub_802DF80(this, 0);
+            }
+            sub_802A4E8();
+            if (resetHeight) {
+                follower->height = 0;
+            }
+            if (field_208_5) {
+                if ((follower->previousHeight == 0 && follower->height > 0
+                     && follower->z + follower->height <= follower->previousZ)
+                    || leader->z == follower->z) {
+                    field_208_5 = 0;
+                }
+            }
+            if (brothersTogether && !leader->field_358_12 && follower->airFrames == -1
+                && leader->z + leader->height < follower->z + follower->height
+                && leader->sub_8047C18(follower)) {
+                field_208_5 = 1;
+            }
+            sub_803C834(leader);
+        }
+
+        if (!field_F9_4 && !field_F9_5) {
+            sub_802B804(leader, field_209_0);
+            sub_802B804(follower, field_209_0);
+        }
+
+        if (field_12A == 2 && field_208_3 && !brothersTogether && field_246_2 != 3
+            && !follower->sub_804D0EC() && (leader->height == 0 || (s8)leader->field_1 != -1)
+            && (follower->height == 0 || (s8)follower->field_1 != -1)
+            && (leader->z + leader->height == follower->z + follower->height
+                || (leader->field_26_4 & follower->field_26_4))) {
+            s8 value = (s8)(leader->field_33C_0 << 1) >> 1;
+
+            if (value == (luigiLeads ^ 1) && (s8)(leader->field_33D_0 << 1) >> 1 == value
+                && (s8)leader->field_342 == -1) {
+                leader->sub_804FC90();
+                follower->field_368->field_0 = leader->field_368->field_0;
+                if (leader->field_368->field_14 != -1) {
+                    leader->field_368->field_10[0] = leader->field_368->field_14;
+                    leader->field_368->field_14 = -1;
+                }
+                if (follower->field_368->field_14 != -1) {
+                    follower->field_368->field_10[0] = follower->field_368->field_14;
+                    follower->field_368->field_14 = -1;
+                }
+                sub_802C4D4(1, 1);
+                sub_802E4C8(this, 0);
+            }
+        }
+
+        if (!field_209_0 && sub_802EDC4(leader, 1, field_FA_10 ^ 1, 0)) {
+            leader->velocityY = 0;
+            leader->velocityX = 0;
+            follower->velocityY = 0;
+            follower->velocityX = 0;
+        }
+    } else {
+        sub_8025ACC();
+        leader->sub_804FC90();
+        follower->sub_804FC90();
+    }
+
+    if (leader->state <= 4) {
+        leader->sub_80490CC(field_FA_10);
+    }
+    if (follower->state <= 4) {
+        follower->sub_80490CC(field_FA_10);
+    }
+    if (field_FA_10 && brothersTogether && !leader->field_2B5_0 && !leader->field_2B5_3
+        && !follower->field_2B5_0 && !follower->field_2B5_3 && leader->state <= 1
+        && follower->state <= 1 && (leader->previousState == 4 || follower->previousState == 4)) {
+        sub_802DF80(this, 0);
+    }
 }
 #endif

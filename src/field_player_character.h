@@ -105,7 +105,8 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_35A_13 : 1;
     u16 field_35A_14 : 1;
     u16 field_35A_15 : 1;
-    u8 pad_35C[0x6];
+    s32 field_35C;
+    u8 pad_360[0x2];
     s16 field_362; // method5's copy of velocityX
     s16 field_364; // method5's copy of velocityY
     u8 pad_366[0x2];

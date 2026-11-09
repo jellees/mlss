@@ -410,6 +410,21 @@ class FieldManager : public Process {
     void sub_8029878();
     void sub_8029934();
     void sub_8029A0C(int mode, int arg2);
+    void sub_802A4E8();
+    void sub_802A608();
+    void sub_802A740();
+    void sub_802B654(FieldPlayerCharacter* player);
+    void sub_802B804(FieldPlayerCharacter* player, u8 arg2);
+    u8 sub_802BD2C();
+    void sub_802C068(struct struc_3000388* arg1);
+    void sub_802C208();
+    void sub_802C4D4(int arg1, int arg2);
+    void sub_802C774(FieldPlayerCharacter* player);
+    void sub_802E2F4();
+    u8 sub_802EDC4(FieldPlayerCharacter* player, int arg2, u8 arg3, u8 arg4);
+    void sub_802F498();
+    void sub_803C7D8(FieldPlayerCharacter* player);
+    void sub_803C834(FieldPlayerCharacter* player);
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
     void sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,

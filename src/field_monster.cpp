@@ -4,7 +4,7 @@
 #include "heap.h"
 #include "field_monster.h"
 
-void sub_804FE68(FieldObject* object) {
+void sub_804FE68(FieldObject* object, FieldObject** objects) {
     if (object->field_20C_0) {
         if (object->field_2B5_0 == 0) {
             object->x += object->velocityX;

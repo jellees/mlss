@@ -142,7 +142,7 @@ class FieldMonster : public FieldObject {
 };
 
 extern "C" {
-void sub_804FE68(FieldObject*);
+void sub_804FE68(FieldObject* object, FieldObject** objects);
 }
 
 #endif
