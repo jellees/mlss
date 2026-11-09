@@ -8,7 +8,7 @@
 #include "field_player_character.h"
 #include "field_monster.h"
 #include "field_object_subclass2.h"
-#include "field_object_subclass3.h"
+#include "field_block.h"
 
 // Handle returned by bevs_process_init_80F048C and evts_process_init_80EF3FC.
 struct EventScriptProcess {

@@ -33,7 +33,7 @@ SECTIONS
         src/field_object.o(.text);
         src/field_player_character.o(.text);
         src/field_monster.o(.text);
-        asm/field_object_subclass3.o(.text);
+        asm/field_block.o(.text);
         asm/text0805139C.o(.text);
         src/sign.o(.text);
         src/system_screens.o(.text);

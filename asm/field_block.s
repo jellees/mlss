@@ -3,8 +3,8 @@
 	.syntax unified
 	.text
 
-	thumb_func_start __20FieldObjectSubclass3ii
-__20FieldObjectSubclass3ii:
+	thumb_func_start __10FieldBlockii
+__10FieldBlockii:
 	push {r4, r5, lr}
 	adds r4, r0, #0x0
 	bl __11FieldObjectii
@@ -74,8 +74,8 @@ _08050930: .4byte 0x0000023B
 _08050934: .4byte 0x0000033E
 _08050938: .4byte 0x00000342
 _0805093C: .4byte 0x0000FFFF
-	thumb_func_start __20FieldObjectSubclass3PUcUsii
-__20FieldObjectSubclass3PUcUsii:
+	thumb_func_start __10FieldBlockPUcUsii
+__10FieldBlockPUcUsii:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9

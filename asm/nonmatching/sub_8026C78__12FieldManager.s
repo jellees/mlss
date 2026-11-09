@@ -76,7 +76,7 @@ _08026CDC:
 	str r3, [sp, #0x000]
 	adds r1, r7, #0x0
 	mov r2, r8
-	bl __20FieldObjectSubclass3PUcUsii
+	bl __10FieldBlockPUcUsii
 	adds r3, r0, #0x0
 	movs r0, #0x10
 	ands r4, r0

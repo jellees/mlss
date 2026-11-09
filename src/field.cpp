@@ -1876,7 +1876,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_119++;
                 break;
             case 7:
-                object = new (1, "FBLK", 1) FieldObjectSubclass3(roomId, i);
+                object = new (1, "FBLK", 1) FieldBlock(roomId, i);
                 objects[i] = object;
                 if (field_11A == 0) {
                     field_11A = i;
@@ -1927,8 +1927,8 @@ void FieldManager::sub_8026C78() {
             case 0x00:
             case 0x20:
             case 0x40: {
-                FieldObjectSubclass3* object =
-                    new (1, "SBLK", 1) FieldObjectSubclass3(entry, index, -1, -1);
+                FieldBlock* object =
+                    new (1, "SBLK", 1) FieldBlock(entry, index, -1, -1);
 
                 if ((flags & 0x10) && object->field_33C_0) {
                     object->field_20C_25 = 0;

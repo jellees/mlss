@@ -397,7 +397,7 @@ _08026ADC:
 	bl __nw__FUliPcUc
 	mov r1, r8
 	adds r2, r7, #0x0
-	bl __20FieldObjectSubclass3ii
+	bl __10FieldBlockii
 	lsls r2, r7, #0x02
 	adds r1, r5, #0x0
 	adds r1, #0x28
