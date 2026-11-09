@@ -3,8 +3,8 @@
 	.syntax unified
 	.text
 
-	thumb_func_start __20FieldObjectSubclass2ii
-__20FieldObjectSubclass2ii:
+	thumb_func_start __17FieldSpriteLayoutii
+__17FieldSpriteLayoutii:
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0x0
 	bl __11FieldObjectii

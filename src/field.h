@@ -7,7 +7,7 @@
 #include "field_object.h"
 #include "field_player_character.h"
 #include "field_monster.h"
-#include "field_object_subclass2.h"
+#include "field_sprite_layout.h"
 #include "field_block.h"
 
 // Handle returned by bevs_process_init_80F048C and evts_process_init_80EF3FC.

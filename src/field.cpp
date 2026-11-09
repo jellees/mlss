@@ -1824,6 +1824,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_10F++;
                 break;
             case 2:
+                // Seems to be various bigger objects. Like boo statues, the magic tree etc.
                 object = new (1, "FBRD", 1) FieldObject(roomId, i);
                 objects[i] = object;
                 if (field_110 == 0) {
@@ -1845,6 +1846,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 break;
             }
             case 4:
+                // Field barrel, the barrel that luigi can use.
                 object = new (1, "FBRL", 1) FieldObject(roomId, i);
                 objects[i] = object;
                 if (field_114 == 0) {
@@ -1853,6 +1855,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_115++;
                 break;
             case 5: {
+                // Field rock, the rocks that you can break in game. They are gone forever once broken.
                 FieldObject* object = new (1, "FRCK", 1) FieldObject(roomId, i);
 
                 if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, object->field_22C_10 + 0x1160) == 1) {
@@ -1868,7 +1871,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 break;
             }
             case 6:
-                object = new (1, "FSPL", 1) FieldObjectSubclass2(roomId, i);
+                object = new (1, "FSPL", 1) FieldSpriteLayout(roomId, i);
                 objects[i] = object;
                 if (field_118 == 0) {
                     field_118 = i;
@@ -1927,8 +1930,7 @@ void FieldManager::sub_8026C78() {
             case 0x00:
             case 0x20:
             case 0x40: {
-                FieldBlock* object =
-                    new (1, "SBLK", 1) FieldBlock(entry, index, -1, -1);
+                FieldBlock* object = new (1, "SBLK", 1) FieldBlock(entry, index, -1, -1);
 
                 if ((flags & 0x10) && object->field_33C_0) {
                     object->field_20C_25 = 0;
