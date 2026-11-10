@@ -2343,7 +2343,7 @@ _0805E112:
 	lsls r1, r0, #0x08
 	asrs r1, r1, #0x10
 	adds r0, r2, #0x0
-	bl sub_81DA690
+	bl ArcTan2
 	adds r1, r5, #0x0
 	adds r1, #0xA8
 	lsls r0, r0, #0x10
@@ -3107,7 +3107,7 @@ _0805E6FA:
 	lsls r1, r0, #0x08
 	asrs r1, r1, #0x10
 	adds r0, r2, #0x0
-	bl sub_81DA690
+	bl ArcTan2
 	adds r1, r6, #0x0
 	adds r1, #0xA8
 	lsls r0, r0, #0x10
@@ -51001,7 +51001,7 @@ _0807670C:
 	asrs r0, r0, #0x10
 	lsls r1, r1, #0x10
 	asrs r1, r1, #0x10
-	bl sub_81DA690
+	bl ArcTan2
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x18
 	ldr r1, _08076748 @ =0xFFFFC000
@@ -66674,23 +66674,23 @@ _0807EB22:
 	ldr r1, _0807EBB0 @ =0x0820002C
 	add r0, sp, #0x010
 	movs r2, #0x08
-	bl sub_81DCD38
+	bl memcpy
 	add r5, sp, #0x018
 	ldr r1, _0807EBB4 @ =0x08200034
 	adds r0, r5, #0x0
 	movs r2, #0x10
-	bl sub_81DCD38
+	bl memcpy
 	add r1, sp, #0x028
 	mov r8, r1
 	ldr r1, _0807EBB8 @ =0x08200044
 	mov r0, r8
 	movs r2, #0x08
-	bl sub_81DCD38
+	bl memcpy
 	add r4, sp, #0x030
 	ldr r1, _0807EBBC @ =0x0820004C
 	adds r0, r4, #0x0
 	movs r2, #0x50
-	bl sub_81DCD38
+	bl memcpy
 	ldr r0, [r7, #0x18]
 	cmp r0, #0x00
 	bge _0807EB5A
@@ -66963,17 +66963,17 @@ _0807EF6E:
 	ldr r1, _0807EFC4 @ =0x0820009C
 	mov r0, sp
 	movs r2, #0x08
-	bl sub_81DCD38
+	bl memcpy
 	add r5, sp, #0x008
 	ldr r1, _0807EFC8 @ =0x082000A4
 	adds r0, r5, #0x0
 	movs r2, #0x08
-	bl sub_81DCD38
+	bl memcpy
 	add r4, sp, #0x010
 	ldr r1, _0807EFCC @ =0x082000AC
 	adds r0, r4, #0x0
 	movs r2, #0x08
-	bl sub_81DCD38
+	bl memcpy
 	movs r7, #0x00
 	ldr r2, [r6, #0x00]
 	ldr r0, [r2, #0x7C]
@@ -80779,7 +80779,7 @@ _08086DBC:
 	subs r1, r1, r4
 	lsls r1, r1, #0x10
 	asrs r1, r1, #0x10
-	bl sub_81DA690
+	bl ArcTan2
 	lsls r0, r0, #0x10
 	lsrs r4, r0, #0x10
 	ldr r2, _08086E24 @ =0x03001038
@@ -113850,32 +113850,32 @@ _08097780:
 	ldr r0, _0809793C @ =0x00005498
 	add r0, r8
 	ldr r0, [r0, #0x00]
-	bl sub_81DB964
+	bl __floatsidf
 	ldr r2, _08097940 @ =0x3FF66666
 	ldr r3, _08097944 @ =0x66666666
-	bl sub_81DB240
+	bl __muldf3
 	str r0, [sp, #0x004]
 	str r1, [sp, #0x008]
 	ldr r0, _08097948 @ =0x0000549C
 	add r0, r8
 	ldr r0, [r0, #0x00]
-	bl sub_81DB964
+	bl __floatsidf
 	str r0, [sp, #0x00C]
 	str r1, [sp, #0x010]
 	adds r0, r4, #0x0
-	bl sub_81DB964
+	bl __floatsidf
 	cmp r4, #0x00
 	bge _080977D8
 	ldr r2, _0809794C @ =0x41F00000
 	ldr r3, _08097950 @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 _080977D8:
 	ldr r2, _08097954 @ =0x3FE00000
 	ldr r3, _08097958 @ =0x00000000
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _0809795C @ =0x3FD33333
 	ldr r3, _08097960 @ =0x33333333
-	bl sub_81DB1D8
+	bl __adddf3
 	adds r5, r1, #0x0
 	adds r4, r0, #0x0
 	ldr r0, [r7, #0x28]
@@ -113897,26 +113897,26 @@ _080977D8:
 	adds r0, #0xFF
 _08097810:
 	asrs r0, r0, #0x08
-	bl sub_81DB964
+	bl __floatsidf
 	adds r3, r1, #0x0
 	adds r2, r0, #0x0
 	adds r1, r5, #0x0
 	adds r0, r4, #0x0
-	bl sub_81DB1D8
+	bl __adddf3
 	adds r3, r1, #0x0
 	adds r2, r0, #0x0
 	ldr r0, [sp, #0x00C]
 	ldr r1, [sp, #0x010]
-	bl sub_81DB240
+	bl __muldf3
 	adds r3, r1, #0x0
 	adds r2, r0, #0x0
 	ldr r0, [sp, #0x004]
 	ldr r1, [sp, #0x008]
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _08097964 @ =0x40700000
 	ldr r3, _08097968 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	ldr r1, [r6, #0x00]
 	subs r1, r1, r0
 	str r1, [r6, #0x00]
@@ -115422,14 +115422,14 @@ _08098460:
 	asrs r1, r0, #0x08
 	adds r0, r2, #0x0
 	bl __divsi3
-	bl sub_81DB964
+	bl __floatsidf
 	ldr r2, _08098528 @ =0x3FF33333
 	ldr r3, _0809852C @ =0x33333333
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _08098530 @ =0x40700000
 	ldr r3, _08098534 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	ldr r1, [r6, #0x10]
 	subs r1, r1, r0
 	str r1, [r6, #0x10]
@@ -140636,23 +140636,23 @@ sub_80A4B0C:
 	movs r0, #0x04
 	bl sub_81DD77C
 	adds r4, r0, #0x0
-	bl sub_81DB964
+	bl __floatsidf
 	cmp r4, #0x00
 	bge _080A4B56
 	ldr r2, _080A4CE8 @ =0x41F00000
 	ldr r3, _080A4CEC @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 _080A4B56:
 	ldr r2, _080A4CF0 @ =0x3FB99999
 	ldr r3, _080A4CF4 @ =0x9999999A
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _080A4CF8 @ =0x3FD99999
 	ldr r3, _080A4CFC @ =0x9999999A
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _080A4D00 @ =0x40700000
 	ldr r3, _080A4D04 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r1, r6, #0x0
 	adds r1, #0x7C
 	strh r0, [r1, #0x00]
@@ -140662,23 +140662,23 @@ _080A4B56:
 	bl sub_81DD77C
 	adds r4, r0, #0x0
 	ldr r7, [r6, #0x08]
-	bl sub_81DB964
+	bl __floatsidf
 	cmp r4, #0x00
 	bge _080A4B98
 	ldr r2, _080A4CE8 @ =0x41F00000
 	ldr r3, _080A4CEC @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 _080A4B98:
 	ldr r2, _080A4CF0 @ =0x3FB99999
 	ldr r3, _080A4CF4 @ =0x9999999A
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _080A4CF8 @ =0x3FD99999
 	ldr r3, _080A4CFC @ =0x9999999A
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _080A4D08 @ =0x40300000
 	ldr r3, _080A4D0C @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r1, r7, #0x0
 	adds r1, #0x20
 	strb r0, [r1, #0x00]
@@ -140698,23 +140698,23 @@ _080A4BBA:
 	movs r0, #0x04
 	bl sub_81DD77C
 	adds r4, r0, #0x0
-	bl sub_81DB964
+	bl __floatsidf
 	cmp r4, #0x00
 	bge _080A4BEC
 	ldr r2, _080A4CE8 @ =0x41F00000
 	ldr r3, _080A4CEC @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 _080A4BEC:
 	ldr r2, _080A4CF0 @ =0x3FB99999
 	ldr r3, _080A4CF4 @ =0x9999999A
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _080A4D10 @ =0x3FF80000
 	ldr r3, _080A4D14 @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _080A4D00 @ =0x40700000
 	ldr r3, _080A4D04 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r1, r6, #0x0
 	adds r1, #0x7C
 	strh r0, [r1, #0x00]
@@ -140724,23 +140724,23 @@ _080A4BEC:
 	bl sub_81DD77C
 	adds r4, r0, #0x0
 	ldr r7, [r6, #0x08]
-	bl sub_81DB964
+	bl __floatsidf
 	cmp r4, #0x00
 	bge _080A4C2E
 	ldr r2, _080A4CE8 @ =0x41F00000
 	ldr r3, _080A4CEC @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 _080A4C2E:
 	ldr r2, _080A4CF0 @ =0x3FB99999
 	ldr r3, _080A4CF4 @ =0x9999999A
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _080A4D10 @ =0x3FF80000
 	ldr r3, _080A4D14 @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _080A4D08 @ =0x40300000
 	ldr r3, _080A4D0C @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r1, r7, #0x0
 	adds r1, #0x20
 	strb r0, [r1, #0x00]
@@ -142796,23 +142796,23 @@ sub_80A5C28:
 	movs r0, #0x04
 	bl sub_81DD77C
 	adds r4, r0, #0x0
-	bl sub_81DB964
+	bl __floatsidf
 	cmp r4, #0x00
 	bge _080A5C72
 	ldr r2, _080A5E04 @ =0x41F00000
 	ldr r3, _080A5E08 @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 _080A5C72:
 	ldr r2, _080A5E0C @ =0x3FB99999
 	ldr r3, _080A5E10 @ =0x9999999A
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _080A5E14 @ =0x3FD99999
 	ldr r3, _080A5E18 @ =0x9999999A
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _080A5E1C @ =0x40700000
 	ldr r3, _080A5E20 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r1, r6, #0x0
 	adds r1, #0x7C
 	strh r0, [r1, #0x00]
@@ -142822,23 +142822,23 @@ _080A5C72:
 	bl sub_81DD77C
 	adds r4, r0, #0x0
 	ldr r7, [r6, #0x08]
-	bl sub_81DB964
+	bl __floatsidf
 	cmp r4, #0x00
 	bge _080A5CB4
 	ldr r2, _080A5E04 @ =0x41F00000
 	ldr r3, _080A5E08 @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 _080A5CB4:
 	ldr r2, _080A5E0C @ =0x3FB99999
 	ldr r3, _080A5E10 @ =0x9999999A
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _080A5E14 @ =0x3FD99999
 	ldr r3, _080A5E18 @ =0x9999999A
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _080A5E24 @ =0x40300000
 	ldr r3, _080A5E28 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r1, r7, #0x0
 	adds r1, #0x20
 	strb r0, [r1, #0x00]
@@ -142858,23 +142858,23 @@ _080A5CD6:
 	movs r0, #0x04
 	bl sub_81DD77C
 	adds r4, r0, #0x0
-	bl sub_81DB964
+	bl __floatsidf
 	cmp r4, #0x00
 	bge _080A5D08
 	ldr r2, _080A5E04 @ =0x41F00000
 	ldr r3, _080A5E08 @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 _080A5D08:
 	ldr r2, _080A5E0C @ =0x3FB99999
 	ldr r3, _080A5E10 @ =0x9999999A
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _080A5E2C @ =0x3FF80000
 	ldr r3, _080A5E30 @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _080A5E1C @ =0x40700000
 	ldr r3, _080A5E20 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r1, r6, #0x0
 	adds r1, #0x7C
 	strh r0, [r1, #0x00]
@@ -142884,23 +142884,23 @@ _080A5D08:
 	bl sub_81DD77C
 	adds r4, r0, #0x0
 	ldr r7, [r6, #0x08]
-	bl sub_81DB964
+	bl __floatsidf
 	cmp r4, #0x00
 	bge _080A5D4A
 	ldr r2, _080A5E04 @ =0x41F00000
 	ldr r3, _080A5E08 @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 _080A5D4A:
 	ldr r2, _080A5E0C @ =0x3FB99999
 	ldr r3, _080A5E10 @ =0x9999999A
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _080A5E2C @ =0x3FF80000
 	ldr r3, _080A5E30 @ =0x00000000
-	bl sub_81DB1D8
+	bl __adddf3
 	ldr r2, _080A5E24 @ =0x40300000
 	ldr r3, _080A5E28 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r1, r7, #0x0
 	adds r1, #0x20
 	strb r0, [r1, #0x00]
@@ -169848,7 +169848,7 @@ _080B25D4:
 	ldr r1, _080B26B4 @ =0x082000DC
 	add r0, sp, #0x004
 	movs r2, #0x03
-	bl sub_81DCD38
+	bl memcpy
 	ldr r0, [r6, #0x28]
 	movs r1, #0x91
 	lsls r1, r1, #0x01
@@ -270389,7 +270389,7 @@ _080E35E2:
 	mov r0, sp
 	ldr r1, _080E369C @ =0x08200100
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldrh r1, [r6, #0x02]
 	add r2, sp, #0x050
 	strh r1, [r2, #0x00]
@@ -270606,7 +270606,7 @@ _080E378C:
 	mov r0, sp
 	ldr r1, _080E383C @ =0x08200100
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldrh r1, [r6, #0x02]
 	add r2, sp, #0x050
 	strh r1, [r2, #0x00]
@@ -279780,7 +279780,7 @@ sub_80E92AC:
 	add r0, sp, #0x02C
 	add r1, sp, #0x018
 	movs r2, #0x14
-	bl sub_81DCD38
+	bl memcpy
 	str r5, [sp, #0x004]
 	ldr r0, [sp, #0x03C]
 	str r0, [sp, #0x000]
@@ -280200,7 +280200,7 @@ _080E95D6:
 	asrs r0, r0, #0x10
 	lsls r1, r1, #0x10
 	asrs r1, r1, #0x10
-	bl sub_81DA690
+	bl ArcTan2
 	movs r1, #0xA0
 	lsls r1, r1, #0x07
 	adds r0, r0, r1
@@ -326789,7 +326789,7 @@ sub_8104350:
 	movs r2, #0xA0
 	lsls r2, r2, #0x01
 	mov r0, sp
-	bl sub_81DCD38
+	bl memcpy
 	cmp r4, #0x00
 	bne _081043CC
 	cmp r6, #0x05
@@ -326826,27 +326826,27 @@ _08104430:
 	add r1, sp
 	mov r10, r1
 	adds r0, r7, #0x0
-	bl sub_81DB964
+	bl __floatsidf
 	str r0, [sp, #0x158]
 	str r1, [sp, #0x15C]
 	ldr r3, _08104770 @ =0x00000000
 	ldr r2, _0810476C @ =0x3FE80000
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _08104774 @ =0x40700000
 	ldr r3, _08104778 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r4, r0, #0x0
 	ldr r2, [sp, #0x14C]
 	adds r0, r2, r7
 	muls r0, r5
-	bl sub_81DB964
+	bl __floatsidf
 	str r0, [sp, #0x160]
 	str r1, [sp, #0x164]
 	ldr r2, _0810477C @ =0x3FD00000
 	ldr r3, _08104780 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r4, r4, r0
 	mov r0, r10
 	str r4, [r0, #0x00]
@@ -326856,18 +326856,18 @@ _08104430:
 	ldr r1, [sp, #0x15C]
 	adds r3, r6, #0x0
 	adds r2, r5, #0x0
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _08104774 @ =0x40700000
 	ldr r3, _08104778 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r4, r0, #0x0
 	ldr r0, [sp, #0x160]
 	ldr r1, [sp, #0x164]
 	adds r3, r6, #0x0
 	adds r2, r5, #0x0
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r4, r4, r0
 	mov r1, r10
 	str r4, [r1, #0x04]
@@ -326875,18 +326875,18 @@ _08104430:
 	ldr r1, [sp, #0x15C]
 	ldr r2, _0810477C @ =0x3FD00000
 	ldr r3, _08104780 @ =0x00000000
-	bl sub_81DB240
+	bl __muldf3
 	ldr r2, _08104774 @ =0x40700000
 	ldr r3, _08104778 @ =0x00000000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r4, r0, #0x0
 	ldr r0, [sp, #0x160]
 	ldr r1, [sp, #0x164]
 	ldr r3, _08104770 @ =0x00000000
 	ldr r2, _0810476C @ =0x3FE80000
-	bl sub_81DB240
-	bl sub_81DB9E0
+	bl __muldf3
+	bl __fixdfsi
 	adds r4, r4, r0
 	mov r2, r10
 	str r4, [r2, #0x08]
@@ -359960,7 +359960,7 @@ sub_8116B48:
 	ldr r1, _08116BC8 @ =0x08201F30
 	mov r0, sp
 	movs r2, #0x06
-	bl sub_81DCD38
+	bl memcpy
 	add r7, sp, #0x008
 	ldr r0, _08116BCC @ =0x03000FF4
 	ldr r0, [r0, #0x00]
@@ -359974,7 +359974,7 @@ sub_8116B48:
 	add r1, sp, #0x014
 	adds r0, r7, #0x0
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r5, #0x01
 	add r0, sp
 	ldrh r1, [r0, #0x00]
@@ -360678,7 +360678,7 @@ sub_8117778:
 	mov r8, r1
 	mov r0, sp
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	mov r0, r10
 	ldr r2, [r0, #0x00]
 	movs r0, #0x01
@@ -360708,7 +360708,7 @@ sub_8117778:
 	mov r0, r8
 	adds r1, r5, #0x0
 	movs r2, #0x03
-	bl sub_81DCD38
+	bl memcpy
 	add r4, sp, #0x018
 	mov r2, r10
 	ldr r1, [r2, #0x00]
@@ -360724,7 +360724,7 @@ sub_8117778:
 	add r1, sp, #0x024
 	adds r0, r4, #0x0
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	mov r1, r9
 	lsls r0, r1, #0x02
 	adds r4, r4, r0
@@ -360920,7 +360920,7 @@ sub_811795C:
 	mov r0, sp
 	mov r1, r9
 	movs r2, #0x03
-	bl sub_81DCD38
+	bl memcpy
 	ldr r2, [r5, #0x00]
 	adds r0, r2, #0x0
 	adds r0, #0x6E
@@ -360942,7 +360942,7 @@ sub_811795C:
 	mov r0, r9
 	adds r1, r4, #0x0
 	movs r2, #0x03
-	bl sub_81DCD38
+	bl memcpy
 	add r2, sp, #0x00C
 	mov r10, r2
 	ldr r1, [r5, #0x00]
@@ -360961,7 +360961,7 @@ sub_811795C:
 	mov r0, r10
 	adds r1, r7, #0x0
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldr r1, [r5, #0x00]
 	adds r0, r1, #0x0
 	adds r0, #0xF2
@@ -360975,11 +360975,11 @@ sub_811795C:
 	add r1, sp, #0x024
 	adds r0, r7, #0x0
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldr r1, _08117B30 @ =0x08201F36
 	adds r0, r4, #0x0
 	movs r2, #0x03
-	bl sub_81DCD38
+	bl memcpy
 	mov r1, r8
 	adds r0, r4, r1
 	ldrb r0, [r0, #0x00]
@@ -363608,7 +363608,7 @@ _08119F9A:
 	strh r2, [r0, #0x00]
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	movs r1, #0x00
 	mov r10, r1
 	ldr r2, _0811A06C @ =0x083BBDD0
@@ -368529,7 +368529,7 @@ _0811C758:
 	add r0, sp, #0x01C
 	add r1, sp, #0x020
 	movs r2, #0x04
-	bl sub_81DCD38
+	bl memcpy
 	ldr r2, [r4, #0x00]
 	ldrb r0, [r2, #0x04]
 	movs r3, #0x06
@@ -368550,7 +368550,7 @@ _0811C782:
 	strb r2, [r0, #0x00]
 	add r0, sp, #0x020
 	movs r2, #0x02
-	bl sub_81DCD38
+	bl memcpy
 	ldr r1, [sp, #0x028]
 	movs r2, #0xC4
 	lsls r2, r2, #0x01
@@ -369233,7 +369233,7 @@ _0811CD0C:
 	add r0, sp, #0x01C
 	add r1, sp, #0x020
 	movs r2, #0x04
-	bl sub_81DCD38
+	bl memcpy
 	ldr r2, [r4, #0x00]
 	ldrb r0, [r2, #0x04]
 	movs r3, #0x06
@@ -369254,7 +369254,7 @@ _0811CD36:
 	strb r2, [r0, #0x00]
 	add r0, sp, #0x020
 	movs r2, #0x02
-	bl sub_81DCD38
+	bl memcpy
 	ldr r1, [sp, #0x040]
 	movs r2, #0xCA
 	lsls r2, r2, #0x01
@@ -369622,11 +369622,11 @@ _0811CFD2:
 	ldr r0, [sp, #0x050]
 	ldr r1, [sp, #0x054]
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldr r0, [sp, #0x054]
 	ldr r1, _0811D0D4 @ =0x08202F20
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldr r4, [sp, #0x048]
 	ldrb r0, [r4, #0x00]
 	cmp r0, #0x00
@@ -370067,7 +370067,7 @@ _0811D3A4:
 	add r0, sp, #0x01C
 	ldr r1, _0811D41C @ =0x08202F2C
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldr r0, [sp, #0x02C]
 	ldrb r4, [r0, #0x00]
 	cmp r4, #0x00
@@ -370276,7 +370276,7 @@ sub_811D4F8:
 	strb r2, [r0, #0x00]
 	add r0, sp, #0x01C
 	movs r2, #0x03
-	bl sub_81DCD38
+	bl memcpy
 	add r1, sp, #0x024
 	mov r3, r10
 	adds r3, #0xDE
@@ -373330,7 +373330,7 @@ sub_8120B80:
 	ldr r1, _08120C34 @ =0x08202F38
 	mov r0, sp
 	movs r2, #0x14
-	bl sub_81DCD38
+	bl memcpy
 	movs r5, #0xE0
 	ldr r2, [r4, #0x38]
 	adds r2, #0x23
@@ -373516,7 +373516,7 @@ _08120CF8:
 	asrs r0, r0, #0x10
 	lsls r1, r4, #0x10
 	asrs r1, r1, #0x10
-	bl sub_81DA690
+	bl ArcTan2
 	lsls r0, r0, #0x10
 	lsrs r2, r0, #0x10
 	movs r6, #0xAC
@@ -374054,7 +374054,7 @@ sub_812123C:
 	ldr r1, _081212F0 @ =0x08202F4C
 	add r0, sp, #0x010
 	movs r2, #0x0A
-	bl sub_81DCD38
+	bl memcpy
 	ldr r7, [r4, #0x14]
 	ldr r4, _081212F4 @ =0x0300034C
 	movs r1, #0x88
@@ -375130,7 +375130,7 @@ _08121FF4:
 	add r0, sp, #0x010
 	mov r1, r10
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	movs r1, #0x80
 	lsls r1, r1, #0x08
 	orrs r4, r1
@@ -375151,7 +375151,7 @@ _08121FF4:
 	add r0, sp, #0x010
 	mov r1, r10
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r6, r6, #0x0E
 	mov r0, r8
 	orrs r6, r0
@@ -375167,7 +375167,7 @@ _08121FF4:
 	add r0, sp, #0x010
 	mov r1, r10
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	mov r0, r8
 	strh r0, [r7, #0x00]
 	movs r1, #0x80
@@ -375256,7 +375256,7 @@ _081220EC:
 	ldr r1, _0812218C @ =0x08202F58
 	movs r2, #0x0C
 	str r3, [sp, #0x014]
-	bl sub_81DCD38
+	bl memcpy
 	ldr r1, _08122190 @ =0x000001FF
 	adds r0, r1, #0x0
 	ands r6, r0
@@ -375284,7 +375284,7 @@ _081220EC:
 	add r0, sp, #0x008
 	ldr r1, _0812218C @ =0x08202F58
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	movs r1, #0x80
 	lsls r1, r1, #0x07
 	ldr r0, _08122194 @ =0x00004064
@@ -375352,7 +375352,7 @@ _081221C4:
 	add r0, sp, #0x014
 	ldr r1, _08122240 @ =0x08202F58
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldr r1, _08122244 @ =0x000001FF
 	adds r0, r1, #0x0
 	ands r4, r0
@@ -375505,7 +375505,7 @@ _081222EE:
 	ldr r1, _0812232C @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r4, #0x0E
 	orrs r5, r0
 	strh r5, [r7, #0x00]
@@ -375671,7 +375671,7 @@ _08122406:
 	ldr r1, _0812246C @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r4, #0x0E
 	mov r1, r10
 	orrs r0, r1
@@ -375696,7 +375696,7 @@ _08122470:
 	ldr r1, _0812249C @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r4, #0x0E
 	mov r2, r10
 	orrs r0, r2
@@ -375716,7 +375716,7 @@ _081224A0:
 	ldr r1, _081224E0 @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	strh r4, [r7, #0x00]
 	strh r5, [r7, #0x02]
 	ldr r0, _081224E4 @ =0x0000084D
@@ -375811,7 +375811,7 @@ _08122528:
 	ldr r1, _0812258C @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r4, #0x0E
 	mov r1, r10
 	orrs r0, r1
@@ -375835,7 +375835,7 @@ _08122590:
 	ldr r1, _081225BC @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r4, #0x0E
 	mov r2, r10
 	orrs r0, r2
@@ -375855,7 +375855,7 @@ _081225C0:
 	ldr r1, _0812260C @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	strh r4, [r7, #0x00]
 	strh r5, [r7, #0x02]
 	ldr r0, _08122610 @ =0x0000084D
@@ -376025,7 +376025,7 @@ _081226DA:
 	ldr r1, _08122740 @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r4, #0x0E
 	mov r1, r10
 	orrs r0, r1
@@ -376050,7 +376050,7 @@ _08122744:
 	ldr r1, _08122770 @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r4, #0x0E
 	mov r2, r10
 	orrs r0, r2
@@ -376070,7 +376070,7 @@ _08122774:
 	ldr r1, _081227B4 @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	strh r4, [r7, #0x00]
 	strh r5, [r7, #0x02]
 	ldr r0, _081227B8 @ =0x0000084D
@@ -376165,7 +376165,7 @@ _081227FC:
 	ldr r1, _08122860 @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r4, #0x0E
 	mov r1, r10
 	orrs r0, r1
@@ -376189,7 +376189,7 @@ _08122864:
 	ldr r1, _08122890 @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	lsls r0, r4, #0x0E
 	mov r2, r10
 	orrs r0, r2
@@ -376209,7 +376209,7 @@ _08122894:
 	ldr r1, _081228C8 @ =0x08202F58
 	add r0, sp, #0x010
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	strh r4, [r7, #0x00]
 	strh r5, [r7, #0x02]
 	ldr r0, _081228CC @ =0x0000084D
@@ -376289,7 +376289,7 @@ sub_812290C:
 	ldr r1, _081229DC @ =0x08202F58
 	mov r0, sp
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	strh r4, [r7, #0x00]
 	ldr r0, _081229E0 @ =0x00004020
 	strh r0, [r7, #0x02]
@@ -376313,7 +376313,7 @@ _0812294A:
 	ldr r1, _081229DC @ =0x08202F58
 	mov r0, sp
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldr r0, _081229EC @ =0x00004074
 	strh r0, [r7, #0x00]
 	lsls r0, r5, #0x0E
@@ -376347,7 +376347,7 @@ _08122986:
 	ldr r1, _081229DC @ =0x08202F58
 	mov r0, sp
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldr r0, _081229EC @ =0x00004074
 	strh r0, [r7, #0x00]
 	lsls r0, r5, #0x0E
@@ -376452,7 +376452,7 @@ sub_8122A20:
 	ldr r1, _08122AF8 @ =0x08202F58
 	mov r0, sp
 	movs r2, #0x0C
-	bl sub_81DCD38
+	bl memcpy
 	ldr r1, [sp, #0x010]
 	lsls r0, r1, #0x10
 	asrs r1, r0, #0x10
@@ -377292,7 +377292,7 @@ sub_81233B4:
 	push {r6, r7}
 	add sp, #-0x010
 	movs r0, #0x40
-	bl sub_81DA6E4
+	bl EEPROMConfigure
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	beq _081233CC
@@ -377350,7 +377350,7 @@ _0812342C:
 	bgt _08123440
 	lsrs r0, r6, #0x10
 	adds r1, r5, #0x0
-	bl sub_81DA7AC
+	bl EEPROMRead
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _08123428
@@ -378245,7 +378245,7 @@ _08123ED6:
 	lsrs r0, r4, #0x10
 	adds r1, r5, #0x0
 	str r2, [sp, #0x01C]
-	bl sub_81DA85C
+	bl EEPROMWrite1
 	lsls r0, r0, #0x10
 	ldr r2, [sp, #0x01C]
 	cmp r0, #0x00
@@ -378293,7 +378293,7 @@ _08123F2E:
 	lsrs r0, r4, #0x10
 	adds r1, r5, #0x0
 	str r2, [sp, #0x01C]
-	bl sub_81DA85C
+	bl EEPROMWrite1
 	lsls r0, r0, #0x10
 	ldr r2, [sp, #0x01C]
 	cmp r0, #0x00
@@ -378336,7 +378336,7 @@ _08123F7E:
 	lsrs r0, r4, #0x10
 	adds r1, r5, #0x0
 	str r2, [sp, #0x01C]
-	bl sub_81DA85C
+	bl EEPROMWrite1
 	lsls r0, r0, #0x10
 	ldr r2, [sp, #0x01C]
 	cmp r0, #0x00
@@ -378413,7 +378413,7 @@ _0812400E:
 	bgt _08124020
 	lsrs r0, r4, #0x10
 	adds r1, r5, #0x0
-	bl sub_81DA9D0
+	bl EEPROMCompare
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _0812400C
@@ -378454,7 +378454,7 @@ _0812405C:
 	bgt _0812406E
 	lsrs r0, r4, #0x10
 	adds r1, r5, #0x0
-	bl sub_81DA9D0
+	bl EEPROMCompare
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _0812405A
@@ -378490,7 +378490,7 @@ _081240A2:
 	bgt _081240B4
 	lsrs r0, r4, #0x10
 	adds r1, r5, #0x0
-	bl sub_81DA9D0
+	bl EEPROMCompare
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _081240A0
@@ -378835,7 +378835,7 @@ _0812436A:
 	bgt _0812437C
 	lsrs r0, r5, #0x10
 	adds r1, r4, #0x0
-	bl sub_81DA85C
+	bl EEPROMWrite1
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _08124368
@@ -378867,7 +378867,7 @@ _081243A4:
 	bgt _081243B6
 	lsrs r0, r5, #0x10
 	adds r1, r4, #0x0
-	bl sub_81DA85C
+	bl EEPROMWrite1
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _081243A2
@@ -378894,7 +378894,7 @@ _081243D6:
 	bgt _081243E8
 	lsrs r0, r5, #0x10
 	adds r1, r4, #0x0
-	bl sub_81DA85C
+	bl EEPROMWrite1
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _081243D4
@@ -378954,7 +378954,7 @@ _08124446:
 	bgt _08124458
 	lsrs r0, r5, #0x10
 	adds r1, r4, #0x0
-	bl sub_81DA9D0
+	bl EEPROMCompare
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _08124444
@@ -378986,7 +378986,7 @@ _08124480:
 	bgt _08124492
 	lsrs r0, r5, #0x10
 	adds r1, r4, #0x0
-	bl sub_81DA9D0
+	bl EEPROMCompare
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _0812447E
@@ -379013,7 +379013,7 @@ _081244B2:
 	bgt _081244C4
 	lsrs r0, r5, #0x10
 	adds r1, r4, #0x0
-	bl sub_81DA9D0
+	bl EEPROMCompare
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	bne _081244B0
@@ -379242,7 +379242,7 @@ _08124692:
 	lsrs r0, r6, #0x10
 	adds r1, r4, #0x0
 	str r2, [sp, #0x008]
-	bl sub_81DA85C
+	bl EEPROMWrite1
 	lsls r0, r0, #0x10
 	ldr r2, [sp, #0x008]
 	cmp r0, #0x00
@@ -379282,7 +379282,7 @@ _081246DA:
 	lsrs r0, r6, #0x10
 	adds r1, r4, #0x0
 	str r2, [sp, #0x008]
-	bl sub_81DA9D0
+	bl EEPROMCompare
 	lsls r0, r0, #0x10
 	ldr r2, [sp, #0x008]
 	cmp r0, #0x00
@@ -379498,7 +379498,7 @@ _0812489A:
 	adds r1, r4, #0x0
 	str r2, [sp, #0x008]
 	str r3, [sp, #0x00C]
-	bl sub_81DA85C
+	bl EEPROMWrite1
 	lsls r0, r0, #0x10
 	ldr r2, [sp, #0x008]
 	ldr r3, [sp, #0x00C]
@@ -379535,7 +379535,7 @@ _081248DC:
 	lsrs r0, r5, #0x10
 	adds r1, r4, #0x0
 	str r2, [sp, #0x008]
-	bl sub_81DA9D0
+	bl EEPROMCompare
 	lsls r0, r0, #0x10
 	ldr r2, [sp, #0x008]
 	cmp r0, #0x00

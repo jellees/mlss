@@ -4720,7 +4720,7 @@ _0801EAEC:
 	adds r1, r5, #0x0
 	movs r2, #0x01
 	movs r3, #0x08
-	bl sub_81DA6A8
+	bl ObjAffineSet
 	movs r1, #0x08
 	ldsh r4, [r7, r1]
 	movs r2, #0x80
@@ -4966,7 +4966,7 @@ _0801ECDE:
 	adds r1, r5, #0x0
 	movs r2, #0x01
 	movs r3, #0x08
-	bl sub_81DA6A8
+	bl ObjAffineSet
 	movs r2, #0x08
 	ldsh r4, [r7, r2]
 	cmp r4, r8

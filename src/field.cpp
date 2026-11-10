@@ -2798,7 +2798,7 @@ void FieldManager::sub_8028AFC(int mode, int relative, int x, int y, u16 speed) 
         field_2FC = speed;
     }
     field_2FA = 0;
-    field_2FE = (u32)sub_81DA690((s16)(field_2EE - field_2F4), (s16)(field_2F2 - field_2EC)) >> 8;
+    field_2FE = (u32)ArcTan2((s16)(field_2EE - field_2F4), (s16)(field_2F2 - field_2EC)) >> 8;
     field_F9_0 = mode;
 }
 

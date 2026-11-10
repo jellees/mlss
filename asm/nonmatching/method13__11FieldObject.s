@@ -69,7 +69,7 @@ _08042070:
 	subs r1, r3, r1
 	lsls r1, r1, #0x10
 	asrs r1, r1, #0x10
-	bl sub_81DA690
+	bl ArcTan2
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	str r0, [sp, #0x014]
