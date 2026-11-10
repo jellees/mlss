@@ -4141,3 +4141,81 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, u8 arg2) {
         player->sub_804FC90();
     }
 }
+
+u8 FieldManager::sub_802BD2C() {
+    u8 result = 0;
+
+    if (brothersTogether) {
+        if (leader->x != leader->previousX || leader->y != leader->previousY) {
+            s32 dx = leader->x - follower->x;
+            s32 dy = leader->y - follower->y;
+            bool wasClamped = field_20A_2;
+
+            field_20A_2 = 0;
+            if (dx > (s16)field_240) {
+                leader->x = follower->x + (s16)field_240;
+                field_20A_2 = 1;
+            }
+            if (dx < -(s16)field_240) {
+                leader->x = follower->x - (s16)field_240;
+                field_20A_2 = 1;
+            }
+            if (dy > (s16)field_240) {
+                leader->y = follower->y + (s16)field_240;
+                field_20A_2 = 1;
+            }
+            if (dy < -(s16)field_240) {
+                leader->y = follower->y - (s16)field_240;
+                field_20A_2 = 1;
+            }
+
+            if (field_20A_2) {
+                sub_802DF80(this, 0);
+                if (leader->x == leader->previousX && leader->y == leader->previousY) {
+                    if (leader->z == leader->previousZ && leader->height == 0 && follower->height == 0
+                        && follower->z + 0x1000 >= leader->z) {
+                        bool stuck;
+
+                        field_26C++;
+                        stuck = FALSE;
+                        if ((field_246_2 == 2 || field_246_2 == 3) && (s8)field_26C == 10
+                            && sub_802E688(field_246_2 != 2)) {
+                            stuck = TRUE;
+                        }
+                        if (stuck) {
+                            sub_802E754(0, 1, 1);
+                            follower->field_23E = follower->field_260 = field_100;
+                            follower->sprite->field_20[0] = follower->field_239 = field_FA_11;
+                            follower->velocityX = follower->velocityY = 0;
+                            {
+                                FieldPlayerCharacter* player = leader;
+
+                                follower->field_20C_7 = follower->field_20C_6 = 1;
+                                player->field_20C_7 = player->field_20C_6 = 1;
+                            }
+                        }
+                    } else {
+                        field_26C = 0;
+                    }
+                } else {
+                    field_26C = 0;
+                }
+            } else {
+                field_26C = 0;
+                if (wasClamped) {
+                    follower->x = follower->previousX;
+                    follower->y = follower->previousY;
+                    sub_802DF80(this, 0);
+                }
+            }
+        } else {
+            field_26C = 0;
+        }
+
+        if ((s8)field_26C == 0 && follower->field_368->field_15 != -1) {
+            follower->field_368->field_10[1] = follower->field_368->field_15;
+            follower->field_368->field_15 = -1;
+        }
+    }
+    return result;
+}

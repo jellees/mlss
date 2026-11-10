@@ -421,6 +421,8 @@ class FieldManager : public Process {
     void sub_802C4D4(int arg1, int arg2);
     void sub_802C774(FieldPlayerCharacter* player);
     void sub_802E2F4();
+    u8 sub_802E688(u8 arg1);
+    void sub_802E754(int arg1, int arg2, int arg3);
     u8 sub_802EDC4(FieldPlayerCharacter* player, int arg2, u8 arg3, u8 arg4);
     void sub_802F498();
     void sub_803C7D8(FieldPlayerCharacter* player);
