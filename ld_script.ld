@@ -112,6 +112,7 @@ SECTIONS
         *libc.a:impure.o(.rodata);
 
         asm/rodata0821DC0C.o(.rodata);
+        asm/rodata08CDB62C.o(.rodata);
         *libc.a:mallocr.o(.data);
         *libc.a:impure.o(.data);
         asm/rodata08CDBD68.o(.rodata);
