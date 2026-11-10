@@ -42,7 +42,7 @@ sub_081DC460: @ 0x081DC460
 sub_081DC464: @ 0x081DC464
 	push {r4, lr}
 	movs r0, #0x18
-	bl sub_081DC7F4
+	bl malloc
 	adds r4, r0, #0
 	cmp r4, #0
 	bne _081DC476

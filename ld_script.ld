@@ -73,7 +73,7 @@ SECTIONS
 		*libgcc.a:_muldi3.o(.text);
 		*libgcc.a:_negdi2.o(.text);
         *libc.a:libcfunc.o(.text);
-        asm/text081DC7F4.o(.text);
+        *libc.a:malloc.o(.text);
         *libc.a:mallocr.o(.text);
         *libc.a:memcpy.o(.text);
         *libc.a:memset.o(.text);
