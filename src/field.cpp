@@ -4334,7 +4334,7 @@ void FieldManager::sub_802C208() {
         player->velocityX = ((s32(*)[2])field_23C)[player->field_358_4][0] - player->x;
         player->velocityY = ((s32(*)[2])field_23C)[player->field_358_4][1] - player->y;
         if (player->velocityX != 0 || player->velocityY != 0) {
-            direction += byte_839F620[sub_81DA690(-player->velocityY, player->velocityX) >> 12];
+            direction += byte_839F620[ArcTan2(-player->velocityY, player->velocityX) >> 12];
             direction &= 7;
             player->angle = direction << 5;
             if (player->field_214_0 > 2) {
@@ -4393,7 +4393,7 @@ void FieldManager::sub_802C4D4(u8 arg1, u8 arg2) {
             value = first->x - second->x;
             dy = first->y - second->y;
             if (value != 0 || dy != 0) {
-                value = byte_839F620[sub_81DA690(-dy, value) >> 12] % 8;
+                value = byte_839F620[ArcTan2(-dy, value) >> 12] % 8;
                 second->angle = value << 5;
                 if (second->field_214_0 > 2) {
                     second->direction = value;

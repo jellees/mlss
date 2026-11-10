@@ -647,7 +647,7 @@ extern u32 dword_3000E00;
 extern u32 dword_3000E04;
 extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
 extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
-extern u8 byte_839F620[]; // Direction (0-7) per sub_81DA690 result / 0x1000 (FieldManager::sub_802C208)
+extern u8 byte_839F620[]; // Direction (0-7) per ArcTan2 result / 0x1000 (FieldManager::sub_802C208)
 extern struct EventScriptProcess* dword_3000D78;
 extern struct struc_3000FD0* dword_3000FD0;
 extern void* dword_3000FC0;
