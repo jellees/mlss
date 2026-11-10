@@ -800,7 +800,7 @@ inline int FieldObject::sub_8047E7C() {
     if (y == previousY && x == previousX) {
         return -1;
     }
-    return sub_81DA690(previousY - y, x - previousX);
+    return ArcTan2(previousY - y, x - previousX);
 }
 
 // https://decomp.me/scratch/TODO
@@ -2756,10 +2756,10 @@ int FieldObject::sub_8045A94(int mode, int relative, int targetX, int targetY, i
         dy = pixelY;
         dz = pixelZ;
     }
-    result = sub_81DA690(dy, dx);
+    result = ArcTan2(dy, dx);
     angle = result / 256 + ((result / 128) & 1);
     if (!field_20C_14) {
-        result = sub_81DA690(((int (*)(int))dword_3001038)(dx * dx + dy * dy), dz);
+        result = ArcTan2(((int (*)(int))dword_3001038)(dx * dx + dy * dy), dz);
         field_3 = result / 256 + ((result / 128) & 1);
     }
 

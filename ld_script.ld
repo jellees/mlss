@@ -12,6 +12,11 @@ SECTIONS
     .bss (NOLOAD) :
     ALIGN(0)
     {
+        . = 0x00001A20; *libgcc.a:dp-bit.o(.bss);
+        *libgcc.a:fp-bit.o(.bss);
+        . = 0x00001A68; *libc.a:syscalls.o(.bss);
+        . = 0x00001BD4; *libc.a:sbrkr.o(COMMON);
+        end = .;
     }
 
     . = 0x8000000;
@@ -51,6 +56,34 @@ SECTIONS
         asm/text08127E50.o(.text);
         src/save_menu.o(.text);
         asm/text0812A9A0.o(.text);
+
+        asm/libagbsyscall.o(.text);
+        asm/eeprom.o(.text);
+        *libgcc.a:_call_via_rX.o(.text);
+        *libgcc.a:_divsi3.o(.text);
+        *libgcc.a:_dvmd_tls.o(.text);
+        *libgcc.a:_modsi3.o(.text);
+        asm/text081DAC0C.o(.text);
+        *libgcc.a:_udivsi3.o(.text);
+        *libgcc.a:_umodsi3.o(.text);
+        *libgcc.a:dp-bit.o(.text);
+        *libgcc.a:fp-bit.o(.text);
+        asm/text081DC434.o(.text);
+        *libgcc.a:_lshrdi3.o(.text);
+		*libgcc.a:_muldi3.o(.text);
+		*libgcc.a:_negdi2.o(.text);
+        *libc.a:libcfunc.o(.text);
+        asm/text081DC7F4.o(.text);
+        *libc.a:memcpy.o(.text);
+        *libc.a:memset.o(.text);
+        *libc.a:mlock.o(.text);
+        *libc.a:sbrkr.o(.text);
+        *libc.a:strcmp.o(.text);
+        *libc.a:syscalls.o(.text);
+        *libc.a:errno.o(.text);
+        *libc.a:freer.o(.text);
+        *libc.a:strlen.o(.text);
+
         src/field_player_character.o(.gnu.linkonce.t._._20FieldPlayerCharacter);
         src/field_monster.o(.gnu.linkonce.t._._20FieldObjectSubclass4);
         asm/text081DD5F8.o(.text);
@@ -74,6 +107,14 @@ SECTIONS
         asm/rodata08210F64.o(.rodata);
         src/save_menu.o(.rodata);
         asm/rodata08210FBC.o(.rodata);
+        *libc.a:syscalls.o(.rodata);
+        *libc.a:impure.o(.rodata);
+
+        asm/rodata0821DC0C.o(.rodata);
+        *libc.a:mallocr.o(.data);
+        *libc.a:impure.o(.data);
+        asm/rodata08CDBD68.o(.rodata);
+
         src/field.o(.gnu.linkonce.d.*);
         asm/rodata08CDBDC8.o(.rodata);
         src/field_object.o(.gnu.linkonce.d.*);
