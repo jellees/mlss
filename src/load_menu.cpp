@@ -462,9 +462,6 @@ void LoadMenu::update() {
     }
 }
 
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8126520.s\"");
-#else
 u8 LoadMenu::sub_8126520() {
     int i;
     int option;
@@ -525,27 +522,29 @@ u8 LoadMenu::sub_8126520() {
                             this->field_F0 = 3;
                             this->field_EE = 1;
                             this->field_EC = 0;
+                            play_sfx_80195B4(0x60, -1);
+                            sprite_hide_8021F20(this->cursor);
+                            gGameState.field_88A_5 = 0;
+                            gGameState.field_88A_3 = 0;
+                            return 1;
                         } else {
-                            if (this->field_EE)
-                                ;
                             play_sfx_80195B4(0x61, -1);
                             this->field_FB = 0;
                             this->cursor->xPosition = 0x22;
                             this->cursor->yPosition = (this->field_F9 - 1) * 12 + 0x28;
                             this->field_EE = 1;
-                            return 0;
                         }
                     } else {
                         this->field_F4 = sub_81252BC(&this->field_F5, 0x1E);
                         this->field_F0 = 2;
                         this->field_EE = 1;
                         this->field_EC = 0;
+                        play_sfx_80195B4(0x60, -1);
+                        sprite_hide_8021F20(this->cursor);
+                        gGameState.field_88A_5 = 0;
+                        gGameState.field_88A_3 = 0;
+                        return 1;
                     }
-                    play_sfx_80195B4(0x60, -1);
-                    sprite_hide_8021F20(this->cursor);
-                    gGameState.field_88A_5 = 0;
-                    gGameState.field_88A_3 = 0;
-                    return 1;
                 }
             } else {
 
@@ -718,7 +717,6 @@ u8 LoadMenu::sub_8126520() {
     }
     return 0;
 }
-#endif
 
 void LoadMenu::sub_8126C3C() {
     s32 arrowX[4] = { 0x70, 0xE8, 0x58, 0xE0 };
