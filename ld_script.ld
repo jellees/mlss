@@ -63,12 +63,12 @@ SECTIONS
         *libgcc.a:_divsi3.o(.text);
         *libgcc.a:_dvmd_tls.o(.text);
         *libgcc.a:_modsi3.o(.text);
-        asm/text081DAC0C.o(.text);
+        asm/libgcc2_2.o(.text);
         *libgcc.a:_udivsi3.o(.text);
         *libgcc.a:_umodsi3.o(.text);
         *libgcc.a:dp-bit.o(.text);
         *libgcc.a:fp-bit.o(.text);
-        asm/text081DC434.o(.text);
+        asm/libgcc2.o(.text);
         *libgcc.a:_lshrdi3.o(.text);
 		*libgcc.a:_muldi3.o(.text);
 		*libgcc.a:_negdi2.o(.text);
@@ -112,7 +112,7 @@ SECTIONS
         *libc.a:impure.o(.rodata);
 
         asm/rodata0821DC0C.o(.rodata);
-        asm/rodata08CDB62C.o(.rodata);
+        asm/libgcc2_data.o(.rodata);
         *libc.a:mallocr.o(.data);
         *libc.a:impure.o(.data);
         asm/rodata08CDBD68.o(.rodata);

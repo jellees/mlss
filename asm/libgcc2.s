@@ -3,24 +3,24 @@
 	.syntax unified
 	.text
 
-	thumb_func_start sub_081DC434
-sub_081DC434: @ 0x081DC434
+	thumb_func_start __default_terminate
+__default_terminate: @ 0x081DC434
 	push {lr}
 	bl abort
 	movs r0, r0
 
-	thumb_func_start sub_081DC43C
-sub_081DC43C: @ 0x081DC43C
+	thumb_func_start __terminate
+__terminate: @ 0x081DC43C
 	push {lr}
-	ldr r0, _081DC448 @ =gUnk_08CDB62C
+	ldr r0, _081DC448 @ =__terminate_func
 	ldr r0, [r0]
 	bl _call_via_r0
 	pop {pc}
 	.align 2, 0
-_081DC448: .4byte gUnk_08CDB62C
+_081DC448: .4byte __terminate_func
 
-	thumb_func_start sub_081DC44C
-sub_081DC44C: @ 0x081DC44C
+	thumb_func_start __throw_type_match
+__throw_type_match: @ 0x081DC44C
 	push {r4, lr}
 	adds r4, r2, #0
 	bl strcmp
@@ -33,20 +33,20 @@ _081DC45C:
 _081DC45E:
 	pop {r4, pc}
 
-	thumb_func_start sub_081DC460
-sub_081DC460: @ 0x081DC460
+	thumb_func_start __empty
+__empty: @ 0x081DC460
 	bx lr
 	.align 2, 0
 
-	thumb_func_start sub_081DC464
-sub_081DC464: @ 0x081DC464
+	thumb_func_start new_eh_context
+new_eh_context: @ 0x081DC464
 	push {r4, lr}
 	movs r0, #0x18
 	bl malloc
 	adds r4, r0, #0
 	cmp r4, #0
 	bne _081DC476
-	bl sub_081DC43C
+	bl __terminate
 _081DC476:
 	adds r0, r4, #0
 	movs r1, #0
@@ -59,41 +59,41 @@ _081DC476:
 	pop {r4, pc}
 	.align 2, 0
 
-	thumb_func_start sub_081DC48C
-sub_081DC48C: @ 0x081DC48C
+	thumb_func_start __get_eh_context
+__get_eh_context: @ 0x081DC48C
 	push {lr}
-	ldr r0, _081DC498 @ =gUnk_08CDB630
+	ldr r0, _081DC498 @ =get_eh_context
 	ldr r0, [r0]
 	bl _call_via_r0
 	pop {pc}
 	.align 2, 0
-_081DC498: .4byte gUnk_08CDB630
+_081DC498: .4byte get_eh_context
 
-	thumb_func_start sub_081DC49C
-sub_081DC49C: @ 0x081DC49C
+	thumb_func_start __get_eh_info
+__get_eh_info: @ 0x081DC49C
 	push {lr}
-	ldr r0, _081DC4AC @ =gUnk_08CDB630
+	ldr r0, _081DC4AC @ =get_eh_context
 	ldr r0, [r0]
 	bl _call_via_r0
 	adds r0, #8
 	pop {pc}
 	.align 2, 0
-_081DC4AC: .4byte gUnk_08CDB630
+_081DC4AC: .4byte get_eh_context
 
-	thumb_func_start sub_081DC4B0
-sub_081DC4B0: @ 0x081DC4B0
+	thumb_func_start eh_context_initialize
+eh_context_initialize: @ 0x081DC4B0
 	push {lr}
-	ldr r1, _081DC4C0 @ =gUnk_08CDB630
-	ldr r0, _081DC4C4 @ =sub_081DC4C8
+	ldr r1, _081DC4C0 @ =get_eh_context
+	ldr r0, _081DC4C4 @ =eh_context_static
 	str r0, [r1]
 	bl _call_via_r0
 	pop {pc}
 	.align 2, 0
-_081DC4C0: .4byte gUnk_08CDB630
-_081DC4C4: .4byte sub_081DC4C8
+_081DC4C0: .4byte get_eh_context
+_081DC4C4: .4byte eh_context_static
 
-	thumb_func_start sub_081DC4C8
-sub_081DC4C8: @ 0x081DC4C8
+	thumb_func_start eh_context_static
+eh_context_static: @ 0x081DC4C8
 	push {r4, lr}
 	ldr r1, _081DC4EC @ =0x03001A58
 	ldr r0, [r1]
@@ -116,17 +116,19 @@ _081DC4EC: .4byte 0x03001A58
 _081DC4F0: .4byte 0x03001A48
 _081DC4F4: .4byte 0x03001A60
 
-	thumb_func_start sub_081DC4F8
-sub_081DC4F8: @ 0x081DC4F8
+	thumb_func_start __get_dynamic_handler_chain
+__get_dynamic_handler_chain: @ 0x081DC4F8
 	push {lr}
-	ldr r0, _081DC508 @ =gUnk_08CDB630
+	ldr r0, _081DC508 @ =get_eh_context
 	ldr r0, [r0]
 	bl _call_via_r0
 	adds r0, #4
 	pop {pc}
 	.align 2, 0
-_081DC508: .4byte gUnk_08CDB630
-_081DC50C:
+_081DC508: .4byte get_eh_context
+
+  thumb_func_start __sjthrow
+__sjthrow: @ 0x081DC50C
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, sb
@@ -135,7 +137,7 @@ _081DC50C:
 	ldr r4, _081DC564 @ =0xFFFFF9B0
 	add sp, r4
 	mov r7, sp
-	ldr r0, _081DC568 @ =gUnk_08CDB630
+	ldr r0, _081DC568 @ =get_eh_context
 	ldr r0, [r0]
 	bl _call_via_r0
 	movs r1, #0xc8
@@ -172,7 +174,7 @@ _081DC50C:
 	b _081DC57A
 	.align 2, 0
 _081DC564: .4byte 0xFFFFF9B0
-_081DC568: .4byte gUnk_08CDB630
+_081DC568: .4byte get_eh_context
 _081DC56C: .4byte 0x00000644
 _081DC570: .4byte 0x0000064C
 _081DC574: .4byte _081DC578
@@ -226,7 +228,7 @@ _081DC5BC:
 _081DC5D0: .4byte 0x0000064C
 _081DC5D4: .4byte 0x00000644
 _081DC5D8:
-	bl sub_081DC43C
+	bl __terminate
 _081DC5DC:
 	movs r1, #0xc8
 	lsls r1, r1, #3
@@ -243,7 +245,7 @@ _081DC5DC:
 	cmp r0, #0
 	bne _081DC5FC
 _081DC5F8:
-	bl sub_081DC43C
+	bl __terminate
 _081DC5FC:
 	ldr r3, _081DC618 @ =0x00000644
 	adds r3, r3, r7
@@ -261,8 +263,8 @@ _081DC5FC:
 	.align 2, 0
 _081DC618: .4byte 0x00000644
 
-	thumb_func_start sub_081DC61C
-sub_081DC61C: @ 0x081DC61C
+	thumb_func_start __sjpopnthrow
+__sjpopnthrow: @ 0x081DC61C
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, sb
@@ -271,7 +273,7 @@ sub_081DC61C: @ 0x081DC61C
 	ldr r4, _081DC66C @ =0xFFFFF9B4
 	add sp, r4
 	mov r7, sp
-	ldr r0, _081DC670 @ =gUnk_08CDB630
+	ldr r0, _081DC670 @ =get_eh_context
 	ldr r0, [r0]
 	bl _call_via_r0
 	adds r1, r0, #4
@@ -304,7 +306,7 @@ sub_081DC61C: @ 0x081DC61C
 	b _081DC67E
 	.align 2, 0
 _081DC66C: .4byte 0xFFFFF9B4
-_081DC670: .4byte gUnk_08CDB630
+_081DC670: .4byte get_eh_context
 _081DC674: .4byte 0x00000644
 _081DC678: .4byte _081DC67C
 _081DC67C:
@@ -355,7 +357,7 @@ _081DC6AE:
 	.align 2, 0
 _081DC6D0: .4byte 0x00000644
 _081DC6D4:
-	bl sub_081DC43C
+	bl __terminate
 _081DC6D8:
 	movs r1, #0xc8
 	lsls r1, r1, #3
@@ -364,14 +366,14 @@ _081DC6D8:
 	ldr r0, [r1]
 	ldr r0, [r0]
 	str r0, [r1]
-	bl _081DC50C
+	bl __sjthrow
 	.align 2, 0
 
-	thumb_func_start sub_081DC6EC
-sub_081DC6EC: @ 0x081DC6EC
+	thumb_func_start __eh_rtime_match
+__eh_rtime_match: @ 0x081DC6EC
 	push {r4, lr}
 	adds r4, r0, #0
-	bl sub_081DC49C
+	bl __get_eh_info
 	ldr r0, [r0]
 	ldr r3, [r0]
 	cmp r3, #0
