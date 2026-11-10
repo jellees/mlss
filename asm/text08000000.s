@@ -6080,7 +6080,7 @@ _08017A22:
 	ands r0, r1
 	strh r0, [r2, #0x00]
 	movs r0, #0xFC
-	bl sub_81DA6AC
+	bl RegisterRamReset
 	strh r4, [r5, #0x00]
 	movs r1, #0x00
 	mov r9, r1
@@ -6622,7 +6622,7 @@ _08017EEA:
 	ldrb r0, [r0, #0x00]
 	cmp r0, #0x00
 	bne _08017F1C
-	bl sub_81DA6C0
+	bl VBlankIntrWait
 	b _08017F1C
 _08017F08: .4byte 0x0300034C
 _08017F0C: .4byte 0x00000888
@@ -6630,7 +6630,7 @@ _08017F10: .4byte 0x03000C28
 _08017F14:
 	movs r0, #0x01
 	movs r1, #0x80
-	bl sub_81DA6A0
+	bl IntrWait
 _08017F1C:
 	ldr r5, _08018068 @ =0x0300034C
 	ldr r2, _0801806C @ =0x000008C1
@@ -8054,7 +8054,7 @@ reset_game_80189C4: @ 080189C4
 	strh r3, [r0, #0x0A]
 	ldrh r0, [r0, #0x0A]
 	movs r0, #0xFC
-	bl sub_81DA6C8
+	bl SoftResetRom
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -8119,9 +8119,9 @@ sub_8018A68:
 	movs r0, #0x01
 	mov r9, r0
 	strh r0, [r6, #0x00]
-	bl sub_81DA6B0
+	bl SoundBiasReset
 	swi #3
-	bl sub_81DA6B8
+	bl SoundBiasSet
 	mov r1, r8
 	strh r1, [r6, #0x00]
 	strh r4, [r5, #0x00]
@@ -8129,7 +8129,7 @@ sub_8018A68:
 	strh r2, [r6, #0x00]
 	mov r0, r10
 	strh r0, [r7, #0x00]
-	bl sub_81DA6C0
+	bl VBlankIntrWait
 	pop {r3, r4, r5}
 	mov r8, r3
 	mov r9, r4

@@ -474,7 +474,7 @@ _08046540:
 	subs r1, r3, r1
 	lsls r1, r1, #0x10
 	asrs r1, r1, #0x10
-	bl sub_81DA690
+	bl ArcTan2
 	lsls r0, r0, #0x10
 	lsrs r1, r0, #0x10
 _08046554:

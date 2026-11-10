@@ -446,7 +446,7 @@ void stop_sfx_80195A8(int);
 void play_sfx_80195B4(int, int);
 u32 sub_80198B0(void*);
 u16 sub_81152FC(void*, u16);
-u16 sub_81DA690(s16, s16);
+u16 ArcTan2(s16, s16);
 void sub_801B5A0(void*, int, int, int, int, int, int, int, int, int);
 void sub_801B390(void*, u8, int*, int*, int*);
 void sub_8116654(void*, u8);
@@ -614,7 +614,7 @@ void sub_8122BFC(void);
 u16 sub_8199624(struct struc_15*);
 void sub_8199D5C(struct struc_15*, int, u8, int);
 void sub_8199D78(struct struc_15*, void*, int, int, int, int, int, int, int, int);
-void sub_81DA6C8(int);
+void SoftResetRom(int);
 
 // EWRAM
 extern struct struc_203FFB8 stru_203FFB8;

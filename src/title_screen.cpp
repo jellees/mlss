@@ -1002,7 +1002,7 @@ void TitleScreen::update() {
                 case 1:
                     stru_203FFF8.field_7_0 = 1;
                     BUFFER_REG_BLDCNT = 0;
-                    sub_81DA6C8(64);
+                    SoftResetRom(64);
                     return;
 
                 case 2:
