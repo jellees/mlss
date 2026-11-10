@@ -3971,3 +3971,39 @@ void FieldManager::sub_802A740() {
     }
 }
 #endif
+
+void FieldManager::sub_802B654(FieldPlayerCharacter* player) {
+    int start;
+
+    if (player->field_35A_12) {
+        if (player->field_388 != NULL) {
+            player->method12((FieldObject**)&player->field_388, 1, 0);
+        }
+        player->method12(objects, field_10B, 1);
+    } else {
+        if (!field_209_0 && field_10E != 0) {
+            player->method12(&objects[field_10E], field_10F, 0);
+        }
+        if (field_110 != 0) {
+            player->method12(&objects[field_110], field_111, 0);
+        }
+        if (field_112 != 0 && player->field_54 == 1 && field_246_2 == 4) {
+            start = field_112;
+        } else if (field_114 != 0) {
+            start = field_114;
+        } else if (field_116 != 0) {
+            start = field_116;
+        } else if (field_11A != 0) {
+            start = field_11A;
+        } else {
+            start = 0;
+        }
+        if (start > 0) {
+            player->method12(&objects[start], field_10B - start, 0);
+        }
+    }
+    player->sub_80465D8();
+    player->method13();
+    player->sub_804D2CC();
+    player->sub_804FB64(objects, 0, 0);
+}
