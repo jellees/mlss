@@ -1524,7 +1524,7 @@ _0802B506:
 	adds r0, r6, #0x0
 	movs r1, #0x01
 	movs r2, #0x01
-	bl sub_802C4D4__12FieldManagerii
+	bl sub_802C4D4__12FieldManagerUcUc
 	adds r0, r6, #0x0
 	movs r1, #0x00
 	bl sub_802E4C8

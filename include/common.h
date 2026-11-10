@@ -596,7 +596,6 @@ void sub_805BFF0(struct Process*);
 void sub_805BED8(struct Process*);
 void sub_803CB5C(struct FieldManager*);
 u8 sub_803E9F0(struct FieldManager*);
-void sub_802C390(struct FieldManager*);
 void sub_802E854(struct FieldManager*, int);
 void sub_802EC64(struct FieldManager*, int);
 void sub_8051208(struct FieldObject*, u32);
@@ -637,7 +636,10 @@ extern struct struc_3000D44* dword_3000D44;
 extern u16 word_2000272;
 extern u8 byte_3000C24;
 extern u32 dword_839F900[][2];
+extern u8 byte_839F910[]; // Angle per D-pad state ((keys & 0xF0) >> 4), 0xFF: none (FieldManager::sub_802C068)
 extern u8 byte_839F94C[]; // Indexed by direction (angle / 32), masked with FieldPlayerCharacter::field_350_0
+extern u8 byte_839F954[]; // FieldManager::sub_802C428: tile offset (x 32 bytes) per FieldStruct4::field_2
+extern u8 byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per FieldStruct4::field_2
 extern void (*dword_3000D80[2])(void);
 extern u16 word_839F5CC[];
 extern u16 word_839F5E2[];
@@ -645,6 +647,7 @@ extern u32 dword_3000E00;
 extern u32 dword_3000E04;
 extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
 extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
+extern u8 byte_839F620[]; // Direction (0-7) per sub_81DA690 result / 0x1000 (FieldManager::sub_802C208)
 extern struct EventScriptProcess* dword_3000D78;
 extern struct struc_3000FD0* dword_3000FD0;
 extern void* dword_3000FC0;
@@ -736,6 +739,7 @@ extern u8 byte_83A0C6C[];
 extern s16 word_83A0C70[];
 extern s16 word_83A0C76[];
 extern s16 word_839F564[]; // Direction vectors
+extern s16 word_839F584[][2]; // Per direction (angle / 32): x and y, scaled by speed / 256 (FieldManager::sub_802BFB0)
 extern u8 byte_801349C[][7]; // Packed sprite boxes, indexed by Sprite::field_16
 extern s16 word_83A0B88[][8][6]; // FieldPlayerCharacter::sub_804DBD0 probe offsets
 extern s16 word_83A0A78[][2][8][4]; // FieldPlayerCharacter::sub_804D734 hammer boxes per mode, half and direction

@@ -1080,7 +1080,7 @@ void FieldManager::update_field_8023DD4() {
     }
 
     sub_802A608();
-    sub_802C390(this);
+    sub_802C390();
 
     if (field_12A == 2) {
         if (sub_8025D24(4) && !field_209_0 && leader->airFrames == -1 && follower->airFrames == -1
@@ -4217,5 +4217,188 @@ u8 FieldManager::sub_802BD2C() {
             follower->field_368->field_15 = -1;
         }
     }
+
     return result;
+}
+
+void FieldManager::sub_802BFB0(u8 angle) {
+    s16* vector;
+    s32 speed;
+    s32 velocityX;
+    s32 velocityY;
+
+    leader->angle = angle;
+    vector = word_839F584[angle >> 5];
+    speed = (s16)leader->field_23E;
+    velocityX = (vector[0] * speed / 256) >> leader->field_353_4;
+    velocityY = (speed * vector[1] / 256) >> leader->field_353_4;
+
+    if (velocityX > 0) {
+        velocityX = (velocityX + 0x3F) & ~0x3F;
+    } else if (velocityX < 0) {
+        velocityX = -velocityX;
+        velocityX = (velocityX + 0x3F) & ~0x3F;
+        velocityX = -velocityX;
+    }
+
+    if (velocityY > 0) {
+        velocityY = (velocityY + 0x3F) & ~0x3F;
+    } else if (velocityY < 0) {
+        velocityY = -velocityY;
+        velocityY = (velocityY + 0x3F) & ~0x3F;
+        velocityY = -velocityY;
+    }
+
+    leader->velocityX = velocityX;
+    leader->velocityY = velocityY;
+}
+
+void FieldManager::sub_802C068(struct struc_3000388* arg1) {
+    int index;
+    u8 angle;
+
+    if (field_2B8_4 || leader->field_2B5_0) {
+        return;
+    }
+
+    if (field_12A == 2 && !leader->field_350_14 && arg1 != NULL) {
+        index = (arg1->field_0 & 0xF0) >> 4;
+        angle = byte_839F910[index];
+        if (angle != 0xFF) {
+            sub_802BFB0(angle);
+            return;
+        }
+        if (leader->state == 4) {
+            leader->velocityX = leader->field_362;
+            leader->velocityY = leader->field_364;
+            if (leader->velocityX > 0) {
+                leader->velocityX -= 8;
+                if (leader->velocityX < 0) {
+                    leader->velocityX = 0;
+                }
+            } else if (leader->velocityX < 0) {
+                leader->velocityX += 8;
+                if (leader->velocityX > 0) {
+                    leader->velocityX = 0;
+                }
+            }
+            if (leader->velocityY > 0) {
+                leader->velocityY -= 8;
+                if (leader->velocityY < 0) {
+                    leader->velocityY = 0;
+                }
+            } else if (leader->velocityY < 0) {
+                leader->velocityY += 8;
+                if (leader->velocityY > 0) {
+                    leader->velocityY = 0;
+                }
+            }
+            leader->field_23E -= 8;
+            if ((s16)leader->field_23E < 0) {
+                leader->field_23E = 0;
+            }
+            follower->field_23E = leader->field_23E;
+        } else {
+            leader->velocityX = 0;
+            leader->velocityY = 0;
+        }
+    } else {
+        leader->velocityX = 0;
+        leader->velocityY = 0;
+    }
+}
+
+void FieldManager::sub_802C208() {
+    FieldPlayerCharacter* player;
+    FieldPlayerCharacter* other;
+    int direction;
+
+    if (!field_20B_2) {
+        player = follower;
+        other = leader;
+        direction = 0;
+    } else {
+        other = follower;
+        player = leader;
+        direction = 4;
+    }
+
+    if (player->field_2B5_0) {
+        return;
+    }
+
+    if (!player->field_350_14 && brothersTogether && (other->field_358_12 || field_208_5)) {
+        int index = player->field_358_4;
+
+        player->field_358_4 = index + ((s16)player->field_23E >> player->field_353_4) / 64;
+        player->velocityX = ((s32(*)[2])field_23C)[player->field_358_4][0] - player->x;
+        player->velocityY = ((s32(*)[2])field_23C)[player->field_358_4][1] - player->y;
+        if (player->velocityX != 0 || player->velocityY != 0) {
+            direction += byte_839F620[sub_81DA690(-player->velocityY, player->velocityX) >> 12];
+            direction &= 7;
+            player->angle = direction << 5;
+            if (player->field_214_0 > 2) {
+                player->direction = direction;
+            }
+        }
+    } else {
+        sub_802C4D4(0, 1);
+    }
+}
+
+void FieldManager::sub_802C390() {
+    if (field_20A_7 == 2 || (field_20A_7 == 0 && !(gGameState.field_3C.field_3C_0 & 0x33))) {
+        if ((s16)field_244 > -0x38) {
+            field_244 -= 8;
+        }
+    } else if (field_20A_7 == 1 || (field_20A_7 == 0 && (gGameState.field_3C.field_3C_0 & 0x33))) {
+        if ((s16)field_244 < 0) {
+            field_244 += 8;
+        }
+    }
+}
+
+void FieldManager::sub_802C428(int index, int value) {
+    FieldPlayerCharacter* player = (FieldPlayerCharacter*)objects[index];
+    FieldStruct4* data = player->field_368;
+
+    if (player->field_352_7) {
+        if (value > 0) {
+            value--;
+        }
+    } else if ((!brothersTogether && value > 0) || data->field_0 == 10) {
+        value--;
+    }
+    data->field_10[!player->field_352_7] = value;
+    sub_8018218(field_1C->field_0[4]->field_8 + byte_839F954[player->field_368->field_2] * 32,
+                (void*)(0x6010DC0 + player->field_54 * 0x400),
+                byte_839F962[player->field_368->field_2] * 32, 0x20, 0);
+}
+
+void FieldManager::sub_802C4D4(u8 arg1, u8 arg2) {
+    FieldPlayerCharacter* second = follower;
+    FieldPlayerCharacter* first = leader;
+    int value = 0;
+
+    if (arg1) {
+        first->velocityX = value;
+        first->velocityY = value;
+    }
+    if (second != NULL && arg2) {
+        second->velocityX = value;
+        second->velocityY = value;
+        if (brothersTogether) {
+            s32 dy;
+
+            value = first->x - second->x;
+            dy = first->y - second->y;
+            if (value != 0 || dy != 0) {
+                value = byte_839F620[sub_81DA690(-dy, value) >> 12] % 8;
+                second->angle = value << 5;
+                if (second->field_214_0 > 2) {
+                    second->direction = value;
+                }
+            }
+        }
+    }
 }

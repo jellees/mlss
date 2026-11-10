@@ -416,9 +416,12 @@ class FieldManager : public Process {
     void sub_802B654(FieldPlayerCharacter* player);
     void sub_802B804(FieldPlayerCharacter* player, u8 arg2);
     u8 sub_802BD2C();
+    void sub_802BFB0(u8 angle);
     void sub_802C068(struct struc_3000388* arg1);
     void sub_802C208();
-    void sub_802C4D4(int arg1, int arg2);
+    void sub_802C390();
+    void sub_802C428(int index, int value);
+    void sub_802C4D4(u8 arg1, u8 arg2);
     void sub_802C774(FieldPlayerCharacter* player);
     void sub_802E2F4();
     u8 sub_802E688(u8 arg1);
