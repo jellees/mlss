@@ -4007,3 +4007,137 @@ void FieldManager::sub_802B654(FieldPlayerCharacter* player) {
     player->sub_804D2CC();
     player->sub_804FB64(objects, 0, 0);
 }
+
+void FieldManager::sub_802B804(FieldPlayerCharacter* player, u8 arg2) {
+    FieldObject** others;
+    int count;
+    int start;
+
+    if (player != NULL && player->field_33C_0 == 0x7F && player->field_20C_0 && !player->field_214_21
+        && player->field_20C_24) {
+        player->field_284 = player->x - (player->field_272 >> 1);
+        player->field_288 = player->y + player->field_270;
+        player->field_28C = (player->height > 0 || (player->height < 0 && player->previousHeight < 0))
+                                ? player->z + player->height
+                                : player->z;
+
+        if (!brothersTogether && player->field_20C_6) {
+            player->sub_804B028(objects[player->field_54 ^ 1]);
+        }
+
+        if (player->field_20C_8 && !player->field_35A_12) {
+            if (player->field_33C_0 == 0x7F && field_112 != 0) {
+                others = &objects[field_112];
+                for (count = field_113; count != 0; count--, others++) {
+                    FieldObject* other = *others;
+                    FieldObject* part;
+
+                    if (player->sub_804B028(other)) {
+                        player->field_33C_7 = 0;
+                        break;
+                    }
+                    part = ((FieldMonster*)other)->field_344;
+                    if (part != NULL && part->field_20C_0 && player->sub_804B028(part)) {
+                        player->field_33C_7 = 1;
+                        break;
+                    }
+                }
+            }
+
+            if (!arg2 && player->field_33C_0 == 0x7F) {
+                if ((!brothersTogether || player->field_352_7 || field_246_2 == 3 || field_246_2 == 6)
+                    && field_10E != 0) {
+                    start = field_10E;
+                } else if (field_110 != 0) {
+                    start = field_110;
+                } else {
+                    start = 0;
+                }
+                if (start > 0) {
+                    others = &objects[start];
+                    count = field_10F + field_111 - start + 2;
+                    while (count != 0) {
+                        if (player->sub_804B028(*others) && !player->field_358_3) {
+                            FieldObject* other = objects[(s8)(player->field_33C_0 << 1) >> 1];
+
+                            if ((other->field_20C_19 == 1 && player->field_352_0)
+                                || (other->field_20C_19 == 2 && player->field_352_1)) {
+                                if (other->field_20C_19 == 1 && other->field_20C_1 > 1
+                                    && player->height == 0) {
+                                    s32 x = player->x;
+                                    s32 y = player->y + player->field_270;
+                                    s32 otherX = other->x;
+                                    s32 otherY = other->y + other->field_270;
+                                    s32 halfWidth = (player->field_272 + other->field_272) >> 1;
+                                    bool hit = FALSE;
+
+                                    if (x - halfWidth < otherX && x + halfWidth > otherX
+                                        && y - player->field_276 < otherY
+                                        && y + other->field_276 > otherY) {
+                                        hit = TRUE;
+                                    } else {
+                                        u32 mask;
+
+                                        if (byte_839F94C[player->angle >> 5]
+                                            & (mask = player->field_350_0)) {
+                                            switch (mask) {
+                                                case 1:
+                                                case 4:
+                                                    if (x + (player->field_272 >> 1)
+                                                            > otherX - (other->field_272 >> 1)
+                                                        && x - (player->field_272 >> 1)
+                                                               < otherX + (other->field_272 >> 1)) {
+                                                        hit = TRUE;
+                                                    }
+                                                    break;
+                                                case 2:
+                                                case 8:
+                                                    if (y > otherY - other->field_276
+                                                        && y - player->field_276 < otherY) {
+                                                        hit = TRUE;
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                    if (hit) {
+                                        player->field_340 = other->field_20C_1;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        count--;
+                        others++;
+                    }
+                }
+
+                if (player->field_33C_0 == 0x7F && field_11A != 0) {
+                    FieldObject** group = &objects[field_11A];
+                    int groupCount;
+
+                    for (groupCount = field_11B; groupCount != 0; groupCount--, group++) {
+                        if (player->sub_804B028(*group)) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (!field_209_0 && field_12A != 0 && field_12A <= 2 && (brothersTogether || player->field_352_7)) {
+        if (player->field_340 == 2) {
+            player->sub_8049BD8(1);
+            sub_802DDB4(this, player, player->field_352_7 ? 0 : brothersTogether, 0);
+        } else if (player->field_352_7 && player->field_340 == 3) {
+            player->sub_8049BD8(2);
+            sub_802DDB4(this, player, player->field_352_7 ? 0 : brothersTogether, 0);
+        } else if (player->field_341 != player->field_340) {
+            player->sub_804FC90();
+            sub_802DDB4(this, player, player->field_352_7 ? 0 : brothersTogether, 0);
+        }
+    } else {
+        player->sub_804FC90();
+    }
+}
