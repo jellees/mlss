@@ -1,3 +1,9 @@
+	.include "asm/macros.inc"
+
+	.syntax unified
+
+	.text
+
 	thumb_func_start sub_802A740__12FieldManager
 sub_802A740__12FieldManager:
 	push {r4, r5, r6, r7, lr}

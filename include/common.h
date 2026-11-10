@@ -637,6 +637,7 @@ extern struct struc_3000D44* dword_3000D44;
 extern u16 word_2000272;
 extern u8 byte_3000C24;
 extern u32 dword_839F900[][2];
+extern u8 byte_839F94C[]; // Indexed by direction (angle / 32), masked with FieldPlayerCharacter::field_350_0
 extern void (*dword_3000D80[2])(void);
 extern u16 word_839F5CC[];
 extern u16 word_839F5E2[];
