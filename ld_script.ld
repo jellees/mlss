@@ -23,7 +23,8 @@ SECTIONS
 
     .text :
     {
-        asm/text08000000.o(.text);
+        asm/crt0.o(.text);
+        asm/text080003A4.o(.text);
         src/heap.o(.text);
         asm/text08018E24.o(.text);
         src/process.o(.text);
