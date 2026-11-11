@@ -44,16 +44,19 @@ if __name__ == "__main__":
         content = f.read()
         # Long section names (g++'s .gnu.linkonce.* for vtables and weak inline functions) wrap the
         # address and size onto the next line.
-        matches = re.findall(r'^ \.([\w.]+)\s+0x[0-9a-f]+\s+(0x[0-9a-f]+) (\w+)\/.+\.o', content, re.MULTILINE)
-        for match in matches:
-            if match[0] == 'text' or match[0].startswith('gnu.linkonce.t.'):
-                if match[2] == 'src':
-                    src += int(match[1], 0)
-                elif match[2] == 'asm':
-                    asm += int(match[1], 0)
-            elif match[0] == 'data' or match[0].startswith('gnu.linkonce.d.'):
-                if match[2] == 'src':
-                    src += int(match[1], 0)
+        matches = re.findall(r'^ \.([\w.]+)\s+0x[0-9a-f]+\s+(0x[0-9a-f]+) ((\w+)\/.+\.o)', content, re.MULTILINE)
+        for section, size, path, kind in matches:
+            # The embedded Mario Bros. ROM is a separate game, not part of the decompilation.
+            if path == 'asm/mariobros.o':
+                continue
+            if section == 'text' or section.startswith('gnu.linkonce.t.'):
+                if kind == 'src':
+                    src += int(size, 0)
+                elif kind == 'asm':
+                    asm += int(size, 0)
+            elif section == 'data' or section.startswith('gnu.linkonce.d.'):
+                if kind == 'src':
+                    src += int(size, 0)
 
     nonmatching = nonmatching_sizes()
     nonmatching_total = sum(nonmatching.values())
