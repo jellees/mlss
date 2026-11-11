@@ -465,7 +465,7 @@ void FieldPlayerCharacter::sub_80492DC() {
     field_35A_2 = 0;
 }
 
-void FieldPlayerCharacter::sub_8049370(u8 arg) {
+void FieldPlayerCharacter::sub_8049370(bool arg) {
     field_214_0 = 4;
     sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1029 : 0x1025) : 0x103F);
     sprite->field_12_1 = 1;

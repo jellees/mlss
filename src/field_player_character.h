@@ -89,7 +89,7 @@ class FieldPlayerCharacter : public FieldObject {
     u32 field_353_6 : 1;
     u32 field_353_7 : 1; // method5's copy of field_353_6
     s8 field_354;        // method5's copy of field_238
-    u8 field_355;
+    s8 field_355;
     u16 field_356;       // Saved field_218 (sub_8049AB4)
     u16 field_358_0 : 3; // Saved direction (sub_8049AB4)
     u16 field_358_3 : 1;
@@ -144,7 +144,7 @@ class FieldPlayerCharacter : public FieldObject {
     void sub_80490CC(u8 arg);                                     // 0x080490CC
     void sub_8049224();                                           // 0x08049224
     void sub_80492DC();                                           // 0x080492DC
-    void sub_8049370(u8 arg);                                     // 0x08049370
+    void sub_8049370(bool arg);                                   // 0x08049370
     void sub_8049430();                                           // 0x08049430
     void sub_80494D4();                                           // 0x080494D4
     void sub_804955C(int type);                                   // 0x0804955C

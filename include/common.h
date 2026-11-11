@@ -589,6 +589,8 @@ void sub_802D46C(struct FieldManager*, struct struc_3000388*);
 void sub_8035974(struct FieldManager*);
 void sub_8033B98(struct FieldManager*, struct FieldObject*);
 void sub_8034870(struct FieldManager*, struct FieldObject*);
+void sub_80346FC(struct FieldManager*, struct FieldObject*);
+int sub_803C544(struct FieldManager*);
 void sub_802DDB4(struct FieldManager*, struct FieldObject*, int, int);
 void sub_8029888(void (*)(void), int);
 void sub_8029910(void);
@@ -640,6 +642,7 @@ extern u8 byte_839F910[]; // Angle per D-pad state ((keys & 0xF0) >> 4), 0xFF: n
 extern u8 byte_839F94C[]; // Indexed by direction (angle / 32), masked with FieldPlayerCharacter::field_350_0
 extern u8 byte_839F954[]; // FieldManager::sub_802C428: tile offset (x 32 bytes) per FieldStruct4::field_2
 extern u8 byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per FieldStruct4::field_2
+extern u16 word_839F974[]; // FieldManager::sub_802C774: 4 pairs of (frame, animation)
 extern void (*dword_3000D80[2])(void);
 extern u16 word_839F5CC[];
 extern u16 word_839F5E2[];

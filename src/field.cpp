@@ -4402,3 +4402,345 @@ void FieldManager::sub_802C4D4(u8 arg1, u8 arg2) {
         }
     }
 }
+
+void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
+    switch (player->field_368->field_2) {
+        case 0:
+            if ((field_246_2 == 0 || field_246_2 == 2) && field_FA_10) {
+                player->field_239 = player->sprite->field_20[0] = field_FA_11;
+                player->sub_8049224();
+            } else {
+                int sound;
+
+                player->field_239 = player->sprite->field_20[0] = field_FA_11;
+                player->startAirborne(player->defaultJumpVelocity, player->defaultGravity, -1);
+                player->state = FIELD_OBJECT_STATE_RISING;
+                if (player->field_54 == 0) {
+                    sound = player->field_35A_11 ? 0x2F : 0x2B;
+                } else {
+                    sound = 0x2B;
+                }
+                play_sfx_80195B4(sound, -1);
+            }
+            break;
+        case 1:
+            player->field_239 = player->sprite->field_20[0] = field_FA_11;
+            player->sub_8049370(field_FA_10);
+            break;
+        case 2:
+            player->field_239 = player->sprite->field_20[0] = field_FA_11;
+            player->sub_8049430();
+            break;
+        case 8:
+            player->field_239 = player->sprite->field_20[0] = field_FA_11;
+            if (player->field_33E != -1 && objects[player->field_33E]->field_20C_19 == 4) {
+                sub_80346FC(this, player);
+            } else {
+                sub_8033B98(this, player);
+            }
+            break;
+        case 10:
+            player->field_239 = player->sprite->field_20[0] = field_FA_11;
+            sub_8034870(this, player);
+            break;
+        case 13:
+            sub_8029878();
+            break;
+    }
+}
+
+void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
+    switch (player->state) {
+        case 58:
+            if (--player->field_355 == 0) {
+                player->field_368->field_0 = player->field_388->field_368->field_0 = 0;
+                player->state = player->field_388->state = 0;
+                {
+                    FieldPlayerCharacter* other = player->field_388;
+
+                    other->field_23E = field_100;
+                    other->field_260 = player->field_23E = field_100;
+                    player->field_260 = field_100;
+                }
+                player->field_388->field_358_3 = 0;
+                player->field_358_3 = 0;
+                player->field_388->field_350_14 = 0;
+                player->field_350_14 = 0;
+                field_246_2 = 0;
+                field_20B_7 = 0;
+                field_208_0 = 1;
+                player->field_214_0 = 3;
+                player->sub_8049000(0x1001);
+                shotBullets[0]->sub_804FAF8();
+                sub_802DF80(this, 0);
+            }
+            break;
+
+        case 5: {
+            u8 hit = FALSE;
+
+            if (!player->field_353_2) {
+                hit = player->sub_804D734(0, objects, field_10B);
+            }
+            if (player->field_353_2 || hit || player->sub_804DBD0(0)) {
+                if (player->field_35A_11) {
+                    if (player->field_353_2) {
+                        if (player->sprite->field_23 == 4) {
+                            player->state = 9;
+                        }
+                    } else if (hit) {
+                        FieldObject* other = objects[(s8)(player->field_33C_0 << 1) >> 1];
+
+                        if (other->field_20C_19 == 4
+                            || (other->field_20C_19 == 5
+                                && sub_803C544(this) > (*(u32*)((u8*)other + 0x22C) & 3))) {
+                            player->field_353_2 = 1;
+                            if (other->field_20C_19 == 5) {
+                                sub_801ABE8(0, 15, 0);
+                                play_sfx_80195B4(0x46, -1);
+                            }
+                        } else {
+                            player->state = player->sprite->field_23 == 3 ? 8 : 9;
+                        }
+                    } else {
+                        player->state = player->sprite->field_23 == 3 ? 6 : 7;
+                    }
+                } else {
+                    if (player->field_353_2) {
+                        if (player->sprite->field_23 == 4) {
+                            player->state = 9;
+                        }
+                    } else if (hit) {
+                        FieldObject* other = objects[(s8)(player->field_33C_0 << 1) >> 1];
+
+                        if (other->field_20C_19 == 4
+                            || (other->field_20C_19 == 5
+                                && sub_803C544(this) > (*(u32*)((u8*)other + 0x22C) & 3))) {
+                            player->field_353_2 = 1;
+                            if (other->field_20C_19 == 5) {
+                                sub_801ABE8(0, 15, 0);
+                                play_sfx_80195B4(0x46, -1);
+                            }
+                        } else {
+                            player->state = player->sprite->field_23 == 3 ? 8 : 9;
+                        }
+                    } else {
+                        player->state = player->sprite->field_23 == 3 ? 6 : 7;
+                    }
+                }
+            }
+
+            if (player->sprite->field_12_3) {
+                player->state = 7;
+            }
+            if (player->state != 5) {
+                int animation = player->sprite->field_20[1];
+
+                if (player->field_35A_11) {
+                    if (player->sprite->field_23 == 3) {
+                        animation += 10;
+                    } else {
+                        animation += 5;
+                    }
+                } else {
+                    if (player->sprite->field_23 == 3) {
+                        animation += 10;
+                    } else {
+                        animation += 5;
+                    }
+                }
+                sub_801E150(player->sprite, animation, 0, 0, 0);
+                player->field_355 = 20;
+            }
+            break;
+        }
+
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+            if (player->state > 7) {
+                player->state -= 2;
+            }
+            if (player->field_355 != 0 && --player->field_355 == 0) {
+                player->sub_804FCD4();
+                player->field_388->field_350_14 = 0;
+            }
+            break;
+
+        case 10: {
+            if (player->field_355 < 60) {
+                u16* entry;
+                u32 i;
+
+                player->field_355++;
+                entry = word_839F974;
+                for (i = 0; i < 4; i++, entry += 2) {
+                    if (entry[0] == player->field_355) {
+                        sub_801E150(player->field_36C, entry[1], 0, 0, 0);
+                        if (player->field_355 == 59) {
+                            stop_sfx_80195A8(player->field_54 == 0 ? 0x157 : 0x87);
+                            play_sfx_80195B4(player->field_54 == 0 ? 0x158 : 0x156, -1);
+                        }
+                    }
+                }
+            }
+            player->updateAirborne();
+            player->sub_804FB64(objects, 0, 0);
+            if (!(field_D0->field_0 & player->field_368->field_4) || player->airFrames != -1) {
+                if (player->airFrames != -1 || player->field_355 < 60) {
+                    player->sub_80494D4();
+                    player->field_388->field_350_14 = 0;
+                } else {
+                    stop_sfx_80195A8(player->field_54 == 0 ? 0x158 : 0x156);
+                    player->state = 11;
+                    player->method7(1);
+                    player->sprite->field_12_1 = 1;
+                    play_sfx_80195B4(player->field_54 == 0 ? 0x9C : 0x9A, -1);
+                }
+            }
+            break;
+        }
+
+        case 11:
+            if (player->sprite->field_12_3) {
+                if (player->sub_804D734(1, objects, field_10B) || player->sub_804DBD0(1)) {
+                    player->field_355 = 5;
+                } else {
+                    player->field_355 = 40;
+                }
+                player->field_214_0 = 0;
+                player->state = 12;
+                sub_801E150(player->field_36C, 5, 0, 0, 0);
+                player->field_36C->field_12_1 = 1;
+            }
+            break;
+
+        case 12:
+            if (player->field_36C->field_20[1] == 5 && player->field_36C->field_12_3) {
+                sub_801E150(player->field_36C, 6, 0, 0, 0);
+            }
+            if (player->field_355 != 0 && --player->field_355 == 0) {
+                player->sub_80494D4();
+                player->field_388->field_350_14 = 0;
+            }
+            break;
+
+        case 62:
+            if (player->sprite->field_12_3) {
+                player->field_214_0 = 2;
+                player->direction = 5;
+                player->jumpToHeight(12, 0x75 >> field_FA_10, -1);
+                player->sub_8049000(0x1002);
+                player->field_20C_13 = 0;
+                player->field_355 = 0;
+                player->state = 63;
+            }
+            break;
+
+        case 63: {
+            player->field_355++;
+            if (player->field_355 & ((2 << field_FA_10) >> field_20A_1)) {
+                player->direction++;
+            }
+            player->updateAirborne();
+            if (field_20A_1) {
+                player->updateAirborne();
+            }
+            player->sub_804FB64(objects, 0, 0);
+            if (player->airFrames != -1) {
+                break;
+            }
+            sub_802C4D4(1, 1);
+            player->field_214_0 = 3;
+            field_20B_7 = 0;
+            field_208_0 = 1;
+            field_246_2 = 0;
+            player->field_368->field_0 = 0;
+            player->state = 0;
+            player->field_350_14 = 0;
+            player->field_260 = player->field_23E = field_100;
+            if ((u8)(player->field_388->field_368->field_0 - 1) <= 1) {
+                player->field_388->field_368->field_1 = 0;
+            } else {
+                player->field_388->field_368->field_0 = 0;
+            }
+            player->field_388->field_350_14 = 0;
+            if (brothersTogether) {
+                player->field_388->state = 0;
+            }
+            {
+                FieldPlayerCharacter* other = player->field_388;
+
+                other->field_23E = field_100;
+                other->field_260 = field_100;
+            }
+            if (player->field_388->airFrames != -1) {
+                player->field_388->field_240 = field_100;
+            }
+            if (brothersTogether) {
+                sub_802DF80(this, 0);
+            }
+            player->direction = player->angle >> 5;
+            field_20B_4 = 0;
+            player->field_368->field_10[0] = player->field_368->field_12;
+            player->field_368->field_12 = -1;
+            sub_802DDB4(this, player, 0, 0);
+            if (!brothersTogether && !player->field_352_7) {
+                player->field_368->field_14 = player->field_368->field_10[0];
+                player->field_368->field_10[0] = 0;
+                sub_802DDB4(this, player, 0, 0);
+            }
+            break;
+        }
+
+        case 70:
+            if (--player->field_355 == 0) {
+                player->sub_8049000(0x1046);
+                player->jumpToHeight(16, 100, (s16)field_100);
+                player->state = 71;
+            }
+            break;
+
+        case 71:
+            player->updateAirborne();
+            player->sub_804FB64(objects, 0, 0);
+            if (player->airFrames == -1) {
+                player->state = 0;
+                player->field_350_14 = 0;
+                player->field_23E = 0x100 >> field_FA_10;
+                player->field_260 = player->field_23E;
+                player->field_388->state = 0;
+                player->field_388->field_350_14 = 0;
+                field_20B_7 = 0;
+                if (brothersTogether) {
+                    player->field_388->field_260 = player->field_388->field_23E = 0x100 >> field_FA_10;
+                    sub_802DF80(this, 0);
+                }
+            }
+            break;
+
+        case 72:
+            player->updateAirborne();
+            if (field_20A_1) {
+                player->updateAirborne();
+            }
+            player->sub_804FB64(objects, 0, 0);
+            if (brothersTogether && player->field_352_7) {
+                s32 dx = player->x - player->field_388->x;
+                s32 dy = player->y - player->field_388->y;
+
+                if (((int (*)(int))dword_3001038)(dx * dx + dy * dy) > 0x1000) {
+                    field_20B_3 = 1;
+                }
+            }
+            if (player->airFrames == -1) {
+                player->method7(1);
+                if (player->field_388->airFrames == -1) {
+                    sub_802D2F4(player);
+                    field_20B_4 = 0;
+                }
+            }
+            break;
+    }
+}
