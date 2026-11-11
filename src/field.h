@@ -267,7 +267,7 @@ class FieldManager : public Process {
     u8 pad_296[0x12];
     u8 field_2A8_0 : 5; // Battle: index of the monster
     u8 field_2A8_5 : 1;
-    u8 field_2A8_6 : 1;
+    u8 inBattle : 1;
     u8 field_2A8_7 : 1;
     u8 field_2A9_0 : 1;
     u8 field_2A9_1 : 1;

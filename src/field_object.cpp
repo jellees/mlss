@@ -2688,21 +2688,21 @@ int FieldObject::sub_80458B0() {
 }
 #endif
 
-void FieldObject::method17() {
-    if (field_212_7 != 0) {
-        if (--field_2B4 == 0) {
+void FieldObject::updateFlicker() {
+    if (flickerMode != FIELD_OBJECT_FLICKER_NONE) {
+        if (--flickerTimer == 0) {
             if (field_20C_25) {
                 sub_804761C(0);
-                field_2B0 += field_212_7 == 1 ? -2 : 2;
-                field_2B4 = field_2B0[0];
+                flickerDurations += flickerMode == FIELD_OBJECT_FLICKER_IN ? -2 : 2;
+                flickerTimer = flickerDurations[0];
             } else {
                 sub_804761C(1);
-                field_2B4 = field_2B0[1];
+                flickerTimer = flickerDurations[1];
             }
         }
-        if (field_2B4 == -1) {
-            sub_804761C(field_212_7 == 1);
-            field_212_7 = 0;
+        if (flickerTimer == -1) {
+            sub_804761C(flickerMode == FIELD_OBJECT_FLICKER_IN);
+            flickerMode = FIELD_OBJECT_FLICKER_NONE;
             sprite->field_12_1 = field_212_14;
         }
     }
@@ -3609,12 +3609,11 @@ bool FieldObject::sub_8047B78() {
     return field_2B5_0 != 0;
 }
 
-void FieldObject::method16(int mode) {
+void FieldObject::startFlicker(FieldObjectFlickerMode mode) {
     field_212_14 = sprite->field_12_1;
-    field_212_7 = mode;
-    // (duration, value) pairs between two 0xFF terminators, walked backwards in mode 1.
-    field_2B0 = mode == 1 ? byte_83A061C + 0x17 : byte_83A061C + 1;
-    field_2B4 = field_2B0[0];
+    flickerMode = mode;
+    flickerDurations = mode == FIELD_OBJECT_FLICKER_IN ? &byte_83A061C[23] : &byte_83A061C[1];
+    flickerTimer = flickerDurations[0];
     sub_804761C(0);
 }
 

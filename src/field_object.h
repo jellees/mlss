@@ -20,6 +20,16 @@ enum FieldObjectState {
     FIELD_OBJECT_STATE_FALLING,
 };
 
+// FieldObject::flickerMode (startFlicker/updateFlicker): blinks the sprite on and off using the span
+// lengths in byte_83A061C.
+enum FieldObjectFlickerMode {
+    FIELD_OBJECT_FLICKER_NONE,
+    // Walks the table backwards: visible spans grow (2 -> 8 frames) and the object ends visible.
+    FIELD_OBJECT_FLICKER_IN,
+    // Walks the table forwards: visible spans shrink (8 -> 2 frames) and the object ends hidden.
+    FIELD_OBJECT_FLICKER_OUT,
+};
+
 class FieldObject {
   public:
     s8 field_0;
@@ -108,7 +118,7 @@ class FieldObject {
     u32 field_212_0 : 5;
     u32 field_212_5 : 1;
     u32 field_212_6 : 1;
-    u32 field_212_7 : 2;
+    u32 flickerMode : 2; // enum FieldObjectFlickerMode
     u32 field_212_9 : 4;
     u32 field_212_13 : 1;
     u32 field_212_14 : 2;
@@ -208,8 +218,8 @@ class FieldObject {
     u8 pad_2A6[0x2];
     u16* field_2A8;
     u16* field_2AC;
-    u8* field_2B0;
-    s32 field_2B4 : 8;
+    u8* flickerDurations;
+    s32 flickerTimer : 8;
     u32 field_2B5_0 : 3;
     u32 field_2B5_3 : 1;
     u32 field_2B5_4 : 2;
@@ -342,8 +352,8 @@ class FieldObject {
     virtual int method13();                                                           // 0x08041FFC
     virtual void method14(FieldObject** objects, u8 arg);                             // 0x08047C68
     virtual void method15(u8 arg);                                                    // 0x08044630
-    virtual void method16(int mode);                                                  // 0x08047B98
-    virtual void method17();                                                          // 0x080459C0
+    virtual void startFlicker(FieldObjectFlickerMode mode);                           // 0x08047B98
+    virtual void updateFlicker();                                                     // 0x080459C0
     virtual void method18(u8 index);                                                  // 0x08047858
     virtual void method19(u8 index);                                                  // 0x08047804
 };

@@ -71,7 +71,7 @@ FieldManager::FieldManager(u8 priority, char* label, int roomId, bool arg4, bool
     fldm->field_246_0 = 0;
     fldm->field_291_0 = 0;
     fldm->field_291_1 = 0;
-    fldm->field_2A8_6 = 0;
+    fldm->inBattle = 0;
     fldm->field_2B9 = 0xFF;
     fldm->field_2B8_6 = 0;
     fldm->field_12B = -1;
@@ -198,7 +198,7 @@ void FieldManager::update() {
         field_1FC->sub_805CB54();
     }
 
-    if (field_2A8_6 && state == 2) {
+    if (inBattle && state == 2) {
         if (field_2B4 >= 0) {
             make_btl_8028F54();
         } else if (field_2B2 >= -1) {
@@ -454,7 +454,7 @@ void FieldManager::update() {
                 field_F9_2 = 0;
             }
 
-            if (field_2A8_6) {
+            if (inBattle) {
                 FieldMonster* monster;
 
                 if (objects[field_2A8_0]->field_20C_19 == 3) {
@@ -658,7 +658,7 @@ void FieldManager::update() {
                     none;
             }
 
-            if (field_2A8_6) {
+            if (inBattle) {
                 sub_8019650(0, none, 0x10);
             } else if (field_2B8_0 || field_F8_1 || field_F8_4) {
                 switch (field_2B9) {
@@ -708,7 +708,7 @@ void FieldManager::update() {
                 field_12A = 0;
             }
 
-            if (field_2A8_6 && brothersTogether) {
+            if (inBattle && brothersTogether) {
                 sub_802DF80(this, 0);
             }
 
@@ -725,7 +725,7 @@ void FieldManager::update() {
                 state = 15;
             }
 
-            field_2A8_6 = 0;
+            inBattle = 0;
             field_12C_0 = 0;
             field_12C_1 = 0;
             field_12D_0 = 0;
@@ -789,7 +789,7 @@ void FieldManager::update_field_8023DD4() {
         sub_8028FBC();
         return;
     }
-    if (field_2A8_6) {
+    if (inBattle) {
         start_battle_8027AC4();
         return;
     }
@@ -1124,7 +1124,7 @@ void FieldManager::update_field_8023DD4() {
         for (count = field_10B; count != 0; count--, object++) {
             if (*object != NULL) {
                 (*object)->method11();
-                (*object)->method17();
+                (*object)->updateFlicker();
             }
         }
         if (field_11A != 0) {
@@ -2296,7 +2296,7 @@ void FieldManager::sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int
     field_2A8_5 = value;
     field_2A9_2 = mode;
     field_2A9_5 = arg10;
-    field_2A8_6 = 1;
+    inBattle = 1;
 }
 
 void FieldManager::start_battle_8027AC4() {

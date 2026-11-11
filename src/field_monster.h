@@ -101,10 +101,10 @@ class FieldMonster : public FieldObject {
             field_344->method9();
         }
     }
-    virtual void method17() { // 0x0805062C
-        FieldObject::method17();
+    virtual void updateFlicker() { // 0x0805062C
+        FieldObject::updateFlicker();
         if (field_344 != NULL) {
-            field_344->method17();
+            field_344->updateFlicker();
         }
     }
     virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects) { // 0x080505F4
