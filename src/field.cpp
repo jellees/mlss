@@ -4744,3 +4744,41 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             break;
     }
 }
+
+void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
+    sub_8020D40(player->field_36C);
+    field_20B_7 = 0;
+    field_208_0 = 1;
+    field_246_2 = 0;
+    player->field_350_15 = 0;
+    player->field_368->field_0 = 0;
+    player->state = 0;
+    player->field_350_14 = 0;
+    if ((u8)(player->field_388->field_368->field_0 - 1) <= 1) {
+        player->field_388->field_368->field_1 = 0;
+    } else {
+        player->field_388->field_368->field_0 = 0;
+    }
+    player->field_35A_14 = 0;
+    player->field_260 = player->field_23E = field_100;
+    player->field_368->field_10[0] = player->field_368->field_12;
+    player->field_368->field_12 = -1;
+    sub_802DDB4(this, player, 0, 0);
+    if (!brothersTogether && !player->field_352_7) {
+        player->field_368->field_14 = player->field_368->field_10[0];
+        player->field_368->field_10[0] = 0;
+        sub_802DDB4(this, player, 0, 0);
+    }
+    player->field_388->field_350_14 = 0;
+    if (brothersTogether) {
+        player->field_388->state = 0;
+        sub_802DDB4(this, player->field_388, player->field_352_7, 0);
+        {
+            FieldPlayerCharacter* other = player->field_388;
+
+            other->field_23E = field_100;
+            other->field_260 = field_100;
+        }
+        sub_802DF80(this, 0);
+    }
+}
