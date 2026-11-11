@@ -46,54 +46,54 @@ IntrMain: @ 0x0800010C
 	add r3, r3, #OFFSET_REG_IE
 	ldr r2, [r3, #OFFSET_REG_IE - OFFSET_REG_IE]
 	and r1, r2, r2, lsr #16
-	mov ip, #0
+	mov r12, #0
 	ands r0, r1, #INTR_FLAG_TIMER3
 	bne _080001B4
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_SERIAL
 	bne _080001B4
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_VBLANK
 	bne _080001C8
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_VCOUNT
 	bne _080001B4
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_HBLANK
 	bne _080001B4
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_DMA0
 	bne _080001B4
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_DMA1
 	bne _080001B4
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_DMA2
 	bne _080001B4
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_DMA3
 	bne _080001B4
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_KEYPAD
 	bne _080001B4
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_GAMEPAK
 	strbne r0, [r3, #REG_SOUNDCNT_X - REG_IE]
 	bne . @ spin
 _080001B4:
 	strh r0, [r3, #OFFSET_REG_IF - OFFSET_REG_IE]
 	ldr r1, _08000370 @ =0x03000014
-	add r1, r1, ip
+	add r1, r1, r12
 	ldr r0, [r1]
 	bx r0
 _080001C8:
 	strh r0, [r3, #OFFSET_REG_IF - OFFSET_REG_IE]
 	ldr r1, _08000374 @ =0x03000014
-	add r1, r1, ip
+	add r1, r1, r12
 	ldr r0, [r1]
 	ldr r3, _08000378 @ =0x03000C7C
-	ldrb ip, [r3]
-	cmp ip, #0
+	ldrb r12, [r3]
+	cmp r12, #0
 	beq _08000258
 	mov r2, #0
 	strb r2, [r3]
@@ -116,13 +116,13 @@ _080001C8:
 	strh r2, [r3]
 	ldr r3, [sp, #0x14]
 	sub r3, r3, #4
-	ldr ip, _08000388 @ =0x03000C74
-	str r3, [ip]
+	ldr r12, _08000388 @ =0x03000C74
+	str r3, [r12]
 	ldr r3, _0800038C @ =0x08000804
 	str r3, [sp, #0x14]
 	ldr r3, _08000390 @ =0x03000C28
-	mov ip, #1
-	strb ip, [r3]
+	mov r12, #1
+	strb r12, [r3]
 _08000258:
 	bx r0
 _0800025C:
@@ -135,37 +135,37 @@ _0800025C:
 	mov r0, #1
 	strh r0, [r3, #OFFSET_REG_IME - OFFSET_REG_IE]
 	and r1, r2, r2, lsr #16
-	mov ip, #0
+	mov r12, #0
 	ands r0, r1, #INTR_FLAG_TIMER3
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_SERIAL
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_VBLANK
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_VCOUNT
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_HBLANK
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_DMA0
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_DMA1
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_DMA2
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_DMA3
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_KEYPAD
 	bne _08000308
-	add ip, ip, #4
+	add r12, r12, #4
 	ands r0, r1, #INTR_FLAG_GAMEPAK
 	strbne r0, [r3, #REG_SOUNDCNT_X - REG_IE]
 	bne . @ spin
@@ -180,7 +180,7 @@ _08000308:
 	orr r3, r3, #PSR_SYS_MODE
 	msr cpsr_fc, r3
 	ldr r1, _08000398 @ =0x03000014
-	add r1, r1, ip
+	add r1, r1, r12
 	ldr r0, [r1]
 	stmdb sp!, {lr}
 	adr lr, _08000344
