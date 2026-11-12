@@ -42,8 +42,8 @@ class FieldMonster : public FieldObject {
     FieldMonster(int roomId, int index); // 0x0804FEC8
     void sub_804FFCC();                  // 0x0804FFCC
     void sub_8050078();                  // 0x08050078
-    void sub_80501EC();                  // 0x080501EC
-    void sub_80502C8();                  // 0x080502C8
+    void defeat();                       // 0x080501EC
+    void survive();                      // 0x080502C8
     void sub_80503CC();                  // 0x080503CC
 
     // Overridden vtable slots; the others are inherited from FieldObject. Each override calls the

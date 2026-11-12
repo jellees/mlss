@@ -102,7 +102,7 @@ class FieldObject {
     u32 field_20C_22 : 1;
     u32 field_20C_23 : 1;
     u32 field_20C_24 : 1;
-    u32 field_20C_25 : 1;
+    u32 spriteActive : 1;
     u32 field_20C_26 : 1;
     u32 field_20C_27 : 5;
     u32 field_210_0 : 1;
@@ -300,7 +300,7 @@ class FieldObject {
     void sub_80473DC();
     void sub_80474D0();
     void sub_80475A0(int slot);
-    void sub_804761C(int enable);
+    void setSpriteActive(int enable);
     void sub_8047DC8(u8 arg);
     void sub_804776C(int value);
     void sub_8047784();

@@ -300,7 +300,7 @@ void FieldManager::update() {
                     field_2E0 = followerSaved->field_6 << 8;
                     field_2E4 = followerSaved->field_8 << 8;
                     field_2E8 = followerSaved->field_A << 8;
-                    follower->field_20C_0 = follower->field_20C_25 = 0;
+                    follower->field_20C_0 = follower->spriteActive = 0;
                 }
 
                 if (field_246_2 != 0) {
@@ -461,7 +461,7 @@ void FieldManager::update() {
                     monster = (FieldMonster*)objects[field_2A8_0];
                     if (monster->field_33D_3) {
                         monster->field_344->field_20C_0 = 0;
-                        monster->field_344->field_20C_25 = 0;
+                        monster->field_344->spriteActive = 0;
                     }
                 }
 
@@ -469,13 +469,13 @@ void FieldManager::update() {
                 switch (field_2B1_0) {
                     case 0:
                         if (!field_2A8_7) {
-                            monster->sub_80501EC();
+                            monster->defeat();
                             field_F9_4 = 1;
                         }
                         break;
                     case 1:
                         if (!field_2A9_1 && field_2A8_0 != 0) {
-                            monster->sub_80502C8();
+                            monster->survive();
                             field_F9_4 = 1;
                         }
                         break;
@@ -488,7 +488,7 @@ void FieldManager::update() {
             }
 
             for (i = 0; i < field_10B; i++) {
-                if (objects[i]->field_20C_25) {
+                if (objects[i]->spriteActive) {
                     objects[i]->method4();
                 }
             }
@@ -1395,7 +1395,7 @@ void FieldManager::sub_802563C() {
         if (count != 0) {
             do {
                 if ((*objects)->sprite->field_20[1] == 1 && (*objects)->sprite->field_12_3) {
-                    (*objects)->sub_804761C(0);
+                    (*objects)->setSpriteActive(0);
                     (*objects)->field_214_0 = 0;
                     sub_801E150((*objects)->sprite, 0, 0, 0, 0);
                     (*objects)->sprite->field_12_1 = 0;
@@ -1860,7 +1860,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
 
                 if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, object->field_22C_10 + 0x1160) == 1) {
                     object->field_20C_0 = 0;
-                    object->field_20C_25 = 0;
+                    object->spriteActive = 0;
                 }
                 object->field_210_5 = 1;
                 objects[i] = object;
@@ -1933,7 +1933,7 @@ void FieldManager::sub_8026C78() {
                 FieldBlock* object = new (1, "SBLK", 1) FieldBlock(entry, index, -1, -1);
 
                 if ((flags & 0x10) && object->field_33C_0) {
-                    object->field_20C_25 = 0;
+                    object->spriteActive = 0;
                 }
                 object->field_54 = field_10B;
                 objects[field_10B] = object;
@@ -2560,7 +2560,7 @@ void FieldManager::sub_8028248() {
                 follower->direction = field_2D8_5;
                 field_2D8_0 = 0x1F;
             } else {
-                follower->sub_804761C(0);
+                follower->setSpriteActive(0);
                 follower->sub_804776C(0);
             }
         }

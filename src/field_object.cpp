@@ -10,7 +10,7 @@ FieldObject::FieldObject(int roomId, int index) {
     field_29 = -1;
     field_20C_0 = 1;
     field_20C_19 = 1;
-    field_20C_25 = 1;
+    spriteActive = 1;
     field_210_0 = 0;
     field_210_1 = 1;
     field_210_2 = 1;
@@ -289,7 +289,7 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
         sprite->field_12_4 = 1;
     }
     sprite->field_20[0] = field_239;
-    if (field_20C_25) {
+    if (spriteActive) {
         int value2 = sprite->field_12_1;
 
         sub_8021ED8(sprite);
@@ -324,7 +324,7 @@ void FieldObject::method6(int arg) {
     int changed;
     int flag;
 
-    if (field_20C_0 && field_20C_25 && field_214_21 == 0) {
+    if (field_20C_0 && spriteActive && field_214_21 == 0) {
         if (field_214_0 > 2) {
             u8* table = byte_83A0636;
             int index = angle >> 4;
@@ -427,7 +427,7 @@ void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
             && (s16)spriteY <= field_283 + 0xD0
             && (field_8 <= (s16)spriteY || field_8 >= -16 - field_283))) {
         field_214_21 = 0;
-        if (field_20C_25 && sprite->field_12_5) {
+        if (spriteActive && sprite->field_12_5) {
             int value;
 
             field_214_24 = 1;
@@ -440,7 +440,7 @@ void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
         }
     } else {
         field_214_21 = field_20C_18 ^ 1;
-        if (field_20C_25 && sprite->field_12_5 == 0) {
+        if (spriteActive && sprite->field_12_5 == 0) {
             if (field_26E != 0xFF) {
                 sub_8116680(field_334, field_26E);
             }
@@ -464,7 +464,7 @@ void FieldObject::method9() {
     int layer1;
     struct Coldef* coldef;
 
-    if (!(field_20C_12 && field_20C_25) || field_214_21) {
+    if (!(field_20C_12 && spriteActive) || field_214_21) {
         return;
     }
     if (field_214_24 == 0 && x == previousX && y == previousY && z == previousZ
@@ -556,7 +556,7 @@ struct struc_Oam* FieldObject::method10(struct struc_Oam* oam, FieldObject** obj
     struct Sprite* other;
     int layer;
 
-    if (field_20C_0 && field_20C_25 && field_214_21 == 0) {
+    if (field_20C_0 && spriteActive && field_214_21 == 0) {
         if (field_20C_15 != 0 && field_20C_26
             && ((field_212_6 && height >= 0)
                 || (height > 0 && (field_20C_15 > 2 || (s8)field_1 == -1)))) {
@@ -739,7 +739,7 @@ inline void FieldObject::method4() {
     if (field_222 != 0xFF) {
         int value;
 
-        field_20C_25 = 1;
+        spriteActive = 1;
         value = sprite->field_12_1;
         sub_8021ED8(sprite);
         sprite->field_12_1 = value;
@@ -2691,17 +2691,17 @@ int FieldObject::sub_80458B0() {
 void FieldObject::updateFlicker() {
     if (flickerMode != FIELD_OBJECT_FLICKER_NONE) {
         if (--flickerTimer == 0) {
-            if (field_20C_25) {
-                sub_804761C(0);
+            if (spriteActive) {
+                setSpriteActive(0);
                 flickerDurations += flickerMode == FIELD_OBJECT_FLICKER_IN ? -2 : 2;
                 flickerTimer = flickerDurations[0];
             } else {
-                sub_804761C(1);
+                setSpriteActive(1);
                 flickerTimer = flickerDurations[1];
             }
         }
         if (flickerTimer == -1) {
-            sub_804761C(flickerMode == FIELD_OBJECT_FLICKER_IN);
+            setSpriteActive(flickerMode == FIELD_OBJECT_FLICKER_IN);
             flickerMode = FIELD_OBJECT_FLICKER_NONE;
             sprite->field_12_1 = field_212_14;
         }
@@ -3063,7 +3063,7 @@ void FieldObject::sub_80465D8() {
             sub_8046A10();
         }
     }
-    if (field_20C_25) {
+    if (spriteActive) {
         if (field_2B5_4 && sprite->xScale == field_302[0]) {
             field_2B5_4 = 0;
         }
@@ -3199,7 +3199,7 @@ int FieldObject::sub_8046C78(int mode, int relative, u16 target, u16 speed) {
 }
 
 void FieldObject::sub_8046D18() {
-    if (field_20C_25) {
+    if (spriteActive) {
         if (field_2B5_4 == 1) {
             field_312[0]++;
             sprite->xScale += field_30A[0];
@@ -3420,7 +3420,7 @@ inline void FieldObject::sub_8047E50(u16 value) {
     sub_8047DC8(field_26E);
 }
 
-// Defined inline here, so that sub_8040804 calls it while sub_804761C inlines it; the out-of-line
+// Defined inline here, so that sub_8040804 calls it while setSpriteActive inlines it; the out-of-line
 // copy is emitted at the end of the file (0x08047DC8).
 inline void FieldObject::sub_8047DC8(u8 arg) {
     if (field_26C != 0xFFFF) {
@@ -3435,11 +3435,13 @@ inline void FieldObject::sub_8047DC8(u8 arg) {
     }
 }
 
-void FieldObject::sub_804761C(int enable) {
-    if (field_222 == 0xFF || field_20C_25 == enable) {
+void FieldObject::setSpriteActive(int enable) {
+    if (field_222 == 0xFF || spriteActive == enable) {
         return;
     }
-    field_20C_25 = enable;
+
+    spriteActive = enable;
+
     if (enable) {
         int value = sprite->field_12_1;
 
@@ -3456,7 +3458,7 @@ void FieldObject::sub_804761C(int enable) {
         if (field_26E != 0xFF) {
             sub_8116680(field_334, field_26E);
         }
-        field_23D = enable;
+        field_23D = 0;
         sub_8020D40(sprite);
     }
 }
@@ -3614,7 +3616,7 @@ void FieldObject::startFlicker(FieldObjectFlickerMode mode) {
     flickerMode = mode;
     flickerDurations = mode == FIELD_OBJECT_FLICKER_IN ? &byte_83A061C[23] : &byte_83A061C[1];
     flickerTimer = flickerDurations[0];
-    sub_804761C(0);
+    setSpriteActive(0);
 }
 
 int FieldObject::sub_8047C18(FieldObject* other) {

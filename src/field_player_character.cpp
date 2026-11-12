@@ -109,7 +109,7 @@ void FieldPlayerCharacter::method5() {
 
 void FieldPlayerCharacter::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
     if (field_352_6) {
-        if (field_20C_25 && !field_214_21) {
+        if (spriteActive && !field_214_21) {
             field_6 = x / 256 - cameraX;
             field_8 = (y - z) / 256 - cameraY - 3;
             sprite->xPosition = field_6 + field_23A;
@@ -629,14 +629,14 @@ void FieldPlayerCharacter::sub_8049BD8(int value) {
 void FieldPlayerCharacter::sub_8049C38(FieldObject** objects, int count) {
     int i;
 
-    if (field_214_21 || !field_20C_12 || !field_20C_25) {
+    if (field_214_21 || !field_20C_12 || !spriteActive) {
         return;
     }
     for (i = 0; i < count; i++, objects++) {
         FieldObject* other = *objects;
 
         if (field_54 == other->field_54 || other->field_214_21 || !other->field_20C_12
-            || !other->field_20C_25) {
+            || !other->spriteActive) {
             continue;
         }
         if (field_6 - field_282 / 2 >= other->field_6 + other->field_282 / 2
