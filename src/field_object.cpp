@@ -1,6 +1,7 @@
 #pragma implementation "field_object.h"
 #include "global.h"
 #include "common.h"
+#include "sprite.h"
 #include "field_object.h"
 #include "field_player_character.h"
 #include "field_block.h"

@@ -2,6 +2,7 @@
 
 #include "global.h"
 #include "common.h"
+#include "sprite.h"
 #include "heap.h"
 #include "field.h"
 #include "sign.h"

@@ -1,6 +1,7 @@
 #pragma implementation "field_player_character.h"
 #include "global.h"
 #include "common.h"
+#include "sprite.h"
 #include "field_player_character.h"
 #include "field_monster.h"
 

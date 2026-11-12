@@ -2,6 +2,7 @@
 
 #include "global.h"
 #include "common.h"
+#include "sprite.h"
 #include "heap.h"
 #include "game_mode.h"
 #include "load_menu.h"

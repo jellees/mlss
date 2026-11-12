@@ -476,7 +476,6 @@ void sub_81994EC(int*, void*);
 void sub_801A6B0(void);
 void sub_801ABE8(u16, u16, int);
 void sub_801AD3C(void);
-void sub_801E150(struct Sprite*, int, int, int, int);
 void sub_8021ED8(struct Sprite*);
 u16* sub_80FB790(u16, u8*);
 void sub_8020994(u16, int, int, int);
