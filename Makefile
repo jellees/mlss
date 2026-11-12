@@ -61,6 +61,8 @@ OBJS_REL := $(patsubst $(OBJ_DIR)/%,%,$(OBJS))
 SUBDIRS  := $(sort $(dir $(OBJS)))
 $(shell mkdir -p $(SUBDIRS))
 
+$(C_BUILDDIR)/eeprom.o: CFLAGS := -O1 -mthumb-interwork -fno-common -Wimplicit -Wparentheses -Werror -g
+
 # Rules
 .PHONY: rom compare clean tools
 
@@ -92,7 +94,7 @@ $(ASM_BUILDDIR)/%.o: $(ASM_SUBDIR)/%.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 $(ELF): $(OBJS)
-	cd $(OBJ_DIR) && $(LD) -Map ../$(MAP) -T ../ld_script.ld -o ../$@ $(LDFLAGS) $(OBJS_REL)
+	cd $(OBJ_DIR) && $(LD) -Map ../$(MAP) -T ../ld_script.ld -o ../$@ $(LDFLAGS)
 
 $(ROM): $(ELF)
 	$(OBJCOPY) -O binary $< $@
