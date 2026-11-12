@@ -2692,11 +2692,11 @@ void FieldObject::updateFlicker() {
     if (flickerMode != FIELD_OBJECT_FLICKER_NONE) {
         if (--flickerTimer == 0) {
             if (spriteActive) {
-                setSpriteActive(0);
+                setSpriteActive(false);
                 flickerDurations += flickerMode == FIELD_OBJECT_FLICKER_IN ? -2 : 2;
                 flickerTimer = flickerDurations[0];
             } else {
-                setSpriteActive(1);
+                setSpriteActive(true);
                 flickerTimer = flickerDurations[1];
             }
         }
@@ -3435,7 +3435,7 @@ inline void FieldObject::sub_8047DC8(u8 arg) {
     }
 }
 
-void FieldObject::setSpriteActive(int enable) {
+void FieldObject::setSpriteActive(bool32 enable) {
     if (field_222 == 0xFF || spriteActive == enable) {
         return;
     }
@@ -3616,7 +3616,7 @@ void FieldObject::startFlicker(FieldObjectFlickerMode mode) {
     flickerMode = mode;
     flickerDurations = mode == FIELD_OBJECT_FLICKER_IN ? &byte_83A061C[23] : &byte_83A061C[1];
     flickerTimer = flickerDurations[0];
-    setSpriteActive(0);
+    setSpriteActive(false);
 }
 
 int FieldObject::sub_8047C18(FieldObject* other) {

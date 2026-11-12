@@ -1395,7 +1395,7 @@ void FieldManager::sub_802563C() {
         if (count != 0) {
             do {
                 if ((*objects)->sprite->field_20[1] == 1 && (*objects)->sprite->field_12_3) {
-                    (*objects)->setSpriteActive(0);
+                    (*objects)->setSpriteActive(false);
                     (*objects)->field_214_0 = 0;
                     sub_801E150((*objects)->sprite, 0, 0, 0, 0);
                     (*objects)->sprite->field_12_1 = 0;
@@ -2560,7 +2560,7 @@ void FieldManager::sub_8028248() {
                 follower->direction = field_2D8_5;
                 field_2D8_0 = 0x1F;
             } else {
-                follower->setSpriteActive(0);
+                follower->setSpriteActive(false);
                 follower->sub_804776C(0);
             }
         }

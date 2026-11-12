@@ -17479,7 +17479,7 @@ sub_8136FB4:
 	bne _08137050
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r5, #0x0
 	movs r1, #0x01
 	bl sub_804776C__11FieldObjecti
@@ -17525,7 +17525,7 @@ _08137050:
 	bne _081370AA
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r5, #0x0
 	movs r1, #0x01
 	bl sub_804776C__11FieldObjecti
@@ -28612,7 +28612,7 @@ sub_813CE8C:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r7, r1
@@ -28794,7 +28794,7 @@ sub_813D048:
 	beq _0813D0BE
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -29318,7 +29318,7 @@ _0813D4BC: .4byte sub_813939C
 _0813D4C0:
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r6, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -29458,7 +29458,7 @@ sub_813D5B8:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -30104,7 +30104,7 @@ _0813DAC4:
 	strb r0, [r2, #0x12]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r6, #0x0
 	movs r1, #0x01
 	bl method15__11FieldObjectUc
@@ -30418,7 +30418,7 @@ sub_813DE14:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0xE9
 	lsls r1, r1, #0x01
 	adds r0, r4, r1
@@ -30542,7 +30542,7 @@ sub_813DEE4:
 	strh r0, [r1, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r5, #0x0
 	adds r1, r4, #0x0
 	bl sub_813DFA4
@@ -33863,7 +33863,7 @@ sub_813FB44:
 	bne _0813FB9C
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -33879,7 +33879,7 @@ _0813FB9C:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r1, _0813FBDC @ =0x0000020D
 	adds r2, r4, r1
 	ldrb r1, [r2, #0x00]
@@ -34938,7 +34938,7 @@ _081403F8:
 	strb r0, [r1, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -35219,7 +35219,7 @@ _08140614:
 	strh r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r1, [r6, #0x0C]
 	ldr r2, [r6, #0x10]
 	ldr r3, [r6, #0x14]
@@ -35303,7 +35303,7 @@ _081406E8:
 	strh r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -35922,7 +35922,7 @@ _08140C90:
 	bl sub_804776C__11FieldObjecti
 	mov r0, r8
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	str r4, [r5, #0x00]
 	ldr r3, _08140DBC @ =0x0000020D
 	add r3, r8
@@ -39522,7 +39522,7 @@ sub_8142A70:
 	strh r5, [r0, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r6, r0
@@ -41309,7 +41309,7 @@ sub_8143894:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -42163,7 +42163,7 @@ _08143F9E:
 	bl sub_804776C__11FieldObjecti
 	mov r0, r8
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _0814401C @ =0x08144021
 	ldr r1, [sp, #0x00C]
 	str r0, [r1, #0x00]
@@ -42400,7 +42400,7 @@ _081441C8:
 	strb r0, [r2, #0x00]
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r7, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -43486,7 +43486,7 @@ _081449FE:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0x85
 	lsls r1, r1, #0x02
 	adds r2, r6, r1
@@ -43669,7 +43669,7 @@ _08144BD2:
 	beq _08144C2C
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -45437,7 +45437,7 @@ _081459AC:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -46294,7 +46294,7 @@ sub_814608C:
 	beq _081460E2
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r2, #0xB7
 	lsls r2, r2, #0x02
 	adds r0, r4, r2
@@ -46308,7 +46308,7 @@ sub_814608C:
 _081460E2:
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -46369,7 +46369,7 @@ _08146146:
 	bne _08146162
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, [r6, #0x08]
 	str r0, [r6, #0x00]
 _08146162:
@@ -46408,7 +46408,7 @@ sub_814616C:
 	strb r0, [r2, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0xE8
 	lsls r1, r1, #0x01
 	adds r0, r6, r1
@@ -46818,7 +46818,7 @@ sub_8146498:
 	beq _081464EE
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r2, #0xB7
 	lsls r2, r2, #0x02
 	adds r0, r4, r2
@@ -46832,7 +46832,7 @@ sub_8146498:
 _081464EE:
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -46893,7 +46893,7 @@ _08146552:
 	bne _0814659E
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -47113,7 +47113,7 @@ _081466F2:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	cmp r6, #0x01
 	beq _08146796
 	cmp r6, #0x01
@@ -47142,7 +47142,7 @@ _08146752:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _0814677C @ =0x08146005
 	mov r2, r10
 	str r0, [r2, #0x00]
@@ -47175,7 +47175,7 @@ _08146796:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _081467B8 @ =0x08146005
 	b _08146ADE
 _081467B8: .4byte sub_8146004
@@ -47205,7 +47205,7 @@ _081467D4:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _081467F8 @ =0x08146005
 	b _08146ADE
 	.byte 0x00, 0x00
@@ -47239,7 +47239,7 @@ _0814681A:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _08146840 @ =0x08146005
 	b _08146ADE
 	.byte 0x00, 0x00
@@ -47724,7 +47724,7 @@ _08146BCE:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0xBD
 	lsls r1, r1, #0x01
 	add r1, r8
@@ -47807,7 +47807,7 @@ sub_8146C78:
 	beq _08146CD4
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -47823,7 +47823,7 @@ _08146CD0: .4byte 0x00000242
 _08146CD4:
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0xB7
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -47885,7 +47885,7 @@ _08146D3A:
 	bne _08146DB6
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r0, #0x83
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
@@ -48381,7 +48381,7 @@ sub_81470F8:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _08147190 @ =0x0000020F
 	adds r2, r4, r0
 	ldrb r1, [r2, #0x00]
@@ -48691,7 +48691,7 @@ _0814738A:
 	bl sub_804776C__11FieldObjecti
 	ldr r0, [r4, #0x00]
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r2, [r4, #0x00]
 	movs r3, #0x85
 	lsls r3, r3, #0x02
@@ -48877,7 +48877,7 @@ _08147528:
 	strb r0, [r2, #0x00]
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _08147584 @ =0x0000020F
 	adds r2, r5, r0
 	ldrb r0, [r2, #0x00]
@@ -50401,7 +50401,7 @@ _08148148:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -51009,7 +51009,7 @@ _081485FA:
 	bne _08148626
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r3, [sp, #0x00C]
 	ldr r0, _081486EC @ =0x0000020D
 	adds r2, r3, r0
@@ -51335,7 +51335,7 @@ _0814886E:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r4, [sp, #0x000]
 	ldr r0, _081488E8 @ =0x0000020D
 	adds r2, r4, r0
@@ -51882,7 +51882,7 @@ sub_8148CF8:
 	bl sub_804776C__11FieldObjecti
 	ldr r0, [r4, #0x00]
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _08148D3C @ =0x08147441
 	str r0, [r5, #0x00]
 _08148D32:
@@ -51949,7 +51949,7 @@ sub_8148DA4:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _08148E1C @ =0x0000020D
 	adds r2, r4, r0
 	ldrb r1, [r2, #0x00]
@@ -52039,7 +52039,7 @@ sub_8148E2C:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r1, _08148E90 @ =0x0000020F
 	adds r2, r4, r1
 	ldrb r1, [r2, #0x00]
@@ -53529,7 +53529,7 @@ sub_8149B80:
 	strh r0, [r6, #0x00]
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r0, #0xA5
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
@@ -56775,7 +56775,7 @@ sub_814B67C:
 	strh r0, [r1, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, _0814B6C4 @ =0x0000020E
 	adds r4, r4, r0
 	ldrb r1, [r4, #0x00]
@@ -57023,7 +57023,7 @@ sub_814B86C:
 	strb r0, [r2, #0x00]
 	adds r0, r6, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0xEE
 	lsls r1, r1, #0x01
 	adds r0, r6, r1
@@ -59278,7 +59278,7 @@ _0814CABA:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r1, [r7, #0x0C]
 	ldr r2, [r7, #0x10]
 	cmp r4, #0x01
@@ -59478,7 +59478,7 @@ _0814CC3C:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, [r6, #0x04]
 	str r0, [r6, #0x00]
 _0814CC5C:
@@ -59520,7 +59520,7 @@ sub_814CC84:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0xA5
 	lsls r1, r1, #0x02
 	adds r0, r6, r1
@@ -59751,7 +59751,7 @@ _0814CE34:
 _0814CE88:
 	mov r0, r12
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x02
@@ -59940,7 +59940,7 @@ _0814D006:
 	str r0, [r6, #0x18]
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x02
@@ -60072,7 +60072,7 @@ _0814D0D0:
 	strb r0, [r2, #0x00]
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, [r7, #0x08]
 	str r0, [r7, #0x00]
 _0814D126:
@@ -60127,7 +60127,7 @@ sub_814D1F8:
 	beq _0814D288
 	adds r0, r6, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -62492,7 +62492,7 @@ _0814E698:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r5, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -63085,7 +63085,7 @@ sub_814EC48:
 	bne _0814EC9C
 	adds r0, r4, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -63185,7 +63185,7 @@ _0814ED2C:
 	bl sub_80479A8__11FieldObject
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r2, #0xEE
 	lsls r2, r2, #0x01
 	adds r0, r4, r2
@@ -64943,7 +64943,7 @@ _0814FAFC:
 	bl sub_804776C__11FieldObjecti
 	ldr r0, [r5, #0x00]
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	bl sub_8199F30
 	adds r1, r0, #0x0
 	movs r0, #0x04
@@ -64987,7 +64987,7 @@ _0814FB8C:
 	beq _0814FC20
 	adds r0, r5, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	ldr r0, [r7, #0x00]
 	movs r1, #0x00
 	bl sub_804776C__11FieldObjecti
@@ -65637,7 +65637,7 @@ _081500F0:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r7, #0x0
 	movs r1, #0x01
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	add sp, #0x008
 	pop {r3}
 	mov r8, r3
@@ -66199,7 +66199,7 @@ sub_81504F4:
 	bl sub_80479A8__11FieldObject
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r2, #0xEE
 	lsls r2, r2, #0x01
 	adds r1, r4, r2
@@ -66252,7 +66252,7 @@ sub_8150590:
 	bl sub_804776C__11FieldObjecti
 	adds r0, r4, #0x0
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	pop {r4}
 	pop {r0}
 	bx r0

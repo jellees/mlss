@@ -9955,7 +9955,7 @@ sub_80346FC:
 	add r0, r8
 	ldr r0, [r0, #0x00]
 	movs r1, #0x00
-	bl setSpriteActive__11FieldObjecti
+	bl setSpriteActive__11FieldObjectUi
 	movs r1, #0x00
 	ldsb r1, [r7, r1]
 	ldr r2, _08034850 @ =0x0000026A

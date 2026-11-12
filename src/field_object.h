@@ -300,7 +300,7 @@ class FieldObject {
     void sub_80473DC();
     void sub_80474D0();
     void sub_80475A0(int slot);
-    void setSpriteActive(int enable);
+    void setSpriteActive(bool32 enable);
     void sub_8047DC8(u8 arg);
     void sub_804776C(int value);
     void sub_8047784();
