@@ -50,7 +50,8 @@ struct GameState {
     // ...
     u8 pad1[0xA];
     struct struc_3000388 field_3C;
-    u8 pad1_2[0x804];
+    u8 pad1_2[0x4];
+    struct OamData field_80[2][128]; // Double-buffered (field_888_3 selects)
 
     int field_880;
     u32 field_884;
@@ -166,6 +167,12 @@ struct Coldef {
     u32 heightScale : 1;
 };
 
+struct Sprite;
+typedef void (*SpriteCallback)(struct Sprite*, int);
+// Sprite routines selected per frame by sub_801E80C (dword_3000D58)
+typedef struct struc_Sprite34* (*SpriteDrawRoutine)(struct struc_Sprite34*, struct Sprite*, u8**, int, u8*, s8*, int,
+                                                      void*);
+
 struct Sprite {
     s16 xPosition;
     s16 yPosition;
@@ -177,8 +184,8 @@ struct Sprite {
     u16 field_E;
     u32 field_10_0 : 1;
     u32 field_10_1 : 5;
-    u32 field_10_6 : 2;
-    u32 field_11_0 : 5;
+    u32 field_10_6 : 4;
+    u32 field_11_2 : 3;
     u32 field_11_5 : 1;
     u32 field_11_6 : 1;
     u32 field_11_7 : 1;
@@ -212,13 +219,17 @@ struct Sprite {
     u8 field_27;
     u16 field_28_0 : 9;
     u16 field_28_9 : 1;
-    u16 field_28_10 : 3;
+    u16 field_28_10 : 1;
+    u16 field_28_11 : 1;
+    u16 field_28_12 : 1;
     u16 field_28_13 : 1;
     u16 field_28_14 : 1;
     u16 field_28_15 : 1;
-    u16 field_2A;
+    s16 field_2A;
     s16 field_2C;
-    u8 pad2E[0x6];
+    u16 field_2E;
+    u16 field_30;
+    u8 pad32[0x2];
     struct struc_Sprite34* field_34;
     u8* field_38; // Animation file (sub_801E150)
     u8* field_3C;
@@ -228,8 +239,8 @@ struct Sprite {
     u8* field_4C;
     void* field_50;
     void* field_54;
-    u8 pad58[0x4];
-    int field_5C;
+    u8* field_58;
+    SpriteCallback field_5C;
     int field_60;
 };
 
@@ -638,7 +649,7 @@ extern u16 word_203FFC4[];
 extern void (*dword_3000D48)(int, int);
 extern int (*dword_3000D4C)(int, int);
 extern u8* dword_3000D50;
-extern u8* dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)
+extern SpriteDrawRoutine dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)
 extern u8 byte_3000D70;
 extern struct ORSTData* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
@@ -697,9 +708,10 @@ extern u8 arm_80008B8_end[];
 extern u8 arm_80008F0[];
 extern u8 arm_80008F0_end[];
 // Sprite routines copied to IWRAM by sub_801DFB0: ROM address, size and heap label
-extern u8* off_839EE1C[6];
+extern SpriteDrawRoutine off_839EE1C[6];
 extern u16 word_839EE34[6];
 extern char* off_839EE40[6];
+extern u8 byte_839EE58[6]; // Record size per animation frame type (sub_801E3EC)
 extern int loc_819832C(int, int);
 extern int loc_8198350(int, int);
 extern u8 loc_81980D8[];

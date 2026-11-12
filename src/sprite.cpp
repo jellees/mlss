@@ -21,10 +21,11 @@ void sub_801DFB0(u8 flags) {
     CpuFill32(0, dword_3000D58, sizeof(dword_3000D58));
     for (i = 0; i < 6; i++) {
         if ((flags >> i) & 1) {
-            dword_3000D58[i] = (u8*)alloc_heap_8018CEC(0, word_839EE34[i], off_839EE40[i]);
+            dword_3000D58[i] =
+                (SpriteDrawRoutine)alloc_heap_8018CEC(0, word_839EE34[i], off_839EE40[i]);
             CpuCopy32(off_839EE1C[i], dword_3000D58[i], word_839EE34[i]);
             // Thumb bit
-            dword_3000D58[i] = dword_3000D58[i] + 1;
+            dword_3000D58[i] = (SpriteDrawRoutine)((u8*)dword_3000D58[i] + 1);
         } else {
             dword_3000D58[i] = off_839EE1C[i];
         }
@@ -49,7 +50,7 @@ void sub_801E150(struct Sprite* sprite, int animation, int arg2, int arg3, int a
     entry = file + (file[animation * 2 + 8] | (file[animation * 2 + 9] << 8));
     sprite->field_12_4 = 0;
     sprite->field_12_1 = 0;
-    sprite->field_5C = arg3;
+    sprite->field_5C = (void (*)(struct Sprite*, int))arg3;
     sprite->field_60 = arg4;
 
     if (arg2 == -1) {
@@ -99,4 +100,389 @@ void sub_801E150(struct Sprite* sprite, int animation, int arg2, int arg3, int a
     sprite->field_3C = entry;
     sprite->field_40 = base + (base[sprite->field_22 * 2 + 1] | (base[sprite->field_22 * 2 + 2] << 8));
     sprite->field_28_14 = 1;
+}
+
+// Heap labels of the sprite routine copies (off_839EE40)
+extern const char sAosaLabel[] = "AOSA";
+extern const char sAosbLabel[] = "AOSB";
+extern const char sAoscLabel[] = "AOSC";
+extern const char sAosdLabel[] = "AOSD";
+extern const char sAoseLabel[] = "AOSE";
+extern const char sAosfLabel[] = "AOSF";
+
+// (first tile, tile count, offset in the packed tile order) of one tile range
+typedef u16 TileInfo[3];
+
+enum {
+    TILE_INFO_FIRST,
+    TILE_INFO_COUNT,
+    TILE_INFO_OFFSET,
+};
+
+// Fills tileMap (Sprite::field_44): byte 0 = 1 (built), then stride bytes per frame with the tile index
+// of each of its records remapped to the packed tile order.
+void sub_801E3EC(u8* tileMap, u8* file) {
+    u8* base = file - (file[0] | (file[1] << 8));
+    int stride = (file[6] & 0x7F) + 1;
+    int count = base[0];
+    TileInfo* tiles = new (0, "TINF", 0) TileInfo[128];
+    int i;
+
+    *tileMap++ = 1;
+    for (i = 0; i < count; i++) {
+        u8* p = base + (base[i * 2 + 1] | (base[i * 2 + 2] << 8));
+        int n = *p++;
+        int type;
+        int recordSize;
+        int tileCount;
+        u8* q;
+        u16 offset;
+        TileInfo* tile;
+        TileInfo* search;
+        int j;
+        int j2;
+        int k;
+        int value;
+        u16 start;
+
+        if (n & 0x80) {
+            n &= 0x7F;
+            p += n * 6;
+            n = *p++;
+        }
+        type = *p++;
+        recordSize = byte_839EE58[type];
+        q = p + n * recordSize;
+        tileCount = *q++;
+        offset = 0;
+        tile = tiles;
+        for (j = 0; j < tileCount; j++, q += 3, tile++) {
+            (*tile)[TILE_INFO_FIRST] = q[0] | (q[1] << 8);
+            (*tile)[TILE_INFO_COUNT] = q[2];
+            (*tile)[TILE_INFO_OFFSET] = offset;
+            offset += q[2];
+        }
+
+        for (k = 0; k < n; k++, p += recordSize) {
+            switch (type) {
+                case 0:
+                    value = p[4] + ((p[5] & 3) << 8);
+                    break;
+                case 1:
+                    value = p[3] + ((p[4] & 1) << 8);
+                    break;
+                case 3:
+                    value = p[2] + ((p[3] & 1) << 8);
+                    break;
+                case 4:
+                    value = p[2] & 0x7F;
+                    break;
+                case 2:
+                case 5:
+                    value = p[2];
+                    break;
+            }
+            search = tiles;
+            for (j2 = 0; j2 < tileCount; j2++, search++) {
+                start = (*search)[TILE_INFO_FIRST];
+                if (value >= start && value < start + (*search)[TILE_INFO_COUNT]) {
+                    tileMap[k] = value - start + (*search)[TILE_INFO_OFFSET];
+                    break;
+                }
+            }
+        }
+        tileMap += stride;
+    }
+    delete[] tiles;
+}
+
+static inline SpriteCallback getCallback(struct Sprite* sprite) {
+    return sprite->field_5C;
+}
+
+void sub_801E68C(struct Sprite* sprite) {
+    SpriteCallback callback;
+
+    if ((sprite->field_48 == 0 || sprite->field_48->field_0 == 0)
+        && (sprite->field_44 == 0 || sprite->field_44[0] == 1) && !sprite->field_12_4
+        && !sprite->field_12_5) {
+        int wrapped = sprite->field_12_3;
+        u8* entry;
+        int frameCount;
+        int timer;
+        int remaining;
+        int frame;
+        int image;
+        int speed;
+        int update;
+        u8* data;
+
+        sprite->field_12_3 = 0;
+        entry = sprite->field_3C;
+        frameCount = sprite->field_25;
+        timer = sprite->field_2C;
+        remaining = sprite->field_2A;
+        frame = sprite->field_23;
+        image = sprite->field_22;
+        speed = sprite->field_20 < 0 ? -sprite->field_20 : sprite->field_20;
+        timer += speed;
+        remaining -= speed;
+        while (remaining <= 0) {
+            if (sprite->field_20 > 0) {
+                if (++frame >= frameCount) {
+                    frame = 0;
+                    timer = 0;
+                    sprite->field_12_3 = wrapped ^ 1;
+                }
+            } else {
+                if (--frame < 0) {
+                    frame = frameCount - 1;
+                    timer = 0;
+                    sprite->field_12_3 = wrapped ^ 1;
+                }
+            }
+            data = entry + (frame * 2 + 1);
+            image = data[0];
+            remaining += data[1] << 4;
+        }
+
+        update = 1;
+        if (sprite->field_12_3) {
+            if (sprite->field_12_1 == 1) {
+                sprite->field_12_4 = 1;
+                frame = frameCount - 1;
+                data = entry + (frame * 2 + 1);
+                image = data[0];
+                remaining = 1;
+                timer = 0;
+            } else if (sprite->field_12_1 == 2) {
+                sprite->field_12_5 = 1;
+                update = 0;
+            }
+        }
+        if (update) {
+            u8* file = sprite->field_38;
+            u8* base = file - (file[0] | (file[1] << 8));
+
+            sprite->field_40 = base + (base[image * 2 + 1] | (base[image * 2 + 2] << 8));
+            sprite->field_2C = timer;
+            sprite->field_2A = remaining;
+            sprite->field_23 = frame;
+            sprite->field_22 = image;
+        }
+    }
+    callback = getCallback(sprite);
+    if (callback != 0 && (sprite->field_28_9 || (sprite->field_12_3 && !sprite->field_12_5))) {
+        callback(sprite, sprite->field_60);
+    }
+}
+
+// The IWRAM copy of the division routine (loc_819832C), as in FieldObject.
+#define IWRAM_DIV(a, b)                                                                                \
+    (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(a, b))
+
+struct struc_Sprite34* sub_801E80C(struct Sprite* sprite, struct struc_Sprite34* arg1, void* arg2) {
+    if (sprite->field_50 != 0) {
+        if (sprite->field_48->field_0 == 1) {
+            int size = sprite->field_28_0 << 5;
+            int done = sub_80198B0(sprite->field_50);
+            int remaining = size - done;
+
+            if (remaining > 0) {
+                CpuFastFill(0, sprite->field_4C + done, remaining);
+                sprite->field_28_0 = done / 32;
+            }
+            sub_8019808((struct BackgroundJob*)sprite->field_48);
+        } else if (sprite->field_48->field_0 == 0) {
+            sprite->field_50 = 0;
+            sprite->field_12_6 = gGameState.field_888_5 + 1;
+        }
+    }
+
+    if ((sprite->field_48 == 0 || sprite->field_48->field_0 == 0)
+        && (sprite->field_44 == 0 || sprite->field_44[0] == 1)) {
+        if (sprite->field_44 == 0 && sprite->field_12_6 != 0) {
+            if (sprite->field_12_6 == 1) {
+                sub_8018218(sprite->field_4C, (u8*)OBJ_VRAM0 + sprite->field_2E,
+                            sprite->field_10_0 ? sprite->field_30 : sprite->field_28_0 << 5, 0x20, 0);
+            }
+            sprite->field_12_6--;
+        }
+        if (sprite->field_44 != 0) {
+            sprite->field_30 = 0;
+        }
+
+        if (!sprite->field_12_5) {
+            s8 matrices[4];
+            u8* cursor;
+            u8* p;
+            int matrix;
+            u8* tiles;
+            int count;
+            int renderer;
+            int i;
+
+            if (sprite->field_13_0 != 0) {
+                if (sprite->field_13_0 == 1) {
+                    int bit = 0;
+                    int mask = sprite->field_14;
+                    int j;
+
+                    for (j = 0; j < sprite->field_13_4; j++) {
+                        while (!(mask & 1)) {
+                            bit++;
+                            mask >>= 1;
+                        }
+                        CpuCopy32((u8*)sprite->field_54 + j * 32, (void*)(0x02000280 + bit * 32), 32);
+                        gGameState.field_0 |= 1 << bit;
+                        bit++;
+                        mask >>= 1;
+                    }
+                }
+                sprite->field_13_0--;
+            }
+
+            matrix = sprite->field_10_1;
+            sprite->field_10_6 = 0;
+            if (sprite->field_44 != 0) {
+                tiles = &sprite->field_44[sprite->field_22 * sprite->field_26 + 1];
+            } else {
+                tiles = 0;
+            }
+
+            p = sprite->field_40;
+            count = *p++;
+            if (count & 0x80) {
+                count &= 0x7F;
+                if (!sprite->field_28_11) {
+                    u16* dest = &gGameState.field_80[gGameState.field_888_3][matrix * 4].affineParam;
+
+                    for (i = 0; i < count; i++, p += 6) {
+                        struct ObjAffineSrcData src;
+                        s16 x;
+                        s16 y;
+                        s16 rotation;
+                        s16 scale;
+
+                        x = p[2] | (p[3] << 8);
+                        x = IWRAM_DIV(0x1000000, sprite->xScale * x);
+                        if (sprite->field_11_6) {
+                            x = -x;
+                        }
+                        src.xScale = x;
+                        y = p[4] | (p[5] << 8);
+                        y = IWRAM_DIV(0x1000000, sprite->yScale * y);
+                        if (sprite->field_11_7) {
+                            y = -y;
+                        }
+                        src.yScale = y;
+                        rotation = p[0] | (p[1] << 8);
+                        if (sprite->field_11_6) {
+                            rotation = -rotation;
+                        }
+                        if (sprite->field_11_7) {
+                            rotation = -rotation;
+                        }
+                        src.rotation = sprite->field_C - rotation;
+                        ObjAffineSet(&src, dest, 1, 8);
+                        scale = sprite->field_8;
+                        if (scale != 0x100) {
+                            dest[0] = IWRAM_DIV((s16)dest[0] << 8, scale);
+                            dest[8] = IWRAM_DIV((s16)dest[8] << 8, scale);
+                        }
+                        scale = sprite->field_A;
+                        if (scale != 0x100) {
+                            dest[4] = IWRAM_DIV((s16)dest[4] << 8, scale);
+                            dest[12] = IWRAM_DIV((s16)dest[12] << 8, scale);
+                        }
+                        dest += 16;
+                        matrix++;
+                        sprite->field_10_6++;
+                    }
+                } else {
+                    p += count * 6;
+                    matrix += count;
+                    sprite->field_10_6 += count;
+                }
+                count = *p++;
+            }
+
+            renderer = *p++;
+            cursor = p;
+            // All four slots set to -1 with one word store
+            *(int*)matrices = -1;
+            sprite->field_34 = arg1;
+            arg1 = dword_3000D58[renderer](arg1, sprite, &cursor, count, tiles, matrices, matrix, arg2);
+            p = cursor;
+
+            if (!sprite->field_28_11) {
+                u16* base = &gGameState.field_80[gGameState.field_888_3][0].affineParam;
+
+                for (i = 0; i < 4; i++) {
+                    if (matrices[i] != -1) {
+                        struct ObjAffineSrcData src;
+                        u16* dest = base + matrices[i] * 16;
+                        s16 x;
+                        s16 y;
+                        s16 scale;
+
+                        x = sprite->xScale;
+                        if (x != 0x100) {
+                            x = IWRAM_DIV(0x10000, x);
+                        }
+                        if (i & 1) {
+                            x = -x;
+                        }
+                        src.xScale = x;
+                        y = sprite->yScale;
+                        if (y != 0x100) {
+                            y = IWRAM_DIV(0x10000, y);
+                        }
+                        if (i & 2) {
+                            y = -y;
+                        }
+                        src.yScale = y;
+                        src.rotation = sprite->field_C;
+                        ObjAffineSet(&src, dest, 1, 8);
+                        scale = sprite->field_8;
+                        if (scale != 0x100) {
+                            dest[0] = IWRAM_DIV((s16)dest[0] << 8, scale);
+                            dest[8] = IWRAM_DIV((s16)dest[8] << 8, scale);
+                        }
+                        scale = sprite->field_A;
+                        if (scale != 0x100) {
+                            dest[4] = IWRAM_DIV((s16)dest[4] << 8, scale);
+                            dest[12] = IWRAM_DIV((s16)dest[12] << 8, scale);
+                        }
+                    }
+                }
+            }
+
+            if (tiles != 0) {
+                u8* list = gGameState.field_888_5 ? sprite->field_58 : p;
+                int total = 0;
+                int skip = sprite->field_28_10;
+
+                if (list != 0) {
+                    int n = *list++;
+                    int vram = sprite->field_2E;
+
+                    for (i = 0; i < n; i++, list += 3) {
+                        int tile = list[0] | ((list[1] & 3) << 8);
+                        int size = list[2] * 32;
+
+                        if (!skip) {
+                            sub_8018218(sprite->field_4C + tile * 32, (u8*)OBJ_VRAM0 + vram, size, 0x20,
+                                        0);
+                        }
+                        vram += size;
+                        total += size;
+                    }
+                }
+                sprite->field_30 = total;
+                sprite->field_58 = gGameState.field_888_5 ? p : 0;
+            }
+        }
+    }
+    return arg1;
 }

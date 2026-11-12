@@ -69,9 +69,9 @@ enum TitleScreenSuitcaseVisualStates {
 #pragma interface
 
 // Declared in reverse order of their vtables in the ROM: g++ emits vtables in reverse.
-class SpriteRenderer : public Process {
+class CompanyIntroRenderer : public Process {
   public:
-    SpriteRenderer(u8 priority, char* label) : Process(priority, label) {
+    CompanyIntroRenderer(u8 priority, char* label) : Process(priority, label) {
     }
     virtual void update();
 };

@@ -10,7 +10,7 @@
 #pragma interface
 
 // "SBDR": the renderer of the sign (parentProcess is the Sign). Its update is the same as
-// SpriteRenderer::update and the other renderers'.
+// CompanyIntroRenderer::update and the other renderers'.
 class SignRenderer : public Process {
   public:
     SignRenderer(u8 priority, char* label) : Process(priority, label) {

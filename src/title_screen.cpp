@@ -21,7 +21,7 @@ CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) 
     BUFFER_REG_DISPCNT = 0;
     sub_8017E34();
 
-    renderer = new (0, "OPDR", 0) SpriteRenderer(8, "OPDR");
+    renderer = new (0, "OPDR", 0) CompanyIntroRenderer(8, "OPDR");
     opdr = renderer;
     renderer->parentProcess = this;
 
@@ -231,7 +231,7 @@ void CompanyIntro::update() {
     sub_8021F7C();
 }
 
-inline void SpriteRenderer::update() {
+inline void CompanyIntroRenderer::update() {
     int var1 = gGameState.field_880;
     sub_8020A78();
     dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
