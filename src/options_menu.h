@@ -5,7 +5,7 @@
 
 //! These classes' inline members and vtables are not emitted in the ROM next to their code like
 //! other classes' (no out-of-line ~OptionsMenu or renderer constructors), so this header is
-//! interface-only and their vtables are asm data (asm/rodata08CDC1F8.s). How the original produced
+//! interface-only and their vtables are asm data (asm/vtables08CDC1F8.s). How the original produced
 //! this is not known yet.
 #pragma interface
 

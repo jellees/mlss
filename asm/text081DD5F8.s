@@ -1,7 +1,7 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-	.text
+	.section .gnu.linkonce.t.asm_text081DD5F8, "ax", %progbits
 
 	thumb_func_start sub_81DD5F8
 sub_81DD5F8:

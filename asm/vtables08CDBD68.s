@@ -1,6 +1,6 @@
 	.include "asm/macros.inc"
 
-	.section .rodata
+	.section .gnu.linkonce.d.asm_vtables08CDBD68, "aw"
 	.align 2, 0
 
 	.byte 0x00, 0x00, 0x00, 0x00

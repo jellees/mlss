@@ -87,10 +87,14 @@ SECTIONS
         *libc.a:freer.o(.text);
         *libc.a:strlen.o(.text);
 
+        /* Out-of-line inline functions shared between files */
         src/field_player_character.o(.gnu.linkonce.t._._20FieldPlayerCharacter);
         src/field_monster.o(.gnu.linkonce.t._._20FieldObjectSubclass4);
-        asm/text081DD5F8.o(.text);
+        asm/text081DD5F8.o(.gnu.linkonce.t.*);
+    }
 
+    .rodata :
+    {
         asm/rodata081DD790.o(.rodata);
         src/heap.o(.rodata);
         asm/rodata081DD7D0.o(.rodata);
@@ -113,33 +117,46 @@ SECTIONS
         asm/rodata08210FBC.o(.rodata);
         *libc.a:syscalls.o(.rodata);
         *libc.a:impure.o(.rodata);
+    }
 
-        asm/rodata0821DC0C.o(.rodata);
+    .data :
+    {
+        asm/data0821DC0C.o(.data);
         asm/sprite.o(.data);
-        asm/rodata0839EF68.o(.rodata);
-        asm/libgcc2_data.o(.rodata);
+        asm/data0839EF68.o(.data);
+        asm/libgcc2_data.o(.data);
         *libc.a:mallocr.o(.data);
         *libc.a:impure.o(.data);
-        asm/rodata08CDBD68.o(.rodata);
+    }
 
+    /* Vtables (.gnu.linkonce.d sections) */
+    .vtables :
+    {
+        asm/vtables08CDBD68.o(.gnu.linkonce.d.*);
         src/field.o(.gnu.linkonce.d.*);
-        asm/rodata08CDBDC8.o(.rodata);
+        asm/vtables08CDBDC8.o(.gnu.linkonce.d.*);
         src/field_object.o(.gnu.linkonce.d.*);
         src/field_player_character.o(.gnu.linkonce.d.*);
         src/field_monster.o(.gnu.linkonce.d.*);
-        asm/rodata08CDC068.o(.rodata);
+        asm/vtables08CDC068.o(.gnu.linkonce.d.*);
         src/sign.o(.gnu.linkonce.d.*);
         src/system_screens.o(.gnu.linkonce.d._vt.18MarioBrosSaveError);
         src/system_screens.o(.gnu.linkonce.d._vt.15SaveClearScreen);
         src/system_screens.o(.gnu.linkonce.d._vt.17SaveClearRenderer);
-        asm/rodata08CDC1F8.o(.rodata);
+        asm/vtables08CDC1F8.o(.gnu.linkonce.d.*);
         src/title_screen.o(.gnu.linkonce.d.*);
-        asm/rodata08CDC278.o(.rodata);
-        asm/rodata08CDC2C8.o(.rodata);
+        asm/vtables08CDC278.o(.gnu.linkonce.d.*);
+        asm/vtables08CDC2C8.o(.gnu.linkonce.d.*);
         src/load_menu.o(.gnu.linkonce.d.*);
         src/save_menu.o(.gnu.linkonce.d.*);
-        asm/rodata08CDC3F8.o(.rodata);
+        asm/vtables08CDC3F8.o(.gnu.linkonce.d.*);
+    }
 
+    /* The embedded Mario Bros. ROM; the gap before it is zero-filled */
+    . = 0x8F50000;
+
+    .mariobros :
+    {
         asm/mariobros.o(.text);
     }
     

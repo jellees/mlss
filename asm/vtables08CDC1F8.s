@@ -1,6 +1,6 @@
 	.include "asm/macros.inc"
 
-	.section .rodata
+	.section .gnu.linkonce.d.asm_vtables08CDC1F8, "aw"
 	.align 2, 0
 
 @ Vtables of the classes in src/options_menu.h (see the comment there).

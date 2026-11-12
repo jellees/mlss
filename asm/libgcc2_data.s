@@ -1,6 +1,6 @@
 	.include "asm/macros.inc"
 
-	.section .rodata
+	.data
 	.align 2, 0
 
 	.global __terminate_func
