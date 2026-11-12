@@ -60,7 +60,7 @@ SECTIONS
         asm/text0812A9A0.o(.text);
 
         asm/libagbsyscall.o(.text);
-        asm/eeprom.o(.text);
+        src/eeprom.o(.text);
         *libgcc.a:_call_via_rX.o(.text);
         *libgcc.a:_divsi3.o(.text);
         *libgcc.a:_dvmd_tls.o(.text);
@@ -115,6 +115,7 @@ SECTIONS
         asm/rodata08210F64.o(.rodata);
         src/save_menu.o(.rodata);
         asm/rodata08210FBC.o(.rodata);
+        src/eeprom.o(.rodata);
         *libc.a:syscalls.o(.rodata);
         *libc.a:impure.o(.rodata);
     }
