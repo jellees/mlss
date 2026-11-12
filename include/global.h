@@ -18,6 +18,8 @@ extern "C" {
 typedef u8 bool;
 #endif
 
+#define ARRAY_COUNT(a) ((s32)(sizeof((a)) / sizeof((a)[0])))
+
 // Figure out if we need these defines later.
 // #define OFFSET_OF(type, element) ((int)&(((type *)0)->element))
 // #define GET_PROCESS_PARENT(type, proc) (type*)(((unsigned char*)proc) - OFFSET_OF(type, process))
