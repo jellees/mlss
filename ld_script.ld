@@ -115,6 +115,8 @@ SECTIONS
         *libc.a:impure.o(.rodata);
 
         asm/rodata0821DC0C.o(.rodata);
+        asm/sprite.o(.data);
+        asm/rodata0839EF68.o(.rodata);
         asm/libgcc2_data.o(.rodata);
         *libc.a:mallocr.o(.data);
         *libc.a:impure.o(.data);
