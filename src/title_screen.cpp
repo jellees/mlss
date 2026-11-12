@@ -1041,7 +1041,7 @@ void MarioBrosScoreVisual::update() {
     sub_8020A78();
     var1 = gGameState.field_880;
 
-    if ((u8)(titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_20[1] - 3) <= 2) {
+    if ((u8)(titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_21 - 3) <= 2) {
         struct struc_11* var11;
         struct struc_203FFB8* s;
         int y2;

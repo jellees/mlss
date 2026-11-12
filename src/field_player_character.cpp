@@ -160,7 +160,7 @@ void FieldPlayerCharacter::method3() {
         field_378_6 = field_36C->field_12_1;
         field_379_0 = field_36C->field_12_3;
         field_379_1 = field_36C->field_12_4;
-        field_37B = field_36C->field_20[1];
+        field_37B = field_36C->field_21;
         field_37C = field_36C->field_23;
         field_37E = field_36C->field_2A;
         field_380 = field_36C->field_2C;
@@ -178,7 +178,7 @@ void FieldPlayerCharacter::method7(u8 force) {
         int arg = 0;
 
         if (field_214_18 == 0) {
-            animation = sprite->field_20[1];
+            animation = sprite->field_21;
             flag = 0;
         } else {
             u8 value = byte_83A05EC[field_214_18 * 16 + field_214_20 * 8 + direction];
@@ -192,7 +192,7 @@ void FieldPlayerCharacter::method7(u8 force) {
         if (state == 1 && previousState == 0 && (field_214_0 == 2 || field_214_0 == 3)) {
             arg = 1;
         }
-        if (sprite->field_20[1] != animation || sprite->field_11_6 != flag || force) {
+        if (sprite->field_21 != animation || sprite->field_11_6 != flag || force) {
             sub_801E150(sprite, animation, arg, 0, 0);
             sprite->field_11_6 = flag;
         }
@@ -396,7 +396,7 @@ void FieldPlayerCharacter::method7(u8 force) {
                     break;
             }
         }
-        if (sprite->field_20[1] != animation || sprite->field_11_6 != flag || force) {
+        if (sprite->field_21 != animation || sprite->field_11_6 != flag || force) {
             sub_801E150(sprite, animation, 0, 0, 0);
             sprite->field_11_6 = flag;
         }
@@ -2858,14 +2858,14 @@ void FieldPlayerShotBullet::sub_804E33C(FieldObject** objects, int count) {
     if (!active) {
         return;
     }
-    if (sprite->field_20[1] > 4) {
+    if (sprite->field_21 > 4) {
         if (sprite->field_12_5) {
             active = 0;
         }
         return;
     }
     if (type == FIELD_PLAYER_SHOT_BULLET_SPIT) {
-        sub_801E150(sprite, sprite->field_20[1] + 5, 0, 0, 0);
+        sub_801E150(sprite, sprite->field_21 + 5, 0, 0, 0);
         sub_804E6E0(objects, count);
         return;
     }
@@ -2877,14 +2877,14 @@ void FieldPlayerShotBullet::sub_804E33C(FieldObject** objects, int count) {
     }
     sub_804E6E0(objects, count);
     if (sub_804EA68() || sides) {
-        sub_801E150(sprite, sprite->field_20[1] + 5, 0, 0, 0);
+        sub_801E150(sprite, sprite->field_21 + 5, 0, 0, 0);
         if (frame != 0) {
             int i = frame;
 
             while (i >= sprite->field_25) {
                 i -= sprite->field_25;
             }
-            sub_801E150(sprite, sprite->field_20[1], i, 0, 0);
+            sub_801E150(sprite, sprite->field_21, i, 0, 0);
         }
         sprite->field_12_1 = 2;
     }

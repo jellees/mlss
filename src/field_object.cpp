@@ -233,7 +233,7 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
         sprite->field_1F_2 = 1;
         sprite->field_1F_0 = 1;
     }
-    sprite->field_20[0] = field_239;
+    sprite->field_20 = field_239;
     field_298_0 = 0;
     if (field_214_0 == 0 || field_214_0 == 2 || field_214_0 == 3 || field_214_0 == 5) {
         sprite->field_12_4 = 1;
@@ -288,7 +288,7 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
     if (field_214_0 == 0 || field_214_0 == 2 || field_214_0 == 3 || field_214_0 == 5) {
         sprite->field_12_4 = 1;
     }
-    sprite->field_20[0] = field_239;
+    sprite->field_20 = field_239;
     if (spriteActive) {
         int value2 = sprite->field_12_1;
 
@@ -311,7 +311,7 @@ void FieldObject::method3() {
     field_298_6 = sprite->field_12_1;
     field_299_0 = sprite->field_12_3;
     field_299_1 = sprite->field_12_4 & 1;
-    field_29B = sprite->field_20[1];
+    field_29B = sprite->field_21;
     field_29C = sprite->field_23;
     field_29E = sprite->field_2A;
     field_2A0 = sprite->field_2C;
@@ -375,7 +375,7 @@ void FieldObject::method7(u8 force) {
     int flag;
 
     if (field_214_18 == 0) {
-        animation = sprite->field_20[1];
+        animation = sprite->field_21;
         flag = 0;
     } else {
         u8 value = byte_83A05EC[field_214_18 * 16 + field_214_20 * 8 + direction];
@@ -383,7 +383,7 @@ void FieldObject::method7(u8 force) {
         animation = value & 0x7F;
         flag = value >> 7;
     }
-    if (sprite->field_20[1] != animation || sprite->field_11_6 != flag || force) {
+    if (sprite->field_21 != animation || sprite->field_11_6 != flag || force) {
         sub_801E150(sprite, animation, 0, 0, 0);
         sprite->field_11_6 = flag;
     }
@@ -3326,11 +3326,11 @@ void FieldObject::sub_8047154(int animation, int arg2) {
 
 void FieldObject::sub_8047258(int slot) {
     if (slot == 0) {
-        field_220 = sprite->field_20[1];
+        field_220 = sprite->field_21;
         field_214_11 = sprite->field_11_6;
         field_214_9 = 1;
     } else {
-        field_221 = sprite->field_20[1];
+        field_221 = sprite->field_21;
         field_214_12 = sprite->field_11_6;
         field_214_10 = 1;
     }
@@ -3359,7 +3359,7 @@ void FieldObject::sub_8047364(u8 type) {
     if (field_214_0 > 2) {
         angle = direction << 5;
         if (field_214_0 == 3) {
-            sub_801E150(sprite, sprite->field_20[1], 0, 0, 0);
+            sub_801E150(sprite, sprite->field_21, 0, 0, 0);
         }
     }
     field_214_6 = 1;
@@ -3513,11 +3513,11 @@ void FieldObject::sub_80478AC(u8 newDirection) {
 
 void FieldObject::sub_804790C(u8 value) {
     field_239 = value;
-    sprite->field_20[0] = value;
+    sprite->field_20 = value;
 }
 
 void FieldObject::sub_8047928() {
-    sub_801E150(sprite, sprite->field_20[1], 0, 0, 0);
+    sub_801E150(sprite, sprite->field_21, 0, 0, 0);
 }
 
 void FieldObject::sub_804794C(u16 value) {

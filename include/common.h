@@ -112,8 +112,9 @@ struct struc_3000D18 {
 };
 
 struct struc_Sprite48 {
-    u8 pad_0[0x4];
+    u32 field_0;
     void* field_4;
+    void* field_8;
 };
 
 // Entries of off_839EE60[][]
@@ -177,7 +178,8 @@ struct Sprite {
     u32 field_10_0 : 1;
     u32 field_10_1 : 5;
     u32 field_10_6 : 2;
-    u32 field_11_0 : 6;
+    u32 field_11_0 : 5;
+    u32 field_11_5 : 1;
     u32 field_11_6 : 1;
     u32 field_11_7 : 1;
     u32 field_12_0 : 1;
@@ -185,8 +187,7 @@ struct Sprite {
     u32 field_12_3 : 1;
     u32 field_12_4 : 1;
     u32 field_12_5 : 1;
-    u32 field_12_6 : 1;
-    u32 field_12_7 : 1;
+    u32 field_12_6 : 2;
     u32 field_13_0 : 2;
     u32 field_13_2 : 2;
     u32 field_13_4 : 4;
@@ -201,23 +202,35 @@ struct Sprite {
     u8 field_1F_2 : 2;
     u8 field_1F_4 : 2;
     u8 field_1F_6 : 2;
-    u8 field_20[2];
+    s8 field_20;
+    u8 field_21; // Animation index (sub_801E150)
     u8 field_22;
     u8 field_23;
     u8 field_24;
     u8 field_25; // Frame count (FieldPlayerShotBullet::sub_804DFE8)
-    u8 pad26[2];
+    u8 field_26;
+    u8 field_27;
     u16 field_28_0 : 9;
     u16 field_28_9 : 1;
     u16 field_28_10 : 3;
     u16 field_28_13 : 1;
-    u16 field_28_14 : 2;
+    u16 field_28_14 : 1;
+    u16 field_28_15 : 1;
     u16 field_2A;
     s16 field_2C;
     u8 pad2E[0x6];
     struct struc_Sprite34* field_34;
-    u8 pad38[0x10];
+    u8* field_38; // Animation file (sub_801E150)
+    u8* field_3C;
+    u8* field_40;
+    u8* field_44;
     struct struc_Sprite48* field_48;
+    u8* field_4C;
+    void* field_50;
+    void* field_54;
+    u8 pad58[0x4];
+    int field_5C;
+    int field_60;
 };
 
 struct struc_203FFF8 {
@@ -625,6 +638,9 @@ extern u16 word_203FFC4[];
 // IWRAM
 extern void (*dword_3000D48)(int, int);
 extern int (*dword_3000D4C)(int, int);
+extern u8* dword_3000D50;
+extern u8* dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)
+extern u8 byte_3000D70;
 extern struct ORSTData* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
 extern struct struc_3000FF4* dword_3000FF4;
@@ -674,6 +690,17 @@ extern struct SignMapEntry stru_83A0D2C[]; // Sign zoom and center per room
 extern u16 word_83A0E64[];                // Sign arrow positions (x, y)
 extern s8 byte_83A0E74[];                 // Sign scroll steps (x, y) per D-pad state
 extern int loc_8198220();
+// ARM routines in ROM that sub_801DFB0 copies to IWRAM (dword_3000D48, dword_3000D4C, dword_3000D50)
+extern u8 arm_8000850[];
+extern u8 arm_8000850_end[];
+extern u8 arm_80008B8[];
+extern u8 arm_80008B8_end[];
+extern u8 arm_80008F0[];
+extern u8 arm_80008F0_end[];
+// Sprite routines copied to IWRAM by sub_801DFB0: ROM address, size and heap label
+extern u8* off_839EE1C[6];
+extern u16 word_839EE34[6];
+extern char* off_839EE40[6];
 extern int loc_819832C(int, int);
 extern int loc_8198350(int, int);
 extern u8 loc_81980D8[];

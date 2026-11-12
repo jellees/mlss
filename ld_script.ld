@@ -33,6 +33,7 @@ SECTIONS
         asm/text0801A548.o(.text);
         src/game_mode.o(.text);
         asm/text0801B0B8.o(.text);
+        src/sprite.o(.text);
         asm/sprite.o(.text);
         src/field.o(.text);
         asm/field.o(.text);
@@ -100,6 +101,7 @@ SECTIONS
         asm/rodata081DD7D0.o(.rodata);
         src/game_mode.o(.rodata);
         asm/rodata081E23B8.o(.rodata);
+        src/sprite.o(.rodata);
         asm/sprite.o(.rodata);
         src/field.o(.rodata);
         asm/field.o(.rodata);

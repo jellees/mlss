@@ -1394,7 +1394,7 @@ void FieldManager::sub_802563C() {
         int count = field_115 + field_117;
         if (count != 0) {
             do {
-                if ((*objects)->sprite->field_20[1] == 1 && (*objects)->sprite->field_12_3) {
+                if ((*objects)->sprite->field_21 == 1 && (*objects)->sprite->field_12_3) {
                     (*objects)->setSpriteActive(false);
                     (*objects)->field_214_0 = 0;
                     sub_801E150((*objects)->sprite, 0, 0, 0, 0);
@@ -2327,7 +2327,7 @@ void FieldManager::start_battle_8027AC4() {
             player->sprite->field_12_1 = player->field_298_6;
             player->sprite->field_12_3 = player->field_299_0;
             player->sprite->field_12_4 = player->field_299_1;
-            player->sprite->field_20[1] = player->field_29B;
+            player->sprite->field_21 = player->field_29B;
             player->sprite->field_23 = player->field_29C;
             player->sprite->field_2A = player->field_29E;
             player->sprite->field_2C = player->field_2A0;
@@ -3812,7 +3812,7 @@ void FieldManager::sub_802A740() {
             } else {
                 frame = field_FA_11;
             }
-            sprite->field_20[0] = frame;
+            sprite->field_20 = frame;
             follower->field_239 = frame;
         }
 
@@ -4185,7 +4185,7 @@ u8 FieldManager::sub_802BD2C() {
                         if (stuck) {
                             sub_802E754(0, 1, 1);
                             follower->field_23E = follower->field_260 = field_100;
-                            follower->sprite->field_20[0] = follower->field_239 = field_FA_11;
+                            follower->sprite->field_20 = follower->field_239 = field_FA_11;
                             follower->velocityX = follower->velocityY = 0;
                             {
                                 FieldPlayerCharacter* player = leader;
@@ -4407,12 +4407,12 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
     switch (player->field_368->field_2) {
         case 0:
             if ((field_246_2 == 0 || field_246_2 == 2) && field_FA_10) {
-                player->field_239 = player->sprite->field_20[0] = field_FA_11;
+                player->field_239 = player->sprite->field_20 = field_FA_11;
                 player->sub_8049224();
             } else {
                 int sound;
 
-                player->field_239 = player->sprite->field_20[0] = field_FA_11;
+                player->field_239 = player->sprite->field_20 = field_FA_11;
                 player->startAirborne(player->defaultJumpVelocity, player->defaultGravity, -1);
                 player->state = FIELD_OBJECT_STATE_RISING;
                 if (player->field_54 == 0) {
@@ -4424,15 +4424,15 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
             }
             break;
         case 1:
-            player->field_239 = player->sprite->field_20[0] = field_FA_11;
+            player->field_239 = player->sprite->field_20 = field_FA_11;
             player->sub_8049370(field_FA_10);
             break;
         case 2:
-            player->field_239 = player->sprite->field_20[0] = field_FA_11;
+            player->field_239 = player->sprite->field_20 = field_FA_11;
             player->sub_8049430();
             break;
         case 8:
-            player->field_239 = player->sprite->field_20[0] = field_FA_11;
+            player->field_239 = player->sprite->field_20 = field_FA_11;
             if (player->field_33E != -1 && objects[player->field_33E]->field_20C_19 == 4) {
                 sub_80346FC(this, player);
             } else {
@@ -4440,7 +4440,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
             }
             break;
         case 10:
-            player->field_239 = player->sprite->field_20[0] = field_FA_11;
+            player->field_239 = player->sprite->field_20 = field_FA_11;
             sub_8034870(this, player);
             break;
         case 13:
@@ -4534,7 +4534,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 player->state = 7;
             }
             if (player->state != 5) {
-                int animation = player->sprite->field_20[1];
+                int animation = player->sprite->field_21;
 
                 if (player->field_35A_11) {
                     if (player->sprite->field_23 == 3) {
@@ -4617,7 +4617,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             break;
 
         case 12:
-            if (player->field_36C->field_20[1] == 5 && player->field_36C->field_12_3) {
+            if (player->field_36C->field_21 == 5 && player->field_36C->field_12_3) {
                 sub_801E150(player->field_36C, 6, 0, 0, 0);
             }
             if (player->field_355 != 0 && --player->field_355 == 0) {
