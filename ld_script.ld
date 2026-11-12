@@ -124,6 +124,12 @@ SECTIONS
         asm/data0821DC0C.o(.data);
         asm/sprite.o(.data);
         asm/data0839EF68.o(.data);
+        asm/field.o(.data);
+        asm/data083A0508.o(.data);
+        asm/system_screens_data.o(.data);
+        asm/data083A297C.o(.data);
+        asm/title_screen_data.o(.data);
+        asm/data083A75D8.o(.data);
         asm/libgcc2_data.o(.data);
         *libc.a:mallocr.o(.data);
         *libc.a:impure.o(.data);
