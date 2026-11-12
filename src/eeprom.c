@@ -37,12 +37,13 @@ static void DMA3Transfer(const void* src, void* dest, u16 count) {
     u16 IME_save;
 
     IME_save = REG_IME;
-    REG_IME = 0; // disable all interrupts
+    REG_IME = 0;                                                   // disable all interrupts
     REG_WAITCNT = (REG_WAITCNT & 0xf8ff) | gEEPROMConfig->waitcnt; // configure wait state 2
     REG_DMA3SAD = (u32)src;
     REG_DMA3DAD = (u32)dest;
-    REG_DMA3CNT = count | 0x80000000;        // enable dma
-    while ((REG_DMA3CNT_H & 0x8000) != 0) {} // wait for dma to finish
+    REG_DMA3CNT = count | 0x80000000; // enable dma
+    while ((REG_DMA3CNT_H & 0x8000) != 0) {
+    } // wait for dma to finish
     REG_IME = IME_save;
 }
 
