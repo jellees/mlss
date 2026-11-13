@@ -14,6 +14,8 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
                              u8* tiles, s8* matrices, int matrix, u8* depth);
 struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
                              u8* tiles, s8* matrices, int matrix, u8* depth);
+struct struc_11* sub_801F7D0(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
+                             u8* tiles, s8* matrices, int matrix, u8* depth);
 
 #ifdef __cplusplus
 }
