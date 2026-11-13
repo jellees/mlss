@@ -663,3 +663,170 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
     *cursor = entry;
     return oam;
 }
+
+// Sprite routine 1 (off_839EE1C[1]): like routine 0, with 5-byte frame objects.
+struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
+                             u8* tiles, s8* matrices, int matrix, u8* depth) {
+    u16 palettes[16];
+    u16* palette = palettes;
+    int bit = 0;
+    int mask = sprite->field_14;
+    int mode;
+    u8* entry;
+    int i;
+    int affine;
+    int objMode;
+    int flip;
+
+    while (mask != 0) {
+        if (mask & 1) {
+            *palette++ = bit << 12;
+        }
+        bit++;
+        mask >>= 1;
+    }
+
+    if ((sprite->field_C != 0 && !sprite->field_28_15) || sprite->xScale > 0x100
+        || sprite->yScale > 0x100 || sprite->field_8 > 0x100 || sprite->field_A > 0x100) {
+        mode = 3;
+    } else if (*(u32*)&sprite->xScale != 0x01000100) {
+        mode = 1;
+    } else {
+        mode = *(u32*)&sprite->field_8 != 0x01000100;
+    }
+
+    entry = *cursor;
+    for (i = 0; i < count; i++, entry += 5) {
+        int width;
+        int height;
+        int x;
+        int y;
+        u8* size;
+
+        affine = (entry[4] >> 2) & 3;
+        objMode = 3;
+        if (mode != 3) {
+            objMode = mode;
+            if (affine != 0) {
+                objMode = affine;
+            }
+        }
+
+        size = &byte_839EE04[(entry[4] >> 4) * 2];
+        width = size[0];
+        height = size[1];
+        x = (s8)entry[0];
+        y = (s8)entry[1];
+        if (affine == 3) {
+            x += width / 2;
+            y += height / 2;
+        }
+
+        if (sprite->xScale != 0x100) {
+            width <<= 8;
+            x *= sprite->xScale;
+            x -= (width - sprite->xScale * width / 256) / 2;
+            x /= 256;
+            width /= 256;
+        }
+        if (sprite->field_11_6) {
+            x = -x - width;
+        }
+        if (sprite->yScale != 0x100) {
+            height <<= 8;
+            y *= sprite->yScale;
+            y -= (height - sprite->yScale * height / 256) / 2;
+            y /= 256;
+            height /= 256;
+        }
+        if (sprite->field_11_7) {
+            y = -y - height;
+        }
+
+        if (sprite->field_C != 0) {
+            int halfWidth = width / 2;
+            int halfHeight = height / 2;
+            int angle = (u16)sprite->field_C >> 8;
+            int centerX = x + halfWidth;
+            int centerY = y + halfHeight;
+
+            x = (centerX * word_8198584[angle] + centerY * word_8198504[angle]) / 0x4000 - halfWidth;
+            y = (-centerX * word_8198504[angle] + centerY * word_8198584[angle]) / 0x4000 - halfHeight;
+        }
+
+        if (*(u32*)&sprite->field_8 != 0x01000100) {
+            x = x * sprite->field_8 / 256;
+            x -= (width - width * sprite->field_8 / 256) / 2;
+            y = y * sprite->field_A / 256;
+            y -= (height - height * sprite->field_A / 256) / 2;
+        }
+
+        if (objMode == 3) {
+            x -= width / 2;
+            y -= height / 2;
+            width *= 2;
+            height *= 2;
+        }
+
+        x += sprite->xPosition;
+        y += sprite->yPosition;
+        if (x >= -width && x <= 239 && y >= -height && y <= 159) {
+            int priorityBits;
+            int paletteIndex;
+            int tile;
+            u16* attributes;
+
+            if ((entry[4] >> 1) & 1) {
+                priorityBits = sprite->field_1F_2 << 10;
+            } else {
+                priorityBits = sprite->field_1F_0 << 10;
+            }
+            oam->field_8 = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
+            (*depth)++;
+            if (objMode != 0 && affine == 0) {
+                flip = ((entry[2] >> 2) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
+                if (matrices[flip] == -1) {
+                    matrices[flip] = matrix;
+                    matrix++;
+                    sprite->field_10_6++;
+                }
+            }
+            oam->field_6 = 0;
+            attributes = &oam->field_0;
+            // OBJ mode, mosaic and 8bpp bits (field_11_2, field_11_4, field_11_5), read as one halfword
+            attributes[0] = (*(u16*)((u8*)sprite + 0x10) & 0x3C00) | ((entry[4] & 0xC0) << 8)
+                            | (objMode << 8) | (y & 0xFF);
+            if (objMode != 0) {
+                int sizeBits = (entry[4] & 0x30) << 10;
+                int xBits = x & 0x1FF;
+                int matrixNum;
+
+                if (affine == 0) {
+                    matrixNum = matrices[flip];
+                } else {
+                    matrixNum = sprite->field_10_1 + (entry[2] & 0xF);
+                }
+                attributes[1] = (matrixNum << 9) | sizeBits | xBits;
+            } else {
+                attributes[1] = ((entry[4] & 0x30)
+                                 | (((entry[2] & 4) ^ (sprite->field_11_6 << 2))
+                                    | ((entry[2] & 8) ^ (sprite->field_11_7 << 3))))
+                                    << 10
+                                | (x & 0x1FF);
+            }
+            paletteIndex = entry[2] >> 4;
+            if (tiles == 0) {
+                tile = entry[3] | ((entry[4] & 1) << 8);
+            } else {
+                tile = *tiles;
+            }
+            attributes[2] = priorityBits | palettes[paletteIndex] | ((sprite->field_2E >> 5) + tile);
+            oam = oam->field_10;
+        }
+        if (tiles != 0) {
+            tiles++;
+        }
+    }
+    *cursor = entry;
+    return oam;
+}
