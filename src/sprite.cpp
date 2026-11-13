@@ -1394,3 +1394,142 @@ struct struc_11* sub_802039C(struct struc_11* oam, struct Sprite* sprite, u8** c
     *cursor = entry;
     return oam;
 }
+
+// Thumb version of arm_80008B8 (dword_3000D4C): copies attributes 0-2 of the used nodes after head to
+// dest.
+int sub_8020784(struct struc_11* node, int dest) {
+    u16* out = (u16*)dest;
+
+    while ((node = node->field_10) != 0) {
+        if (node->field_6 == 0) {
+            u32 attributes = *(u32*)&node->field_0;
+            u16 attribute2 = node->field_4;
+
+            *(u32*)out = attributes;
+            out[2] = attribute2;
+            out += 4;
+        }
+    }
+    return (int)out;
+}
+
+// Thumb version of arm_8000850 (dword_3000D48): insertion sort of the list by field_8, up to end.
+void sub_80207A8(struct struc_11* head, struct struc_11* end) {
+    struct struc_11* node = head->field_10;
+
+    do {
+        struct struc_11* previous = node->field_C;
+        struct struc_11* moved = 0;
+
+        while (previous->field_8 > node->field_8) {
+            struct struc_11* before = previous->field_C;
+            struct struc_11* after = node->field_10;
+
+            before->field_10 = node;
+            after->field_C = previous;
+            node->field_C = before;
+            previous->field_C = node;
+            previous->field_10 = after;
+            node->field_10 = previous;
+            moved = previous;
+            previous = node->field_C;
+        }
+        if (moved != 0) {
+            node = moved->field_10;
+        } else {
+            node = node->field_10;
+        }
+    } while (node != end);
+}
+
+// Thumb version of arm_80008F0 (dword_3000D50): resets a pool of count nodes, all but the head unused.
+void sub_80207E8(struct struc_11* node, int count) {
+    count--;
+    node->field_8 = 0;
+    node++;
+    while (count != 0) {
+        node->field_6 = 1;
+        count--;
+        node++;
+    }
+}
+
+// Links a pool of count nodes into a list; all nodes start unused with the highest sort key.
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_802083C.s\"");
+#else
+void sub_802083C(struct struc_11* node, int count) {
+    struct struc_11* previous = 0;
+
+    while (count != 0) {
+        node->field_6 = 1;
+        node->field_8 = 0xFFFFFFFF;
+        node->field_C = previous;
+        node->field_10 = node + 1;
+        previous = node;
+        count--;
+        node++;
+    }
+    node[-1].field_10 = 0;
+}
+#endif
+
+// Queues the upload of the sprite's tiles (field_50 to field_4C) as a background job.
+void sub_80208E0(struct Sprite* sprite) {
+    struct struc_Sprite48* job = sprite->field_48;
+
+    job->field_0 = 1;
+    job->field_4 = sprite->field_50;
+    job->field_8 = sprite->field_4C;
+    job->field_C = 0;
+}
+
+// Frees the IWRAM routines copied by sub_801DFB0.
+void sub_80208F4(void) {
+    int i;
+
+    free_heap_memory_8018C68(dword_3000D48);
+    dword_3000D48 = 0;
+    dword_3000D4C = 0;
+    dword_3000D50 = 0;
+    for (i = 0; i < 6; i++) {
+        if ((byte_3000D70 >> i) & 1) {
+            SpriteDrawRoutine* slot = &dword_3000D58[i];
+
+            // Thumb bit
+            *slot = (SpriteDrawRoutine)((u8*)*slot - 1);
+            free_heap_memory_8018C68(*slot);
+            *slot = 0;
+        }
+    }
+    byte_3000D70 = 0;
+}
+
+// Sets up the sprite system: clears stru_203FFB8, copies the sprite routines selected by flags to IWRAM
+// and allocates the pool of OAM sort nodes.
+void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
+    struct struc_203FFB8* system = &stru_203FFB8;
+    struct struc_203FFA8* heap = &stru_203FFA8;
+    int i;
+
+    dword_3000D74 = system;
+    heap->field_4 = 0;
+    heap->field_0 = 0;
+    heap->field_8 = 0x3FFB8;
+    heap->field_C = 0;
+    dword_3001034(0, system, sizeof(*system));
+    system->field_8 = system->field_A = arg0;
+    //! Possible fake match (permuter): the do-while(0) may be what's left of a macro
+    do {
+        system->field_3 = system->field_4 = arg1;
+        system->field_5 = system->field_6 = arg2;
+    } while (0);
+    system->field_2C = heap;
+    for (i = 0; i < 16; i++) {
+        system->field_C[i] |= 0xFFFF;
+    }
+    system->field_3C = (u32) new ((flags >> 7) ^ 1, "OAME", 0) struct struc_11[0x82];
+    sub_801DFB0(flags);
+    sub_802083C((struct struc_11*)system->field_3C, 0x82);
+}

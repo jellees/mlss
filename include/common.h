@@ -112,10 +112,12 @@ struct struc_3000D18 {
     u32 field_C;
 };
 
+// Same layout as BackgroundJob (sub_80208E0 queues it, sub_8019808 runs it)
 struct struc_Sprite48 {
     u32 field_0;
     void* field_4;
     void* field_8;
+    u32 field_C;
 };
 
 // Entries of off_839EE60[][]
@@ -384,8 +386,15 @@ struct struc_11 {
     u16 field_4;
     u16 field_6;
     u32 field_8;
-    u32 field_C;
+    struct struc_11* field_C;
     struct struc_11* field_10;
+};
+
+struct struc_203FFA8 {
+    u32 field_0;
+    u32 field_4;
+    u32 field_8;
+    u8 field_C;
 };
 
 struct struc_203FFB8 {
@@ -394,11 +403,17 @@ struct struc_203FFB8 {
     u8 field_1;
     u8 field_2;
     u8 field_3;
-
-    u8 pad1[0x34];
-
+    u8 field_4;
+    u8 field_5;
+    u8 field_6;
+    u8 pad7;
+    u16 field_8;
+    u16 field_A;
+    u16 field_C[16];
+    struct struc_203FFA8* field_2C;
+    u8 pad30[0x8];
     struct struc_11* field_38;
-    u32 field_3C;
+    u32 field_3C; // Pool of 0x82 OAM sort nodes (sub_8020994)
 };
 
 struct Popup {
@@ -485,7 +500,7 @@ void sub_801ABE8(u16, u16, int);
 void sub_801AD3C(void);
 void sub_8021ED8(struct Sprite*);
 u16* sub_80FB790(u16, u8*);
-void sub_8020994(u16, int, int, int);
+void sub_8020994(u16, u8, u8, u8);
 void sub_80184F4(void*);
 void sub_8019808(struct BackgroundJob*);
 void sub_8020A78(void);
@@ -638,6 +653,8 @@ void SoftResetRom(int);
 
 // EWRAM
 extern struct struc_203FFB8 stru_203FFB8;
+extern struct struc_203FFB8* dword_3000D74;
+extern struct struc_203FFA8 stru_203FFA8;
 extern struct struc_203FFF8 stru_203FFF8;
 extern u16 word_203FFC4[];
 

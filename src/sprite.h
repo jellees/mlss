@@ -22,6 +22,12 @@ struct struc_11* sub_801FFA8(struct struc_11* oam, struct Sprite* sprite, u8** c
                              u8* tiles, s8* matrices, int matrix, u8* depth);
 struct struc_11* sub_802039C(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
                              u8* tiles, s8* matrices, int matrix, u8* depth);
+int sub_8020784(struct struc_11* node, int dest);
+void sub_80207A8(struct struc_11* head, struct struc_11* end);
+void sub_80207E8(struct struc_11* node, int count);
+void sub_802083C(struct struc_11* node, int count);
+void sub_80208E0(struct Sprite* sprite);
+void sub_80208F4(void);
 
 #ifdef __cplusplus
 }
