@@ -126,11 +126,6 @@ struct struc_839EE60 {
     u32 field_0_31 : 1;
 };
 
-struct struc_Sprite34 {
-    u8 pad_0[0x8];
-    u32 field_8;
-};
-
 // An OAM buffer entry, linked to the next one (FieldObject::method10)
 struct struc_Oam {
     union {
@@ -170,8 +165,8 @@ struct Coldef {
 struct Sprite;
 typedef void (*SpriteCallback)(struct Sprite*, int);
 // Sprite routines selected per frame by sub_801E80C (dword_3000D58)
-typedef struct struc_Sprite34* (*SpriteDrawRoutine)(struct struc_Sprite34*, struct Sprite*, u8**, int, u8*, s8*, int,
-                                                      void*);
+typedef struct struc_11* (*SpriteDrawRoutine)(struct struc_11*, struct Sprite*, u8**, int, u8*, s8*, int,
+                                                      u8*);
 
 struct Sprite {
     s16 xPosition;
@@ -185,7 +180,8 @@ struct Sprite {
     u32 field_10_0 : 1;
     u32 field_10_1 : 5;
     u32 field_10_6 : 4;
-    u32 field_11_2 : 3;
+    u32 field_11_2 : 2;
+    u32 field_11_4 : 1;
     u32 field_11_5 : 1;
     u32 field_11_6 : 1;
     u32 field_11_7 : 1;
@@ -230,7 +226,7 @@ struct Sprite {
     u16 field_2E;
     u16 field_30;
     u8 pad32[0x2];
-    struct struc_Sprite34* field_34;
+    struct struc_11* field_34;
     u8* field_38; // Animation file (sub_801E150)
     u8* field_3C;
     u8* field_40;
@@ -711,6 +707,7 @@ extern u8 arm_80008F0_end[];
 extern SpriteDrawRoutine off_839EE1C[6];
 extern u16 word_839EE34[6];
 extern char* off_839EE40[6];
+extern u8 byte_839EE04[4 * 4 * 2]; // OBJ width and height in pixels, by shape * 8 + size * 2
 extern u8 byte_839EE58[6]; // Record size per animation frame type (sub_801E3EC)
 extern int loc_819832C(int, int);
 extern int loc_8198350(int, int);

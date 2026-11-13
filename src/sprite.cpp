@@ -281,7 +281,7 @@ void sub_801E68C(struct Sprite* sprite) {
 #define IWRAM_DIV(a, b)                                                                                \
     (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(a, b))
 
-struct struc_Sprite34* sub_801E80C(struct Sprite* sprite, struct struc_Sprite34* arg1, void* arg2) {
+struct struc_11* sub_801E80C(struct Sprite* sprite, struct struc_11* arg1, u8* arg2) {
     if (sprite->field_50 != 0) {
         if (sprite->field_48->field_0 == 1) {
             int size = sprite->field_28_0 << 5;
@@ -485,4 +485,181 @@ struct struc_Sprite34* sub_801E80C(struct Sprite* sprite, struct struc_Sprite34*
         }
     }
     return arg1;
+}
+
+// Sprite routine 0 (off_839EE1C[0]): adds one OAM entry per object of the frame.
+struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
+                             u8* tiles, s8* matrices, int matrix, u8* depth) {
+    u16 palettes[16];
+    u8 priorities[4];
+    u16* palette = palettes;
+    int bit = 0;
+    int mask = sprite->field_14;
+    int mode;
+    u8* entry;
+    int i;
+    int affine;
+    int objMode;
+    int flip;
+
+    while (mask != 0) {
+        if (mask & 1) {
+            *palette++ = bit << 12;
+        }
+        bit++;
+        mask >>= 1;
+    }
+
+    if ((sprite->field_C != 0 && !sprite->field_28_15) || sprite->xScale > 0x100
+        || sprite->yScale > 0x100 || sprite->field_8 > 0x100 || sprite->field_A > 0x100) {
+        mode = 3;
+    } else if (*(u32*)&sprite->xScale != 0x01000100) {
+        mode = 1;
+    } else {
+        mode = *(u32*)&sprite->field_8 != 0x01000100;
+    }
+
+    priorities[0] = sprite->field_1F_0;
+    priorities[1] = sprite->field_1F_2;
+    priorities[2] = sprite->field_1F_4;
+    priorities[3] = sprite->field_1F_6;
+
+    entry = *cursor;
+    for (i = 0; i < count; i++, entry += 6) {
+        int width;
+        int height;
+        int x;
+        int y;
+        u8* size;
+
+        affine = entry[1] & 3;
+        objMode = 3;
+        if (mode != 3) {
+            objMode = mode;
+            if (affine != 0) {
+                objMode = affine;
+            }
+        }
+
+        size = &byte_839EE04[(entry[1] >> 6) * 8 + (entry[3] >> 6) * 2];
+        width = size[0];
+        height = size[1];
+        x = entry[2];
+        if (entry[3] & 1) {
+            x |= 0xFFFFFF00;
+        }
+        y = (s8)entry[0];
+        if (affine == 3) {
+            x += width / 2;
+            y += height / 2;
+        }
+
+        if (sprite->xScale != 0x100) {
+            width <<= 8;
+            x *= sprite->xScale;
+            x -= (width - sprite->xScale * width / 256) / 2;
+            x /= 256;
+            width /= 256;
+        }
+        if (sprite->field_11_6) {
+            x = -x - width;
+        }
+        if (sprite->yScale != 0x100) {
+            height <<= 8;
+            y *= sprite->yScale;
+            y -= (height - sprite->yScale * height / 256) / 2;
+            y /= 256;
+            height /= 256;
+        }
+        if (sprite->field_11_7) {
+            y = -y - height;
+        }
+
+        if (sprite->field_C != 0) {
+            int halfWidth = width / 2;
+            int halfHeight = height / 2;
+            int angle = (u16)sprite->field_C >> 8;
+            int centerX = x + halfWidth;
+            int centerY = y + halfHeight;
+
+            x = (centerX * word_8198584[angle] + centerY * word_8198504[angle]) / 0x4000 - halfWidth;
+            y = (-centerX * word_8198504[angle] + centerY * word_8198584[angle]) / 0x4000 - halfHeight;
+        }
+
+        if (*(u32*)&sprite->field_8 != 0x01000100) {
+            x = x * sprite->field_8 / 256;
+            x -= (width - width * sprite->field_8 / 256) / 2;
+            y = y * sprite->field_A / 256;
+            y -= (height - height * sprite->field_A / 256) / 2;
+        }
+
+        if (objMode == 3) {
+            x -= width / 2;
+            y -= height / 2;
+            width *= 2;
+            height *= 2;
+        }
+
+        x += sprite->xPosition;
+        y += sprite->yPosition;
+        if (x >= -width && x <= 239 && y >= -height && y <= 159) {
+            int priority = priorities[(entry[5] >> 2) & 3];
+            int priorityBits = priority << 10;
+            int paletteIndex;
+            int tile;
+            int attribute;
+            u16* attributes;
+
+            oam->field_8 = (priority << 30) | (sprite->field_E << 14) | (*depth << 7) | i;
+            (*depth)++;
+            if (objMode != 0 && affine == 0) {
+                flip = ((entry[3] >> 4) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
+                if (matrices[flip] == -1) {
+                    matrices[flip] = matrix;
+                    matrix++;
+                    sprite->field_10_6++;
+                }
+            }
+            oam->field_6 = 0;
+            attributes = &oam->field_0;
+            if (sprite->field_11_2) {
+                attribute = sprite->field_11_2 << 10;
+            } else {
+                attribute = (entry[1] & 0xC) << 8;
+            }
+            attributes[0] = attribute
+                            | ((((entry[1] & 0xF0) | objMode) << 8) | (sprite->field_11_4 << 12))
+                            | (y & 0xFF);
+            if (objMode != 0) {
+                int sizeBits = (entry[3] & 0xC0) << 8;
+                int xBits = x & 0x1FF;
+                int matrixBits;
+
+                if (affine == 0) {
+                    matrixBits = matrices[flip] << 9;
+                } else {
+                    matrixBits = (sprite->field_10_1 + ((entry[3] & 0x3E) >> 1)) << 9;
+                }
+                attributes[1] = matrixBits | sizeBits | xBits;
+            } else {
+                attributes[1] = ((entry[3] & 0xC0) | ((entry[3] & 0x10) ^ (sprite->field_11_6 << 4))
+                                 | ((entry[3] & 0x20) ^ (sprite->field_11_7 << 5)))
+                                    << 8
+                                | (x & 0x1FF);
+            }
+            paletteIndex = entry[5] >> 4;
+            if (tiles == 0) {
+                tile = entry[4] | ((entry[5] & 3) << 8);
+            } else {
+                tile = *tiles;
+            }
+            attributes[2] = priorityBits | palettes[paletteIndex] | ((sprite->field_2E >> 5) + tile);
+            oam = oam->field_10;
+        }
+        if (tiles != 0) {
+            tiles++;
+        }
+    }
+    *cursor = entry;
+    return oam;
 }
