@@ -20,6 +20,8 @@ struct struc_11* sub_801FBAC(struct struc_11* oam, struct Sprite* sprite, u8** c
                              u8* tiles, s8* matrices, int matrix, u8* depth);
 struct struc_11* sub_801FFA8(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
                              u8* tiles, s8* matrices, int matrix, u8* depth);
+struct struc_11* sub_802039C(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
+                             u8* tiles, s8* matrices, int matrix, u8* depth);
 
 #ifdef __cplusplus
 }
