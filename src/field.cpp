@@ -821,7 +821,8 @@ void FieldManager::update_field_8023DD4() {
 
     if (field_10A > 0) {
         field_10A--;
-        if ((u8)(field_12A - 1) <= 4 && field_10A == 0) {
+        if ((field_12A == 1 || field_12A == 2 || field_12A == 3 || field_12A == 4 || field_12A == 5)
+            && field_10A == 0) {
             field_FC_2 = 1;
         }
     }
@@ -1171,7 +1172,7 @@ void FieldManager::update_field_8023DD4() {
     }
 
     if (!field_291_0 || field_290 <= 0) {
-        if ((u8)(field_12A - 7) > 1 && field_F8_6 && field_F9_0 == 0) {
+        if ((field_12A != 7 && field_12A != 8) && field_F8_6 && field_F9_0 == 0) {
             sub_80286AC(field_FA_5);
         }
         field_27E = field_27A + field_12E;
@@ -3278,7 +3279,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = leader->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 0;
                 } else {
                     data->field_0 = 0;
@@ -3317,7 +3318,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = follower->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 0;
                 } else {
                     data->field_0 = 0;
@@ -3365,7 +3366,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = mario->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 5;
                 } else {
                     data->field_0 = 5;
@@ -3391,7 +3392,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = luigi->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 5;
                 } else {
                     data->field_0 = 5;
@@ -3418,7 +3419,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = mario->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 11;
                 } else {
                     data->field_0 = 11;
@@ -3434,7 +3435,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = luigi->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 11;
                 } else {
                     data->field_0 = 11;
@@ -3461,7 +3462,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = luigi->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 6;
                 } else {
                     data->field_0 = 6;
@@ -3493,7 +3494,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = mario->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 6;
                 } else {
                     data->field_0 = 6;
@@ -3519,7 +3520,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = luigi->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 9;
                 } else {
                     data->field_0 = 9;
@@ -3547,7 +3548,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             {
                 FieldStruct4* data = mario->field_368;
 
-                if ((u8)(data->field_0 - 1) <= 1) {
+                if (data->field_0 == 1 || data->field_0 == 2) {
                     data->field_1 = 9;
                 } else {
                     data->field_0 = 9;
@@ -3750,7 +3751,7 @@ void FieldManager::sub_802A740() {
                 break;
             default:
                 sub_802C068(field_D0);
-                if ((u16)(leader->state - 3) <= 1) {
+                if (leader->state == 3 || leader->state == 4) {
                     int velocityZ = field_FA_10 ? -0x200 : 0;
                     if (velocityZ != 0 && leader->velocityZ < velocityZ) {
                         leader->velocityZ = velocityZ;
@@ -3836,7 +3837,7 @@ void FieldManager::sub_802A740() {
                 break;
             default:
                 sub_802C208();
-                if ((u16)(follower->state - 3) <= 1) {
+                if (follower->state == 3 || follower->state == 4) {
                     int velocityZ = field_FA_10 ? -0x200 : 0;
                     if (velocityZ != 0 && follower->velocityZ < velocityZ) {
                         follower->velocityZ = velocityZ;
@@ -4661,7 +4662,8 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             player->state = 0;
             player->field_350_14 = 0;
             player->field_260 = player->field_23E = field_100;
-            if ((u8)(player->field_388->field_368->field_0 - 1) <= 1) {
+            if (player->field_388->field_368->field_0 == 1
+                || player->field_388->field_368->field_0 == 2) {
                 player->field_388->field_368->field_1 = 0;
             } else {
                 player->field_388->field_368->field_0 = 0;
@@ -4755,7 +4757,7 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
     player->field_368->field_0 = 0;
     player->state = 0;
     player->field_350_14 = 0;
-    if ((u8)(player->field_388->field_368->field_0 - 1) <= 1) {
+    if (player->field_388->field_368->field_0 == 1 || player->field_388->field_368->field_0 == 2) {
         player->field_388->field_368->field_1 = 0;
     } else {
         player->field_388->field_368->field_0 = 0;

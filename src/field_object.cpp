@@ -2418,7 +2418,7 @@ void FieldObject::method15(u8 force) {
                 field_26_2 = topCell->secondaryShape - 3;
                 switch (topProbe) {
                     case 1:
-                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                        if (topCell->secondaryShape == 4 || topCell->secondaryShape == 5) {
                             bestTop += 0xFFF;
                             bestTop &= ~0xFFF;
                         } else if (topCell->secondaryShape == 6) {
@@ -2428,7 +2428,7 @@ void FieldObject::method15(u8 force) {
                         }
                         break;
                     case 2:
-                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                        if (topCell->secondaryShape == 4 || topCell->secondaryShape == 5) {
                             bestTop += 0xFFF;
                             bestTop &= ~0xFFF;
                         } else if (topCell->secondaryShape == 6) {
@@ -2438,7 +2438,7 @@ void FieldObject::method15(u8 force) {
                         }
                         break;
                     case 3:
-                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                        if (topCell->secondaryShape == 4 || topCell->secondaryShape == 5) {
                             probe = sub_803FBA4(field_290, x, yToFrontEdge(y) - field_280, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (topCell->tileFlags & probe->tileFlags) {
@@ -2468,7 +2468,7 @@ void FieldObject::method15(u8 force) {
                         }
                         break;
                     case 4:
-                        if ((u8)(topCell->secondaryShape - 4) <= 1) {
+                        if (topCell->secondaryShape == 4 || topCell->secondaryShape == 5) {
                             probe = sub_803FBA4(field_290, x, yToFrontEdge(y) - field_280, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (topCell->tileFlags & probe->tileFlags) {
@@ -2527,7 +2527,7 @@ void FieldObject::method15(u8 force) {
                 shape = floorCell->primaryShape;
                 switch (floorProbe) {
                     case 1:
-                        if ((u8)(shape - 4) <= 1) {
+                        if (shape == 4 || shape == 5) {
                             bestFloor += 0xFFF;
                             bestFloor &= ~0xFFF;
                         } else if (shape == 6) {
@@ -2537,7 +2537,7 @@ void FieldObject::method15(u8 force) {
                         }
                         break;
                     case 2:
-                        if ((u8)(shape - 4) <= 1) {
+                        if (shape == 4 || shape == 5) {
                             bestFloor += 0xFFF;
                             bestFloor &= ~0xFFF;
                         } else if (shape == 6) {
@@ -2547,7 +2547,7 @@ void FieldObject::method15(u8 force) {
                         }
                         break;
                     case 3:
-                        if ((u8)(shape - 4) <= 1) {
+                        if (shape == 4 || shape == 5) {
                             probe = sub_803FBA4(field_290, x, yToFrontEdge(y) - field_280, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (floorCell->tileFlags & probe->tileFlags) {
@@ -2569,7 +2569,7 @@ void FieldObject::method15(u8 force) {
                         }
                         break;
                     case 4:
-                        if ((u8)(shape - 4) <= 1) {
+                        if (shape == 4 || shape == 5) {
                             probe = sub_803FBA4(field_290, x, yToFrontEdge(y) - field_280, &floor,
                                                 &ceiling, &top, 1, field_20C_11);
                             if (floorCell->tileFlags & probe->tileFlags) {
