@@ -1679,13 +1679,8 @@ void sprite_remove(struct Sprite* sprite) {
     }
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8020DD0.s\"");
-#else
 // Creates a sprite and adds it to the end of the sprite list. id -1 makes an empty sprite; ids and
 // palettes with bits 12-15 set select the bank (bits 12-15 minus 1) themselves.
-//
 struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, int bufferSize,
                            int palette) {
     struct Sprite* sprite;
@@ -1700,7 +1695,6 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
         u8* animation;
         u8* tiles;
         int paletteCount;
-        void** paletteTable;
         void* paletteData;
         u8* base;
         int frames;
@@ -1711,10 +1705,12 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
             bank = (id >> 12) - 1;
             id &= 0xFFF;
         }
+
         info = &gSpriteInfo[bank][id];
         flag = info->uncompressed;
         animationIndex = info->animation;
         tilesIndex = info->tiles;
+
         if (palette == -1) {
             paletteBank = bank;
             palette = info->palette;
@@ -1724,43 +1720,52 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
         } else {
             paletteBank = bank;
         }
+
         animation = gSpriteAnimations[bank][animationIndex];
         tiles = (u8*)gSpriteTiles[bank] + gSpriteTiles[bank][tilesIndex];
         paletteCount = gSpritePaletteCounts[paletteBank][palette];
+
         if (gGameState.field_888_1 == 1 && gSpritePalettes[paletteBank] != 0
             && !stru_203FFB8.field_0_2) {
-            paletteTable = off_839EF10[paletteBank];
+            paletteData = off_839EF10[paletteBank][palette];
         } else {
-            paletteTable = gSpritePalettes[paletteBank];
+            paletteData = gSpritePalettes[paletteBank][palette];
         }
-        paletteData = paletteTable[palette];
 
         if (tileCount == -1) {
+            int decompressed;
+
             frames = (animation[4] | ((animation[5] & 1) << 8)) + 1;
             if (!flag) {
-                tileCount = sub_80198B0(tiles) >> 5;
+                decompressed = sub_80198B0(tiles) >> 5;
             } else {
-                tileCount = 0;
+                decompressed = 0;
             }
+            tileCount = decompressed;
             if (tileCount < frames) {
                 tileCount = frames;
             }
         }
+
         if (arg4 == -1) {
             if (arg2 == 1) {
-                arg4 = (animation[3] >> 1) + 1;
+                arg4 = animation[3] >> 1;
+                arg4++;
             } else {
                 arg4 = tileCount;
             }
         }
+
         tileCount *= 32;
         arg4 *= 32;
         base = animation - (animation[0] | (animation[1] << 8));
         records = (animation[6] & 0x7F) + 1;
         recordSize = base[0];
+
         if (bufferSize == -1) {
             bufferSize = records * recordSize + 1;
         }
+
         bufferSize += 3;
         bufferSize &= ~3;
 
@@ -1799,25 +1804,22 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
     }
 
     system = &stru_203FFB8;
+
     if (system->field_30 == 0) {
         system->field_30 = sprite;
     } else {
         sprite->field_68 = system->field_34->field_68;
         system->field_34->field_68 = sprite;
     }
+
     sprite->field_64 = system->field_34;
     system->field_34 = sprite;
     system->field_1++;
+
     return sprite;
 }
-#endif
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_80210A8.s\"");
-#else
 // Gives an existing sprite new graphics (see sub_8020DD0 for the parameters).
-//
 void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCount, int arg5,
                  int bufferSize, int palette) {
     struct SpriteInfo* info;
@@ -1828,7 +1830,6 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
     u8* animation;
     u8* tiles;
     int paletteCount;
-    void** paletteTable;
     void* paletteData;
     u8* base;
     int frames;
@@ -1858,10 +1859,12 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
         bank = (id >> 12) - 1;
         id &= 0xFFF;
     }
+
     info = &gSpriteInfo[bank][id];
     flag = info->uncompressed;
     animationIndex = info->animation;
     tilesIndex = info->tiles;
+
     if (palette == -1) {
         paletteBank = bank;
         palette = info->palette;
@@ -1871,34 +1874,46 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
     } else {
         paletteBank = bank;
     }
+
     animation = gSpriteAnimations[bank][animationIndex];
     tiles = (u8*)gSpriteTiles[bank] + gSpriteTiles[bank][tilesIndex];
     paletteCount = gSpritePaletteCounts[paletteBank][palette];
+
     if (gGameState.field_888_1 == 1 && gSpritePalettes[paletteBank] != 0 && !stru_203FFB8.field_0_2) {
-        paletteTable = off_839EF10[paletteBank];
+        paletteData = off_839EF10[paletteBank][palette];
     } else {
-        paletteTable = gSpritePalettes[paletteBank];
+        paletteData = gSpritePalettes[paletteBank][palette];
     }
-    paletteData = paletteTable[palette];
 
     if (tileCount == -1) {
+        int decompressed;
+
         frames = (animation[4] | ((animation[5] & 1) << 8)) + 1;
-        tileCount = !flag ? sub_80198B0(tiles) >> 5 : 0;
+        if (!flag) {
+            decompressed = sub_80198B0(tiles) >> 5;
+        } else {
+            decompressed = 0;
+        }
+        tileCount = decompressed;
         if (tileCount < frames) {
             tileCount = frames;
         }
     }
+
     // arg5 is unused, but this dead code is what leaves the original's lone load of it
     if (arg5 == -1) {
         arg5 = tileCount;
     }
+
     tileCount *= 32;
     base = animation - (animation[0] | (animation[1] << 8));
     records = (animation[6] & 0x7F) + 1;
     recordSize = base[0];
+
     if (bufferSize == -1) {
         bufferSize = recordSize * records + 1;
     }
+
     bufferSize += 3;
     bufferSize &= ~3;
 
@@ -1912,7 +1927,6 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
     sprite->paletteBank = paletteBank;
     sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, arg3 == 1 ? bufferSize : 0, flag, 1);
 }
-#endif
 
 // Destroys a sprite: hides it, removes it from the sprite list and frees it.
 void sprite_destroy(struct Sprite* sprite) {
