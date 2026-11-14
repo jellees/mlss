@@ -1454,11 +1454,11 @@ void sub_80207E8(struct struc_11* node, int count) {
     }
 }
 
-// Links a pool of count nodes into a list; all nodes start unused with the highest sort key.
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_802083C.s\"");
 #else
+// Links a pool of count nodes into a list; all nodes start unused with the highest sort key.
 void sub_802083C(struct struc_11* node, int count) {
     struct struc_11* previous = 0;
 
@@ -1534,11 +1534,12 @@ void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
     sub_802083C((struct struc_11*)system->field_3C, 0x82);
 }
 
-// Builds the OAM list for the frame: gives every shown sprite its affine matrices and VRAM tiles
-// (shared with an earlier sprite that looks the same) and draws it. https://decomp.me/scratch/TODO
+// https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8020A78.s\"");
 #else
+// Builds the OAM list for the frame: gives every shown sprite its affine matrices and VRAM tiles
+// (shared with an earlier sprite that looks the same) and draws it.
 void sub_8020A78(void) {
     struct struc_203FFB8* system = &stru_203FFB8;
     struct Sprite* sprite = system->field_30;
@@ -1681,12 +1682,13 @@ void sub_8020D40(struct Sprite* sprite) {
     }
 }
 
-// Creates a sprite and adds it to the end of the sprite list. id -1 makes an empty sprite; ids and
-// palettes with bits 12-15 set select the bank (bits 12-15 minus 1) themselves.
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8020DD0.s\"");
 #else
+// Creates a sprite and adds it to the end of the sprite list. id -1 makes an empty sprite; ids and
+// palettes with bits 12-15 set select the bank (bits 12-15 minus 1) themselves.
+//
 struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, int bufferSize,
                            int palette) {
     struct Sprite* sprite;
@@ -1812,11 +1814,12 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
 }
 #endif
 
-// Gives an existing sprite new graphics (see sub_8020DD0 for the parameters).
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_80210A8.s\"");
 #else
+// Gives an existing sprite new graphics (see sub_8020DD0 for the parameters).
+//
 void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCount, int arg5,
                  int bufferSize, int palette) {
     struct struc_839EE60* info;
@@ -1948,12 +1951,12 @@ void sub_8021308(struct Sprite* sprite) {
     system->field_1--;
 }
 
-// Loads a sprite's tiles into a shared buffer (or finds the buffer loaded before) with a background
-// job. Returns 0 for sprites without such tiles, and for an existing buffer unless arg3 is set.
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_80213A0.s\"");
 #else
+// Loads a sprite's tiles into a shared buffer (or finds the buffer loaded before) with a background
+// job. Returns 0 for sprites without such tiles, and for an existing buffer unless arg3 is set.
 void* sub_80213A0(int bank, int id, int tileCount, u8 arg3) {
     struct struc_839EE60* info;
     int animationIndex;
@@ -2043,12 +2046,13 @@ void* sub_80214A4(int bank, int id, int size, u8 arg3) {
     return map;
 }
 
-// Finds or loads a palette in the 16 OBJ palette slots (stru_203FFB8.field_C, from field_4 on). Returns
-// 2 if it is already loaded, 1 if the requested slot is taken or the slots run out, else 0; *mask gets
-// the slots. https://decomp.me/scratch/TODO
+// https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8021574.s\"");
 #else
+// Finds or loads a palette in the 16 OBJ palette slots (stru_203FFB8.field_C, from field_4 on). Returns
+// 2 if it is already loaded, 1 if the requested slot is taken or the slots run out, else 0; *mask gets
+// the slots.
 int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, u16* mask, int slot) {
     struct struc_203FFB8* system = &stru_203FFB8;
     u16 free = 0;
@@ -2152,4 +2156,178 @@ u16 sub_802191C(int index) {
         result = freed;
     }
     return result;
+}
+
+// Finds another sprite that shares something with sprite: 0 tiles, 1 animation, 2 palette (shown
+// sprites only), 3 VRAM tiles, 4 tiles without a tile buffer.
+struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
+    struct Sprite* other = stru_203FFB8.field_30;
+
+    if (other != 0) {
+        if (type == 2) {
+            do {
+                // field_1C and field_1E_4: the palette
+                if (other != sprite && !other->field_12_5 && !other->field_28_12
+                    && (*(u32*)&other->field_1C & 0x00F0FFFF)
+                           == (*(u32*)&sprite->field_1C & 0x00F0FFFF)) {
+                    return other;
+                }
+                other = other->field_68;
+            } while (other != 0);
+        } else {
+            do {
+                if (other != sprite && other->field_1E_0 == sprite->field_1E_0) {
+                    if (type == 0 && other->field_18 == sprite->field_18) {
+                        return other;
+                    }
+                    if (type == 1 && other->field_1A == sprite->field_1A) {
+                        return other;
+                    }
+                    if (type == 3 && other->field_2E == sprite->field_2E) {
+                        return other;
+                    }
+                    if (type == 4 && other->field_18 == sprite->field_18 && other->field_44 == 0) {
+                        //! Possible fake match (permuter): makes this the return block the others jump
+                        //! to
+                        do {
+                            return other;
+                        } while (0);
+                    }
+                }
+                other = other->field_68;
+            } while (other != 0);
+        }
+    }
+    return 0;
+}
+
+// TODO: decompile
+asm_unified(".include \"asm/nonmatching/sub_8021AC8.s\"");
+
+// TODO: decompile
+asm_unified(".include \"asm/nonmatching/sub_8021C24.s\"");
+
+// TODO: decompile
+asm_unified(".include \"asm/nonmatching/sprite_heap_alloc.s\"");
+
+// Frees a sprite heap block and merges it with free neighbours.
+void sprite_heap_free(void* p) {
+    if (p != 0) {
+        struct struc_203FFA8* block = ((struct struc_203FFA8*)((u8*)p - 16))->field_0;
+        struct struc_203FFA8* previous = block->field_0;
+        struct struc_203FFA8* next = block->field_4;
+
+        block->field_C = 0;
+        if (next != 0 && next->field_C == 0) {
+            block->field_8 += next->field_8;
+            block->field_4 = next->field_4;
+            if (block->field_4 != 0) {
+                block->field_4->field_0 = block;
+            }
+        }
+        if (previous != 0 && previous->field_C == 0) {
+            previous->field_8 += block->field_8;
+            previous->field_4 = block->field_4;
+            if (previous->field_4 != 0) {
+                previous->field_4->field_0 = previous;
+            }
+        }
+    }
+}
+
+// Finds the data of the sprite heap block with this type, bank and index.
+void* sprite_heap_search(int type, u8 bank, u16 index) {
+    struct struc_203FFA8* block = stru_203FFB8.field_2C;
+
+    do {
+        if (block->field_C == type && block->field_D == bank && block->field_E == index) {
+            return (u8*)block - (block->field_8 - 16);
+        }
+        block = block->field_4;
+    } while (block != 0);
+    return 0;
+}
+
+// TODO: decompile
+asm_unified(".include \"asm/nonmatching/sub_8021DD8.s\"");
+
+// Returns the off_839EE60 entry of a sprite (bits 12-15 of id, if set, select the bank).
+struct struc_839EE60* sub_8021EA8(int bank, int id) {
+    if (id & 0xF000) {
+        bank = (id >> 12) - 1;
+        id &= 0xFFF;
+    }
+    return &off_839EE60[bank][id];
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8021ED8.s\"");
+#else
+// Shows a hidden sprite, adding it back to the end of the sprite list if it isn't in it.
+void sub_8021ED8(struct Sprite* sprite) {
+    if (sprite->field_12_5) {
+        if (sprite->field_64 == sprite->field_68) {
+            struct struc_203FFB8* system = &stru_203FFB8;
+
+            if (system->field_30 == 0) {
+                system->field_30 = sprite;
+            } else {
+                sprite->field_68 = system->field_34->field_68;
+                system->field_34->field_68 = sprite;
+            }
+            sprite->field_64 = system->field_34;
+            system->field_34 = sprite;
+            system->field_1++;
+        }
+        sprite_show_8020CBC(sprite);
+    }
+}
+#endif
+
+// Hides a sprite and frees its palette slots, but keeps it in the sprite list.
+void sprite_hide_8021F20(struct Sprite* sprite) {
+    if (!sprite->field_12_5) {
+        sprite->field_12_5 = 1;
+        if (sub_8021A18(sprite, 2) == 0) {
+            u16* slot = stru_203FFB8.field_C;
+            int mask = sprite->field_14;
+
+            while (mask != 0) {
+                if ((*slot & 0x4000) && (mask & 1)) {
+                    *slot = 0xFFFF;
+                }
+                slot++;
+                mask >>= 1;
+            }
+        }
+    }
+}
+
+// Animates all sprites; field_12_1 says what happens at the end of an animation (2: hide, 3: destroy).
+void sub_8021F7C(void) {
+    struct Sprite* sprite = stru_203FFB8.field_30;
+
+    while (sprite != 0) {
+        struct Sprite* next = sprite->field_68;
+
+        if (sprite->field_28_14) {
+            sub_801E68C(sprite);
+            if (sprite->field_12_3) {
+                if (sprite->field_12_1 == 2) {
+                    sprite_hide_8021F20(sprite);
+                } else if (sprite->field_12_1 == 3) {
+                    sub_8021308(sprite);
+                }
+            }
+        }
+        sprite = next;
+    }
+}
+
+// Shuts the sprite system down.
+void sub_8021FD4(void) {
+    delete[] (struct struc_11*)stru_203FFB8.field_3C;
+    sub_80208F4();
+    dword_3000D74 = 0;
 }

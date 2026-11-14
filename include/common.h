@@ -345,11 +345,6 @@ struct struc_3000FF4 {
     u8 pad31[0xB];
 };
 
-struct struc_8021EA8 {
-    u32 field_0_0 : 9;
-    u32 field_0_9 : 23;
-};
-
 struct struc_3000FD0 {
     u8 pad_0[0x528];
     u32 field_528;
@@ -395,11 +390,15 @@ struct struc_11 {
     struct struc_11* field_10;
 };
 
+// Sprite heap block header. The heap grows down from stru_203FFA8; a block's data is the field_8 - 16
+// bytes just below its header (right after the next block's header).
 struct struc_203FFA8 {
-    u32 field_0;
-    u32 field_4;
-    u32 field_8;
-    u8 field_C;
+    struct struc_203FFA8* field_0; // Previous block (the one above)
+    struct struc_203FFA8* field_4; // Next block (the one below)
+    int field_8; // Size including the header
+    u8 field_C; // Type: 0 free, 1 sprite, 2 tile buffer (sub_80213A0), 3 tile map (sub_80214A4)
+    u8 field_D; // Bank
+    u16 field_E; // Index in the bank
 };
 
 struct struc_203FFB8 {
@@ -571,7 +570,7 @@ u16 sub_802191C(int);
 u32** sub_81980C8(int);
 void sub_8127BC8(struct LoadMenuEntry*, u8);
 void reset_game_80189C4(void);
-struct struc_8021EA8* sub_8021EA8(int, int);
+struct struc_839EE60* sub_8021EA8(int, int);
 void sub_80196E0(void);
 void sub_80FC198(void);
 void sub_812335C(void);
