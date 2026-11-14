@@ -2207,8 +2207,61 @@ asm_unified(".include \"asm/nonmatching/sub_8021AC8.s\"");
 // TODO: decompile
 asm_unified(".include \"asm/nonmatching/sub_8021C24.s\"");
 
-// TODO: decompile
-asm_unified(".include \"asm/nonmatching/sprite_heap_alloc.s\"");
+// Allocates size bytes in the sprite heap (first fit, splitting the block if the rest can hold a
+// header) and clears the first field of tile buffers and tile maps.
+void* sprite_heap_alloc(int type, int size, u8 bank, u16 index) {
+    struct SpriteHeapBlock* block = stru_203FFB8.field_2C;
+
+    size += 15;
+    size &= ~15;
+    size += 16;
+
+    do {
+        int blockSize = block->size;
+
+        if (block->type == SPRITE_HEAP_FREE && blockSize >= size) {
+            void* data;
+
+            if (blockSize >= size + sizeof(struct SpriteHeapBlock)) {
+                struct SpriteHeapBlock* rest = (struct SpriteHeapBlock*)((u8*)block - size);
+
+                rest->previous = block;
+                rest->next = block->next;
+                if (rest->next != 0) {
+                    rest->next->previous = rest;
+                }
+                rest->size = block->size - size;
+                rest->type = SPRITE_HEAP_FREE;
+                block->next = rest;
+                block->size = size;
+            } else {
+                block->size = blockSize;
+            }
+
+            block->type = type;
+            block->bank = bank;
+            block->index = index;
+            data = (u8*)block - (block->size - 16);
+
+            switch (type) {
+                case SPRITE_HEAP_TILES:
+                    *(u32*)data = 0;
+                    break;
+                case SPRITE_HEAP_TILE_MAP:
+                    *(u8*)data = 0;
+                    break;
+                case SPRITE_HEAP_SPRITE:
+                    break;
+            }
+
+            return data;
+        }
+
+        block = block->next;
+    } while (block != 0);
+
+    return 0;
+}
 
 // Frees a sprite heap block and merges it with free neighbours.
 void sprite_heap_free(void* p) {
