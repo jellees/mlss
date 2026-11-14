@@ -1566,7 +1566,7 @@ void sub_8020A78(void) {
                 other = system->field_30;
                 while (other != sprite) {
                     // field_11 & 0xC0: both flip bits (field_11_6, field_11_7)
-                    if (!other->hidden && other->field_1E_0 == sprite->field_1E_0
+                    if (!other->hidden && other->bank == sprite->bank
                         && other->field_1A == sprite->field_1A && other->field_22 == sprite->field_22
                         && *(u32*)&other->xScale == *(u32*)&sprite->xScale
                         && *(u32*)&other->field_8 == *(u32*)&sprite->field_8
@@ -1598,7 +1598,7 @@ void sub_8020A78(void) {
                     other = system->field_30;
                     while (other != sprite) {
                         if (other->field_48->status == 0 && !other->hidden
-                            && other->field_1E_0 == sprite->field_1E_0
+                            && other->bank == sprite->bank
                             && *(u32*)&other->field_18 == *(u32*)&sprite->field_18
                             && other->field_22 == sprite->field_22) {
                             shared = 1;
@@ -1636,7 +1636,7 @@ void sprite_show(struct Sprite* sprite) {
         sprite->hidden = false;
         sprite->field_12_1 = 0;
         if (sprite->field_54 != 0) {
-            if (sub_8021574(sprite->field_1E_4, sprite->field_1C, sprite->field_28_12, 1, 1,
+            if (sub_8021574(sprite->paletteBank, sprite->field_1C, sprite->field_28_12, 1, 1,
                             &sprite->field_14, -1)
                 == 2) {
                 sprite->field_13_0 = 0;
@@ -1782,8 +1782,8 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
         sprite->field_1A = animationIndex;
         sprite->field_18 = tilesIndex;
         sprite->field_1C = palette;
-        sprite->field_1E_0 = bank;
-        sprite->field_1E_4 = paletteBank;
+        sprite->bank = bank;
+        sprite->paletteBank = paletteBank;
         sprite->field_30 = arg4;
         sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, arg2 == 1 ? bufferSize : 0, flag,
                     0);
@@ -1911,8 +1911,8 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
     sprite->field_1A = animationIndex;
     sprite->field_18 = tilesIndex;
     sprite->field_1C = palette;
-    sprite->field_1E_0 = bank;
-    sprite->field_1E_4 = paletteBank;
+    sprite->bank = bank;
+    sprite->paletteBank = paletteBank;
     sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, arg3 == 1 ? bufferSize : 0, flag, 1);
 }
 #endif
@@ -2168,7 +2168,7 @@ struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
     if (other != 0) {
         if (type == 2) {
             do {
-                // field_1C and field_1E_4: the palette
+                // field_1C and paletteBank: the palette
                 if (other != sprite && !other->hidden && !other->field_28_12
                     && (*(u32*)&other->field_1C & 0x00F0FFFF)
                            == (*(u32*)&sprite->field_1C & 0x00F0FFFF)) {
@@ -2178,7 +2178,7 @@ struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
             } while (other != 0);
         } else {
             do {
-                if (other != sprite && other->field_1E_0 == sprite->field_1E_0) {
+                if (other != sprite && other->bank == sprite->bank) {
                     if (type == 0 && other->field_18 == sprite->field_18) {
                         return other;
                     }

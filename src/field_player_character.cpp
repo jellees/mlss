@@ -415,7 +415,7 @@ void FieldPlayerCharacter::sub_8049000(u16 animation) {
         field_214_23 = field_218 == SPRITE_ID(0, 1) || field_218 == SPRITE_ID(0, 2)
                        || field_218 == SPRITE_ID(0, 40);
         sub_80210A8(sprite, 0, field_218, 1, -1, -1, -1, -1);
-        field_21E = (sprite->field_1E_4 + 1) << 12 | sprite->field_1C;
+        field_21E = (sprite->paletteBank + 1) << 12 | sprite->field_1C;
         sub_8040804(true, -1, -1);
     }
 }

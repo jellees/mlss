@@ -192,8 +192,8 @@ struct Sprite {
     u16 field_18;
     u16 field_1A;
     u16 field_1C;
-    u8 field_1E_0 : 4;
-    u8 field_1E_4 : 4;
+    u8 bank : 4;
+    u8 paletteBank : 4;
     u8 field_1F_0 : 2;
     u8 field_1F_2 : 2;
     u8 field_1F_4 : 2;

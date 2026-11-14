@@ -184,12 +184,12 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
     } else {
         sprite = sub_8020DD0(0, SPRITE_ID(7, 6), field_214_17 != 0, -1, -1, -1, -1);
         field_218 = SPRITE_ID(7, 6);
-        field_21E = (sprite->field_1E_4 + 1) << 12 | sprite->field_1C;
+        field_21E = (sprite->paletteBank + 1) << 12 | sprite->field_1C;
     }
     field_214_23 =
         field_218 == SPRITE_ID(0, 1) || field_218 == SPRITE_ID(0, 2) || field_218 == SPRITE_ID(0, 40);
     field_214_22 = 0;
-    entry = &gSpriteInfo[sprite->field_1E_0][sprite->field_16];
+    entry = &gSpriteInfo[sprite->bank][sprite->field_16];
     field_214_18 = entry->field_0_29;
     field_214_20 = entry->field_0_28;
     animation2 = -1;
@@ -266,10 +266,10 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
     u8 value;
 
     if (mode == 0) {
-        field_26C = sub_81152FC(field_334, (sprite->field_1E_0 + 1) << 12 | sprite->field_16);
+        field_26C = sub_81152FC(field_334, (sprite->bank + 1) << 12 | sprite->field_16);
         field_214_22 = 0;
     }
-    entry = &gSpriteInfo[sprite->field_1E_0][sprite->field_16];
+    entry = &gSpriteInfo[sprite->bank][sprite->field_16];
     field_214_18 = entry->field_0_29;
     field_214_20 = entry->field_0_28;
     value = byte_83A05EC[field_214_18 * 16 + field_214_20 * 8 + direction];
@@ -621,7 +621,7 @@ struct OamNode* FieldObject::method10(struct OamNode* oam, FieldObject** objects
 }
 
 void FieldObject::sub_80415A0() {
-    u8* entry = off_83A069C[sprite->field_1E_0];
+    u8* entry = off_83A069C[sprite->bank];
 
     if (entry != 0) {
         // 7-byte entries of 5- and 6-bit values, packed from the most significant bit.
@@ -663,7 +663,7 @@ void FieldObject::sub_80415A0() {
 asm_unified(".include \"asm/nonmatching/sub_804173C__11FieldObjectiUcUcUc.s\"");
 #else
 void FieldObject::sub_804173C(int set, u8 size1, u8 size2, u8 size3) {
-    u8* entry = off_83A069C[sprite->field_1E_0];
+    u8* entry = off_83A069C[sprite->bank];
 
     if (entry != 0) {
         entry += sprite->field_16 * 7;
@@ -3409,7 +3409,7 @@ void FieldObject::sub_80475A0(int slot) {
     u32 i;
 
     field_21E = (bank + 1) << 12 | value;
-    sprite->field_1E_4 = bank;
+    sprite->paletteBank = bank;
     sprite->field_1C = value;
     sprite->field_14 = 0;
     for (i = 0; i < sprite->field_13_4; i++, slot++) {
