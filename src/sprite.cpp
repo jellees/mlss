@@ -1452,26 +1452,25 @@ void oam_nodes_reset(struct OamNode* node, int count) {
     }
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/oam_nodes_init.s\"");
-#else
 // Links a pool of count nodes into a list; all nodes start unused with the highest sort key.
 void oam_nodes_init(struct OamNode* node, int count) {
     struct OamNode* previous = 0;
 
     while (count != 0) {
+        struct OamNode** link = &node->next;
+
         node->unused = true;
         node->sortKey = 0xFFFFFFFF;
         node->previous = previous;
         node->next = node + 1;
         previous = node;
         count--;
-        node++;
+        //! Possible fake match: a plain node++ gets merged with the node + 1 above by the first cse
+        //! pass, and then the unrolled loop doesn't match.
+        node = (struct OamNode*)(link + 1);
     }
     node[-1].next = 0;
 }
-#endif
 
 // Queues the upload of the sprite's tiles (field_50 to field_4C) as a background job.
 void sub_80208E0(struct Sprite* sprite) {
