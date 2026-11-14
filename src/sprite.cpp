@@ -1456,10 +1456,10 @@ void oam_nodes_reset(struct OamNode* node, int count) {
 
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/oam_nodes_link.s\"");
+asm_unified(".include \"asm/nonmatching/oam_nodes_init.s\"");
 #else
 // Links a pool of count nodes into a list; all nodes start unused with the highest sort key.
-void oam_nodes_link(struct OamNode* node, int count) {
+void oam_nodes_init(struct OamNode* node, int count) {
     struct OamNode* previous = 0;
 
     while (count != 0) {
@@ -1531,7 +1531,7 @@ void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
     }
     system->field_3C = (u32) new ((flags >> 7) ^ 1, "OAME", 0) struct OamNode[0x82];
     sub_801DFB0(flags);
-    oam_nodes_link((struct OamNode*)system->field_3C, 0x82);
+    oam_nodes_init((struct OamNode*)system->field_3C, 0x82);
 }
 
 // https://decomp.me/scratch/TODO

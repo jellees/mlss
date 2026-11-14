@@ -368,7 +368,7 @@ struct struc_3000D44 {
     u8 field_28_2 : 4;
 };
 
-// One OBJ waiting to go into OAM. A pool of 0x82 is linked by oam_nodes_link; each frame gOamNodesReset
+// One OBJ waiting to go into OAM. A pool of 0x82 is set up by oam_nodes_init; each frame gOamNodesReset
 // frees them, the sprite draw routines fill them, gOamNodesSort sorts them by sortKey and gOamNodesCopy copies
 // the used ones to gGameState.oamBuffers.
 struct OamNode {

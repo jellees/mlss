@@ -25,7 +25,7 @@ struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cur
 int oam_nodes_copy(struct OamNode* node, int dest);
 void oam_nodes_sort(struct OamNode* head, struct OamNode* end);
 void oam_nodes_reset(struct OamNode* node, int count);
-void oam_nodes_link(struct OamNode* node, int count);
+void oam_nodes_init(struct OamNode* node, int count);
 void sub_80208E0(struct Sprite* sprite);
 void sub_80208F4(void);
 void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags);
