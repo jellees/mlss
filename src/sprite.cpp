@@ -2042,3 +2042,114 @@ void* sub_80214A4(int bank, int id, int size, u8 arg3) {
     }
     return map;
 }
+
+// Finds or loads a palette in the 16 OBJ palette slots (stru_203FFB8.field_C, from field_4 on). Returns
+// 2 if it is already loaded, 1 if the requested slot is taken or the slots run out, else 0; *mask gets
+// the slots. https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8021574.s\"");
+#else
+int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, u16* mask, int slot) {
+    struct struc_203FFB8* system = &stru_203FFB8;
+    u16 free = 0;
+    u16 used = 0;
+    int start;
+    int i;
+    u16* entry;
+    int count;
+    void** paletteTable;
+    u8* paletteData;
+    u16 value;
+
+    if (palette & 0xF000) {
+        bank = (palette >> 12) - 1;
+        palette &= 0xFFF;
+    }
+    start = system->field_4;
+    for (i = start, entry = &stru_203FFB8.field_C[start]; i < 16; i++, entry++) {
+        if (*entry != 0xFFFF) {
+            if (slot == -1) {
+                if (arg2 == 0) {
+                    u16 flag = *entry & 0x8000;
+                    int entryBank = (*entry >> 10) & 0xF;
+                    int entryPalette = *entry & 0x3FF;
+
+                    if (bank == entryBank && palette == entryPalette && flag == 0) {
+                        used |= 1 << i;
+                    }
+                }
+            } else if (slot == i) {
+                return 1;
+            }
+        } else {
+            free |= 1 << i;
+        }
+    }
+    if (used != 0) {
+        *mask = used;
+        return 2;
+    }
+
+    count = off_839EF3C[bank][palette];
+    if (gGameState.field_888_1 == 1 && off_839EEE4[bank] != 0 && !stru_203FFB8.field_0_2) {
+        paletteTable = off_839EF10[bank];
+    } else {
+        paletteTable = off_839EEE4[bank];
+    }
+    paletteData = (u8*)paletteTable[palette];
+    if (slot == -1) {
+        slot = start;
+    }
+    value = (arg2 << 15) | (arg4 << 14) | (bank << 10) | palette;
+    for (i = 0; i < count; i++) {
+        u16 bit;
+
+        while (!((free >> slot) & 1)) {
+            slot++;
+            if (slot == 16) {
+                *mask = used;
+                return 1;
+            }
+        }
+        bit = 1 << slot;
+        used |= bit;
+        stru_203FFB8.field_C[slot] = value;
+        if (arg3 == 0) {
+            CpuCopy16(paletteData, (void*)(0x02000280 + slot * 32), 32);
+            gGameState.field_0 |= bit;
+        }
+        slot++;
+        paletteData += 32;
+    }
+    *mask = used;
+    return 0;
+}
+#endif
+
+// Frees every palette slot that holds the same palette as slot index; returns the freed slots.
+u16 sub_802191C(int index) {
+    struct struc_203FFB8* system = &stru_203FFB8;
+    u16* slots = system->field_C;
+    u16 result = 0;
+
+    if (slots[index] != 0xFFFF) {
+        int bank = (slots[index] >> 10) & 0xF;
+        int palette = slots[index] & 0x3FF;
+        u16 freed = 0;
+        int i;
+
+        for (i = system->field_4; i < 16; i++) {
+            if (slots[i] != 0xFFFF) {
+                int slotBank = (slots[i] >> 10) & 0xF;
+                int slotPalette = slots[i] & 0x3FF;
+
+                if (bank == slotBank && palette == slotPalette) {
+                    slots[i] = 0xFFFF;
+                    freed |= 1 << i;
+                }
+            }
+        }
+        result = freed;
+    }
+    return result;
+}
