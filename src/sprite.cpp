@@ -2201,8 +2201,81 @@ struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
     return 0;
 }
 
-// TODO: decompile
-asm_unified(".include \"asm/nonmatching/sub_8021AC8.s\"");
+// An inlined copy of sprite_heap_search (calling it doesn't match sub_8021AC8).
+static inline void* sprite_heap_search_inline(int type, u8 bank, u16 index) {
+    struct SpriteHeapBlock* block = stru_203FFB8.field_2C;
+
+    do {
+        if (block->type == type && block->bank == bank && block->index == index) {
+            return (u8*)block - (block->size - 16);
+        }
+        block = block->next;
+    } while (block != 0);
+    return 0;
+}
+
+// Sets up a sprite's tiles (a shared or new tile buffer to decompress into, unless uncompressed),
+// tile map (shared or new for animations without one) and VRAM tiles (shared or newly reserved).
+void sub_8021AC8(struct Sprite* sprite, u8* tiles, u8* animation, void* palette, int tileSize,
+                 int bufferSize, int uncompressed, int arg7) {
+    if (!uncompressed) {
+        struct DecompressJob* job = (struct DecompressJob*)sprite_heap_search_inline(
+            SPRITE_HEAP_TILES, sprite->bank, sprite->field_18);
+
+        if (job == 0) {
+            u8* buffer = (u8*)sprite_heap_alloc(SPRITE_HEAP_TILES, tileSize + 16, sprite->bank,
+                                                sprite->field_18);
+            sprite->field_48 = (struct DecompressJob*)buffer;
+            sprite->field_50 = tiles;
+            sprite->field_4C = buffer + 16;
+            sub_80208E0(sprite);
+            sprite->field_13_2 = 1;
+        } else {
+            sprite->field_48 = job;
+            sprite->field_50 = job->src;
+            sprite->field_4C = (u8*)(job + 1);
+            sprite->field_13_2 = 0;
+        }
+    } else {
+        sprite->field_4C = tiles;
+        sprite->field_48 = 0;
+        sprite->field_50 = 0;
+    }
+    if (bufferSize != 0) {
+        int offset = animation[2] | (animation[3] << 8);
+        u8* map;
+
+        if (offset == 0) {
+            map = (u8*)sprite_heap_search_inline(SPRITE_HEAP_TILE_MAP, sprite->bank, sprite->field_1A);
+            if (map == 0) {
+                map = (u8*)sprite_heap_alloc(SPRITE_HEAP_TILE_MAP, bufferSize, sprite->bank,
+                                             sprite->field_1A);
+                sprite->field_13_3 = 1;
+            } else {
+                sprite->field_13_3 = 0;
+            }
+        } else {
+            map = animation - offset;
+        }
+        sprite->field_44 = map;
+    } else if (!arg7) {
+        struct Sprite* other = sub_8021A18(sprite, 4);
+
+        if (other == 0) {
+            u16* vramTiles = &stru_203FFB8.field_8;
+
+            sprite->field_2E = *vramTiles;
+            *vramTiles += tileSize;
+        } else {
+            sprite->field_2E = other->field_2E;
+        }
+        sprite->field_44 = 0;
+    }
+    
+    sprite->field_38 = animation;
+    sprite->field_54 = palette;
+    sprite->field_58 = 0;
+}
 
 // Frees a sprite's heap tile buffer and tile map unless another sprite shares them (the sharer takes
 // them over), and gives back its VRAM tiles if they are the last ones allocated.

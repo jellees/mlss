@@ -43,7 +43,7 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, void* mask,
 u16 sub_802191C(int index);
 struct Sprite* sub_8021A18(struct Sprite* sprite, int type);
 void sub_8021AC8(struct Sprite* sprite, u8* tiles, u8* animation, void* palette, int tileSize,
-                 int bufferSize, int arg6, int arg7);
+                 int bufferSize, int uncompressed, int arg7);
 void sub_8021C24(struct Sprite* sprite);
 void* sprite_heap_alloc(int type, int size, u8 bank, u16 index);
 void sprite_heap_free(void* p);
