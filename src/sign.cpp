@@ -70,13 +70,13 @@ void Sign::update() {
             }
 
             for (i = 0; i < 4; i++) {
-                arrows[i] = sub_8020DD0(0, SPRITE_ID(7, 254), 1, -1, -1, -1, -1);
+                arrows[i] = sprite_create(0, SPRITE_ID(7, 254), 1, -1, -1, -1, -1);
                 sub_801E150(arrows[i], i, -1, 0, 0);
                 arrows[i]->xPosition = word_83A0E64[i * 2];
                 arrows[i]->yPosition = word_83A0E64[i * 2 + 1];
             }
 
-            youAreHere = sub_8020DD0(0, SPRITE_ID(7, 253), 1, -1, -1, -1, -1);
+            youAreHere = sprite_create(0, SPRITE_ID(7, 253), 1, -1, -1, -1, -1);
             sub_801E150(youAreHere, 0, -1, 0, 0);
             youAreHere->field_1F_0 = 2;
             renderer->enable();
@@ -139,7 +139,7 @@ void Sign::update() {
     }
 
     if (state >= 3 && state <= 5) {
-        sub_8021F7C();
+        sprites_update();
     }
 }
 
@@ -174,9 +174,12 @@ void Sign::sub_8051A00() {
 
 void SignRenderer::update() {
     u16* oam = gGameState.oamCursor;
-    sub_8020A78();
+
+    sprites_draw();
+
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
     oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+
     gGameState.oamCursor = oam;
 }
 

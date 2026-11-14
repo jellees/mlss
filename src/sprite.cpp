@@ -33,7 +33,7 @@ void sub_801DFB0(u8 flags) {
     byte_3000D70 = flags;
 }
 
-void sub_801E150(struct Sprite* sprite, int animation, int arg2, int arg3, int arg4) {
+void sub_801E150(struct Sprite* sprite, int animation, int arg2, SpriteCallback arg3, int arg4) {
     u8* file = sprite->field_38;
     u8* base = file - (file[0] | (file[1] << 8));
     u32 value = file[4] | (file[5] << 8);
@@ -50,7 +50,7 @@ void sub_801E150(struct Sprite* sprite, int animation, int arg2, int arg3, int a
     entry = file + (file[animation * 2 + 8] | (file[animation * 2 + 9] << 8));
     sprite->field_12_4 = 0;
     sprite->field_12_1 = 0;
-    sprite->field_5C = (void (*)(struct Sprite*, int))arg3;
+    sprite->field_5C = arg3;
     sprite->field_60 = arg4;
 
     if (arg2 == -1) {
@@ -200,7 +200,7 @@ static inline SpriteCallback getCallback(struct Sprite* sprite) {
     return sprite->field_5C;
 }
 
-void sub_801E68C(struct Sprite* sprite) {
+void sprite_update(struct Sprite* sprite) {
     SpriteCallback callback;
 
     if ((sprite->field_48 == 0 || sprite->field_48->status == 0)
@@ -281,7 +281,7 @@ void sub_801E68C(struct Sprite* sprite) {
 #define IWRAM_DIV(a, b)                                                                                \
     (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(a, b))
 
-struct OamNode* sub_801E80C(struct Sprite* sprite, struct OamNode* arg1, u8* arg2) {
+struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg2) {
     if (sprite->field_50 != 0) {
         if (sprite->field_48->status == 1) {
             int size = sprite->field_28_0 << 5;
@@ -1533,7 +1533,7 @@ void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
 
 // Builds the OAM list for the frame: gives every shown sprite its affine matrices and VRAM tiles
 // (shared with an earlier sprite that looks the same) and draws it.
-void sub_8020A78(void) {
+void sprites_draw(void) {
     struct struc_203FFB8* system = &stru_203FFB8;
     struct Sprite* sprite = system->field_30;
     u16 vram;
@@ -1616,7 +1616,7 @@ void sub_8020A78(void) {
                     sprite->field_28_10 = 0;
                 }
             }
-            oam = sub_801E80C(sprite, oam, &system->field_2);
+            oam = sprite_draw(sprite, oam, &system->field_2);
             matrix += sprite->field_10_6;
             if (sprite->field_44 != 0 && !shared) {
                 vram += sprite->field_30;
@@ -1681,8 +1681,8 @@ void sprite_remove(struct Sprite* sprite) {
 
 // Creates a sprite and adds it to the end of the sprite list. id -1 makes an empty sprite; ids and
 // palettes with bits 12-15 set select the bank (bits 12-15 minus 1) themselves.
-struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, int bufferSize,
-                           int palette) {
+struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4, int bufferSize,
+                             int palette) {
     struct Sprite* sprite;
     struct struc_203FFB8* system;
 
@@ -1819,7 +1819,7 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
     return sprite;
 }
 
-// Gives an existing sprite new graphics (see sub_8020DD0 for the parameters).
+// Gives an existing sprite new graphics (see sprite_create for the parameters).
 void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCount, int arg5,
                  int bufferSize, int palette) {
     struct SpriteInfo* info;
@@ -2489,14 +2489,14 @@ void sprite_hide(struct Sprite* sprite) {
 }
 
 // Animates all sprites; field_12_1 says what happens at the end of an animation (2: hide, 3: destroy).
-void sub_8021F7C(void) {
+void sprites_update(void) {
     struct Sprite* sprite = stru_203FFB8.field_30;
 
     while (sprite != 0) {
         struct Sprite* next = sprite->field_68;
 
         if (sprite->active) {
-            sub_801E68C(sprite);
+            sprite_update(sprite);
             if (sprite->field_12_3) {
                 if (sprite->field_12_1 == 2) {
                     sprite_hide(sprite);

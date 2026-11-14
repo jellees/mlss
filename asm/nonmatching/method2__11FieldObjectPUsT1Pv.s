@@ -53,7 +53,7 @@ method2__11FieldObjectPUsT1Pv:
 	ldrh r0, [r0, #0x00]
 	str r0, [sp, #0x008]
 	movs r0, #0x00
-	bl sub_8020DD0
+	bl sprite_create
 	adds r7, r0, #0x0
 	ldrh r1, [r4, #0x00]
 	mov r0, r8
@@ -98,7 +98,7 @@ _0804043C:
 	ldrh r0, [r5, #0x00]
 	str r0, [sp, #0x008]
 	movs r0, #0x00
-	bl sub_8020DD0
+	bl sprite_create
 	adds r7, r0, #0x0
 	ldrh r1, [r4, #0x00]
 	mov r0, r8
@@ -124,7 +124,7 @@ _080404A0:
 	str r3, [sp, #0x008]
 	movs r0, #0x00
 	adds r1, r4, #0x0
-	bl sub_8020DD0
+	bl sprite_create
 	adds r7, r0, #0x0
 	movs r1, #0x86
 	lsls r1, r1, #0x02

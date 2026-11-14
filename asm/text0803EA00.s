@@ -1037,7 +1037,7 @@ _0803F6C8:
 	ands r1, r4
 	strb r1, [r3, #0x00]
 _0803F6FC:
-	bl sub_8020A78
+	bl sprites_draw
 	movs r4, #0x00
 	movs r0, #0x80
 	lsls r0, r0, #0x02

@@ -311,7 +311,7 @@ void LoadMenu::update() {
                                     || this->entries[this->field_154[this->field_FB - 1]].field_18
                                            == i)) {
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i] =
-                                    sub_8020DD0(
+                                    sprite_create(
                                         0,
                                         this->entries[this->field_154[this->field_FB - 1]].items[i].id,
                                         1, -1, -1, -1, -1);
@@ -336,7 +336,7 @@ void LoadMenu::update() {
                             } else {
                                 sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_4C, -1);
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i] =
-                                    sub_8020DD0(5, SPRITE_ID(5, 6), 1, -1, -1, -1, -1);
+                                    sprite_create(5, SPRITE_ID(5, 6), 1, -1, -1, -1, -1);
                                 sub_801E150(this->sprites[this->field_154[this->field_FB - 1] * 2 + i],
                                             i, -1, 0, 0);
                                 sprite_show(this->sprites[this->field_154[this->field_FB - 1] * 2 + i]);
@@ -724,7 +724,7 @@ void LoadMenu::sub_8126C3C() {
 
     if (this->field_F2 == 0) {
         sub_8021574(5, PALETTE_ID(5, 3), 0, 0, 0, this->field_4C, -1);
-        this->cursor = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
+        this->cursor = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
         sub_801E150(this->cursor, 0, -1, 0, 0);
         sprite_show(this->cursor);
         this->cursor->xPosition = this->field_FA * 32 + 32;
@@ -739,7 +739,7 @@ void LoadMenu::sub_8126C3C() {
         this->cursor->field_28_13 = 0;
         this->field_F2 = 1;
     } else if (this->field_F2 == 1) {
-        this->arrows[this->field_EC] = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
+        this->arrows[this->field_EC] = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
         sub_801E150(this->arrows[this->field_EC], this->field_EC + 3, -1, 0, 0);
         sprite_show(this->arrows[this->field_EC]);
         this->arrows[this->field_EC]->xPosition = arrowX[this->field_EC];
@@ -767,7 +767,7 @@ void LoadMenu::sub_8126C3C() {
                 if (this->entries[slot].items[i].id != 0
                     && (this->entries[slot].field_18 == 2 || this->entries[slot].field_18 == i)) {
                     this->sprites[index] =
-                        sub_8020DD0(0, this->entries[slot].items[i].id, 1, -1, -1, -1, -1);
+                        sprite_create(0, this->entries[slot].items[i].id, 1, -1, -1, -1, -1);
                     sub_801E150(this->sprites[index], this->entries[slot].items[i].field_2, -1, 0, 0);
                     sub_801E150(this->sprites[index], this->entries[slot].items[i].field_2,
                                 this->entries[slot].items[i].field_3, 0, 0);
@@ -786,7 +786,7 @@ void LoadMenu::sub_8126C3C() {
                     this->sprites[index]->field_12_1 = 1;
                 } else if ((this->field_F1 >> slot) & 1) {
                     sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_4C, -1);
-                    this->sprites[index] = sub_8020DD0(5, SPRITE_ID(5, 6), 1, -1, -1, -1, -1);
+                    this->sprites[index] = sprite_create(5, SPRITE_ID(5, 6), 1, -1, -1, -1, -1);
                     sub_801E150(this->sprites[index], i, -1, 0, 0);
                     sprite_show(this->sprites[index]);
                     this->sprites[index]->xPosition = 0xBC - i * 40;
@@ -804,8 +804,8 @@ void LoadMenu::sub_8126C3C() {
                 }
             }
         }
-        sub_8021F7C();
-        sub_8020A78();
+        sprites_update();
+        sprites_draw();
         gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
         this->field_F2 = 0;
         this->field_EC = 0;
@@ -1000,14 +1000,18 @@ void LoadMenuRenderer::update() {
         if (menu->field_EE) {
             menu->sub_8127238();
         }
+
         if ((menu->field_F1 >> menu->field_FA) & 1) {
             oam = menu->sub_8127B90(oam);
         }
-        sub_8021F7C();
-        sub_8020A78();
+
+        sprites_update();
+        sprites_draw();
+
         gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
         oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
         oam = menu->sub_81270E4(oam);
+
         gGameState.oamCursor = oam;
     }
 }

@@ -2760,7 +2760,7 @@ _0802540C:
 _08025412:
 	mov r0, r10
 	bl sub_8029624__12FieldManager
-	bl sub_8021F7C
+	bl sprites_update
 	movs r0, #0x80
 	lsls r0, r0, #0x02
 	add r0, r10

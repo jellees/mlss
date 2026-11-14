@@ -698,7 +698,7 @@ void SaveMenu::sub_812936C() {
 
     sub_8021574(5, PALETTE_ID(5, 3), 0, 0, 0, this->field_60, -1);
 
-    this->cursor = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
+    this->cursor = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sub_801E150(this->cursor, 0, -1, 0, 0);
     sprite_show(this->cursor);
     this->cursor->xPosition = 0x24;
@@ -712,7 +712,7 @@ void SaveMenu::sub_812936C() {
     this->cursor->field_28_9 = 0;
     this->cursor->field_28_13 = 0;
 
-    this->field_3C = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
+    this->field_3C = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sub_801E150(this->field_3C, 1, -1, 0, 0);
     sprite_show(this->field_3C);
     this->field_3C->xPosition = 0x20;
@@ -727,7 +727,7 @@ void SaveMenu::sub_812936C() {
     this->field_3C->field_28_13 = 0;
     this->field_3C->field_12_4 = 1;
 
-    this->field_40 = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
+    this->field_40 = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sub_801E150(this->field_40, 7, -1, 0, 0);
     sprite_show(this->field_40);
     this->field_40->xPosition = 0x20;
@@ -742,7 +742,7 @@ void SaveMenu::sub_812936C() {
     this->field_40->field_28_13 = 0;
     this->field_40->field_12_4 = 1;
 
-    this->field_44 = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
+    this->field_44 = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sub_801E150(this->field_44, 8, -1, 0, 0);
     sprite_show(this->field_44);
     this->field_44->xPosition = 0x20;
@@ -764,7 +764,7 @@ void SaveMenu::sub_812936C() {
             int i;
 
             for (i = 0; i < 4; i++) {
-                this->arrows[i] = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
+                this->arrows[i] = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
                 sub_801E150(this->arrows[i], i + 2, -1, 0, 0);
                 sprite_show(this->arrows[i]);
                 this->arrows[i]->xPosition = arrowX[i];
@@ -800,7 +800,7 @@ void SaveMenu::sub_812936C() {
                     && (this->entry.field_18 == 2 || this->entry.field_18 == i)) {
                     sub_8021574(0, sprite_get_info(0, this->entry.items[i].id)->palette, 0, 0, 0,
                                 this->field_60, -1);
-                    this->fileSprites[i] = sub_8020DD0(0, this->entry.items[i].id, 1, -1, -1, -1, -1);
+                    this->fileSprites[i] = sprite_create(0, this->entry.items[i].id, 1, -1, -1, -1, -1);
                     sub_801E150(this->fileSprites[i], this->entry.items[i].field_2, -1, 0, 0);
                     sub_801E150(this->fileSprites[i], this->entry.items[i].field_2,
                                 this->entry.items[i].field_3, 0, 0);
@@ -819,7 +819,7 @@ void SaveMenu::sub_812936C() {
                     this->fileSprites[i]->field_12_1 = 1;
                 } else {
                     sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_60, -1);
-                    this->fileSprites[i] = sub_8020DD0(5, SPRITE_ID(5, 6), 0, -1, -1, -1, -1);
+                    this->fileSprites[i] = sprite_create(5, SPRITE_ID(5, 6), 0, -1, -1, -1, -1);
                     sub_801E150(this->fileSprites[i], i, -1, 0, 0);
                     sprite_show(this->fileSprites[i]);
                     this->fileSprites[i]->xPosition = 0xBC - i * 40;
@@ -847,7 +847,7 @@ void SaveMenu::sub_812936C() {
                 if (dword_3000FF8[i].id == 0
                     || (!parent->brothersTogether && !parent->field_208_6 && parent->luigiLeads != i)) {
                     sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_60, -1);
-                    this->currentSprites[i] = sub_8020DD0(5, SPRITE_ID(5, 6), 0, -1, -1, -1, -1);
+                    this->currentSprites[i] = sprite_create(5, SPRITE_ID(5, 6), 0, -1, -1, -1, -1);
                     sub_801E150(this->currentSprites[i], i, -1, 0, 0);
                     sprite_show(this->currentSprites[i]);
                     this->currentSprites[i]->xPosition = 0xBC - i * 40;
@@ -863,7 +863,7 @@ void SaveMenu::sub_812936C() {
                 } else {
                     sub_8021574(0, sprite_get_info(0, dword_3000FF8[i].id)->palette, 0, 0, 0,
                                 this->field_60, -1);
-                    this->currentSprites[i] = sub_8020DD0(0, dword_3000FF8[i].id, 1, -1, -1, -1, -1);
+                    this->currentSprites[i] = sprite_create(0, dword_3000FF8[i].id, 1, -1, -1, -1, -1);
                     sub_801E150(this->currentSprites[i], dword_3000FF8[i].field_2, -1, 0, 0);
                     sub_801E150(this->currentSprites[i], dword_3000FF8[i].field_2,
                                 dword_3000FF8[i].field_3, 0, 0);
@@ -885,8 +885,8 @@ void SaveMenu::sub_812936C() {
         }
     }
 
-    sub_8021F7C();
-    sub_8020A78();
+    sprites_update();
+    sprites_draw();
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
 }
 
@@ -1216,7 +1216,7 @@ void SaveMenu::sub_812A42C() {
 
 void SaveMenuRenderer::update() {
     SaveMenu* menu = (SaveMenu*)parentProcess;
-    u16* buf = gGameState.oamCursor;
+    u16* oam = gGameState.oamCursor;
 
     if (menu->state > 4) {
         if (menu->field_67) {
@@ -1225,14 +1225,17 @@ void SaveMenuRenderer::update() {
         if (gGameState.field_888_4 == 0) {
             //! Possible fake match: `!(x & 1)` gives different code in C++ (bool), so `== 0`.
             if ((menu->field_B0 & 1) == 0) {
-                buf = menu->sub_812A930(buf);
+                oam = menu->sub_812A930(oam);
             }
-            sub_8021F7C();
-            sub_8020A78();
+
+            sprites_update();
+            sprites_draw();
+
             gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
-            buf = gOamNodesCopy(stru_203FFB8.field_3C, buf);
-            buf = menu->sub_8129B4C(buf);
-            gGameState.oamCursor = buf;
+            oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+            oam = menu->sub_8129B4C(oam);
+
+            gGameState.oamCursor = oam;
         }
     }
 }

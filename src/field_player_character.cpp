@@ -132,7 +132,7 @@ void FieldPlayerCharacter::method8(s16 cameraX, s16 cameraY, FieldObject** objec
 void FieldPlayerCharacter::method2(u16* arg1, u16* arg2, void* arg3) {
     FieldObject::method2(arg1, arg2, arg3);
     if (field_378_0) {
-        field_36C = sub_8020DD0(0, field_370, 1, -1, -1, -1, -1);
+        field_36C = sprite_create(0, field_370, 1, -1, -1, -1, -1);
         sub_801E150(field_36C, field_37B, -1, 0, 0);
         sub_801E150(field_36C, field_37B, field_37C, 0, 0);
         sprite_restore(field_36C);
@@ -148,7 +148,7 @@ void FieldPlayerCharacter::method2(u16* arg1, u16* arg2, void* arg3) {
         field_36C->yScale = field_384;
         field_378_0 = 0;
     } else {
-        field_36C = sub_8020DD0(0, -1, 1, -1, -1, -1, -1);
+        field_36C = sprite_create(0, -1, 1, -1, -1, -1, -1);
     }
 }
 
@@ -2781,12 +2781,12 @@ void FieldPlayerShotBullet::sub_804DFE8() {
     int flag;
 
     if (!active) {
-        sprite = sub_8020DD0(0, -1, 1, -1, -1, -1, -1);
+        sprite = sprite_create(0, -1, 1, -1, -1, -1, -1);
         return;
     }
     animationSet = word_83A0C5A[type - 2];
     sub_8021574(0, PALETTE_ID(0, 4), 0, 0, 0, &buffer, 12);
-    sprite = sub_8020DD0(0, animationSet, 1, -1, -1, -1, -1);
+    sprite = sprite_create(0, animationSet, 1, -1, -1, -1, -1);
     value = byte_83A05EC[direction + 32];
     animation = value & 0x7F;
     flag = value >> 7;

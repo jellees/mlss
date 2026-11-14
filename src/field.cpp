@@ -420,7 +420,7 @@ void FieldManager::update() {
 
         case 10:
             sub_80265EC(field_126);
-            sub_8020A78();
+            sprites_draw();
             state = 11;
             break;
 
@@ -1278,7 +1278,7 @@ void FieldManager::update_field_8023DD4() {
                                 field_246_2 == 3 ? field_10B - 1 : field_10B);
         }
         sub_8029624();
-        sub_8021F7C();
+        sprites_update();
         if (leader->field_350_0 || leader->field_350_4) {
             field_11E = field_D0->field_0;
         }
@@ -1759,7 +1759,7 @@ void FieldManager::sub_80265EC(u16 arg1) {
     int i;
 
     for (i = 0; i < 4; i++) {
-        field_1C->field_25C[i].sprite = sub_8020DD0(0, SPRITE_ID(7, 9), 1, -1, -1, -1, -1);
+        field_1C->field_25C[i].sprite = sprite_create(0, SPRITE_ID(7, 9), 1, -1, -1, -1, -1);
         sub_801E150(field_1C->field_25C[i].sprite, 0, -1, 0, 0);
     }
 

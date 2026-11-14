@@ -174,15 +174,15 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
     field_2AC = arg2;
     field_334 = arg3;
     if (field_298_0) {
-        sprite = sub_8020DD0(0, field_218, field_214_17 != 0, -1, -1, -1, field_21E);
+        sprite = sprite_create(0, field_218, field_214_17 != 0, -1, -1, -1, field_21E);
         field_26C = sub_81152FC(arg3, field_218);
     } else if (field_222 != 0xFF) {
         field_218 = arg1[field_222];
         field_21E = arg2[field_223];
-        sprite = sub_8020DD0(0, field_218, field_214_17 != 0, -1, -1, -1, field_21E);
+        sprite = sprite_create(0, field_218, field_214_17 != 0, -1, -1, -1, field_21E);
         field_26C = sub_81152FC(arg3, field_218);
     } else {
-        sprite = sub_8020DD0(0, SPRITE_ID(7, 6), field_214_17 != 0, -1, -1, -1, -1);
+        sprite = sprite_create(0, SPRITE_ID(7, 6), field_214_17 != 0, -1, -1, -1, -1);
         field_218 = SPRITE_ID(7, 6);
         field_21E = (sprite->paletteBank + 1) << 12 | sprite->field_1C;
     }

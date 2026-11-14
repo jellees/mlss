@@ -427,7 +427,7 @@ _08050BFC:
 	movs r0, #0x00
 	movs r2, #0x00
 	adds r3, r4, #0x0
-	bl sub_8020DD0
+	bl sprite_create
 	movs r3, #0xD3
 	lsls r3, r3, #0x02
 	adds r5, r6, r3
@@ -532,7 +532,7 @@ _08050CCA:
 	adds r1, r2, #0x0
 	movs r2, #0x00
 	adds r3, r4, #0x0
-	bl sub_8020DD0
+	bl sprite_create
 	adds r5, r0, #0x0
 	ldr r1, _08050D60 @ =0x00000216
 	adds r2, r6, r1

@@ -29,18 +29,18 @@ CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) 
     sub_8020994(0, 0, 0, 0x80);
     stru_203FFB8.field_0_2 = 1;
 
-    mario = sub_8020DD0(2, SPRITE_ID(0, 1), 1, -1, -1, -1, -1);
+    mario = sprite_create(2, SPRITE_ID(0, 1), 1, -1, -1, -1, -1);
     sub_801E150(mario, 12, -1, 0, 0);
     mario->xPosition = 80;
     mario->yPosition = -35;
     mario->field_11_6 = 1;
 
-    luigi = sub_8020DD0(2, SPRITE_ID(0, 2), 1, -1, -1, -1, -1);
+    luigi = sprite_create(2, SPRITE_ID(0, 2), 1, -1, -1, -1, -1);
     sub_801E150(luigi, 12, -1, 0, 0);
     luigi->xPosition = 160;
     luigi->yPosition = -35;
 
-    alphaDreamLogo = sub_8020DD0(7, SPRITE_ID(7, 335), 1, -1, -1, -1, -1);
+    alphaDreamLogo = sprite_create(7, SPRITE_ID(7, 335), 1, -1, -1, -1, -1);
     sub_801E150(alphaDreamLogo, 0, -1, 0, 0);
     alphaDreamLogo->xPosition = 120;
     alphaDreamLogo->yPosition = 74;
@@ -228,14 +228,17 @@ void CompanyIntro::update() {
         luigi->yPosition = yPosLuigi / 256;
     }
 
-    sub_8021F7C();
+    sprites_update();
 }
 
 inline void CompanyIntroRenderer::update() {
     u16* oam = gGameState.oamCursor;
-    sub_8020A78();
+
+    sprites_draw();
+
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
     oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+
     gGameState.oamCursor = oam;
 }
 
@@ -288,7 +291,7 @@ TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(prio
     sub_8020994(0, 0, 0, 0);
 
     for (i = 0; i < 9; i++) {
-        sprites[i] = sub_8020DD0(0, word_83A74C0[i * 2], word_83A74C0[i * 2 + 1], -1, -1, -1, -1);
+        sprites[i] = sprite_create(0, word_83A74C0[i * 2], word_83A74C0[i * 2 + 1], -1, -1, -1, -1);
         sub_801E150(sprites[i], 0, -1, 0, 0);
     }
 
@@ -527,7 +530,7 @@ void title_screen_scroll_background_hblank(void) {
 void TitleScreen::update() {
     int i, j;
 
-    sub_8021F7C();
+    sprites_update();
 
     switch (state) {
         case TS_STATE_FADE_IN:
@@ -1038,7 +1041,7 @@ void MarioBrosScoreVisual::update() {
     TitleScreen* titleScreen = (TitleScreen*)parentProcess;
     u16* oam;
 
-    sub_8020A78();
+    sprites_draw();
     oam = gGameState.oamCursor;
 
     if (titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_21 == 3
@@ -1075,6 +1078,7 @@ void MarioBrosScoreVisual::update() {
 
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
     oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+
     gGameState.oamCursor = oam;
 }
 

@@ -18,7 +18,7 @@ class SaveClearRenderer : public Process {
     }
     virtual void update() {
         u16* oam = gGameState.oamCursor;
-        sub_8020A78();
+        sprites_draw();
         gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
         oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
         gGameState.oamCursor = oam;
@@ -301,7 +301,7 @@ OptionsMenu::OptionsMenu(u8 priority, char* label, int a4) : Process(priority, l
 
     sub_8020994(0x3000, 8, 0, 0x80u);
 
-    this->sprite = sub_8020DD0(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
+    this->sprite = sprite_create(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
     sub_801E150(this->sprite, 0, -1, 0, 0);
     sprite_show(this->sprite);
     this->sprite->xPosition = 40;
@@ -597,7 +597,7 @@ void OptionsMenu::update() {
             break;
     }
 
-    sub_8021F7C();
+    sprites_update();
 }
 
 int OptionsMenu::save() {
@@ -781,7 +781,7 @@ void OptionsRenderer::update() {
         }
     }
 
-    sub_8020A78();
+    sprites_draw();
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
     oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
 
@@ -881,7 +881,7 @@ SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, l
 
     sub_8020994(0x2000, 8, 0, 0);
 
-    this->sprite = sub_8020DD0(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
+    this->sprite = sprite_create(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
     sub_801E150(this->sprite, 0, -1, 0, 0);
     sprite_show(this->sprite);
     this->sprite->xPosition = 140;
@@ -1142,7 +1142,7 @@ void SaveClearScreen::update() {
             break;
     }
 
-    sub_8021F7C();
+    sprites_update();
 }
 
 MarioBrosSaveError::MarioBrosSaveError(u8 priority, char* label) : Process(priority, label) {

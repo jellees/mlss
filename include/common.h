@@ -157,7 +157,7 @@ struct Coldef {
 
 struct Sprite;
 typedef void (*SpriteCallback)(struct Sprite*, int);
-// Sprite routines selected per frame by sub_801E80C (dword_3000D58)
+// Sprite routines selected per frame by sprite_draw (dword_3000D58)
 typedef struct OamNode* (*SpriteDrawRoutine)(struct OamNode*, struct Sprite*, u8**, int, u8*, s8*, int,
                                              u8*);
 
@@ -767,7 +767,7 @@ extern u8* off_839EC80;
 extern u16 word_839F5A4[]; // Up, Up, Down, Down, Left, Right, Left, Right, B, A
 extern u8 byte_839F5B8[];
 extern struct SpriteInfo* gSpriteInfo[];
-// Per sprite bank, indexed by the fields of SpriteInfo (sub_8020DD0)
+// Per sprite bank, indexed by the fields of SpriteInfo (sprite_create)
 extern u8** gSpriteAnimations[];
 extern u32* gSpriteTiles[];
 extern void** gSpritePalettes[];
