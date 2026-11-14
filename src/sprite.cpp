@@ -2419,7 +2419,7 @@ u16 sub_8021DD8(int bank, int palette) {
             }
         }
     }
-    
+
     return freed;
 }
 
