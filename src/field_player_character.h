@@ -100,7 +100,7 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_35A_1 : 1;
     u16 field_35A_2 : 1;
     u16 field_35A_3 : 8;
-    u16 field_35A_11 : 1;
+    u16 isMini : 1;
     u16 field_35A_12 : 1;
     u16 field_35A_13 : 1;
     u16 field_35A_14 : 1;
@@ -144,13 +144,13 @@ class FieldPlayerCharacter : public FieldObject {
     void sub_80490CC(u8 arg);                                     // 0x080490CC
     void sub_8049224();                                           // 0x08049224
     void sub_80492DC();                                           // 0x080492DC
-    void sub_8049370(bool arg);                                   // 0x08049370
-    void sub_8049430();                                           // 0x08049430
-    void sub_80494D4();                                           // 0x080494D4
-    void sub_804955C(int type);                                   // 0x0804955C
-    void sub_80496B4();                                           // 0x080496B4
+    void startHammer(bool arg);                                   // 0x08049370
+    void startHandPower();                                           // 0x08049430
+    void stopHandPower();                                           // 0x080494D4
+    void showHandPowerSprite(int type);                                   // 0x0804955C
+    void showBarrelBreakingSprite();                                           // 0x080496B4
     void sub_80497A8();                                           // 0x080497A8
-    void sub_80498B0();                                           // 0x080498B0 (uncalled)
+    void showExclamationBalloon();                                           // 0x080498B0 (uncalled)
     void sub_80499B8();                                           // 0x080499B8
     void sub_8049AB4(int mode, int animation);                    // 0x08049AB4
     void sub_8049BD8(int value);                                  // 0x08049BD8
@@ -191,7 +191,7 @@ class FieldPlayerCharacter : public FieldObject {
         if (state >= 5 && state <= 9) {
             sub_804FCD4();
         } else if (state >= 10 && state <= 12) {
-            sub_80494D4();
+            stopHandPower();
         }
         field_214_0 = savedField;
         direction = savedDirection;
@@ -204,7 +204,7 @@ class FieldPlayerCharacter : public FieldObject {
         if (state >= 5 && state <= 9) {
             sub_804FCD4();
         } else if (state >= 10 && state <= 12) {
-            sub_80494D4();
+            stopHandPower();
         }
         field_214_0 = savedField;
         direction = savedDirection;

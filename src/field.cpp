@@ -3301,7 +3301,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             leader->sprite->xScale = leader->sprite->yScale = 0x100;
             leader->field_212_6 = 0;
             leader->field_23B = 0;
-            leader->field_35A_11 = 0;
+            leader->isMini = false;
             leader->field_35A_12 = 0;
             leader->field_35A_13 = 0;
             leader->field_35A_14 = 0;
@@ -3341,7 +3341,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
                 follower->field_368->field_14 = follower->field_368->field_12;
                 follower->field_368->field_12 = -1;
             }
-            follower->field_35A_11 = 0;
+            follower->isMini = false;
             follower->field_35A_12 = 0;
             follower->field_35A_13 = 0;
             follower->field_35A_14 = 0;
@@ -3375,7 +3375,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             mario->field_240 = speed;
             mario->field_23E = speed;
             mario->field_260 = speed;
-            mario->field_35A_11 = 0;
+            mario->isMini = false;
             mario->field_35A_13 = 1;
             mario->sub_8049000(0x102E);
             if (shotBulletIndex == 0) {
@@ -3428,7 +3428,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             mario->field_240 = speed;
             mario->field_23E = speed;
             mario->field_260 = speed;
-            mario->field_35A_11 = 1;
+            mario->isMini = true;
             mario->field_35A_13 = 0;
             mario->sub_8049000(0x1028);
             {
@@ -3499,7 +3499,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
                     data->field_0 = 6;
                 }
             }
-            mario->field_35A_11 = 0;
+            mario->isMini = false;
             mario->field_35A_13 = 0;
             if (brothersTogether) {
                 speed = 0x100 >> field_FA_10;
@@ -3553,7 +3553,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
                     data->field_0 = 9;
                 }
             }
-            mario->field_35A_11 = 0;
+            mario->isMini = false;
             mario->field_35A_13 = 0;
             if (brothersTogether) {
                 speed = 0x100 >> field_FA_10;
@@ -3640,14 +3640,14 @@ void FieldManager::sub_802A608() {
         return;
     }
 
-    if (!leader->field_35A_11 && !leader->field_35A_12 && !leader->field_35A_13 && !leader->field_35A_14
+    if (!leader->isMini && !leader->field_35A_12 && !leader->field_35A_13 && !leader->field_35A_14
         && leader->state == 0 && get_3000FF4_Field_E(leader) <= 1) {
         leader->sub_804FD3C();
     } else if (leader->field_35A_2) {
         leader->sub_80492DC();
     }
 
-    if (!follower->field_35A_11 && !follower->field_35A_12 && !follower->field_35A_13
+    if (!follower->isMini && !follower->field_35A_12 && !follower->field_35A_13
         && !follower->field_35A_14 && follower->state == 0 && get_3000FF4_Field_E(follower) <= 1) {
         follower->sub_804FD3C();
     } else if (follower->field_35A_2) {
@@ -3773,7 +3773,7 @@ void FieldManager::sub_802A740() {
             sub_802B654(leader);
         }
 
-        if (leader->field_35A_11 && leader->state <= 4) {
+        if (leader->isMini && leader->state <= 4) {
             int result = sub_80261C0(leader);
             if (result != -1) {
                 if (leader->field_36C->hidden || leader->field_36C->field_16 != 0x54) {
@@ -4417,7 +4417,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
                 player->startAirborne(player->defaultJumpVelocity, player->defaultGravity, -1);
                 player->state = FIELD_OBJECT_STATE_RISING;
                 if (player->field_54 == 0) {
-                    sound = player->field_35A_11 ? 0x2F : 0x2B;
+                    sound = player->isMini ? 0x2F : 0x2B;
                 } else {
                     sound = 0x2B;
                 }
@@ -4426,13 +4426,13 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
             break;
         case 1:
             player->field_239 = player->sprite->field_20 = field_FA_11;
-            player->sub_8049370(field_FA_10);
+            player->startHammer(field_FA_10);
             break;
         case 2:
             player->field_239 = player->sprite->field_20 = field_FA_11;
-            player->sub_8049430();
+            player->startHandPower();
             break;
-        case 8:
+        case 8: // Luigi comes up from underground.
             player->field_239 = player->sprite->field_20 = field_FA_11;
             if (player->field_33E != -1 && objects[player->field_33E]->field_20C_19 == 4) {
                 sub_80346FC(this, player);
@@ -4440,11 +4440,11 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
                 sub_8033B98(this, player);
             }
             break;
-        case 10:
+        case 10: // Luigi breaks the barrel.
             player->field_239 = player->sprite->field_20 = field_FA_11;
             sub_8034870(this, player);
             break;
-        case 13:
+        case 13: // Plays buzzer sound.
             sub_8029878();
             break;
     }
@@ -4484,7 +4484,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 hit = player->sub_804D734(0, objects, field_10B);
             }
             if (player->field_353_2 || hit || player->sub_804DBD0(0)) {
-                if (player->field_35A_11) {
+                if (player->isMini) {
                     if (player->field_353_2) {
                         if (player->sprite->field_23 == 4) {
                             player->state = 9;
@@ -4537,7 +4537,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             if (player->state != 5) {
                 int animation = player->sprite->field_21;
 
-                if (player->field_35A_11) {
+                if (player->isMini) {
                     if (player->sprite->field_23 == 3) {
                         animation += 10;
                     } else {
@@ -4590,7 +4590,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             player->sub_804FB64(objects, 0, 0);
             if (!(field_D0->field_0 & player->field_368->field_4) || player->airFrames != -1) {
                 if (player->airFrames != -1 || player->field_355 < 60) {
-                    player->sub_80494D4();
+                    player->stopHandPower();
                     player->field_388->field_350_14 = 0;
                 } else {
                     stop_sfx_80195A8(player->field_54 == 0 ? 0x158 : 0x156);
@@ -4622,7 +4622,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 sub_801E150(player->field_36C, 6, 0, 0, 0);
             }
             if (player->field_355 != 0 && --player->field_355 == 0) {
-                player->sub_80494D4();
+                player->stopHandPower();
                 player->field_388->field_350_14 = 0;
             }
             break;

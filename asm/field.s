@@ -713,7 +713,7 @@ _0802DB3C:
 	movs r0, #0x01
 	ands r1, r0
 	adds r0, r2, #0x0
-	bl sub_8049370__20FieldPlayerCharacterb
+	bl startHammer__20FieldPlayerCharacterb
 	b _0802DBEE
 _0802DB50:
 	ldr r1, _0802DB88 @ =0x00000246
@@ -787,7 +787,7 @@ _0802DBE0:
 	b _0802DBEE
 _0802DBE8:
 	adds r0, r2, #0x0
-	bl sub_8049430__20FieldPlayerCharacter
+	bl startHandPower__20FieldPlayerCharacter
 _0802DBEE:
 	movs r2, #0x80
 	lsls r2, r2, #0x02
@@ -10176,7 +10176,7 @@ _080348E4:
 	movs r2, #0x75
 	bl jumpToHeight__11FieldObjectiii
 	adds r0, r5, #0x0
-	bl sub_80496B4__20FieldPlayerCharacter
+	bl showBarrelBreakingSprite__20FieldPlayerCharacter
 	movs r3, #0xDB
 	lsls r3, r3, #0x02
 	adds r0, r5, r3
@@ -12064,7 +12064,7 @@ sub_8036E14:
 	strb r0, [r1, #0x00]
 	ldr r0, [r6, #0x00]
 	movs r1, #0x02
-	bl sub_804955C__20FieldPlayerCharacteri
+	bl showHandPowerSprite__20FieldPlayerCharacteri
 	ldr r1, _08036F68 @ =0x0000026E
 	adds r0, r5, r1
 	mov r2, r9
@@ -12878,7 +12878,7 @@ sub_8038140:
 	strb r0, [r1, #0x00]
 	ldr r0, [r5, #0x00]
 	movs r1, #0x02
-	bl sub_804955C__20FieldPlayerCharacteri
+	bl showHandPowerSprite__20FieldPlayerCharacteri
 	ldr r0, _080382B8 @ =0x0000026A
 	adds r1, r6, r0
 	ldrb r0, [r1, #0x00]
@@ -14512,7 +14512,7 @@ sub_8039A00:
 	strb r0, [r1, #0x00]
 	ldr r0, [r6, #0x00]
 	movs r1, #0x02
-	bl sub_804955C__20FieldPlayerCharacteri
+	bl showHandPowerSprite__20FieldPlayerCharacteri
 	ldr r3, _08039B48 @ =0x0000026E
 	adds r0, r5, r3
 	mov r1, r9
@@ -14673,7 +14673,7 @@ sub_8039B5C:
 	strb r0, [r1, #0x00]
 	ldr r0, [r6, #0x00]
 	movs r1, #0x02
-	bl sub_804955C__20FieldPlayerCharacteri
+	bl showHandPowerSprite__20FieldPlayerCharacteri
 	ldr r1, _08039C90 @ =0x0000026E
 	adds r0, r5, r1
 	mov r3, r8
@@ -15131,7 +15131,7 @@ _0803A482:
 	strb r0, [r1, #0x00]
 	ldr r0, [r7, #0x00]
 	movs r1, #0x02
-	bl sub_804955C__20FieldPlayerCharacteri
+	bl showHandPowerSprite__20FieldPlayerCharacteri
 	ldr r0, _0803A574 @ =0x0000026E
 	adds r1, r6, r0
 	movs r0, #0x00
@@ -16671,7 +16671,7 @@ _0803C656:
 	cmp r0, #0x02
 	bhi _0803C668
 	adds r0, r1, #0x0
-	bl sub_80494D4__20FieldPlayerCharacter
+	bl stopHandPower__20FieldPlayerCharacter
 _0803C668:
 	pop {r0}
 	bx r0
@@ -18105,7 +18105,7 @@ _0803DDC2:
 	bl _call_via_r2
 	strb r6, [r7, #0x00]
 	adds r0, r4, #0x0
-	bl sub_80496B4__20FieldPlayerCharacter
+	bl showBarrelBreakingSprite__20FieldPlayerCharacter
 	movs r1, #0xDB
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
@@ -18199,7 +18199,7 @@ sub_803DE2C:
 	ands r0, r1
 	str r0, [r2, #0x00]
 	ldr r0, [r5, #0x00]
-	bl sub_80496B4__20FieldPlayerCharacter
+	bl showBarrelBreakingSprite__20FieldPlayerCharacter
 	ldr r0, [r5, #0x00]
 	movs r1, #0xDB
 	lsls r1, r1, #0x02

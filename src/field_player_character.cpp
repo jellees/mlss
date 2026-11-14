@@ -425,7 +425,7 @@ void FieldPlayerCharacter::sub_80490CC(u8 arg) {
         if (airFrames >= 0) {
             if (arg != 0 && !field_2B5_0 && !field_2B5_3) {
                 state = 4;
-                sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x103C : 0x103B) : 0x1052);
+                sub_8049000(field_54 == 0 ? (isMini ? 0x103C : 0x103B) : 0x1052);
                 if (field_214_0 != 4) {
                     field_214_0 = 5;
                 }
@@ -440,7 +440,7 @@ void FieldPlayerCharacter::sub_80490CC(u8 arg) {
             state = 0;
         }
         if (arg != 0 && !field_2B5_0 && !field_2B5_3 && previousState == 4 && state != 4) {
-            sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1028 : 0x1001) : 0x1002);
+            sub_8049000(field_54 == 0 ? (isMini ? 0x1028 : 0x1001) : 0x1002);
             field_214_0 = 3;
         }
     }
@@ -449,7 +449,7 @@ void FieldPlayerCharacter::sub_80490CC(u8 arg) {
 void FieldPlayerCharacter::sub_8049224() {
     field_214_0 = 4;
     if (state != 4) {
-        sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x103C : 0x103B) : 0x1052);
+        sub_8049000(field_54 == 0 ? (isMini ? 0x103C : 0x103B) : 0x1052);
     } else if (sprite->field_12_4) {
         sub_8040804(true, -1, -1);
     }
@@ -463,14 +463,14 @@ void FieldPlayerCharacter::sub_80492DC() {
     if ((field_54 == 0 && field_218 == SPRITE_ID(0, 62))
         || (field_54 == 1 && field_218 == SPRITE_ID(0, 83))) {
         field_214_0 = 3;
-        sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1028 : 0x1001) : 0x1002);
+        sub_8049000(field_54 == 0 ? (isMini ? 0x1028 : 0x1001) : 0x1002);
     }
     field_35A_2 = 0;
 }
 
-void FieldPlayerCharacter::sub_8049370(bool arg) {
+void FieldPlayerCharacter::startHammer(bool arg) {
     field_214_0 = 4;
-    sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1029 : 0x1025) : 0x103F);
+    sub_8049000(field_54 == 0 ? (isMini ? 0x1029 : 0x1025) : 0x103F);
     sprite->field_12_1 = 1;
     if (arg == 0) {
         play_sfx_80195B4(0x3C, -1);
@@ -483,26 +483,26 @@ void FieldPlayerCharacter::sub_8049370(bool arg) {
     field_353_2 = 0;
 }
 
-void FieldPlayerCharacter::sub_8049430() {
+void FieldPlayerCharacter::startHandPower() {
     field_214_0 = 4;
-    sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x102A : 0x1026) : 0x1040);
-    sub_804955C(field_368->field_0 == 11);
+    sub_8049000(field_54 == 0 ? (isMini ? 0x102A : 0x1026) : 0x1040);
+    showHandPowerSprite(field_368->field_0 == 11 ? 1 : 0);
     play_sfx_80195B4(field_54 == 0 ? 0x157 : 0x87, -1);
     state = 10;
     field_355 = 0;
     field_358_12 = 0;
 }
 
-void FieldPlayerCharacter::sub_80494D4() {
+void FieldPlayerCharacter::stopHandPower() {
     field_214_0 = 3;
     sprite_remove(field_36C);
-    sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1028 : 0x1001) : 0x1002);
+    sub_8049000(field_54 == 0 ? (isMini ? 0x1028 : 0x1001) : 0x1002);
     stop_sfx_80195A8(field_54 == 0 ? 0x157 : 0x87);
     stop_sfx_80195A8(field_54 == 0 ? 0x158 : 0x156);
     state = 0;
 }
 
-void FieldPlayerCharacter::sub_804955C(int type) {
+void FieldPlayerCharacter::showHandPowerSprite(int type) {
     s8(*offsets)[3];
 
     field_370 = field_54 == 0 ? SPRITE_ID(0, 89) : SPRITE_ID(0, 90);
@@ -523,7 +523,7 @@ void FieldPlayerCharacter::sub_804955C(int type) {
     field_36C->field_12_1 = 0;
 }
 
-void FieldPlayerCharacter::sub_80496B4() {
+void FieldPlayerCharacter::showBarrelBreakingSprite() { // Show barrel breaking
     field_370 = SPRITE_ID(0, 69);
     sub_80210A8(field_36C, 0, SPRITE_ID(0, 69), 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 1, -1, 0, 0);
@@ -541,7 +541,7 @@ void FieldPlayerCharacter::sub_80496B4() {
     field_36C->field_12_1 = 2;
 }
 
-void FieldPlayerCharacter::sub_80497A8() {
+void FieldPlayerCharacter::sub_80497A8() { // ! balloon
     field_370 = SPRITE_ID(0, 84);
     sub_80210A8(field_36C, 0, SPRITE_ID(0, 84), 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 0, -1, 0, 0);
@@ -559,7 +559,7 @@ void FieldPlayerCharacter::sub_80497A8() {
     field_36C->field_12_1 = 0;
 }
 
-void FieldPlayerCharacter::sub_80498B0() {
+void FieldPlayerCharacter::showExclamationBalloon() {
     field_370 = SPRITE_ID(7, 4);
     sub_80210A8(field_36C, 0, field_370, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 0, -1, 0, 0);
@@ -577,7 +577,7 @@ void FieldPlayerCharacter::sub_80498B0() {
     field_36C->field_12_1 = 0;
 }
 
-void FieldPlayerCharacter::sub_80499B8() {
+void FieldPlayerCharacter::sub_80499B8() { // show bean star pieces
     field_370 = SPRITE_ID(7, 11);
     sub_80210A8(field_36C, 2, field_370, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 2, -1, 0, 0);
@@ -612,7 +612,7 @@ void FieldPlayerCharacter::sub_8049AB4(int mode, int animation) {
             FieldObject::method3();
             field_356 = field_218;
             field_358_0 = direction;
-            sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x103D : 0x1032) : 0x104B);
+            sub_8049000(field_54 == 0 ? (isMini ? 0x103D : 0x1032) : 0x104B);
             break;
     }
 }
@@ -2317,7 +2317,7 @@ settle:
 #endif
 
 bool FieldPlayerCharacter::sub_804D0EC() {
-    if (field_54 == 0 && field_35A_11) {
+    if (field_54 == 0 && isMini) {
         if (get_coldef_ptr_by_xz(field_290, previousX / 4096, previousY / 4096)->floorType == 3) {
             return TRUE;
         }
@@ -2510,12 +2510,12 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
     int bottom;
     int bottom2;
 
-    if (mode != 1 && !(field_35A_11 && sprite->field_23 > 2 && sprite->field_23 <= 4)
+    if (mode != 1 && !(isMini && sprite->field_23 > 2 && sprite->field_23 <= 4)
         && !(sprite->field_23 == 3 || sprite->field_23 == 4)) {
         return FALSE;
     }
     if (mode == 0) {
-        if (field_35A_11) {
+        if (isMini) {
             switch (sprite->field_23) {
                 case 3:
                     high = 0x1800;
@@ -2538,7 +2538,7 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
                     break;
             }
         }
-    } else if (field_35A_11) {
+    } else if (isMini) {
         high = 0x1000;
         low = 0x100;
     } else {
@@ -2627,13 +2627,13 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
     int ceiling;
     int objectTop;
 
-    if (mode != 1 && !(field_35A_11 && sprite->field_23 > 2 && sprite->field_23 <= 4)
+    if (mode != 1 && !(isMini && sprite->field_23 > 2 && sprite->field_23 <= 4)
         && !(sprite->field_23 == 3 || sprite->field_23 == 4)) {
         return FALSE;
     }
     offsets = word_83A0B88[mode][direction];
     if (mode == 0) {
-        if (field_35A_11) {
+        if (isMini) {
             switch (sprite->field_23) {
                 case 3:
                     high = 0x1800;
@@ -2656,7 +2656,7 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
                     break;
             }
         }
-    } else if (field_35A_11) {
+    } else if (isMini) {
         high = 0x1000;
         low = 0x100;
     } else {
@@ -2699,7 +2699,7 @@ inline void FieldPlayerCharacter::sub_804FD3C() {
 
 inline void FieldPlayerCharacter::sub_804FCD4() {
     field_214_0 = 3;
-    sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1028 : 0x1001) : 0x1002);
+    sub_8049000(field_54 == 0 ? (isMini ? 0x1028 : 0x1001) : 0x1002);
     state = 0;
     field_212_6 = 0;
 }
