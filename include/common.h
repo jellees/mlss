@@ -240,8 +240,8 @@ struct Sprite {
     u8* field_58;
     SpriteCallback field_5C;
     int field_60;
-    u8 pad64[0x4];
-    struct Sprite* field_68; // Next sprite in stru_203FFB8.field_30
+    struct Sprite* field_64; // Previous sprite in stru_203FFB8's list
+    struct Sprite* field_68; // Next sprite in stru_203FFB8's list
 };
 
 struct struc_203FFF8 {
@@ -414,8 +414,8 @@ struct struc_203FFB8 {
     u16 field_A;
     u16 field_C[16];
     struct struc_203FFA8* field_2C;
-    struct Sprite* field_30; // List of sprites (linked by Sprite::field_68)
-    u8 pad34[0x4];
+    struct Sprite* field_30; // First sprite of the list (linked by Sprite::field_64/field_68)
+    struct Sprite* field_34; // Last sprite of the list
     struct struc_11* field_38;
     u32 field_3C; // Pool of 0x82 OAM sort nodes (sub_8020994)
 };

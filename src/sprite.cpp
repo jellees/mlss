@@ -1645,3 +1645,38 @@ void sprite_show_8020CBC(struct Sprite* sprite) {
         }
     }
 }
+
+// Hides a sprite: frees its palette slots and removes it from the sprite list.
+void sub_8020D40(struct Sprite* sprite) {
+    struct struc_203FFB8* system;
+
+    if (!sprite->field_12_5) {
+        sprite->field_12_5 = 1;
+        if (sub_8021A18(sprite, 2) == 0) {
+            u16* slot = stru_203FFB8.field_C;
+            int mask = sprite->field_14;
+
+            while (mask != 0) {
+                if ((*slot & 0x4000) && (mask & 1)) {
+                    *slot = 0xFFFF;
+                }
+                slot++;
+                mask >>= 1;
+            }
+        }
+        system = &stru_203FFB8;
+        if (sprite->field_64 != 0) {
+            sprite->field_64->field_68 = sprite->field_68;
+        } else {
+            system->field_30 = sprite->field_68;
+        }
+        if (sprite->field_68 != 0) {
+            sprite->field_68->field_64 = sprite->field_64;
+        } else {
+            system->field_34 = sprite->field_64;
+        }
+        sprite->field_68 = 0;
+        sprite->field_64 = 0;
+        system->field_1--;
+    }
+}
