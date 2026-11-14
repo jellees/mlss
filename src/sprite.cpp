@@ -2204,11 +2204,38 @@ struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
 // TODO: decompile
 asm_unified(".include \"asm/nonmatching/sub_8021AC8.s\"");
 
-// TODO: decompile
-asm_unified(".include \"asm/nonmatching/sub_8021C24.s\"");
+// Frees a sprite's heap tile buffer and tile map unless another sprite shares them (the sharer takes
+// them over), and gives back its VRAM tiles if they are the last ones allocated.
+void sub_8021C24(struct Sprite* sprite) {
+    struct Sprite* other;
 
-// Allocates size bytes in the sprite heap (first fit, splitting the block if the rest can hold a
-// header) and clears the first field of tile buffers and tile maps.
+    if (sprite->field_48 != 0 && sprite->field_13_2) {
+        other = sub_8021A18(sprite, 0);
+        if (other == 0) {
+            sprite_heap_free(sprite->field_48);
+        } else {
+            other->field_13_2 = 1;
+        }
+    }
+
+    if (sprite->field_44 != 0) {
+        if ((u32)sprite->field_44 <= 0x07FFFFFF && sprite->field_13_3) {
+            other = sub_8021A18(sprite, 1);
+            if (other == 0) {
+                sprite_heap_free(sprite->field_44);
+            } else {
+                other->field_13_3 = 1;
+            }
+        }
+    } else {
+        struct struc_203FFB8* system = &stru_203FFB8;
+
+        if (sprite->field_2E + sprite->field_30 == system->field_8 && sub_8021A18(sprite, 3) == 0) {
+            system->field_8 -= sprite->field_30;
+        }
+    }
+}
+
 void* sprite_heap_alloc(int type, int size, u8 bank, u16 index) {
     struct SpriteHeapBlock* block = stru_203FFB8.field_2C;
 

@@ -185,7 +185,8 @@ struct Sprite {
     u32 hidden : 1;
     u32 field_12_6 : 2;
     u32 field_13_0 : 2;
-    u32 field_13_2 : 2;
+    u32 field_13_2 : 1; // field_48 is a sprite heap tile buffer
+    u32 field_13_3 : 1; // field_44 is a sprite heap tile map
     u32 field_13_4 : 4;
     u16 field_14;
     u16 field_16;
