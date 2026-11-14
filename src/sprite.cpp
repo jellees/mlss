@@ -7,18 +7,21 @@
 #define ROUTINE_SIZE(name) ((u32)(name##_end - name))
 
 // Copies the ARM routines and the sprite routines selected by flags (bit i = routine i) to IWRAM.
-void sub_801DFB0(u8 flags) {
+static void sprite_routines_copy(u8 flags) {
     int i;
 
-    gOamNodesSort = (void (*)(int, int))alloc_heap_8018CEC(
+    gOamNodesSort = (void (*)(struct OamNode*, struct OamNode*))alloc_heap_8018CEC(
         0, ROUTINE_SIZE(arm_8000850) + ROUTINE_SIZE(arm_80008B8) + ROUTINE_SIZE(arm_80008F0), "ANMA");
     CpuCopy32(arm_8000850, gOamNodesSort, ROUTINE_SIZE(arm_8000850));
-    gOamNodesCopy = (u16 * (*)(int, u16*))((u8*)gOamNodesSort + ROUTINE_SIZE(arm_8000850));
+
+    gOamNodesCopy = (u16 * (*)(struct OamNode*, u16*))((u8*)gOamNodesSort + ROUTINE_SIZE(arm_8000850));
     CpuCopy32(arm_80008B8, gOamNodesCopy, ROUTINE_SIZE(arm_80008B8));
-    gOamNodesReset = (void (*)(u32, int))((u8*)gOamNodesCopy + ROUTINE_SIZE(arm_80008B8));
+
+    gOamNodesReset = (void (*)(struct OamNode*, int))((u8*)gOamNodesCopy + ROUTINE_SIZE(arm_80008B8));
     CpuCopy32(arm_80008F0, gOamNodesReset, ROUTINE_SIZE(arm_80008F0));
 
     CpuFill32(0, dword_3000D58, sizeof(dword_3000D58));
+
     for (i = 0; i < 6; i++) {
         if ((flags >> i) & 1) {
             dword_3000D58[i] =
@@ -30,6 +33,7 @@ void sub_801DFB0(u8 flags) {
             dword_3000D58[i] = off_839EE1C[i];
         }
     }
+
     byte_3000D70 = flags;
 }
 
@@ -1397,11 +1401,11 @@ struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cur
 
 // Thumb version of arm_80008B8 (gOamNodesCopy): copies attributes 0-2 of the used nodes after head to
 // dest.
-u16* oam_nodes_copy(struct OamNode* node, u16* dest) {
-    while ((node = node->next) != 0) {
-        if (!node->unused) {
-            u32 attributes = *(u32*)&node->attr0;
-            u16 attribute2 = node->attr2;
+u16* oam_nodes_copy(struct OamNode* head, u16* dest) {
+    while ((head = head->next) != 0) {
+        if (!head->unused) {
+            u32 attributes = *(u32*)&head->attr0;
+            u16 attribute2 = head->attr2;
 
             *(u32*)dest = attributes;
             dest[2] = attribute2;
@@ -1441,14 +1445,14 @@ void oam_nodes_sort(struct OamNode* head, struct OamNode* end) {
 }
 
 // Thumb version of arm_80008F0 (gOamNodesReset): resets a pool of count nodes, all but the head unused.
-void oam_nodes_reset(struct OamNode* node, int count) {
+void oam_nodes_reset(struct OamNode* head, int count) {
     count--;
-    node->sortKey = 0;
-    node++;
+    head->sortKey = 0;
+    head++;
     while (count != 0) {
-        node->unused = true;
+        head->unused = true;
         count--;
-        node++;
+        head++;
     }
 }
 
@@ -1482,8 +1486,8 @@ void sub_80208E0(struct Sprite* sprite) {
     job->field_C = 0;
 }
 
-// Frees the IWRAM routines copied by sub_801DFB0.
-void sub_80208F4(void) {
+// Frees the IWRAM routines copied by sprite_routines_copy.
+static void sprite_routines_free(void) {
     int i;
 
     free_heap_memory_8018C68(gOamNodesSort);
@@ -1503,60 +1507,68 @@ void sub_80208F4(void) {
     byte_3000D70 = 0;
 }
 
-// Sets up the sprite system: clears stru_203FFB8, copies the sprite routines selected by flags to IWRAM
-// and allocates the pool of OAM sort nodes.
-void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
-    struct struc_203FFB8* system = &stru_203FFB8;
+// Sets up the sprite system: clears gSpriteContext, copies the sprite routines selected by flags to
+// IWRAM and allocates the pool of OAM sort nodes.
+void sprite_context_init(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
+    struct SpriteContext* context = &gSpriteContext;
     struct SpriteHeapBlock* heap = &gSpriteHeap;
     int i;
 
-    dword_3000D74 = system;
+    dword_3000D74 = context;
     heap->next = 0;
     heap->previous = 0;
     heap->size = 0x3FFB8;
     heap->type = SPRITE_HEAP_FREE;
-    dword_3001034(0, system, sizeof(*system));
-    system->field_8 = system->field_A = arg0;
+    dword_3001034(0, context, sizeof(*context));
+    context->field_8 = context->field_A = arg0;
+
     //! Possible fake match (permuter): the do-while(0) may be what's left of a macro
     do {
-        system->field_3 = system->field_4 = arg1;
-        system->field_5 = system->field_6 = arg2;
+        context->field_3 = context->field_4 = arg1;
+        context->field_5 = context->field_6 = arg2;
     } while (0);
-    system->field_2C = heap;
+
+    context->field_2C = heap;
+
     for (i = 0; i < 16; i++) {
-        system->field_C[i] |= 0xFFFF;
+        context->field_C[i] |= 0xFFFF;
     }
-    system->field_3C = (u32) new ((flags >> 7) ^ 1, "OAME", 0) struct OamNode[0x82];
-    sub_801DFB0(flags);
-    oam_nodes_init((struct OamNode*)system->field_3C, 0x82);
+
+    context->oamNodes = new ((flags >> 7) ^ 1, "OAME", 0) struct OamNode[OAM_NODE_COUNT];
+
+    sprite_routines_copy(flags);
+    oam_nodes_init(context->oamNodes, OAM_NODE_COUNT);
 }
 
 // Builds the OAM list for the frame: gives every shown sprite its affine matrices and VRAM tiles
 // (shared with an earlier sprite that looks the same) and draws it.
 void sprites_draw(void) {
-    struct struc_203FFB8* system = &stru_203FFB8;
-    struct Sprite* sprite = system->field_30;
+    struct SpriteContext* context = &gSpriteContext;
+    struct Sprite* sprite = context->field_30;
     u16 vram;
     u8 matrix;
     struct OamNode* oam;
 
-    system->field_2 = 0;
-    gOamNodesReset(system->field_3C, 0x82);
+    context->field_2 = 0;
+    gOamNodesReset(context->oamNodes, OAM_NODE_COUNT);
+
     if (sprite == 0) {
         return;
     }
-    vram = system->field_8;
-    matrix = system->field_6;
-    oam = ((struct OamNode*)system->field_3C)->next;
+
+    vram = context->field_8;
+    matrix = context->field_6;
+    oam = context->oamNodes->next;
+
     do {
         if (sprite->active) {
             struct Sprite* other;
             int shared;
 
-            if (system->field_0_1) {
+            if (context->field_0_1) {
                 int found = 0;
 
-                other = system->field_30;
+                other = context->field_30;
                 while (other != sprite) {
                     // field_1A is compared twice in the original (the compiler merges the two into
                     // one masked comparison); maybe field_18 was meant for one of them.
@@ -1589,8 +1601,8 @@ void sprites_draw(void) {
 
             shared = 0;
             if (sprite->field_44 != 0) {
-                if (system->field_0_0) {
-                    other = system->field_30;
+                if (context->field_0_0) {
+                    other = context->field_30;
                     while (other != sprite) {
                         if (other->field_48->status == 0 && !other->hidden
                             && other->bank == sprite->bank && other->field_18 == sprite->field_18
@@ -1616,7 +1628,7 @@ void sprites_draw(void) {
                     sprite->field_28_10 = 0;
                 }
             }
-            oam = sprite_draw(sprite, oam, &system->field_2);
+            oam = sprite_draw(sprite, oam, &context->field_2);
             matrix += sprite->field_10_6;
             if (sprite->field_44 != 0 && !shared) {
                 vram += sprite->field_30;
@@ -1624,7 +1636,7 @@ void sprites_draw(void) {
         }
         sprite = sprite->field_68;
     } while (sprite != 0);
-    system->field_38 = oam;
+    context->field_38 = oam;
 }
 
 // Shows a hidden sprite again and reloads its palettes.
@@ -1646,12 +1658,12 @@ void sprite_show(struct Sprite* sprite) {
 
 // Hides a sprite: frees its palette slots and removes it from the sprite list.
 void sprite_remove(struct Sprite* sprite) {
-    struct struc_203FFB8* system;
+    struct SpriteContext* context;
 
     if (!sprite->hidden) {
         sprite->hidden = true;
         if (sub_8021A18(sprite, 2) == 0) {
-            u16* slot = stru_203FFB8.field_C;
+            u16* slot = gSpriteContext.field_C;
             int mask = sprite->field_14;
 
             while (mask != 0) {
@@ -1662,20 +1674,20 @@ void sprite_remove(struct Sprite* sprite) {
                 mask >>= 1;
             }
         }
-        system = &stru_203FFB8;
+        context = &gSpriteContext;
         if (sprite->field_64 != 0) {
             sprite->field_64->field_68 = sprite->field_68;
         } else {
-            system->field_30 = sprite->field_68;
+            context->field_30 = sprite->field_68;
         }
         if (sprite->field_68 != 0) {
             sprite->field_68->field_64 = sprite->field_64;
         } else {
-            system->field_34 = sprite->field_64;
+            context->field_34 = sprite->field_64;
         }
         sprite->field_68 = 0;
         sprite->field_64 = 0;
-        system->field_1--;
+        context->field_1--;
     }
 }
 
@@ -1684,7 +1696,7 @@ void sprite_remove(struct Sprite* sprite) {
 struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4, int bufferSize,
                              int palette) {
     struct Sprite* sprite;
-    struct struc_203FFB8* system;
+    struct SpriteContext* context;
 
     if (id != -1) {
         struct SpriteInfo* info;
@@ -1726,7 +1738,7 @@ struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4
         paletteCount = gSpritePaletteCounts[paletteBank][palette];
 
         if (gGameState.field_888_1 == 1 && gSpritePalettes[paletteBank] != 0
-            && !stru_203FFB8.field_0_2) {
+            && !gSpriteContext.field_0_2) {
             paletteData = off_839EF10[paletteBank][palette];
         } else {
             paletteData = gSpritePalettes[paletteBank][palette];
@@ -1803,18 +1815,18 @@ struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4
         sprite->field_16 = 0xFFFF;
     }
 
-    system = &stru_203FFB8;
+    context = &gSpriteContext;
 
-    if (system->field_30 == 0) {
-        system->field_30 = sprite;
+    if (context->field_30 == 0) {
+        context->field_30 = sprite;
     } else {
-        sprite->field_68 = system->field_34->field_68;
-        system->field_34->field_68 = sprite;
+        sprite->field_68 = context->field_34->field_68;
+        context->field_34->field_68 = sprite;
     }
 
-    sprite->field_64 = system->field_34;
-    system->field_34 = sprite;
-    system->field_1++;
+    sprite->field_64 = context->field_34;
+    context->field_34 = sprite;
+    context->field_1++;
 
     return sprite;
 }
@@ -1840,7 +1852,7 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
         if (!sprite->hidden) {
             sprite->hidden = true;
             if (sub_8021A18(sprite, 2) == 0) {
-                u16* slot = stru_203FFB8.field_C;
+                u16* slot = gSpriteContext.field_C;
                 int mask = sprite->field_14;
 
                 while (mask != 0) {
@@ -1879,7 +1891,7 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
     tiles = (u8*)gSpriteTiles[bank] + gSpriteTiles[bank][tilesIndex];
     paletteCount = gSpritePaletteCounts[paletteBank][palette];
 
-    if (gGameState.field_888_1 == 1 && gSpritePalettes[paletteBank] != 0 && !stru_203FFB8.field_0_2) {
+    if (gGameState.field_888_1 == 1 && gSpritePalettes[paletteBank] != 0 && !gSpriteContext.field_0_2) {
         paletteData = off_839EF10[paletteBank][palette];
     } else {
         paletteData = gSpritePalettes[paletteBank][palette];
@@ -1930,12 +1942,12 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
 
 // Destroys a sprite: hides it, removes it from the sprite list and frees it.
 void sprite_destroy(struct Sprite* sprite) {
-    struct struc_203FFB8* system;
+    struct SpriteContext* context;
 
     if (!sprite->hidden) {
         sprite->hidden = true;
         if (sub_8021A18(sprite, 2) == 0) {
-            u16* slot = stru_203FFB8.field_C;
+            u16* slot = gSpriteContext.field_C;
             int mask = sprite->field_14;
 
             while (mask != 0) {
@@ -1948,19 +1960,19 @@ void sprite_destroy(struct Sprite* sprite) {
         }
     }
     sub_8021C24(sprite);
-    system = &stru_203FFB8;
+    context = &gSpriteContext;
     if (sprite->field_64 != 0) {
         sprite->field_64->field_68 = sprite->field_68;
     } else {
-        system->field_30 = sprite->field_68;
+        context->field_30 = sprite->field_68;
     }
     if (sprite->field_68 != 0) {
         sprite->field_68->field_64 = sprite->field_64;
     } else {
-        system->field_34 = sprite->field_64;
+        context->field_34 = sprite->field_64;
     }
     sprite_heap_free(sprite);
-    system->field_1--;
+    context->field_1--;
 }
 
 // https://decomp.me/scratch/TODO
@@ -2063,11 +2075,11 @@ void* sub_80214A4(int bank, int id, int size, u8 arg3) {
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8021574.s\"");
 #else
-// Finds or loads a palette in the 16 OBJ palette slots (stru_203FFB8.field_C, from field_4 on). Returns
-// 2 if it is already loaded, 1 if the requested slot is taken or the slots run out, else 0; *mask gets
-// the slots.
+// Finds or loads a palette in the 16 OBJ palette slots (gSpriteContext.field_C, from field_4 on).
+// Returns 2 if it is already loaded, 1 if the requested slot is taken or the slots run out, else 0;
+// *mask gets the slots.
 int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, void* mask, int slot) {
-    struct struc_203FFB8* system = &stru_203FFB8;
+    struct SpriteContext* context = &gSpriteContext;
     u16 free = 0;
     u16 used = 0;
     int start;
@@ -2082,8 +2094,8 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, void* mask,
         bank = (palette >> 12) - 1;
         palette &= 0xFFF;
     }
-    start = system->field_4;
-    for (i = start, entry = &stru_203FFB8.field_C[start]; i < 16; i++, entry++) {
+    start = context->field_4;
+    for (i = start, entry = &gSpriteContext.field_C[start]; i < 16; i++, entry++) {
         if (*entry != 0xFFFF) {
             if (slot == -1) {
                 if (arg2 == 0) {
@@ -2108,7 +2120,7 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, void* mask,
     }
 
     count = gSpritePaletteCounts[bank][palette];
-    if (gGameState.field_888_1 == 1 && gSpritePalettes[bank] != 0 && !stru_203FFB8.field_0_2) {
+    if (gGameState.field_888_1 == 1 && gSpritePalettes[bank] != 0 && !gSpriteContext.field_0_2) {
         paletteTable = off_839EF10[bank];
     } else {
         paletteTable = gSpritePalettes[bank];
@@ -2130,7 +2142,7 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, void* mask,
         }
         bit = 1 << slot;
         used |= bit;
-        stru_203FFB8.field_C[slot] = value;
+        gSpriteContext.field_C[slot] = value;
         if (arg3 == 0) {
             CpuCopy16(paletteData, (void*)(0x02000280 + slot * 32), 32);
             gGameState.field_0 |= bit;
@@ -2145,8 +2157,8 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, void* mask,
 
 // Frees every palette slot that holds the same palette as slot index; returns the freed slots.
 u16 sub_802191C(int index) {
-    struct struc_203FFB8* system = &stru_203FFB8;
-    u16* slots = system->field_C;
+    struct SpriteContext* context = &gSpriteContext;
+    u16* slots = context->field_C;
     u16 result = 0;
 
     if (slots[index] != 0xFFFF) {
@@ -2155,7 +2167,7 @@ u16 sub_802191C(int index) {
         u16 freed = 0;
         int i;
 
-        for (i = system->field_4; i < 16; i++) {
+        for (i = context->field_4; i < 16; i++) {
             if (slots[i] != 0xFFFF) {
                 int slotBank = (slots[i] >> 10) & 0xF;
                 int slotPalette = slots[i] & 0x3FF;
@@ -2174,7 +2186,7 @@ u16 sub_802191C(int index) {
 // Finds another sprite that shares something with sprite: 0 tiles, 1 animation, 2 palette (shown
 // sprites only), 3 VRAM tiles, 4 tiles without a tile buffer.
 struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
-    struct Sprite* other = stru_203FFB8.field_30;
+    struct Sprite* other = gSpriteContext.field_30;
 
     if (other != 0) {
         if (type == 2) {
@@ -2216,7 +2228,7 @@ struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
 
 // An inlined copy of sprite_heap_search (calling it doesn't match sub_8021AC8).
 static inline void* sprite_heap_search_inline(int type, u8 bank, u16 index) {
-    struct SpriteHeapBlock* block = stru_203FFB8.field_2C;
+    struct SpriteHeapBlock* block = gSpriteContext.field_2C;
 
     do {
         if (block->type == type && block->bank == bank && block->index == index) {
@@ -2275,7 +2287,7 @@ void sub_8021AC8(struct Sprite* sprite, u8* tiles, u8* animation, void* palette,
         struct Sprite* other = sub_8021A18(sprite, 4);
 
         if (other == 0) {
-            u16* vramTiles = &stru_203FFB8.field_8;
+            u16* vramTiles = &gSpriteContext.field_8;
 
             sprite->field_2E = *vramTiles;
             *vramTiles += tileSize;
@@ -2314,16 +2326,16 @@ void sub_8021C24(struct Sprite* sprite) {
             }
         }
     } else {
-        struct struc_203FFB8* system = &stru_203FFB8;
+        struct SpriteContext* context = &gSpriteContext;
 
-        if (sprite->field_2E + sprite->field_30 == system->field_8 && sub_8021A18(sprite, 3) == 0) {
-            system->field_8 -= sprite->field_30;
+        if (sprite->field_2E + sprite->field_30 == context->field_8 && sub_8021A18(sprite, 3) == 0) {
+            context->field_8 -= sprite->field_30;
         }
     }
 }
 
 void* sprite_heap_alloc(int type, int size, u8 bank, u16 index) {
-    struct SpriteHeapBlock* block = stru_203FFB8.field_2C;
+    struct SpriteHeapBlock* block = gSpriteContext.field_2C;
 
     size += 15;
     size &= ~15;
@@ -2403,7 +2415,7 @@ void sprite_heap_free(void* p) {
 
 // Finds the data of the sprite heap block with this type, bank and index.
 void* sprite_heap_search(int type, u8 bank, u16 index) {
-    struct SpriteHeapBlock* block = stru_203FFB8.field_2C;
+    struct SpriteHeapBlock* block = gSpriteContext.field_2C;
 
     do {
         if (block->type == type && block->bank == bank && block->index == index) {
@@ -2416,12 +2428,12 @@ void* sprite_heap_search(int type, u8 bank, u16 index) {
 
 // Frees every palette slot that holds this palette; returns the freed slots. Unreferenced.
 u16 sub_8021DD8(int bank, int palette) {
-    struct struc_203FFB8* system = &stru_203FFB8;
-    u16* slots = system->field_C;
+    struct SpriteContext* context = &gSpriteContext;
+    u16* slots = context->field_C;
     u16 freed = 0;
     int i;
 
-    for (i = system->field_4; i < 16; i++) {
+    for (i = context->field_4; i < 16; i++) {
         if (slots[i] != 0xFFFF) {
             int slotBank = (slots[i] >> 10) & 0xF;
             int slotPalette = slots[i] & 0x3FF;
@@ -2449,21 +2461,21 @@ struct SpriteInfo* sprite_get_info(int bank, int id) {
 void sprite_restore(struct Sprite* sprite) {
     if (sprite->hidden) {
         if (sprite->field_64 == sprite->field_68) {
-            struct struc_203FFB8* system = &stru_203FFB8;
+            struct SpriteContext* context = &gSpriteContext;
 
-            if (system->field_30 == 0) {
-                system->field_30 = sprite;
+            if (context->field_30 == 0) {
+                context->field_30 = sprite;
             } else {
-                struct Sprite* last = system->field_34;
+                struct Sprite* last = context->field_34;
 
                 sprite->field_68 = last->field_68;
                 //! Possible fake match (permuter): storing sprite through last makes field_34 reload
                 last = sprite;
-                system->field_34->field_68 = last;
+                context->field_34->field_68 = last;
             }
-            sprite->field_64 = system->field_34;
-            system->field_34 = sprite;
-            system->field_1++;
+            sprite->field_64 = context->field_34;
+            context->field_34 = sprite;
+            context->field_1++;
         }
         sprite_show(sprite);
     }
@@ -2474,7 +2486,7 @@ void sprite_hide(struct Sprite* sprite) {
     if (!sprite->hidden) {
         sprite->hidden = true;
         if (sub_8021A18(sprite, 2) == 0) {
-            u16* slot = stru_203FFB8.field_C;
+            u16* slot = gSpriteContext.field_C;
             int mask = sprite->field_14;
 
             while (mask != 0) {
@@ -2490,7 +2502,7 @@ void sprite_hide(struct Sprite* sprite) {
 
 // Animates all sprites; field_12_1 says what happens at the end of an animation (2: hide, 3: destroy).
 void sprites_update(void) {
-    struct Sprite* sprite = stru_203FFB8.field_30;
+    struct Sprite* sprite = gSpriteContext.field_30;
 
     while (sprite != 0) {
         struct Sprite* next = sprite->field_68;
@@ -2510,8 +2522,8 @@ void sprites_update(void) {
 }
 
 // Shuts the sprite system down.
-void sub_8021FD4(void) {
-    delete[] (struct OamNode*)stru_203FFB8.field_3C;
-    sub_80208F4();
+void sprite_context_release(void) {
+    delete[] gSpriteContext.oamNodes;
+    sprite_routines_free();
     dword_3000D74 = 0;
 }

@@ -50,7 +50,7 @@ SaveMenu::~SaveMenu() {
         sub_80FAFD8(this->tmev, 3);
     }
 
-    sub_8021FD4();
+    sprite_context_release();
 
     if (this->field_C8) {
         operator delete[](this->field_C8);
@@ -196,7 +196,7 @@ void SaveMenu::update() {
             this->state = 3;
             break;
         case 3:
-            sub_8020994(this->field_90 + 0x400, 0, 0, 0);
+            sprite_context_init(this->field_90 + 0x400, 0, 0, 0);
             this->state = 4;
             break;
         case 4:
@@ -887,7 +887,7 @@ void SaveMenu::sub_812936C() {
 
     sprites_update();
     sprites_draw();
-    gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
+    gOamNodesSort(gSpriteContext.oamNodes, gSpriteContext.oamNodes + OAM_NODE_COUNT - 1);
 }
 
 u16* SaveMenu::sub_8129B4C(u16* oam) {
@@ -1231,8 +1231,8 @@ void SaveMenuRenderer::update() {
             sprites_update();
             sprites_draw();
 
-            gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
-            oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+            gOamNodesSort(gSpriteContext.oamNodes, gSpriteContext.oamNodes + OAM_NODE_COUNT - 1);
+            oam = gOamNodesCopy(gSpriteContext.oamNodes, oam);
             oam = menu->sub_8129B4C(oam);
 
             gGameState.oamCursor = oam;

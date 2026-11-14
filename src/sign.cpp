@@ -44,11 +44,11 @@ Sign::Sign(u8 priority, char* label, u16 roomId) : Process(priority, label) {
     map = new (0, "S_MP", 0) S_MP(8, "S_MP", mapRoomId, scrollX, scrollY, panm);
     map->parentProcess = this;
 
-    sub_8020994(0x15C0, 0, 1, 0x80);
+    sprite_context_init(0x15C0, 0, 1, 0x80);
 }
 
 inline Sign::~Sign() {
-    sub_8021FD4();
+    sprite_context_release();
     if (map) {
         delete map;
     }
@@ -177,8 +177,8 @@ void SignRenderer::update() {
 
     sprites_draw();
 
-    gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+    gOamNodesSort(gSpriteContext.oamNodes, gSpriteContext.oamNodes + OAM_NODE_COUNT - 1);
+    oam = gOamNodesCopy(gSpriteContext.oamNodes, oam);
 
     gGameState.oamCursor = oam;
 }

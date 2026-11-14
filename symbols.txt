@@ -1,5 +1,5 @@
 
-stru_203FFB8 = 0x0203FFB8;
+gSpriteContext = 0x0203FFB8;
 gSpriteHeap = 0x0203FFA8;
 dword_3000D74 = 0x03000D74;
 stru_203FFF8 = 0x0203FFF8;

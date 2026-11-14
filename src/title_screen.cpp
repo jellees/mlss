@@ -26,8 +26,8 @@ CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) 
     renderer->parentProcess = this;
 
     dword_3000C78 = 0;
-    sub_8020994(0, 0, 0, 0x80);
-    stru_203FFB8.field_0_2 = 1;
+    sprite_context_init(0, 0, 0, 0x80);
+    gSpriteContext.field_0_2 = 1;
 
     mario = sprite_create(2, SPRITE_ID(0, 1), 1, -1, -1, -1, -1);
     sub_801E150(mario, 12, -1, 0, 0);
@@ -94,7 +94,8 @@ CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) 
 }
 
 inline CompanyIntro::~CompanyIntro() {
-    sub_8021FD4();
+    sprite_context_release();
+
     if (opdr) {
         delete opdr;
     }
@@ -236,8 +237,8 @@ inline void CompanyIntroRenderer::update() {
 
     sprites_draw();
 
-    gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+    gOamNodesSort(gSpriteContext.oamNodes, gSpriteContext.oamNodes + OAM_NODE_COUNT - 1);
+    oam = gOamNodesCopy(gSpriteContext.oamNodes, oam);
 
     gGameState.oamCursor = oam;
 }
@@ -288,7 +289,7 @@ TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(prio
     CpuFastSet(dword_83A5C5C, (void*)0x600D000, 1024);
     CpuFastSet(dword_83A6C5C, (void*)0x600C800, 312);
     operator delete(cgdw);
-    sub_8020994(0, 0, 0, 0);
+    sprite_context_init(0, 0, 0, 0);
 
     for (i = 0; i < 9; i++) {
         sprites[i] = sprite_create(0, word_83A74C0[i * 2], word_83A74C0[i * 2 + 1], -1, -1, -1, -1);
@@ -348,11 +349,14 @@ inline TitleScreen::~TitleScreen() {
     }
 
     delete dword_3000DA0;
-    sub_8021FD4();
+
+    sprite_context_release();
+
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 |= 1;
     BUFFER_REG_DISPCNT = 0;
     gGameState.field_31 = 2;
+
     sub_8017E34();
 }
 
@@ -1047,8 +1051,8 @@ void MarioBrosScoreVisual::update() {
     if (titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_21 == 3
         || titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_21 == 4
         || titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_21 == 5) {
-        struct struc_203FFB8* system = &stru_203FFB8;
-        struct OamNode* node = system->field_38;
+        struct SpriteContext* context = &gSpriteContext;
+        struct OamNode* node = context->field_38;
         s16 topScoreY = word_83A75B8[titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_22 - 10];
         int scoreY;
         int i;
@@ -1073,11 +1077,11 @@ void MarioBrosScoreVisual::update() {
             node = node->next;
         }
 
-        system->field_38 = node;
+        context->field_38 = node;
     }
 
-    gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+    gOamNodesSort(gSpriteContext.oamNodes, gSpriteContext.oamNodes + OAM_NODE_COUNT - 1);
+    oam = gOamNodesCopy(gSpriteContext.oamNodes, oam);
 
     gGameState.oamCursor = oam;
 }

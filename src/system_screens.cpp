@@ -19,8 +19,8 @@ class SaveClearRenderer : public Process {
     virtual void update() {
         u16* oam = gGameState.oamCursor;
         sprites_draw();
-        gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-        oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+        gOamNodesSort(gSpriteContext.oamNodes, gSpriteContext.oamNodes + OAM_NODE_COUNT - 1);
+        oam = gOamNodesCopy(gSpriteContext.oamNodes, oam);
         gGameState.oamCursor = oam;
     }
 };
@@ -29,38 +29,50 @@ inline MarioBrosSaveError::~MarioBrosSaveError() {
     if (this->winw) {
         operator delete[](this->winw);
     }
+
     if (this->bwcw) {
         operator delete[](this->bwcw);
     }
+
     if (this->bwsw) {
         operator delete[](this->bwsw);
     }
+
     if (this->bbwf) {
         operator delete[](this->bbwf);
     }
+
     operator delete(this->bbwi);
+
     BUFFER_REG_DISPCNT = 0;
     BUFFER_REG_BLDCNT = 0;
 }
 
 inline OptionsMenu::~OptionsMenu() {
-    sub_8021FD4();
+    sprite_context_release();
+
     if (this->odtr) {
         delete this->odtr;
     }
+
     if (this->winw) {
         operator delete[](this->winw);
     }
+
     if (this->bwcw) {
         operator delete[](this->bwcw);
     }
+
     if (this->bwsw) {
         operator delete[](this->bwsw);
     }
+
     if (this->bbwf) {
         operator delete[](this->bbwf);
     }
+
     operator delete((void*)this->bbwi);
+
     sub_801A6B0();
     gGameState.field_31 = 2;
     BUFFER_REG_DISPCNT = 0;
@@ -299,7 +311,7 @@ OptionsMenu::OptionsMenu(u8 priority, char* label, int a4) : Process(priority, l
         operator delete[](cgdw);
     }
 
-    sub_8020994(0x3000, 8, 0, 0x80u);
+    sprite_context_init(0x3000, 8, 0, 0x80u);
 
     this->sprite = sprite_create(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
     sub_801E150(this->sprite, 0, -1, 0, 0);
@@ -782,8 +794,8 @@ void OptionsRenderer::update() {
     }
 
     sprites_draw();
-    gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+    gOamNodesSort(gSpriteContext.oamNodes, gSpriteContext.oamNodes + OAM_NODE_COUNT - 1);
+    oam = gOamNodesCopy(gSpriteContext.oamNodes, oam);
 
     for (i = 0; i <= 2; i++, y += 24) {
         if (gGameState.field_888_1 != 1 && i == 1) {
@@ -879,7 +891,7 @@ SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, l
         operator delete[](scdw);
     }
 
-    sub_8020994(0x2000, 8, 0, 0);
+    sprite_context_init(0x2000, 8, 0, 0);
 
     this->sprite = sprite_create(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
     sub_801E150(this->sprite, 0, -1, 0, 0);
@@ -980,7 +992,7 @@ SaveClearScreen::~SaveClearScreen() {
         operator delete[](this->bbwf);
     }
     operator delete(this->bbwi);
-    sub_8021FD4();
+    sprite_context_release();
 
     gGameState.field_888_5 = 0;
     gGameState.field_888_6 = 0;

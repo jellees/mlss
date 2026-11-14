@@ -179,7 +179,7 @@ FieldManager::~FieldManager() {
         sub_80F0420(bevs, 3);
     }
     sub_80F0184(evts);
-    sub_8021FD4();
+    sprite_context_release();
     runtime_install_interrupt_callback(2, NULL);
     gGameState.field_88A_5 = 0;
 }
@@ -372,7 +372,7 @@ void FieldManager::update() {
             } else {
                 field_304 = new (0, "S_MP", 0) S_MP(8, "S_MP", roomId, 0, 0, field_314);
             }
-            sub_8020994(0x15C0, 0, 1, 0xBE);
+            sprite_context_init(0x15C0, 0, 1, 0xBE);
             field_F8_0 = 1;
             state = 4;
             break;
@@ -2144,7 +2144,7 @@ void FieldManager::sub_80273E4() {
     }
     sub_80F0184(evts);
     if (field_F8_0) {
-        sub_8021FD4();
+        sprite_context_release();
         field_F8_0 = 0;
     }
     if (field_314) {
@@ -2462,7 +2462,7 @@ void FieldManager::sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y,
     field_2CC = arg8;
     field_2B9 = arg9;
     if (field_F8_0) {
-        sub_8021FD4();
+        sprite_context_release();
         field_F8_0 = 0;
     }
     field_2B8_0 = 1;

@@ -232,8 +232,8 @@ struct Sprite {
     u8* field_58;
     SpriteCallback field_5C;
     int field_60;
-    struct Sprite* field_64; // Previous sprite in stru_203FFB8's list
-    struct Sprite* field_68; // Next sprite in stru_203FFB8's list
+    struct Sprite* field_64; // Previous sprite in gSpriteContext's list
+    struct Sprite* field_68; // Next sprite in gSpriteContext's list
 };
 
 struct struc_203FFF8 {
@@ -369,9 +369,9 @@ struct struc_3000D44 {
     u8 field_28_2 : 4;
 };
 
-// One OBJ waiting to go into OAM. A pool of 0x82 is set up by oam_nodes_init; each frame gOamNodesReset
-// frees them, the sprite draw routines fill them, gOamNodesSort sorts them by sortKey and gOamNodesCopy
-// copies the used ones to gGameState.oamBuffers.
+// One OBJ waiting to go into OAM. A pool of OAM_NODE_COUNT is set up by oam_nodes_init; each frame
+// gOamNodesReset frees them, the sprite draw routines fill them, gOamNodesSort sorts them by sortKey
+// and gOamNodesCopy copies the used ones to gGameState.oamBuffers.
 struct OamNode {
     u16 attr0;
     u16 attr1;
@@ -401,7 +401,7 @@ struct SpriteHeapBlock {
     u16 index; // In the bank
 };
 
-struct struc_203FFB8 {
+struct SpriteContext {
     u8 field_0_0 : 1;
     u8 field_0_1 : 1;
     u8 field_0_2 : 1;
@@ -419,7 +419,7 @@ struct struc_203FFB8 {
     struct Sprite* field_30; // First sprite of the list (linked by Sprite::field_64/field_68)
     struct Sprite* field_34; // Last sprite of the list
     struct OamNode* field_38;
-    u32 field_3C; // Pool of 0x82 OAM sort nodes (sub_8020994)
+    struct OamNode* oamNodes; // Pool of OAM_NODE_COUNT OAM sort nodes (sprite_context_init)
 };
 
 struct Popup {
@@ -642,16 +642,16 @@ void sub_8199D78(struct struc_15*, void*, int, int, int, int, int, int, int, int
 void SoftResetRom(int);
 
 // EWRAM
-extern struct struc_203FFB8 stru_203FFB8;
-extern struct struc_203FFB8* dword_3000D74;
+extern struct SpriteContext gSpriteContext;
+extern struct SpriteContext* dword_3000D74;
 extern struct SpriteHeapBlock gSpriteHeap;
 extern struct struc_203FFF8 stru_203FFF8;
 extern u16 word_203FFC4[];
 
 // IWRAM
-extern void (*gOamNodesSort)(int, int);
-extern u16* (*gOamNodesCopy)(int, u16*);
-extern void (*gOamNodesReset)(u32, int);
+extern void (*gOamNodesSort)(struct OamNode* head, struct OamNode* end);
+extern u16* (*gOamNodesCopy)(struct OamNode* head, u16* dest);
+extern void (*gOamNodesReset)(struct OamNode* head, int count);
 extern SpriteDrawRoutine
     dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)
 extern u8 byte_3000D70;
@@ -708,14 +708,15 @@ extern struct SignMapEntry stru_83A0D2C[]; // Sign zoom and center per room
 extern u16 word_83A0E64[];                 // Sign arrow positions (x, y)
 extern s8 byte_83A0E74[];                  // Sign scroll steps (x, y) per D-pad state
 extern int loc_8198220();
-// ARM routines in ROM that sub_801DFB0 copies to IWRAM (gOamNodesSort, gOamNodesCopy, gOamNodesReset)
+// ARM routines in ROM that sprite_routines_copy copies to IWRAM (gOamNodesSort, gOamNodesCopy,
+// gOamNodesReset)
 extern u8 arm_8000850[];
 extern u8 arm_8000850_end[];
 extern u8 arm_80008B8[];
 extern u8 arm_80008B8_end[];
 extern u8 arm_80008F0[];
 extern u8 arm_80008F0_end[];
-// Sprite routines copied to IWRAM by sub_801DFB0: ROM address, size and heap label
+// Sprite routines copied to IWRAM by sprite_routines_copy: ROM address, size and heap label
 extern SpriteDrawRoutine off_839EE1C[6];
 extern u16 word_839EE34[6];
 extern char* off_839EE40[6];

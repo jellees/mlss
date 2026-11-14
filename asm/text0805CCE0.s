@@ -311344,7 +311344,7 @@ _080FC3C0:
 	bl free_heap_memory_8018C68__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
-	bl sub_8021FD4
+	bl sprite_context_release
 _080FC3F0:
 	ldr r4, _080FC434 @ =0x03000FDC
 	ldr r0, [r4, #0x00]
@@ -311527,7 +311527,7 @@ _080FC4BC:
 	movs r1, #0x00
 	movs r2, #0x00
 	movs r3, #0xAA
-	bl sub_8020994
+	bl sprite_context_init
 	ldr r2, _080FC5BC @ =0x0203FFB8
 	ldrb r0, [r2, #0x00]
 	orrs r0, r4
@@ -359573,7 +359573,7 @@ sub_8116728:
 	movs r1, #0x00
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_8020994
+	bl sprite_context_init
 	ldr r1, _08116840 @ =0x00001001
 	movs r4, #0x01
 	negs r4, r4
@@ -359764,7 +359764,7 @@ _08116928:
 	beq _0811695E
 	ldr r0, _08116974 @ =0x08CDC378
 	str r0, [r4, #0x18]
-	bl sub_8021FD4
+	bl sprite_context_release
 	ldr r0, [r4, #0x50]
 	cmp r0, #0x00
 	beq _0811694A
@@ -361384,7 +361384,7 @@ _08117E36:
 	movs r1, #0x03
 	bl sub_80FAFD8
 _08117E42:
-	bl sub_8021FD4
+	bl sprite_context_release
 	adds r4, r5, #0x0
 	adds r4, #0x88
 	movs r1, #0x97

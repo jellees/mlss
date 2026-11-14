@@ -118,7 +118,7 @@ sub_812AA78:
 	strh r1, [r0, #0x00]
 	ldr r0, _0812AADC @ =0x0600D000
 	bl sub_80184F4
-	bl sub_8021FD4
+	bl sprite_context_release
 	ldr r0, [r4, #0x24]
 	cmp r0, #0x00
 	beq _0812AAAC
@@ -8016,7 +8016,7 @@ _0812F740:
 	movs r1, #0x00
 	movs r2, #0x00
 	movs r3, #0x80
-	bl sub_8020994
+	bl sprite_context_init
 	ldr r0, _0812FA10 @ =0x03000C78
 	str r5, [r0, #0x00]
 	ldr r6, _0812FA14 @ =0x083C41B4
@@ -66678,7 +66678,7 @@ _08150A34: .4byte 0x00001B90
 	thumb_func_start sub_8150A38
 sub_8150A38:
 	push {lr}
-	bl sub_8021FD4
+	bl sprite_context_release
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00

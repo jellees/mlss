@@ -306,7 +306,7 @@ _080545E2:
 	movs r1, #0x00
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_8020994
+	bl sprite_context_init
 	ldr r1, _080546D0 @ =0x00006003
 	mov r2, r10
 	str r2, [sp, #0x000]

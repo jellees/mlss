@@ -1,11 +1,13 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
+// Size of gSpriteContext.oamNodes: the list head and one node per OBJ that can be drawn in a frame.
+#define OAM_NODE_COUNT 130
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void sub_801DFB0(u8 flags);
 void sub_801E150(struct Sprite* sprite, int animation, int arg2, SpriteCallback arg3, int arg4);
 void sub_801E3EC(u8* tileMap, u8* file);
 void sprite_update(struct Sprite* sprite);
@@ -22,13 +24,12 @@ struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cur
                             u8* tiles, s8* matrices, int matrix, u8* depth);
 struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
                             u8* tiles, s8* matrices, int matrix, u8* depth);
-u16* oam_nodes_copy(struct OamNode* node, u16* dest);
+u16* oam_nodes_copy(struct OamNode* head, u16* dest);
 void oam_nodes_sort(struct OamNode* head, struct OamNode* end);
-void oam_nodes_reset(struct OamNode* node, int count);
+void oam_nodes_reset(struct OamNode* head, int count);
 void oam_nodes_init(struct OamNode* node, int count);
 void sub_80208E0(struct Sprite* sprite);
-void sub_80208F4(void);
-void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags);
+void sprite_context_init(u16 arg0, u8 arg1, u8 arg2, u8 flags);
 void sprites_draw(void);
 void sprite_show(struct Sprite* sprite);
 void sprite_remove(struct Sprite* sprite);
@@ -52,7 +53,7 @@ struct SpriteInfo* sprite_get_info(int bank, int id);
 void sprite_restore(struct Sprite* sprite);
 void sprite_hide(struct Sprite* sprite);
 void sprites_update(void);
-void sub_8021FD4(void);
+void sprite_context_release(void);
 
 #ifdef __cplusplus
 }

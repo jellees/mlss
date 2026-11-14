@@ -46,7 +46,7 @@ LoadMenu::~LoadMenu() {
         sub_80FAFD8(this->field_160, 3);
     }
 
-    sub_8021FD4();
+    sprite_context_release();
 
     if (this->field_54) {
         operator delete[](this->field_54);
@@ -110,7 +110,7 @@ void LoadMenu::update() {
             break;
 
         case 3:
-            sub_8020994(this->field_D0 + 0x400, 0, 0, 0);
+            sprite_context_init(this->field_D0 + 0x400, 0, 0, 0);
             sub_80213A0(5, SPRITE_ID(5, 5), -1, 1);
             this->state = 4;
             break;
@@ -804,9 +804,11 @@ void LoadMenu::sub_8126C3C() {
                 }
             }
         }
+
         sprites_update();
         sprites_draw();
-        gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
+        gOamNodesSort(gSpriteContext.oamNodes, gSpriteContext.oamNodes + OAM_NODE_COUNT - 1);
+
         this->field_F2 = 0;
         this->field_EC = 0;
     }
@@ -1008,8 +1010,8 @@ void LoadMenuRenderer::update() {
         sprites_update();
         sprites_draw();
 
-        gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
-        oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+        gOamNodesSort(gSpriteContext.oamNodes, gSpriteContext.oamNodes + OAM_NODE_COUNT - 1);
+        oam = gOamNodesCopy(gSpriteContext.oamNodes, oam);
         oam = menu->sub_81270E4(oam);
 
         gGameState.oamCursor = oam;
