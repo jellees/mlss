@@ -107,8 +107,8 @@ class FieldMonster : public FieldObject {
             field_344->updateFlicker();
         }
     }
-    virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects) { // 0x080505F4
-        struct struc_Oam* result = FieldObject::method10(oam, objects);
+    virtual struct OamNode* method10(struct OamNode* oam, FieldObject** objects) { // 0x080505F4
+        struct OamNode* result = FieldObject::method10(oam, objects);
         if (field_344 != NULL) {
             result = field_344->method10(oam, objects);
         }

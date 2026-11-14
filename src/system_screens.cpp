@@ -17,11 +17,11 @@ class SaveClearRenderer : public Process {
     SaveClearRenderer(u8 priority, char* label) : Process(priority, label) {
     }
     virtual void update() {
-        int var1 = gGameState.field_880;
+        int var1 = gGameState.oamCursor;
         sub_8020A78();
-        dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-        var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
-        gGameState.field_880 = var1;
+        gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+        var1 = gOamNodesCopy(stru_203FFB8.field_3C, var1);
+        gGameState.oamCursor = var1;
     }
 };
 
@@ -765,7 +765,7 @@ void OptionsRenderer::update() {
     int rightPalette;
 
     optn = (OptionsMenu*)parentProcess;
-    oam = (u16*)gGameState.field_880;
+    oam = (u16*)gGameState.oamCursor;
     y = 48;
 
     if (optn->popup.zoomFrame == 0) {
@@ -782,8 +782,8 @@ void OptionsRenderer::update() {
     }
 
     sub_8020A78();
-    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    oam = (u16*)dword_3000D4C(stru_203FFB8.field_3C, (int)oam);
+    gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    oam = (u16*)gOamNodesCopy(stru_203FFB8.field_3C, (int)oam);
 
     for (i = 0; i <= 2; i++, y += 24) {
         if (gGameState.field_888_1 != 1 && i == 1) {
@@ -831,7 +831,7 @@ void OptionsRenderer::update() {
     oam[2] = 0x1C88;
     oam += 4;
 
-    gGameState.field_880 = (int)oam;
+    gGameState.oamCursor = (int)oam;
 }
 
 SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, label) {

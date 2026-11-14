@@ -344,18 +344,18 @@ class FieldObject {
     virtual void method5();                                 // 0x08040020
     virtual void method6(int arg);                          // 0x08040AE0
     virtual void method7(u8 force);                         // 0x08040C50
-    virtual void method8(s16 cameraX, s16 cameraY, FieldObject** objects);            // 0x08040CF4
-    virtual void method9();                                                           // 0x08040FA0
-    virtual struct struc_Oam* method10(struct struc_Oam* oam, FieldObject** objects); // 0x08041368
-    virtual void method11();                                                          // 0x08047CE8
-    virtual void method12(FieldObject** others, int count, u8 flag);                  // 0x08041A2C
-    virtual int method13();                                                           // 0x08041FFC
-    virtual void method14(FieldObject** objects, u8 arg);                             // 0x08047C68
-    virtual void method15(u8 arg);                                                    // 0x08044630
-    virtual void startFlicker(FieldObjectFlickerMode mode);                           // 0x08047B98
-    virtual void updateFlicker();                                                     // 0x080459C0
-    virtual void method18(u8 index);                                                  // 0x08047858
-    virtual void method19(u8 index);                                                  // 0x08047804
+    virtual void method8(s16 cameraX, s16 cameraY, FieldObject** objects);        // 0x08040CF4
+    virtual void method9();                                                       // 0x08040FA0
+    virtual struct OamNode* method10(struct OamNode* oam, FieldObject** objects); // 0x08041368
+    virtual void method11();                                                      // 0x08047CE8
+    virtual void method12(FieldObject** others, int count, u8 flag);              // 0x08041A2C
+    virtual int method13();                                                       // 0x08041FFC
+    virtual void method14(FieldObject** objects, u8 arg);                         // 0x08047C68
+    virtual void method15(u8 arg);                                                // 0x08044630
+    virtual void startFlicker(FieldObjectFlickerMode mode);                       // 0x08047B98
+    virtual void updateFlicker();                                                 // 0x080459C0
+    virtual void method18(u8 index);                                              // 0x08047858
+    virtual void method19(u8 index);                                              // 0x08047804
 };
 
 #endif

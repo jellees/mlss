@@ -553,7 +553,7 @@ void FieldObject::method9() {
 }
 #endif
 
-struct struc_Oam* FieldObject::method10(struct struc_Oam* oam, FieldObject** objects) {
+struct OamNode* FieldObject::method10(struct OamNode* oam, FieldObject** objects) {
     u16 oamX;
     s16 oamY;
     struct Sprite* other;
@@ -603,16 +603,16 @@ struct struc_Oam* FieldObject::method10(struct struc_Oam* oam, FieldObject** obj
                     if (layer > other->field_1F_2) {
                         layer = other->field_1F_2;
                     }
-                    oam->field_8 = other->field_34->field_8 - 1;
+                    oam->sortKey = other->field_34->sortKey - 1;
                 } else {
-                    oam->field_8 = layer << 30 | 0x3FFFC000;
+                    oam->sortKey = layer << 30 | 0x3FFFC000;
                 }
-                oam->data.attr[0] = stru_83A065C[field_23D - 1].attr0 | (oamY & 0xFF);
+                oam->attr0 = stru_83A065C[field_23D - 1].attr0 | (oamY & 0xFF);
                 //! Possible fake match: the original masks x to 9 bits with a shift pair (maybe a
                 //! macro).
-                oam->data.attr[1] = stru_83A065C[field_23D - 1].attr1 | ((u32)(oamX << 23) >> 23);
-                oam->data.attr[2] = layer << 10 | 0xF000 | stru_83A065C[field_23D - 1].attr2;
-                oam->data.oam.affineParam = 0;
+                oam->attr1 = stru_83A065C[field_23D - 1].attr1 | ((u32)(oamX << 23) >> 23);
+                oam->attr2 = layer << 10 | 0xF000 | stru_83A065C[field_23D - 1].attr2;
+                oam->unused = false;
                 oam = oam->next;
             }
         }

@@ -51,9 +51,9 @@ struct GameState {
     u8 pad1[0xA];
     struct struc_3000388 field_3C;
     u8 pad1_2[0x4];
-    struct OamData field_80[2][128]; // Double-buffered (field_888_3 selects)
+    struct OamData oamBuffers[2][128]; // Shadow OAM, double-buffered (field_888_3 selects)
 
-    int field_880;
+    int oamCursor; // Where gOamNodesCopy writes next in oamBuffers
     u32 field_884;
     u16 field_888_0 : 1;
     u16 field_888_1 : 2;
@@ -130,17 +130,6 @@ struct SpriteInfo {
     u32 uncompressed : 1; // The tiles need no decompression
 };
 
-// An OAM buffer entry, linked to the next one (FieldObject::method10)
-struct struc_Oam {
-    union {
-        struct OamData oam;
-        u16 attr[4];
-    } data;
-    u32 field_8;
-    u8 pad_C[0x4];
-    struct struc_Oam* next;
-};
-
 // Entries of stru_83A065C
 struct struc_83A065C {
     s8 x;
@@ -169,7 +158,7 @@ struct Coldef {
 struct Sprite;
 typedef void (*SpriteCallback)(struct Sprite*, int);
 // Sprite routines selected per frame by sub_801E80C (dword_3000D58)
-typedef struct struc_11* (*SpriteDrawRoutine)(struct struc_11*, struct Sprite*, u8**, int, u8*, s8*, int,
+typedef struct OamNode* (*SpriteDrawRoutine)(struct OamNode*, struct Sprite*, u8**, int, u8*, s8*, int,
                                                       u8*);
 
 struct Sprite {
@@ -230,7 +219,7 @@ struct Sprite {
     u16 field_2E;
     u16 field_30;
     u8 pad32[0x2];
-    struct struc_11* field_34;
+    struct OamNode* field_34;
     u8* field_38; // Animation file (sub_801E150)
     u8* field_3C;
     u8* field_40;
@@ -379,14 +368,17 @@ struct struc_3000D44 {
     u8 field_28_2 : 4;
 };
 
-struct struc_11 {
-    u16 field_0;
-    u16 field_2;
-    u16 field_4;
-    u16 field_6;
-    u32 field_8;
-    struct struc_11* field_C;
-    struct struc_11* field_10;
+// One OBJ waiting to go into OAM. A pool of 0x82 is linked by oam_nodes_link; each frame gOamNodesReset
+// frees them, the sprite draw routines fill them, gOamNodesSort sorts them by sortKey and gOamNodesCopy copies
+// the used ones to gGameState.oamBuffers.
+struct OamNode {
+    u16 attr0;
+    u16 attr1;
+    u16 attr2;
+    bool16 unused;
+    u32 sortKey; // priority << 30 | Sprite::field_E << 14 | depth << 7 | index
+    struct OamNode* previous;
+    struct OamNode* next;
 };
 
 // Sprite heap block header. The heap grows down from stru_203FFA8; a block's data is the field_8 - 16
@@ -417,7 +409,7 @@ struct struc_203FFB8 {
     struct struc_203FFA8* field_2C;
     struct Sprite* field_30; // First sprite of the list (linked by Sprite::field_64/field_68)
     struct Sprite* field_34; // Last sprite of the list
-    struct struc_11* field_38;
+    struct OamNode* field_38;
     u32 field_3C; // Pool of 0x82 OAM sort nodes (sub_8020994)
 };
 
@@ -648,9 +640,9 @@ extern struct struc_203FFF8 stru_203FFF8;
 extern u16 word_203FFC4[];
 
 // IWRAM
-extern void (*dword_3000D48)(int, int);
-extern int (*dword_3000D4C)(int, int);
-extern void (*dword_3000D50)(u32, int);
+extern void (*gOamNodesSort)(int, int);
+extern int (*gOamNodesCopy)(int, int);
+extern void (*gOamNodesReset)(u32, int);
 extern SpriteDrawRoutine dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)
 extern u8 byte_3000D70;
 extern struct ORSTData* dword_3000DA0;
@@ -702,7 +694,7 @@ extern struct SignMapEntry stru_83A0D2C[]; // Sign zoom and center per room
 extern u16 word_83A0E64[];                // Sign arrow positions (x, y)
 extern s8 byte_83A0E74[];                 // Sign scroll steps (x, y) per D-pad state
 extern int loc_8198220();
-// ARM routines in ROM that sub_801DFB0 copies to IWRAM (dword_3000D48, dword_3000D4C, dword_3000D50)
+// ARM routines in ROM that sub_801DFB0 copies to IWRAM (gOamNodesSort, gOamNodesCopy, gOamNodesReset)
 extern u8 arm_8000850[];
 extern u8 arm_8000850_end[];
 extern u8 arm_80008B8[];

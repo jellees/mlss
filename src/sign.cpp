@@ -173,11 +173,11 @@ void Sign::sub_8051A00() {
 }
 
 void SignRenderer::update() {
-    int var1 = gGameState.field_880;
+    int var1 = gGameState.oamCursor;
     sub_8020A78();
-    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    var1 = dword_3000D4C(stru_203FFB8.field_3C, var1);
-    gGameState.field_880 = var1;
+    gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
+    var1 = gOamNodesCopy(stru_203FFB8.field_3C, var1);
+    gGameState.oamCursor = var1;
 }
 
 void Sign::sub_8051ACC() {

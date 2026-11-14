@@ -887,7 +887,7 @@ void SaveMenu::sub_812936C() {
 
     sub_8021F7C();
     sub_8020A78();
-    dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
+    gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
 }
 
 void* SaveMenu::sub_8129B4C(void* buf) {
@@ -1216,7 +1216,7 @@ void SaveMenu::sub_812A42C() {
 
 void SaveMenuRenderer::update() {
     SaveMenu* menu = (SaveMenu*)parentProcess;
-    int buf = gGameState.field_880;
+    int buf = gGameState.oamCursor;
 
     if (menu->state > 4) {
         if (menu->field_67) {
@@ -1229,10 +1229,10 @@ void SaveMenuRenderer::update() {
             }
             sub_8021F7C();
             sub_8020A78();
-            dword_3000D48(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
-            buf = dword_3000D4C(stru_203FFB8.field_3C, buf);
+            gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
+            buf = gOamNodesCopy(stru_203FFB8.field_3C, buf);
             buf = (int)menu->sub_8129B4C((void*)buf);
-            gGameState.field_880 = buf;
+            gGameState.oamCursor = buf;
         }
     }
 }

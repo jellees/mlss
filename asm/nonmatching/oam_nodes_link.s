@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_802083C
-sub_802083C:
+	thumb_func_start oam_nodes_link
+oam_nodes_link:
 	push {r4, r5, r6, lr}
 	adds r2, r0, #0x0
 	adds r3, r1, #0x0

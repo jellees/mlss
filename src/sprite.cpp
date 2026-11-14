@@ -10,13 +10,13 @@
 void sub_801DFB0(u8 flags) {
     int i;
 
-    dword_3000D48 = (void (*)(int, int))alloc_heap_8018CEC(
+    gOamNodesSort = (void (*)(int, int))alloc_heap_8018CEC(
         0, ROUTINE_SIZE(arm_8000850) + ROUTINE_SIZE(arm_80008B8) + ROUTINE_SIZE(arm_80008F0), "ANMA");
-    CpuCopy32(arm_8000850, dword_3000D48, ROUTINE_SIZE(arm_8000850));
-    dword_3000D4C = (int (*)(int, int))((u8*)dword_3000D48 + ROUTINE_SIZE(arm_8000850));
-    CpuCopy32(arm_80008B8, dword_3000D4C, ROUTINE_SIZE(arm_80008B8));
-    dword_3000D50 = (void (*)(u32, int))((u8*)dword_3000D4C + ROUTINE_SIZE(arm_80008B8));
-    CpuCopy32(arm_80008F0, dword_3000D50, ROUTINE_SIZE(arm_80008F0));
+    CpuCopy32(arm_8000850, gOamNodesSort, ROUTINE_SIZE(arm_8000850));
+    gOamNodesCopy = (int (*)(int, int))((u8*)gOamNodesSort + ROUTINE_SIZE(arm_8000850));
+    CpuCopy32(arm_80008B8, gOamNodesCopy, ROUTINE_SIZE(arm_80008B8));
+    gOamNodesReset = (void (*)(u32, int))((u8*)gOamNodesCopy + ROUTINE_SIZE(arm_80008B8));
+    CpuCopy32(arm_80008F0, gOamNodesReset, ROUTINE_SIZE(arm_80008F0));
 
     CpuFill32(0, dword_3000D58, sizeof(dword_3000D58));
     for (i = 0; i < 6; i++) {
@@ -281,7 +281,7 @@ void sub_801E68C(struct Sprite* sprite) {
 #define IWRAM_DIV(a, b)                                                                                \
     (((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(a, b))
 
-struct struc_11* sub_801E80C(struct Sprite* sprite, struct struc_11* arg1, u8* arg2) {
+struct OamNode* sub_801E80C(struct Sprite* sprite, struct OamNode* arg1, u8* arg2) {
     if (sprite->field_50 != 0) {
         if (sprite->field_48->status == 1) {
             int size = sprite->field_28_0 << 5;
@@ -355,7 +355,7 @@ struct struc_11* sub_801E80C(struct Sprite* sprite, struct struc_11* arg1, u8* a
             if (count & 0x80) {
                 count &= 0x7F;
                 if (!sprite->field_28_11) {
-                    u16* dest = &gGameState.field_80[gGameState.field_888_3][matrix * 4].affineParam;
+                    u16* dest = &gGameState.oamBuffers[gGameState.field_888_3][matrix * 4].affineParam;
 
                     for (i = 0; i < count; i++, p += 6) {
                         struct ObjAffineSrcData src;
@@ -416,7 +416,7 @@ struct struc_11* sub_801E80C(struct Sprite* sprite, struct struc_11* arg1, u8* a
             p = cursor;
 
             if (!sprite->field_28_11) {
-                u16* base = &gGameState.field_80[gGameState.field_888_3][0].affineParam;
+                u16* base = &gGameState.oamBuffers[gGameState.field_888_3][0].affineParam;
 
                 for (i = 0; i < 4; i++) {
                     if (matrices[i] != -1) {
@@ -488,8 +488,8 @@ struct struc_11* sub_801E80C(struct Sprite* sprite, struct struc_11* arg1, u8* a
 }
 
 // Sprite routine 0 (off_839EE1C[0]): adds one OAM entry per object of the frame.
-struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
-                             u8* tiles, s8* matrices, int matrix, u8* depth) {
+struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                            u8* tiles, s8* matrices, int matrix, u8* depth) {
     u16 palettes[16];
     u8 priorities[4];
     u16* palette = palettes;
@@ -499,7 +499,7 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
     u8* entry;
     int i;
     int affine;
-    int objMode;
+    int affineMode;
     int flip;
 
     while (mask != 0) {
@@ -512,9 +512,9 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
 
     if ((sprite->field_C != 0 && !sprite->field_28_15) || sprite->xScale > 0x100
         || sprite->yScale > 0x100 || sprite->field_8 > 0x100 || sprite->field_A > 0x100) {
-        mode = 3;
+        mode = ST_OAM_AFFINE_DOUBLE;
     } else if (*(u32*)&sprite->xScale != 0x01000100) {
-        mode = 1;
+        mode = ST_OAM_AFFINE_NORMAL;
     } else {
         mode = *(u32*)&sprite->field_8 != 0x01000100;
     }
@@ -533,11 +533,11 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
         u8* size;
 
         affine = entry[1] & 3;
-        objMode = 3;
-        if (mode != 3) {
-            objMode = mode;
-            if (affine != 0) {
-                objMode = affine;
+        affineMode = ST_OAM_AFFINE_DOUBLE;
+        if (mode != ST_OAM_AFFINE_DOUBLE) {
+            affineMode = mode;
+            if (affine != ST_OAM_AFFINE_OFF) {
+                affineMode = affine;
             }
         }
 
@@ -549,7 +549,7 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
             x |= 0xFFFFFF00;
         }
         y = (s8)entry[0];
-        if (affine == 3) {
+        if (affine == ST_OAM_AFFINE_DOUBLE) {
             x += width / 2;
             y += height / 2;
         }
@@ -593,7 +593,7 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
             y -= (height - height * sprite->field_A / 256) / 2;
         }
 
-        if (objMode == 3) {
+        if (affineMode == ST_OAM_AFFINE_DOUBLE) {
             x -= width / 2;
             y -= height / 2;
             width *= 2;
@@ -610,9 +610,9 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
             int attribute;
             u16* attributes;
 
-            oam->field_8 = (priority << 30) | (sprite->field_E << 14) | (*depth << 7) | i;
+            oam->sortKey = (priority << 30) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
-            if (objMode != 0 && affine == 0) {
+            if (affineMode != ST_OAM_AFFINE_OFF && affine == ST_OAM_AFFINE_OFF) {
                 flip = ((entry[3] >> 4) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
@@ -620,22 +620,22 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
                     sprite->field_10_6++;
                 }
             }
-            oam->field_6 = 0;
-            attributes = &oam->field_0;
+            oam->unused = false;
+            attributes = &oam->attr0;
             if (sprite->field_11_2) {
                 attribute = sprite->field_11_2 << 10;
             } else {
                 attribute = (entry[1] & 0xC) << 8;
             }
             attributes[0] = attribute
-                            | ((((entry[1] & 0xF0) | objMode) << 8) | (sprite->field_11_4 << 12))
+                            | ((((entry[1] & 0xF0) | affineMode) << 8) | (sprite->field_11_4 << 12))
                             | (y & 0xFF);
-            if (objMode != 0) {
+            if (affineMode != ST_OAM_AFFINE_OFF) {
                 int sizeBits = (entry[3] & 0xC0) << 8;
                 int xBits = x & 0x1FF;
                 int matrixBits;
 
-                if (affine == 0) {
+                if (affine == ST_OAM_AFFINE_OFF) {
                     matrixBits = matrices[flip] << 9;
                 } else {
                     matrixBits = (sprite->field_10_1 + ((entry[3] & 0x3E) >> 1)) << 9;
@@ -654,7 +654,7 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
                 tile = *tiles;
             }
             attributes[2] = priorityBits | palettes[paletteIndex] | ((sprite->field_2E >> 5) + tile);
-            oam = oam->field_10;
+            oam = oam->next;
         }
         if (tiles != 0) {
             tiles++;
@@ -665,8 +665,8 @@ struct struc_11* sub_801EEBC(struct struc_11* oam, struct Sprite* sprite, u8** c
 }
 
 // Sprite routine 1 (off_839EE1C[1]): like routine 0, with 5-byte frame objects.
-struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
-                             u8* tiles, s8* matrices, int matrix, u8* depth) {
+struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                            u8* tiles, s8* matrices, int matrix, u8* depth) {
     u16 palettes[16];
     u16* palette = palettes;
     int bit = 0;
@@ -675,7 +675,7 @@ struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** c
     u8* entry;
     int i;
     int affine;
-    int objMode;
+    int affineMode;
     int flip;
 
     while (mask != 0) {
@@ -688,9 +688,9 @@ struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** c
 
     if ((sprite->field_C != 0 && !sprite->field_28_15) || sprite->xScale > 0x100
         || sprite->yScale > 0x100 || sprite->field_8 > 0x100 || sprite->field_A > 0x100) {
-        mode = 3;
+        mode = ST_OAM_AFFINE_DOUBLE;
     } else if (*(u32*)&sprite->xScale != 0x01000100) {
-        mode = 1;
+        mode = ST_OAM_AFFINE_NORMAL;
     } else {
         mode = *(u32*)&sprite->field_8 != 0x01000100;
     }
@@ -704,11 +704,11 @@ struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** c
         u8* size;
 
         affine = (entry[4] >> 2) & 3;
-        objMode = 3;
-        if (mode != 3) {
-            objMode = mode;
-            if (affine != 0) {
-                objMode = affine;
+        affineMode = ST_OAM_AFFINE_DOUBLE;
+        if (mode != ST_OAM_AFFINE_DOUBLE) {
+            affineMode = mode;
+            if (affine != ST_OAM_AFFINE_OFF) {
+                affineMode = affine;
             }
         }
 
@@ -717,7 +717,7 @@ struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** c
         height = size[1];
         x = (s8)entry[0];
         y = (s8)entry[1];
-        if (affine == 3) {
+        if (affine == ST_OAM_AFFINE_DOUBLE) {
             x += width / 2;
             y += height / 2;
         }
@@ -761,7 +761,7 @@ struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** c
             y -= (height - height * sprite->field_A / 256) / 2;
         }
 
-        if (objMode == 3) {
+        if (affineMode == ST_OAM_AFFINE_DOUBLE) {
             x -= width / 2;
             y -= height / 2;
             width *= 2;
@@ -781,9 +781,9 @@ struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** c
             } else {
                 priorityBits = sprite->field_1F_0 << 10;
             }
-            oam->field_8 = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
+            oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
-            if (objMode != 0 && affine == 0) {
+            if (affineMode != ST_OAM_AFFINE_OFF && affine == ST_OAM_AFFINE_OFF) {
                 flip = ((entry[2] >> 2) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
@@ -791,17 +791,17 @@ struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** c
                     sprite->field_10_6++;
                 }
             }
-            oam->field_6 = 0;
-            attributes = &oam->field_0;
+            oam->unused = false;
+            attributes = &oam->attr0;
             // OBJ mode, mosaic and 8bpp bits (field_11_2, field_11_4, field_11_5), read as one halfword
             attributes[0] = (*(u16*)((u8*)sprite + 0x10) & 0x3C00) | ((entry[4] & 0xC0) << 8)
-                            | (objMode << 8) | (y & 0xFF);
-            if (objMode != 0) {
+                            | (affineMode << 8) | (y & 0xFF);
+            if (affineMode != ST_OAM_AFFINE_OFF) {
                 int sizeBits = (entry[4] & 0x30) << 10;
                 int xBits = x & 0x1FF;
                 int matrixNum;
 
-                if (affine == 0) {
+                if (affine == ST_OAM_AFFINE_OFF) {
                     matrixNum = matrices[flip];
                 } else {
                     matrixNum = sprite->field_10_1 + (entry[2] & 0xF);
@@ -821,7 +821,7 @@ struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** c
                 tile = *tiles;
             }
             attributes[2] = priorityBits | palettes[paletteIndex] | ((sprite->field_2E >> 5) + tile);
-            oam = oam->field_10;
+            oam = oam->next;
         }
         if (tiles != 0) {
             tiles++;
@@ -832,8 +832,8 @@ struct struc_11* sub_801F370(struct struc_11* oam, struct Sprite* sprite, u8** c
 }
 
 // Sprite routine 2 (off_839EE1C[2]): 4-byte frame objects without their own affine mode.
-struct struc_11* sub_801F7D0(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
-                             u8* tiles, s8* matrices, int matrix, u8* depth) {
+struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                            u8* tiles, s8* matrices, int matrix, u8* depth) {
     u16 palettes[16];
     u16* palette = palettes;
     int bit = 0;
@@ -855,9 +855,9 @@ struct struc_11* sub_801F7D0(struct struc_11* oam, struct Sprite* sprite, u8** c
 
     if ((sprite->field_C != 0 && !sprite->field_28_15) || sprite->xScale > 0x100
         || sprite->yScale > 0x100 || sprite->field_8 > 0x100 || sprite->field_A > 0x100) {
-        mode = 3;
+        mode = ST_OAM_AFFINE_DOUBLE;
     } else {
-        mode = 1;
+        mode = ST_OAM_AFFINE_NORMAL;
         if (sprite->field_C == 0 && *(u32*)&sprite->xScale == 0x01000100) {
             mode = *(u32*)&sprite->field_8 != 0x01000100;
         }
@@ -918,7 +918,7 @@ struct struc_11* sub_801F7D0(struct struc_11* oam, struct Sprite* sprite, u8** c
             y -= (height - height * sprite->field_A / 256) / 2;
         }
 
-        if (mode == 3) {
+        if (mode == ST_OAM_AFFINE_DOUBLE) {
             x -= width / 2;
             y -= height / 2;
             width *= 2;
@@ -932,9 +932,9 @@ struct struc_11* sub_801F7D0(struct struc_11* oam, struct Sprite* sprite, u8** c
             int tile;
             u16* attributes;
 
-            oam->field_8 = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
+            oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
-            if (mode != 0) {
+            if (mode != ST_OAM_AFFINE_OFF) {
                 flip = ((flags >> 2) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
@@ -942,17 +942,17 @@ struct struc_11* sub_801F7D0(struct struc_11* oam, struct Sprite* sprite, u8** c
                     sprite->field_10_6++;
                 }
             }
-            oam->field_6 = 0;
-            attributes = &oam->field_0;
+            oam->unused = false;
+            attributes = &oam->attr0;
             // OBJ mode, mosaic and 8bpp bits (field_11_2, field_11_4, field_11_5), read as one halfword
             attributes[0] = (*(u16*)((u8*)sprite + 0x10) & 0x3C00) | ((flags & 0xC0) << 8) | (mode << 8)
                             | (y & 0xFF);
-            if (mode != 0) {
-                oam->field_2 = ((flags & 0x30) << 10) | (matrices[flip] << 9) | (x & 0x1FF);
+            if (mode != ST_OAM_AFFINE_OFF) {
+                oam->attr1 = ((flags & 0x30) << 10) | (matrices[flip] << 9) | (x & 0x1FF);
             } else {
-                oam->field_2 =
-                    ((flags & 0x3C) ^ ((sprite->field_11_6 << 2) | (sprite->field_11_7 << 3))) << 10
-                    | (x & 0x1FF);
+                oam->attr1 = ((flags & 0x3C) ^ ((sprite->field_11_6 << 2) | (sprite->field_11_7 << 3)))
+                                 << 10
+                             | (x & 0x1FF);
             }
             paletteIndex = flags & 3;
             if (tiles == 0) {
@@ -961,7 +961,7 @@ struct struc_11* sub_801F7D0(struct struc_11* oam, struct Sprite* sprite, u8** c
                 tile = *tiles;
             }
             attributes[2] = priorityBits | palettes[paletteIndex] | ((sprite->field_2E >> 5) + tile);
-            oam = oam->field_10;
+            oam = oam->next;
         }
         if (tiles != 0) {
             tiles++;
@@ -972,8 +972,8 @@ struct struc_11* sub_801F7D0(struct struc_11* oam, struct Sprite* sprite, u8** c
 }
 
 // Sprite routine 3 (off_839EE1C[3]): like routine 2, with one palette for the whole sprite.
-struct struc_11* sub_801FBAC(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
-                             u8* tiles, s8* matrices, int matrix, u8* depth) {
+struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                            u8* tiles, s8* matrices, int matrix, u8* depth) {
     int palette = 0;
     int mask = sprite->field_14;
     int mode;
@@ -990,9 +990,9 @@ struct struc_11* sub_801FBAC(struct struc_11* oam, struct Sprite* sprite, u8** c
 
     if ((sprite->field_C != 0 && !sprite->field_28_15) || sprite->xScale > 0x100
         || sprite->yScale > 0x100 || sprite->field_8 > 0x100 || sprite->field_A > 0x100) {
-        mode = 3;
+        mode = ST_OAM_AFFINE_DOUBLE;
     } else {
-        mode = 1;
+        mode = ST_OAM_AFFINE_NORMAL;
         if (sprite->field_C == 0 && *(u32*)&sprite->xScale == 0x01000100) {
             mode = *(u32*)&sprite->field_8 != 0x01000100;
         }
@@ -1054,7 +1054,7 @@ struct struc_11* sub_801FBAC(struct struc_11* oam, struct Sprite* sprite, u8** c
             y -= (height - height * sprite->field_A / 256) / 2;
         }
 
-        if (mode == 3) {
+        if (mode == ST_OAM_AFFINE_DOUBLE) {
             x -= width / 2;
             y -= height / 2;
             width *= 2;
@@ -1074,9 +1074,9 @@ struct struc_11* sub_801FBAC(struct struc_11* oam, struct Sprite* sprite, u8** c
                 priorityBits = sprite->field_1F_0 << 10;
             }
 
-            oam->field_8 = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
+            oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
-            if (mode != 0) {
+            if (mode != ST_OAM_AFFINE_OFF) {
                 flip = ((flags >> 2) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
@@ -1084,17 +1084,17 @@ struct struc_11* sub_801FBAC(struct struc_11* oam, struct Sprite* sprite, u8** c
                     sprite->field_10_6++;
                 }
             }
-            oam->field_6 = 0;
-            attributes = &oam->field_0;
+            oam->unused = false;
+            attributes = &oam->attr0;
             // OBJ mode, mosaic and 8bpp bits (field_11_2, field_11_4, field_11_5), read as one halfword
             attributes[0] = (*(u16*)((u8*)sprite + 0x10) & 0x3C00) | ((flags & 0xC0) << 8) | (mode << 8)
                             | (y & 0xFF);
-            if (mode != 0) {
-                oam->field_2 = ((flags & 0x30) << 10) | (matrices[flip] << 9) | (x & 0x1FF);
+            if (mode != ST_OAM_AFFINE_OFF) {
+                oam->attr1 = ((flags & 0x30) << 10) | (matrices[flip] << 9) | (x & 0x1FF);
             } else {
-                oam->field_2 =
-                    ((flags & 0x3C) ^ ((sprite->field_11_6 << 2) | (sprite->field_11_7 << 3))) << 10
-                    | (x & 0x1FF);
+                oam->attr1 = ((flags & 0x3C) ^ ((sprite->field_11_6 << 2) | (sprite->field_11_7 << 3)))
+                                 << 10
+                             | (x & 0x1FF);
             }
             if (tiles == 0) {
                 tile = entry[2] | ((flags & 1) << 8);
@@ -1102,7 +1102,7 @@ struct struc_11* sub_801FBAC(struct struc_11* oam, struct Sprite* sprite, u8** c
                 tile = *tiles;
             }
             attributes[2] = priorityBits | palette | ((sprite->field_2E >> 5) + tile);
-            oam = oam->field_10;
+            oam = oam->next;
         }
         if (tiles != 0) {
             tiles++;
@@ -1113,8 +1113,8 @@ struct struc_11* sub_801FBAC(struct struc_11* oam, struct Sprite* sprite, u8** c
 }
 
 // Sprite routine 4 (off_839EE1C[4]): 3-byte frame objects, one palette for the whole sprite.
-struct struc_11* sub_801FFA8(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
-                             u8* tiles, s8* matrices, int matrix, u8* depth) {
+struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                            u8* tiles, s8* matrices, int matrix, u8* depth) {
     int palette = 0;
     int mask = sprite->field_14;
     int mode;
@@ -1134,9 +1134,9 @@ struct struc_11* sub_801FFA8(struct struc_11* oam, struct Sprite* sprite, u8** c
 
     if ((sprite->field_C != 0 && !sprite->field_28_15) || sprite->xScale > 0x100
         || sprite->yScale > 0x100 || sprite->field_8 > 0x100 || sprite->field_A > 0x100) {
-        mode = 3;
+        mode = ST_OAM_AFFINE_DOUBLE;
     } else {
-        mode = 1;
+        mode = ST_OAM_AFFINE_NORMAL;
         if (sprite->field_C == 0 && *(u32*)&sprite->xScale == 0x01000100) {
             mode = *(u32*)&sprite->field_8 != 0x01000100;
         }
@@ -1205,7 +1205,7 @@ struct struc_11* sub_801FFA8(struct struc_11* oam, struct Sprite* sprite, u8** c
             y -= (height - height * sprite->field_A / 256) / 2;
         }
 
-        if (mode == 3) {
+        if (mode == ST_OAM_AFFINE_DOUBLE) {
             x -= width / 2;
             y -= height / 2;
             width *= 2;
@@ -1218,25 +1218,25 @@ struct struc_11* sub_801FFA8(struct struc_11* oam, struct Sprite* sprite, u8** c
             int tile;
             u16* attributes;
 
-            oam->field_8 = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
+            oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
             flip = (tileFlip >> 7) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
-            if (mode != 0) {
+            if (mode != ST_OAM_AFFINE_OFF) {
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
                     matrix++;
                     sprite->field_10_6++;
                 }
             }
-            oam->field_6 = 0;
-            attributes = &oam->field_0;
+            oam->unused = false;
+            attributes = &oam->attr0;
             // OBJ mode, mosaic and 8bpp bits (field_11_2, field_11_4, field_11_5), read as one halfword
             attributes[0] = (*(u16*)((u8*)sprite + 0x10) & 0x3C00) | ((shapeX & 0xC0) << 8)
                             | (mode << 8) | (y & 0xFF);
-            if (mode != 0) {
-                oam->field_2 = ((sizeY & 0xC0) << 8) | (matrices[flip] << 9) | (x & 0x1FF);
+            if (mode != ST_OAM_AFFINE_OFF) {
+                oam->attr1 = ((sizeY & 0xC0) << 8) | (matrices[flip] << 9) | (x & 0x1FF);
             } else {
-                oam->field_2 = ((sizeY & 0xC0) << 8) | (flip << 12) | (x & 0x1FF);
+                oam->attr1 = ((sizeY & 0xC0) << 8) | (flip << 12) | (x & 0x1FF);
             }
             if (tiles == 0) {
                 tile = tileFlip & 0x7F;
@@ -1244,7 +1244,7 @@ struct struc_11* sub_801FFA8(struct struc_11* oam, struct Sprite* sprite, u8** c
                 tile = *tiles;
             }
             attributes[2] = palette | priorityBits | ((sprite->field_2E >> 5) + tile);
-            oam = oam->field_10;
+            oam = oam->next;
         }
         if (tiles != 0) {
             tiles++;
@@ -1255,8 +1255,8 @@ struct struc_11* sub_801FFA8(struct struc_11* oam, struct Sprite* sprite, u8** c
 }
 
 // Sprite routine 5 (off_839EE1C[5]): like routine 4, with an 8-bit tile and no flip bit per object.
-struct struc_11* sub_802039C(struct struc_11* oam, struct Sprite* sprite, u8** cursor, int count,
-                             u8* tiles, s8* matrices, int matrix, u8* depth) {
+struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                            u8* tiles, s8* matrices, int matrix, u8* depth) {
     int palette = 0;
     int mask = sprite->field_14;
     int mode;
@@ -1276,9 +1276,9 @@ struct struc_11* sub_802039C(struct struc_11* oam, struct Sprite* sprite, u8** c
 
     if ((sprite->field_C != 0 && !sprite->field_28_15) || sprite->xScale > 0x100
         || sprite->yScale > 0x100 || sprite->field_8 > 0x100 || sprite->field_A > 0x100) {
-        mode = 3;
+        mode = ST_OAM_AFFINE_DOUBLE;
     } else {
-        mode = 1;
+        mode = ST_OAM_AFFINE_NORMAL;
         if (sprite->field_C == 0 && *(u32*)&sprite->xScale == 0x01000100) {
             mode = *(u32*)&sprite->field_8 != 0x01000100;
         }
@@ -1347,7 +1347,7 @@ struct struc_11* sub_802039C(struct struc_11* oam, struct Sprite* sprite, u8** c
             y -= (height - height * sprite->field_A / 256) / 2;
         }
 
-        if (mode == 3) {
+        if (mode == ST_OAM_AFFINE_DOUBLE) {
             x -= width / 2;
             y -= height / 2;
             width *= 2;
@@ -1360,32 +1360,32 @@ struct struc_11* sub_802039C(struct struc_11* oam, struct Sprite* sprite, u8** c
             int tile;
             u16* attributes;
 
-            oam->field_8 = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
+            oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
             flip = sprite->field_11_6 | (sprite->field_11_7 << 1);
-            if (mode != 0) {
+            if (mode != ST_OAM_AFFINE_OFF) {
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
                     matrix++;
                     sprite->field_10_6++;
                 }
             }
-            oam->field_6 = 0;
-            attributes = &oam->field_0;
+            oam->unused = false;
+            attributes = &oam->attr0;
             // OBJ mode, mosaic and 8bpp bits (field_11_2, field_11_4, field_11_5), read as one halfword
             attributes[0] = (*(u16*)((u8*)sprite + 0x10) & 0x3C00) | ((shapeX & 0xC0) << 8)
                             | (mode << 8) | (y & 0xFF);
-            if (mode != 0) {
-                oam->field_2 = ((sizeY & 0xC0) << 8) | (matrices[flip] << 9) | (x & 0x1FF);
+            if (mode != ST_OAM_AFFINE_OFF) {
+                oam->attr1 = ((sizeY & 0xC0) << 8) | (matrices[flip] << 9) | (x & 0x1FF);
             } else {
-                oam->field_2 = ((sizeY & 0xC0) << 8) | (flip << 12) | (x & 0x1FF);
+                oam->attr1 = ((sizeY & 0xC0) << 8) | (flip << 12) | (x & 0x1FF);
             }
             tile = tileNumber;
             if (tiles != 0) {
                 tile = *tiles;
             }
             attributes[2] = palette | priorityBits | ((sprite->field_2E >> 5) + tile);
-            oam = oam->field_10;
+            oam = oam->next;
         }
         if (tiles != 0) {
             tiles++;
@@ -1395,15 +1395,15 @@ struct struc_11* sub_802039C(struct struc_11* oam, struct Sprite* sprite, u8** c
     return oam;
 }
 
-// Thumb version of arm_80008B8 (dword_3000D4C): copies attributes 0-2 of the used nodes after head to
+// Thumb version of arm_80008B8 (gOamNodesCopy): copies attributes 0-2 of the used nodes after head to
 // dest.
-int sub_8020784(struct struc_11* node, int dest) {
+int oam_nodes_copy(struct OamNode* node, int dest) {
     u16* out = (u16*)dest;
 
-    while ((node = node->field_10) != 0) {
-        if (node->field_6 == 0) {
-            u32 attributes = *(u32*)&node->field_0;
-            u16 attribute2 = node->field_4;
+    while ((node = node->next) != 0) {
+        if (!node->unused) {
+            u32 attributes = *(u32*)&node->attr0;
+            u16 attribute2 = node->attr2;
 
             *(u32*)out = attributes;
             out[2] = attribute2;
@@ -1413,42 +1413,42 @@ int sub_8020784(struct struc_11* node, int dest) {
     return (int)out;
 }
 
-// Thumb version of arm_8000850 (dword_3000D48): insertion sort of the list by field_8, up to end.
-void sub_80207A8(struct struc_11* head, struct struc_11* end) {
-    struct struc_11* node = head->field_10;
+// Thumb version of arm_8000850 (gOamNodesSort): insertion sort of the list by field_8, up to end.
+void oam_nodes_sort(struct OamNode* head, struct OamNode* end) {
+    struct OamNode* node = head->next;
 
     do {
-        struct struc_11* previous = node->field_C;
-        struct struc_11* moved = 0;
+        struct OamNode* previous = node->previous;
+        struct OamNode* moved = 0;
 
-        while (previous->field_8 > node->field_8) {
-            struct struc_11* before = previous->field_C;
-            struct struc_11* after = node->field_10;
+        while (previous->sortKey > node->sortKey) {
+            struct OamNode* before = previous->previous;
+            struct OamNode* after = node->next;
 
-            before->field_10 = node;
-            after->field_C = previous;
-            node->field_C = before;
-            previous->field_C = node;
-            previous->field_10 = after;
-            node->field_10 = previous;
+            before->next = node;
+            after->previous = previous;
+            node->previous = before;
+            previous->previous = node;
+            previous->next = after;
+            node->next = previous;
             moved = previous;
-            previous = node->field_C;
+            previous = node->previous;
         }
         if (moved != 0) {
-            node = moved->field_10;
+            node = moved->next;
         } else {
-            node = node->field_10;
+            node = node->next;
         }
     } while (node != end);
 }
 
-// Thumb version of arm_80008F0 (dword_3000D50): resets a pool of count nodes, all but the head unused.
-void sub_80207E8(struct struc_11* node, int count) {
+// Thumb version of arm_80008F0 (gOamNodesReset): resets a pool of count nodes, all but the head unused.
+void oam_nodes_reset(struct OamNode* node, int count) {
     count--;
-    node->field_8 = 0;
+    node->sortKey = 0;
     node++;
     while (count != 0) {
-        node->field_6 = 1;
+        node->unused = true;
         count--;
         node++;
     }
@@ -1456,22 +1456,22 @@ void sub_80207E8(struct struc_11* node, int count) {
 
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_802083C.s\"");
+asm_unified(".include \"asm/nonmatching/oam_nodes_link.s\"");
 #else
 // Links a pool of count nodes into a list; all nodes start unused with the highest sort key.
-void sub_802083C(struct struc_11* node, int count) {
-    struct struc_11* previous = 0;
+void oam_nodes_link(struct OamNode* node, int count) {
+    struct OamNode* previous = 0;
 
     while (count != 0) {
-        node->field_6 = 1;
-        node->field_8 = 0xFFFFFFFF;
-        node->field_C = previous;
-        node->field_10 = node + 1;
+        node->unused = true;
+        node->sortKey = 0xFFFFFFFF;
+        node->previous = previous;
+        node->next = node + 1;
         previous = node;
         count--;
         node++;
     }
-    node[-1].field_10 = 0;
+    node[-1].next = 0;
 }
 #endif
 
@@ -1489,10 +1489,10 @@ void sub_80208E0(struct Sprite* sprite) {
 void sub_80208F4(void) {
     int i;
 
-    free_heap_memory_8018C68(dword_3000D48);
-    dword_3000D48 = 0;
-    dword_3000D4C = 0;
-    dword_3000D50 = 0;
+    free_heap_memory_8018C68(gOamNodesSort);
+    gOamNodesSort = 0;
+    gOamNodesCopy = 0;
+    gOamNodesReset = 0;
     for (i = 0; i < 6; i++) {
         if ((byte_3000D70 >> i) & 1) {
             SpriteDrawRoutine* slot = &dword_3000D58[i];
@@ -1529,9 +1529,9 @@ void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
     for (i = 0; i < 16; i++) {
         system->field_C[i] |= 0xFFFF;
     }
-    system->field_3C = (u32) new ((flags >> 7) ^ 1, "OAME", 0) struct struc_11[0x82];
+    system->field_3C = (u32) new ((flags >> 7) ^ 1, "OAME", 0) struct OamNode[0x82];
     sub_801DFB0(flags);
-    sub_802083C((struct struc_11*)system->field_3C, 0x82);
+    oam_nodes_link((struct OamNode*)system->field_3C, 0x82);
 }
 
 // https://decomp.me/scratch/TODO
@@ -1545,16 +1545,16 @@ void sub_8020A78(void) {
     struct Sprite* sprite = system->field_30;
     u16 vram;
     u8 matrix;
-    struct struc_11* oam;
+    struct OamNode* oam;
 
     system->field_2 = 0;
-    dword_3000D50(system->field_3C, 0x82);
+    gOamNodesReset(system->field_3C, 0x82);
     if (sprite == 0) {
         return;
     }
     vram = system->field_8;
     matrix = system->field_6;
-    oam = ((struct struc_11*)system->field_3C)->field_10;
+    oam = ((struct OamNode*)system->field_3C)->next;
     do {
         if (sprite->active) {
             struct Sprite* other;
@@ -2327,7 +2327,7 @@ void sub_8021F7C(void) {
 
 // Shuts the sprite system down.
 void sub_8021FD4(void) {
-    delete[] (struct struc_11*)stru_203FFB8.field_3C;
+    delete[] (struct OamNode*)stru_203FFB8.field_3C;
     sub_80208F4();
     dword_3000D74 = 0;
 }
