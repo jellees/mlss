@@ -145,12 +145,12 @@ class FieldPlayerCharacter : public FieldObject {
     void sub_8049224();                                           // 0x08049224
     void sub_80492DC();                                           // 0x080492DC
     void startHammer(bool arg);                                   // 0x08049370
-    void startHandPower();                                           // 0x08049430
-    void stopHandPower();                                           // 0x080494D4
-    void showHandPowerSprite(int type);                                   // 0x0804955C
-    void showBarrelBreakingSprite();                                           // 0x080496B4
+    void startHandPower();                                        // 0x08049430
+    void stopHandPower();                                         // 0x080494D4
+    void showHandPowerSprite(int type);                           // 0x0804955C
+    void showBarrelBreakingSprite();                              // 0x080496B4
     void sub_80497A8();                                           // 0x080497A8
-    void showExclamationBalloon();                                           // 0x080498B0 (uncalled)
+    void showExclamationBalloon();                                // 0x080498B0 (uncalled)
     void sub_80499B8();                                           // 0x080499B8
     void sub_8049AB4(int mode, int animation);                    // 0x08049AB4
     void sub_8049BD8(int value);                                  // 0x08049BD8
