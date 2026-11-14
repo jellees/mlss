@@ -368257,7 +368257,7 @@ _0811C524:
 	adds r0, r6, r0
 	ldrh r1, [r0, #0x00]
 	movs r0, #0x00
-	bl sub_8021EA8
+	bl sprite_get_info
 	ldr r1, [r0, #0x00]
 	lsls r1, r1, #0x17
 	lsrs r1, r1, #0x17

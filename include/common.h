@@ -114,15 +114,20 @@ struct struc_3000D18 {
     u32 field_C;
 };
 
-// Entries of off_839EE60[][]
-struct struc_839EE60 {
-    u32 field_0_0 : 9; // Palette (off_839EEE4/off_839EF10, off_839EF3C)
-    u32 field_0_9 : 9; // Tiles (off_839EEB8)
-    u32 field_0_18 : 9; // Animation file (off_839EE8C)
+// Sprite id of a gSpriteInfo entry: bits 12-15 hold the bank + 1, bits 0-11 the index in the bank
+#define SPRITE_ID(bank, index) ((((bank) + 1) << 12) | (index))
+// Palette id of a gSpritePalettes entry, encoded the same way
+#define PALETTE_ID(bank, index) ((((bank) + 1) << 12) | (index))
+
+// Entries of gSpriteInfo[][]
+struct SpriteInfo {
+    u32 palette : 9; // gSpritePalettes/off_839EF10, gSpritePaletteCounts
+    u32 tiles : 9; // gSpriteTiles
+    u32 animation : 9; // gSpriteAnimations
     u32 field_0_27 : 1;
     u32 field_0_28 : 1;
     u32 field_0_29 : 2;
-    u32 field_0_31 : 1;
+    u32 uncompressed : 1; // The tiles need no decompression
 };
 
 // An OAM buffer entry, linked to the next one (FieldObject::method10)
@@ -755,13 +760,13 @@ extern s16 word_83A75C8[];
 extern u8* off_839EC80;
 extern u16 word_839F5A4[]; // Up, Up, Down, Down, Left, Right, Left, Right, B, A
 extern u8 byte_839F5B8[];
-extern struct struc_839EE60* off_839EE60[];
-// Per sprite bank, indexed by the fields of struc_839EE60 (sub_8020DD0)
-extern u8** off_839EE8C[];
-extern u32* off_839EEB8[];
-extern void** off_839EEE4[];
+extern struct SpriteInfo* gSpriteInfo[];
+// Per sprite bank, indexed by the fields of SpriteInfo (sub_8020DD0)
+extern u8** gSpriteAnimations[];
+extern u32* gSpriteTiles[];
+extern void** gSpritePalettes[];
 extern void** off_839EF10[];
-extern u8* off_839EF3C[];
+extern u8* gSpritePaletteCounts[];
 extern u8 byte_83A05EC[];
 extern u8 byte_83A061C[];
 extern u8 byte_83A0636[];

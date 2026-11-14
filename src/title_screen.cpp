@@ -29,24 +29,24 @@ CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) 
     sub_8020994(0, 0, 0, 0x80);
     stru_203FFB8.field_0_2 = 1;
 
-    mario = sub_8020DD0(2, 4097, 1, -1, -1, -1, -1);
+    mario = sub_8020DD0(2, SPRITE_ID(0, 1), 1, -1, -1, -1, -1);
     sub_801E150(mario, 12, -1, 0, 0);
     mario->xPosition = 80;
     mario->yPosition = -35;
     mario->field_11_6 = 1;
 
-    luigi = sub_8020DD0(2, 4098, 1, -1, -1, -1, -1);
+    luigi = sub_8020DD0(2, SPRITE_ID(0, 2), 1, -1, -1, -1, -1);
     sub_801E150(luigi, 12, -1, 0, 0);
     luigi->xPosition = 160;
     luigi->yPosition = -35;
 
-    alphaDreamLogo = sub_8020DD0(7, 33103, 1, -1, -1, -1, -1);
+    alphaDreamLogo = sub_8020DD0(7, SPRITE_ID(7, 335), 1, -1, -1, -1, -1);
     sub_801E150(alphaDreamLogo, 0, -1, 0, 0);
     alphaDreamLogo->xPosition = 120;
     alphaDreamLogo->yPosition = 74;
 
-    sub_80213A0(0, 4109, -1, 1);
-    sub_80213A0(0, 4110, -1, 1);
+    sub_80213A0(0, SPRITE_ID(0, 13), -1, 1);
+    sub_80213A0(0, SPRITE_ID(0, 14), -1, 1);
     xPosMario = 20480;
     yPosMario = -8960;
     xPosLuigi = 40960;
@@ -206,7 +206,7 @@ void CompanyIntro::update() {
                 bool32 temp;
                 yPosMario = 24064;
                 yPosLuigi = 24064;
-                sub_80210A8(mario, 2, 4109, 1, -1, -1, -1, -1);
+                sub_80210A8(mario, 2, SPRITE_ID(0, 13), 1, -1, -1, -1, -1);
                 sub_801E150(mario, 0, -1, 0, 0);
                 sprite_show(mario);
                 temp = mario->field_11_6;
@@ -214,7 +214,7 @@ void CompanyIntro::update() {
                 mario->field_11_6 = temp;
                 mario->field_12_1 = 1;
 
-                sub_80210A8(luigi, 2, 4110, 1, -1, -1, -1, -1);
+                sub_80210A8(luigi, 2, SPRITE_ID(0, 14), 1, -1, -1, -1, -1);
                 sub_801E150(luigi, 0, -1, 0, 0);
                 sprite_show(luigi);
                 luigi->field_12_1 = 1;

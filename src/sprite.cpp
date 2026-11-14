@@ -1695,7 +1695,7 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
     struct struc_203FFB8* system;
 
     if (id != -1) {
-        struct struc_839EE60* info;
+        struct SpriteInfo* info;
         int flag;
         int animationIndex;
         int tilesIndex;
@@ -1714,26 +1714,27 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
             bank = (id >> 12) - 1;
             id &= 0xFFF;
         }
-        info = &off_839EE60[bank][id];
-        flag = info->field_0_31;
-        animationIndex = info->field_0_18;
-        tilesIndex = info->field_0_9;
+        info = &gSpriteInfo[bank][id];
+        flag = info->uncompressed;
+        animationIndex = info->animation;
+        tilesIndex = info->tiles;
         if (palette == -1) {
             paletteBank = bank;
-            palette = info->field_0_0;
+            palette = info->palette;
         } else if (palette & 0xF000) {
             paletteBank = (palette >> 12) - 1;
             palette &= 0xFFF;
         } else {
             paletteBank = bank;
         }
-        animation = off_839EE8C[bank][animationIndex];
-        tiles = (u8*)off_839EEB8[bank] + off_839EEB8[bank][tilesIndex];
-        paletteCount = off_839EF3C[paletteBank][palette];
-        if (gGameState.field_888_1 == 1 && off_839EEE4[paletteBank] != 0 && !stru_203FFB8.field_0_2) {
+        animation = gSpriteAnimations[bank][animationIndex];
+        tiles = (u8*)gSpriteTiles[bank] + gSpriteTiles[bank][tilesIndex];
+        paletteCount = gSpritePaletteCounts[paletteBank][palette];
+        if (gGameState.field_888_1 == 1 && gSpritePalettes[paletteBank] != 0
+            && !stru_203FFB8.field_0_2) {
             paletteTable = off_839EF10[paletteBank];
         } else {
-            paletteTable = off_839EEE4[paletteBank];
+            paletteTable = gSpritePalettes[paletteBank];
         }
         paletteData = paletteTable[palette];
 
@@ -1822,7 +1823,7 @@ asm_unified(".include \"asm/nonmatching/sub_80210A8.s\"");
 //
 void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCount, int arg5,
                  int bufferSize, int palette) {
-    struct struc_839EE60* info;
+    struct SpriteInfo* info;
     int flag;
     int animationIndex;
     int tilesIndex;
@@ -1860,26 +1861,26 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
         bank = (id >> 12) - 1;
         id &= 0xFFF;
     }
-    info = &off_839EE60[bank][id];
-    flag = info->field_0_31;
-    animationIndex = info->field_0_18;
-    tilesIndex = info->field_0_9;
+    info = &gSpriteInfo[bank][id];
+    flag = info->uncompressed;
+    animationIndex = info->animation;
+    tilesIndex = info->tiles;
     if (palette == -1) {
         paletteBank = bank;
-        palette = info->field_0_0;
+        palette = info->palette;
     } else if (palette & 0xF000) {
         paletteBank = (palette >> 12) - 1;
         palette &= 0xFFF;
     } else {
         paletteBank = bank;
     }
-    animation = off_839EE8C[bank][animationIndex];
-    tiles = (u8*)off_839EEB8[bank] + off_839EEB8[bank][tilesIndex];
-    paletteCount = off_839EF3C[paletteBank][palette];
-    if (gGameState.field_888_1 == 1 && off_839EEE4[paletteBank] != 0 && !stru_203FFB8.field_0_2) {
+    animation = gSpriteAnimations[bank][animationIndex];
+    tiles = (u8*)gSpriteTiles[bank] + gSpriteTiles[bank][tilesIndex];
+    paletteCount = gSpritePaletteCounts[paletteBank][palette];
+    if (gGameState.field_888_1 == 1 && gSpritePalettes[paletteBank] != 0 && !stru_203FFB8.field_0_2) {
         paletteTable = off_839EF10[paletteBank];
     } else {
-        paletteTable = off_839EEE4[paletteBank];
+        paletteTable = gSpritePalettes[paletteBank];
     }
     paletteData = paletteTable[palette];
 
@@ -1958,7 +1959,7 @@ asm_unified(".include \"asm/nonmatching/sub_80213A0.s\"");
 // Loads a sprite's tiles into a shared buffer (or finds the buffer loaded before) with a background
 // job. Returns 0 for sprites without such tiles, and for an existing buffer unless arg3 is set.
 void* sub_80213A0(int bank, int id, int tileCount, u8 arg3) {
-    struct struc_839EE60* info;
+    struct SpriteInfo* info;
     int animationIndex;
     int tilesIndex;
     u8* animation;
@@ -1969,13 +1970,13 @@ void* sub_80213A0(int bank, int id, int tileCount, u8 arg3) {
         bank = (id >> 12) - 1;
         id &= 0xFFF;
     }
-    info = &off_839EE60[bank][id];
-    // Bit 31 (field_0_31) tested as the sign of the whole word
+    info = &gSpriteInfo[bank][id];
+    // Bit 31 (uncompressed) tested as the sign of the whole word
     if (*(s32*)info >= 0) {
-        animationIndex = info->field_0_18;
-        tilesIndex = info->field_0_9;
-        animation = off_839EE8C[bank][animationIndex];
-        tiles = (u8*)off_839EEB8[bank] + off_839EEB8[bank][tilesIndex];
+        animationIndex = info->animation;
+        tilesIndex = info->tiles;
+        animation = gSpriteAnimations[bank][animationIndex];
+        tiles = (u8*)gSpriteTiles[bank] + gSpriteTiles[bank][tilesIndex];
         if (tileCount == -1) {
             int frames = (animation[4] | ((animation[5] & 1) << 8)) + 1;
 
@@ -2007,7 +2008,7 @@ void* sub_80213A0(int bank, int id, int tileCount, u8 arg3) {
 // Returns a sprite's tile map: the one in its animation file, or one built by sub_801E3EC in a shared
 // buffer (0 for an existing buffer unless arg3 is set).
 void* sub_80214A4(int bank, int id, int size, u8 arg3) {
-    struct struc_839EE60* info;
+    struct SpriteInfo* info;
     int animationIndex;
     u8* animation;
     int offset;
@@ -2020,9 +2021,9 @@ void* sub_80214A4(int bank, int id, int size, u8 arg3) {
         bank = (id >> 12) - 1;
         id &= 0xFFF;
     }
-    info = &off_839EE60[bank][id];
-    animationIndex = info->field_0_18;
-    animation = off_839EE8C[bank][animationIndex];
+    info = &gSpriteInfo[bank][id];
+    animationIndex = info->animation;
+    animation = gSpriteAnimations[bank][animationIndex];
     offset = animation[2] | (animation[3] << 8);
     if (offset == 0) {
         base = animation - (animation[0] | (animation[1] << 8));
@@ -2094,11 +2095,11 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, void* mask,
         return 2;
     }
 
-    count = off_839EF3C[bank][palette];
-    if (gGameState.field_888_1 == 1 && off_839EEE4[bank] != 0 && !stru_203FFB8.field_0_2) {
+    count = gSpritePaletteCounts[bank][palette];
+    if (gGameState.field_888_1 == 1 && gSpritePalettes[bank] != 0 && !stru_203FFB8.field_0_2) {
         paletteTable = off_839EF10[bank];
     } else {
-        paletteTable = off_839EEE4[bank];
+        paletteTable = gSpritePalettes[bank];
     }
     paletteData = (u8*)paletteTable[palette];
     if (slot == -1) {
@@ -2251,13 +2252,13 @@ void* sprite_heap_search(int type, u8 bank, u16 index) {
 // TODO: decompile
 asm_unified(".include \"asm/nonmatching/sub_8021DD8.s\"");
 
-// Returns the off_839EE60 entry of a sprite (bits 12-15 of id, if set, select the bank).
-struct struc_839EE60* sub_8021EA8(int bank, int id) {
+// Returns the gSpriteInfo entry of a sprite (bits 12-15 of id, if set, select the bank).
+struct SpriteInfo* sprite_get_info(int bank, int id) {
     if (id & 0xF000) {
         bank = (id >> 12) - 1;
         id &= 0xFFF;
     }
-    return &off_839EE60[bank][id];
+    return &gSpriteInfo[bank][id];
 }
 
 // Shows a hidden sprite, adding it back to the end of the sprite list if it isn't in it.

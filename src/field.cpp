@@ -1743,14 +1743,14 @@ void FieldManager::sub_80264F4(u16 arg1) {
     }
 
     if (field_246_2 == 4) {
-        sub_8021574(0, 0x1003, 0, 0, 0, buffer, 12);
+        sub_8021574(0, PALETTE_ID(0, 3), 0, 0, 0, buffer, 12);
     } else if (field_246_2 == 1) {
-        sub_8021574(0, 0x1004, 0, 0, 0, buffer, 12);
+        sub_8021574(0, PALETTE_ID(0, 4), 0, 0, 0, buffer, 12);
     }
 
-    sub_8021574(0, 0x8003, 0, 0, 0, buffer, 13);
-    sub_8021574(0, 0x8000, 0, 0, 0, buffer, 14);
-    sub_8021574(0, 0x8001, 0, 0, 0, buffer, 15);
+    sub_8021574(0, PALETTE_ID(7, 3), 0, 0, 0, buffer, 13);
+    sub_8021574(0, PALETTE_ID(7, 0), 0, 0, 0, buffer, 14);
+    sub_8021574(0, PALETTE_ID(7, 1), 0, 0, 0, buffer, 15);
 }
 
 void FieldManager::sub_80265EC(u16 arg1) {
@@ -1758,7 +1758,7 @@ void FieldManager::sub_80265EC(u16 arg1) {
     int i;
 
     for (i = 0; i < 4; i++) {
-        field_1C->field_25C[i].sprite = sub_8020DD0(0, 0x8009, 1, -1, -1, -1, -1);
+        field_1C->field_25C[i].sprite = sub_8020DD0(0, SPRITE_ID(7, 9), 1, -1, -1, -1, -1);
         sub_801E150(field_1C->field_25C[i].sprite, 0, -1, 0, 0);
     }
 
@@ -3361,7 +3361,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
             if (mario->field_35A_2) {
                 mario->sub_80492DC();
             }
-            sub_8021574(0, 0x1004, 0, 0, 0, buffer, 12);
+            sub_8021574(0, PALETTE_ID(0, 4), 0, 0, 0, buffer, 12);
             {
                 FieldStruct4* data = mario->field_368;
 

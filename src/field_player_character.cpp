@@ -412,7 +412,8 @@ void FieldPlayerCharacter::sub_8049000(u16 animation) {
             field_26C = 0xFFFF;
             field_26E = 0xFF;
         }
-        field_214_23 = field_218 == 0x1001 || field_218 == 0x1002 || field_218 == 0x1028;
+        field_214_23 = field_218 == SPRITE_ID(0, 1) || field_218 == SPRITE_ID(0, 2)
+                       || field_218 == SPRITE_ID(0, 40);
         sub_80210A8(sprite, 0, field_218, 1, -1, -1, -1, -1);
         field_21E = (sprite->field_1E_4 + 1) << 12 | sprite->field_1C;
         sub_8040804(true, -1, -1);
@@ -459,7 +460,8 @@ void FieldPlayerCharacter::sub_8049224() {
 }
 
 void FieldPlayerCharacter::sub_80492DC() {
-    if ((field_54 == 0 && field_218 == 0x103E) || (field_54 == 1 && field_218 == 0x1053)) {
+    if ((field_54 == 0 && field_218 == SPRITE_ID(0, 62))
+        || (field_54 == 1 && field_218 == SPRITE_ID(0, 83))) {
         field_214_0 = 3;
         sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1028 : 0x1001) : 0x1002);
     }
@@ -503,7 +505,7 @@ void FieldPlayerCharacter::sub_80494D4() {
 void FieldPlayerCharacter::sub_804955C(int type) {
     s8(*offsets)[3];
 
-    field_370 = field_54 == 0 ? 0x1059 : 0x105A;
+    field_370 = field_54 == 0 ? SPRITE_ID(0, 89) : SPRITE_ID(0, 90);
     sub_80210A8(field_36C, 0, field_370, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 0, -1, 0, 0);
     sprite_restore(field_36C);
@@ -522,8 +524,8 @@ void FieldPlayerCharacter::sub_804955C(int type) {
 }
 
 void FieldPlayerCharacter::sub_80496B4() {
-    field_370 = 0x1045;
-    sub_80210A8(field_36C, 0, 0x1045, 1, -1, -1, -1, -1);
+    field_370 = SPRITE_ID(0, 69);
+    sub_80210A8(field_36C, 0, SPRITE_ID(0, 69), 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 1, -1, 0, 0);
     sprite_restore(field_36C);
     field_353_0 = 1;
@@ -540,8 +542,8 @@ void FieldPlayerCharacter::sub_80496B4() {
 }
 
 void FieldPlayerCharacter::sub_80497A8() {
-    field_370 = 0x1054;
-    sub_80210A8(field_36C, 0, 0x1054, 1, -1, -1, -1, -1);
+    field_370 = SPRITE_ID(0, 84);
+    sub_80210A8(field_36C, 0, SPRITE_ID(0, 84), 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 0, -1, 0, 0);
     sprite_restore(field_36C);
     field_353_0 = 1;
@@ -558,7 +560,7 @@ void FieldPlayerCharacter::sub_80497A8() {
 }
 
 void FieldPlayerCharacter::sub_80498B0() {
-    field_370 = 0x8004;
+    field_370 = SPRITE_ID(7, 4);
     sub_80210A8(field_36C, 0, field_370, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 0, -1, 0, 0);
     sprite_restore(field_36C);
@@ -576,7 +578,7 @@ void FieldPlayerCharacter::sub_80498B0() {
 }
 
 void FieldPlayerCharacter::sub_80499B8() {
-    field_370 = 0x800B;
+    field_370 = SPRITE_ID(7, 11);
     sub_80210A8(field_36C, 2, field_370, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 2, -1, 0, 0);
     sprite_restore(field_36C);
@@ -596,7 +598,7 @@ void FieldPlayerCharacter::sub_80499B8() {
 void FieldPlayerCharacter::sub_8049AB4(int mode, int animation) {
     switch (mode) {
         case 0:
-            field_370 = 0x800B;
+            field_370 = SPRITE_ID(7, 11);
             sub_80210A8(field_36C, 2, field_370, 1, -1, -1, -1, -1);
             sub_801E150(field_36C, animation, -1, 0, 0);
             sprite_restore(field_36C);
@@ -2783,7 +2785,7 @@ void FieldPlayerShotBullet::sub_804DFE8() {
         return;
     }
     animationSet = word_83A0C5A[type - 2];
-    sub_8021574(0, 0x1004, 0, 0, 0, &buffer, 12);
+    sub_8021574(0, PALETTE_ID(0, 4), 0, 0, 0, &buffer, 12);
     sprite = sub_8020DD0(0, animationSet, 1, -1, -1, -1, -1);
     value = byte_83A05EC[direction + 32];
     animation = value & 0x7F;

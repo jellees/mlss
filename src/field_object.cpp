@@ -165,7 +165,7 @@ asm_unified(".include \"asm/nonmatching/method2__11FieldObjectPUsT1Pv.s\"");
 #else
 void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
     struct Sprite* sprite;
-    struct struc_839EE60* entry;
+    struct SpriteInfo* entry;
     int animation;
     int animation2;
     int flag;
@@ -182,13 +182,14 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
         sprite = sub_8020DD0(0, field_218, field_214_17 != 0, -1, -1, -1, field_21E);
         field_26C = sub_81152FC(arg3, field_218);
     } else {
-        sprite = sub_8020DD0(0, 0x8006, field_214_17 != 0, -1, -1, -1, -1);
-        field_218 = 0x8006;
+        sprite = sub_8020DD0(0, SPRITE_ID(7, 6), field_214_17 != 0, -1, -1, -1, -1);
+        field_218 = SPRITE_ID(7, 6);
         field_21E = (sprite->field_1E_4 + 1) << 12 | sprite->field_1C;
     }
-    field_214_23 = field_218 == 0x1001 || field_218 == 0x1002 || field_218 == 0x1028;
+    field_214_23 =
+        field_218 == SPRITE_ID(0, 1) || field_218 == SPRITE_ID(0, 2) || field_218 == SPRITE_ID(0, 40);
     field_214_22 = 0;
-    entry = &off_839EE60[sprite->field_1E_0][sprite->field_16];
+    entry = &gSpriteInfo[sprite->field_1E_0][sprite->field_16];
     field_214_18 = entry->field_0_29;
     field_214_20 = entry->field_0_28;
     animation2 = -1;
@@ -250,7 +251,8 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
 //! Possible fake match: field_214_17 is passed as `field_214_17 != 0` here and in method2 (the original
 //! reads it as `(x >> 1) & 1`); the source probably passed the result of an inline bool getter.
 void FieldObject::sub_8040790() {
-    field_214_23 = field_218 == 0x1001 || field_218 == 0x1002 || field_218 == 0x1028;
+    field_214_23 =
+        field_218 == SPRITE_ID(0, 1) || field_218 == SPRITE_ID(0, 2) || field_218 == SPRITE_ID(0, 40);
     sub_80210A8(sprite, 0, field_218, field_214_17 != 0, -1, -1, -1, field_21E);
 }
 
@@ -260,14 +262,14 @@ void FieldObject::sub_8040790() {
 asm_unified(".include \"asm/nonmatching/sub_8040804__11FieldObjectbii.s\"");
 #else
 void FieldObject::sub_8040804(bool mode, int animation, int flag) {
-    struct struc_839EE60* entry;
+    struct SpriteInfo* entry;
     u8 value;
 
     if (mode == 0) {
         field_26C = sub_81152FC(field_334, (sprite->field_1E_0 + 1) << 12 | sprite->field_16);
         field_214_22 = 0;
     }
-    entry = &off_839EE60[sprite->field_1E_0][sprite->field_16];
+    entry = &gSpriteInfo[sprite->field_1E_0][sprite->field_16];
     field_214_18 = entry->field_0_29;
     field_214_20 = entry->field_0_28;
     value = byte_83A05EC[field_214_18 * 16 + field_214_20 * 8 + direction];

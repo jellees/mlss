@@ -48,7 +48,7 @@ void sub_8021C24(struct Sprite* sprite);
 void* sprite_heap_alloc(int type, int size, u8 bank, u16 index);
 void sprite_heap_free(void* p);
 void* sprite_heap_search(int type, u8 bank, u16 index);
-struct struc_839EE60* sub_8021EA8(int bank, int id);
+struct SpriteInfo* sprite_get_info(int bank, int id);
 void sprite_restore(struct Sprite* sprite);
 void sprite_hide(struct Sprite* sprite);
 void sub_8021F7C(void);

@@ -696,9 +696,9 @@ void SaveMenu::sub_812936C() {
     s32 arrowX[5] = { 0xC8, 0x78, 0xE8, 0x60, 0 };
     s32 arrowY[5] = { 0x80, 0x18, 0x88, 0x18, 0 };
 
-    sub_8021574(5, 0x6003, 0, 0, 0, this->field_60, -1);
+    sub_8021574(5, PALETTE_ID(5, 3), 0, 0, 0, this->field_60, -1);
 
-    this->cursor = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
+    this->cursor = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sub_801E150(this->cursor, 0, -1, 0, 0);
     sprite_show(this->cursor);
     this->cursor->xPosition = 0x24;
@@ -712,7 +712,7 @@ void SaveMenu::sub_812936C() {
     this->cursor->field_28_9 = 0;
     this->cursor->field_28_13 = 0;
 
-    this->field_3C = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
+    this->field_3C = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sub_801E150(this->field_3C, 1, -1, 0, 0);
     sprite_show(this->field_3C);
     this->field_3C->xPosition = 0x20;
@@ -727,7 +727,7 @@ void SaveMenu::sub_812936C() {
     this->field_3C->field_28_13 = 0;
     this->field_3C->field_12_4 = 1;
 
-    this->field_40 = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
+    this->field_40 = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sub_801E150(this->field_40, 7, -1, 0, 0);
     sprite_show(this->field_40);
     this->field_40->xPosition = 0x20;
@@ -742,7 +742,7 @@ void SaveMenu::sub_812936C() {
     this->field_40->field_28_13 = 0;
     this->field_40->field_12_4 = 1;
 
-    this->field_44 = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
+    this->field_44 = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sub_801E150(this->field_44, 8, -1, 0, 0);
     sprite_show(this->field_44);
     this->field_44->xPosition = 0x20;
@@ -764,7 +764,7 @@ void SaveMenu::sub_812936C() {
             int i;
 
             for (i = 0; i < 4; i++) {
-                this->arrows[i] = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
+                this->arrows[i] = sub_8020DD0(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
                 sub_801E150(this->arrows[i], i + 2, -1, 0, 0);
                 sprite_show(this->arrows[i]);
                 this->arrows[i]->xPosition = arrowX[i];
@@ -798,7 +798,7 @@ void SaveMenu::sub_812936C() {
             for (i = 0; i < 2; i++) {
                 if (this->entry.items[i].id != 0
                     && (this->entry.field_18 == 2 || this->entry.field_18 == i)) {
-                    sub_8021574(0, sub_8021EA8(0, this->entry.items[i].id)->field_0_0, 0, 0, 0,
+                    sub_8021574(0, sprite_get_info(0, this->entry.items[i].id)->palette, 0, 0, 0,
                                 this->field_60, -1);
                     this->fileSprites[i] = sub_8020DD0(0, this->entry.items[i].id, 1, -1, -1, -1, -1);
                     sub_801E150(this->fileSprites[i], this->entry.items[i].field_2, -1, 0, 0);
@@ -818,8 +818,8 @@ void SaveMenu::sub_812936C() {
                     this->fileSprites[i]->field_12_4 = 1;
                     this->fileSprites[i]->field_12_1 = 1;
                 } else {
-                    sub_8021574(5, 0x6002, 0, 0, 0, this->field_60, -1);
-                    this->fileSprites[i] = sub_8020DD0(5, 0x6006, 0, -1, -1, -1, -1);
+                    sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_60, -1);
+                    this->fileSprites[i] = sub_8020DD0(5, SPRITE_ID(5, 6), 0, -1, -1, -1, -1);
                     sub_801E150(this->fileSprites[i], i, -1, 0, 0);
                     sprite_show(this->fileSprites[i]);
                     this->fileSprites[i]->xPosition = 0xBC - i * 40;
@@ -846,8 +846,8 @@ void SaveMenu::sub_812936C() {
             for (i = 0; i < 2; i++) {
                 if (dword_3000FF8[i].id == 0
                     || (!parent->brothersTogether && !parent->field_208_6 && parent->luigiLeads != i)) {
-                    sub_8021574(5, 0x6002, 0, 0, 0, this->field_60, -1);
-                    this->currentSprites[i] = sub_8020DD0(5, 0x6006, 0, -1, -1, -1, -1);
+                    sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_60, -1);
+                    this->currentSprites[i] = sub_8020DD0(5, SPRITE_ID(5, 6), 0, -1, -1, -1, -1);
                     sub_801E150(this->currentSprites[i], i, -1, 0, 0);
                     sprite_show(this->currentSprites[i]);
                     this->currentSprites[i]->xPosition = 0xBC - i * 40;
@@ -861,7 +861,7 @@ void SaveMenu::sub_812936C() {
                     this->currentSprites[i]->field_28_9 = 0;
                     this->currentSprites[i]->field_28_13 = 0;
                 } else {
-                    sub_8021574(0, sub_8021EA8(0, dword_3000FF8[i].id)->field_0_0, 0, 0, 0,
+                    sub_8021574(0, sprite_get_info(0, dword_3000FF8[i].id)->palette, 0, 0, 0,
                                 this->field_60, -1);
                     this->currentSprites[i] = sub_8020DD0(0, dword_3000FF8[i].id, 1, -1, -1, -1, -1);
                     sub_801E150(this->currentSprites[i], dword_3000FF8[i].field_2, -1, 0, 0);

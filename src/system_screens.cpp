@@ -301,7 +301,7 @@ OptionsMenu::OptionsMenu(u8 priority, char* label, int a4) : Process(priority, l
 
     sub_8020994(0x3000, 8, 0, 0x80u);
 
-    this->sprite = sub_8020DD0(5, 24581, 1, -1, -1, -1, -1);
+    this->sprite = sub_8020DD0(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
     sub_801E150(this->sprite, 0, -1, 0, 0);
     sprite_show(this->sprite);
     this->sprite->xPosition = 40;
@@ -881,7 +881,7 @@ SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, l
 
     sub_8020994(0x2000, 8, 0, 0);
 
-    this->sprite = sub_8020DD0(5, 0x6005, 1, -1, -1, -1, -1);
+    this->sprite = sub_8020DD0(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
     sub_801E150(this->sprite, 0, -1, 0, 0);
     sprite_show(this->sprite);
     this->sprite->xPosition = 140;
