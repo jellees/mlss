@@ -1947,3 +1947,98 @@ void sub_8021308(struct Sprite* sprite) {
     sprite_heap_free(sprite);
     system->field_1--;
 }
+
+// Loads a sprite's tiles into a shared buffer (or finds the buffer loaded before) with a background
+// job. Returns 0 for sprites without such tiles, and for an existing buffer unless arg3 is set.
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80213A0.s\"");
+#else
+void* sub_80213A0(int bank, int id, int tileCount, u8 arg3) {
+    struct struc_839EE60* info;
+    int animationIndex;
+    int tilesIndex;
+    u8* animation;
+    u8* tiles;
+    struct BackgroundJob* job;
+
+    if (id & 0xF000) {
+        bank = (id >> 12) - 1;
+        id &= 0xFFF;
+    }
+    info = &off_839EE60[bank][id];
+    // Bit 31 (field_0_31) tested as the sign of the whole word
+    if (*(s32*)info >= 0) {
+        animationIndex = info->field_0_18;
+        tilesIndex = info->field_0_9;
+        animation = off_839EE8C[bank][animationIndex];
+        tiles = (u8*)off_839EEB8[bank] + off_839EEB8[bank][tilesIndex];
+        if (tileCount == -1) {
+            int frames = (animation[4] | ((animation[5] & 1) << 8)) + 1;
+
+            tileCount = sub_80198B0(tiles) >> 5;
+            if (tileCount < frames) {
+                tileCount = frames;
+            }
+        }
+        tileCount *= 32;
+        job = (struct BackgroundJob*)sprite_heap_search(2, bank, tilesIndex);
+        if (job == 0) {
+            tileCount += 16;
+            job = (struct BackgroundJob*)sprite_heap_alloc(2, tileCount, bank, tilesIndex);
+            dword_3001034(0, job, tileCount);
+            job->status = 1;
+            job->src = tiles;
+            job->dest = job + 1;
+            job->field_C = 0;
+            sub_8019808(job);
+        } else if (!arg3) {
+            return 0;
+        }
+        return job;
+    }
+    return 0;
+}
+#endif
+
+// Returns a sprite's tile map: the one in its animation file, or one built by sub_801E3EC in a shared
+// buffer (0 for an existing buffer unless arg3 is set).
+void* sub_80214A4(int bank, int id, int size, u8 arg3) {
+    struct struc_839EE60* info;
+    int animationIndex;
+    u8* animation;
+    int offset;
+    u8* base;
+    int records;
+    int recordSize;
+    u8* map;
+
+    if (id & 0xF000) {
+        bank = (id >> 12) - 1;
+        id &= 0xFFF;
+    }
+    info = &off_839EE60[bank][id];
+    animationIndex = info->field_0_18;
+    animation = off_839EE8C[bank][animationIndex];
+    offset = animation[2] | (animation[3] << 8);
+    if (offset == 0) {
+        base = animation - (animation[0] | (animation[1] << 8));
+        records = (animation[6] & 0x7F) + 1;
+        recordSize = base[0];
+        if (size == -1) {
+            size = records * recordSize + 1;
+        }
+        size += 3;
+        size &= ~3;
+        map = (u8*)sprite_heap_search(3, bank, animationIndex);
+        if (map == 0) {
+            map = (u8*)sprite_heap_alloc(3, size, bank, animationIndex);
+            sub_801E3EC(map, animation);
+        } else if (!arg3) {
+            return 0;
+        }
+    } else {
+        map = animation - offset;
+    }
+    return map;
+}

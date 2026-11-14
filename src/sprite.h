@@ -32,7 +32,8 @@ void sub_8020A78(void);
 void sub_8020D40(struct Sprite* sprite);
 int sub_8021A18(struct Sprite* sprite, int arg1);
 void sub_8021C24(struct Sprite* sprite);
-void* sprite_heap_alloc(int arg0, int size, int arg2, int arg3);
+void* sprite_heap_alloc(int arg0, int size, u8 arg2, u16 arg3);
+void* sprite_heap_search(int arg0, u8 arg1, u16 arg2);
 void sprite_heap_free(void* p);
 void sub_8021AC8(struct Sprite* sprite, u8* tiles, u8* animation, void* palette, int tileSize,
                  int bufferSize, int arg6, int arg7);
