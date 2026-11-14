@@ -2271,7 +2271,7 @@ void sub_8021AC8(struct Sprite* sprite, u8* tiles, u8* animation, void* palette,
         }
         sprite->field_44 = 0;
     }
-    
+
     sprite->field_38 = animation;
     sprite->field_54 = palette;
     sprite->field_58 = 0;
@@ -2401,8 +2401,27 @@ void* sprite_heap_search(int type, u8 bank, u16 index) {
     return 0;
 }
 
-// TODO: decompile
-asm_unified(".include \"asm/nonmatching/sub_8021DD8.s\"");
+// Frees every palette slot that holds this palette; returns the freed slots. Unreferenced.
+u16 sub_8021DD8(int bank, int palette) {
+    struct struc_203FFB8* system = &stru_203FFB8;
+    u16* slots = system->field_C;
+    u16 freed = 0;
+    int i;
+
+    for (i = system->field_4; i < 16; i++) {
+        if (slots[i] != 0xFFFF) {
+            int slotBank = (slots[i] >> 10) & 0xF;
+            int slotPalette = slots[i] & 0x3FF;
+
+            if (bank == slotBank && palette == slotPalette) {
+                slots[i] = 0xFFFF;
+                freed |= 1 << i;
+            }
+        }
+    }
+    
+    return freed;
+}
 
 // Returns the gSpriteInfo entry of a sprite (bits 12-15 of id, if set, select the bank).
 struct SpriteInfo* sprite_get_info(int bank, int id) {
