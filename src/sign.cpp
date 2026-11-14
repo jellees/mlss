@@ -173,11 +173,11 @@ void Sign::sub_8051A00() {
 }
 
 void SignRenderer::update() {
-    int var1 = gGameState.oamCursor;
+    u16* oam = gGameState.oamCursor;
     sub_8020A78();
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    var1 = gOamNodesCopy(stru_203FFB8.field_3C, var1);
-    gGameState.oamCursor = var1;
+    oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+    gGameState.oamCursor = oam;
 }
 
 void Sign::sub_8051ACC() {

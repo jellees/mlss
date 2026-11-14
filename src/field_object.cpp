@@ -611,7 +611,7 @@ struct OamNode* FieldObject::method10(struct OamNode* oam, FieldObject** objects
                 //! Possible fake match: the original masks x to 9 bits with a shift pair (maybe a
                 //! macro).
                 oam->attr1 = stru_83A065C[field_23D - 1].attr1 | ((u32)(oamX << 23) >> 23);
-                oam->attr2 = layer << 10 | 0xF000 | stru_83A065C[field_23D - 1].attr2;
+                oam->attr2 = OAM_PRIORITY(layer) | OAM_PALETTE(15) | stru_83A065C[field_23D - 1].attr2;
                 oam->unused = false;
                 oam = oam->next;
             }

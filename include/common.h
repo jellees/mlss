@@ -53,7 +53,7 @@ struct GameState {
     u8 pad1_2[0x4];
     struct OamData oamBuffers[2][128]; // Shadow OAM, double-buffered (field_888_3 selects)
 
-    int oamCursor; // Where gOamNodesCopy writes next in oamBuffers
+    u16* oamCursor; // Where gOamNodesCopy writes next in oamBuffers
     u32 field_884;
     u16 field_888_0 : 1;
     u16 field_888_1 : 2;
@@ -538,16 +538,16 @@ void* sub_80F92DC(void*, int, int, void*, int, void*, int, int, int, int);
 void sub_80E9384(void*, int);
 void sub_8125220(u8, u8*, u8);
 u8 sub_81252BC(u8*, u8);
-void* sub_8121F1C(void*, u8, u8, u16);
-void* sub_8122098(void*, u8, u8);
-void* sub_8122A20(void*, s16, s16, u8, u8, u8, u16, u8, u8, u8, u8);
+u16* sub_8121F1C(u16*, u8, u8, u16);
+u16* sub_8122098(u16*, u8, u8);
+u16* sub_8122A20(u16*, s16, s16, u8, u8, u8, u16, u8, u8, u8, u8);
 void sub_8083860(void*, u8, u16, u16, u8*, u8);
 u8* sub_8123308(u16);
 void* sub_80E9414(void*, int);
 u16 sub_8127E38(u32);
 void sub_81151E4(void*, u8, u16, u16, u16, u16, int, int);
 u8 sub_8116620(void*);
-void* sub_8122198(void*, u8, u8, u8);
+u16* sub_8122198(u16*, u8, u8, u8);
 u16 sub_8123DC4(u16, int);
 void sub_8123BA8(int);
 void sub_819A43C(void);
@@ -649,7 +649,7 @@ extern u16 word_203FFC4[];
 
 // IWRAM
 extern void (*gOamNodesSort)(int, int);
-extern int (*gOamNodesCopy)(int, int);
+extern u16* (*gOamNodesCopy)(int, u16*);
 extern void (*gOamNodesReset)(u32, int);
 extern SpriteDrawRoutine
     dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)

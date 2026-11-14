@@ -232,11 +232,11 @@ void CompanyIntro::update() {
 }
 
 inline void CompanyIntroRenderer::update() {
-    int var1 = gGameState.oamCursor;
+    u16* oam = gGameState.oamCursor;
     sub_8020A78();
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    var1 = gOamNodesCopy(stru_203FFB8.field_3C, var1);
-    gGameState.oamCursor = var1;
+    oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+    gGameState.oamCursor = oam;
 }
 
 TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(priority, label) {
@@ -1035,51 +1035,47 @@ void TitleScreen::update() {
 }
 
 void MarioBrosScoreVisual::update() {
-    TitleScreen* titleScreen;
-    int var1;
+    TitleScreen* titleScreen = (TitleScreen*)parentProcess;
+    u16* oam;
 
-    titleScreen = (TitleScreen*)parentProcess;
     sub_8020A78();
-    var1 = gGameState.oamCursor;
+    oam = gGameState.oamCursor;
 
     if (titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_21 == 3
         || titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_21 == 4
         || titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_21 == 5) {
-        struct OamNode* var11;
-        struct struc_203FFB8* s;
-        int y2;
+        struct struc_203FFB8* system = &stru_203FFB8;
+        struct OamNode* node = system->field_38;
+        s16 topScoreY = word_83A75B8[titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_22 - 10];
+        int scoreY;
         int i;
-        s16 t;
         int j;
 
-        s = &stru_203FFB8;
-        var11 = s->field_38;
-        t = word_83A75B8[titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_22 - 10];
         for (i = 0; i < 6; i++) {
-            var11->attr0 = t - 34;
-            var11->attr1 = 43 + i * 7;
-            var11->attr2 = (topScore[i] + 44) | 0x2400;
-            var11->unused = false;
-            var11->sortKey = 0x40000000;
-            var11 = var11->next;
+            node->attr0 = topScoreY - 34;
+            node->attr1 = 43 + i * 7;
+            node->attr2 = (topScore[i] + 44) | OAM_PALETTE(2) | OAM_PRIORITY(1);
+            node->unused = false;
+            node->sortKey = 0x40000000;
+            node = node->next;
         }
 
-        y2 = word_83A75C8[titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_22 - 10] - 21;
+        scoreY = word_83A75C8[titleScreen->sprites[TS_SPRITE_SUITCASE_VISUAL]->field_22 - 10] - 21;
         for (j = 0; j < 2; j++) {
-            var11->attr0 = y2;
-            var11->attr1 = 64 + j * 7;
-            var11->attr2 = (pScore[j] + 44) | 0x2400;
-            var11->unused = false;
-            var11->sortKey = 0x40000000;
-            var11 = var11->next;
+            node->attr0 = scoreY;
+            node->attr1 = 64 + j * 7;
+            node->attr2 = (pScore[j] + 44) | OAM_PALETTE(2) | OAM_PRIORITY(1);
+            node->unused = false;
+            node->sortKey = 0x40000000;
+            node = node->next;
         }
 
-        s->field_38 = var11;
+        system->field_38 = node;
     }
 
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    var1 = gOamNodesCopy(stru_203FFB8.field_3C, var1);
-    gGameState.oamCursor = var1;
+    oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+    gGameState.oamCursor = oam;
 }
 
 /**

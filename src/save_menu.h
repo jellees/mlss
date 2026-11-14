@@ -83,13 +83,13 @@ class SaveMenu : public Process {
     virtual void update();
     u8 sub_8128D74();
     void sub_812936C();
-    void* sub_8129B4C(void* buf);
+    u16* sub_8129B4C(u16* oam);
     void sub_8129C98();
     void sub_812A42C();
     u8 sub_812A888();
     void sub_812A8AC(u16 color);
     void sub_812A8E0();
-    void* sub_812A930(void* buf);
+    u16* sub_812A930(u16* oam);
 };
 
 #endif

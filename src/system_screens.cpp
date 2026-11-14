@@ -17,11 +17,11 @@ class SaveClearRenderer : public Process {
     SaveClearRenderer(u8 priority, char* label) : Process(priority, label) {
     }
     virtual void update() {
-        int var1 = gGameState.oamCursor;
+        u16* oam = gGameState.oamCursor;
         sub_8020A78();
         gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-        var1 = gOamNodesCopy(stru_203FFB8.field_3C, var1);
-        gGameState.oamCursor = var1;
+        oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+        gGameState.oamCursor = oam;
     }
 };
 
@@ -765,7 +765,7 @@ void OptionsRenderer::update() {
     int rightPalette;
 
     optn = (OptionsMenu*)parentProcess;
-    oam = (u16*)gGameState.oamCursor;
+    oam = gGameState.oamCursor;
     y = 48;
 
     if (optn->popup.zoomFrame == 0) {
@@ -773,9 +773,9 @@ void OptionsRenderer::update() {
             case 2:
             case 3:
             case 4:
-                oam[0] = optn->okButtonPosY | 0x4000;
-                oam[1] = optn->okButtonPosX | 0x8000;
-                oam[2] = 0x78;
+                oam[0] = OAM_SHAPE(ST_OAM_H_RECTANGLE) | optn->okButtonPosY;
+                oam[1] = OAM_OBJ_SIZE(ST_OAM_SIZE_2) | optn->okButtonPosX;
+                oam[2] = 120;
                 oam += 4;
                 break;
         }
@@ -783,7 +783,7 @@ void OptionsRenderer::update() {
 
     sub_8020A78();
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 2580);
-    oam = (u16*)gOamNodesCopy(stru_203FFB8.field_3C, (int)oam);
+    oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
 
     for (i = 0; i <= 2; i++, y += 24) {
         if (gGameState.field_888_1 != 1 && i == 1) {
@@ -791,47 +791,47 @@ void OptionsRenderer::update() {
         } else {
             leftPalette = (u16)((optn->options_4 >> i) ^ 1) & 1;
         }
-        oam[0] = y | 0x4000;
-        oam[1] = 0x8098;
-        oam[2] = (leftPalette << 12) | 0xC00;
+        oam[0] = OAM_SHAPE(ST_OAM_H_RECTANGLE) | y;
+        oam[1] = OAM_OBJ_SIZE(ST_OAM_SIZE_2) | 152;
+        oam[2] = OAM_PALETTE(leftPalette) | OAM_PRIORITY(3);
         oam += 4;
 
         rightPalette = leftPalette;
         if (gGameState.field_888_1 == 1 || i != 1) {
             rightPalette ^= 1;
         }
-        oam[0] = y | 0x4000;
-        oam[1] = 0x80B0;
-        oam[2] = (rightPalette << 12) | 0xC08;
+        oam[0] = OAM_SHAPE(ST_OAM_H_RECTANGLE) | y;
+        oam[1] = OAM_OBJ_SIZE(ST_OAM_SIZE_2) | 176;
+        oam[2] = OAM_PALETTE(rightPalette) | OAM_PRIORITY(3) | 8;
         oam += 4;
     }
 
-    oam[0] = 0x4042;
-    oam[1] = 0x4020;
-    oam[2] = 0xC20;
+    oam[0] = OAM_SHAPE(ST_OAM_H_RECTANGLE) | 66;
+    oam[1] = OAM_OBJ_SIZE(ST_OAM_SIZE_1) | 32;
+    oam[2] = OAM_PRIORITY(3) | 32;
     oam += 4;
-    oam[0] = 0x4042;
-    oam[1] = 0x4040;
-    oam[2] = 0xC24;
+    oam[0] = OAM_SHAPE(ST_OAM_H_RECTANGLE) | 66;
+    oam[1] = OAM_OBJ_SIZE(ST_OAM_SIZE_1) | 64;
+    oam[2] = OAM_PRIORITY(3) | 36;
     oam += 4;
-    oam[0] = 0x405A;
-    oam[1] = 0x4020;
-    oam[2] = 0xCC0;
+    oam[0] = OAM_SHAPE(ST_OAM_H_RECTANGLE) | 90;
+    oam[1] = OAM_OBJ_SIZE(ST_OAM_SIZE_1) | 32;
+    oam[2] = OAM_PRIORITY(3) | 192;
     oam += 4;
-    oam[0] = 0x405A;
-    oam[1] = 0x4040;
-    oam[2] = 0xCC4;
+    oam[0] = OAM_SHAPE(ST_OAM_H_RECTANGLE) | 90;
+    oam[1] = OAM_OBJ_SIZE(ST_OAM_SIZE_1) | 64;
+    oam[2] = OAM_PRIORITY(3) | 196;
     oam += 4;
-    oam[0] = 0x4000;
-    oam[1] = 0x8010;
-    oam[2] = 0x1C80;
+    oam[0] = OAM_SHAPE(ST_OAM_H_RECTANGLE) | 0;
+    oam[1] = OAM_OBJ_SIZE(ST_OAM_SIZE_2) | 16;
+    oam[2] = OAM_PALETTE(1) | OAM_PRIORITY(3) | 128;
     oam += 4;
-    oam[0] = 0x4000;
-    oam[1] = 0x8030;
-    oam[2] = 0x1C88;
+    oam[0] = OAM_SHAPE(ST_OAM_H_RECTANGLE) | 0;
+    oam[1] = OAM_OBJ_SIZE(ST_OAM_SIZE_2) | 48;
+    oam[2] = OAM_PALETTE(1) | OAM_PRIORITY(3) | 136;
     oam += 4;
 
-    gGameState.oamCursor = (int)oam;
+    gGameState.oamCursor = oam;
 }
 
 SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, label) {

@@ -68,13 +68,13 @@ class LoadMenu : public Process {
     virtual void update();
     u8 sub_8126520();
     void sub_8126C3C();
-    void* sub_81270E4(void* buf);
+    u16* sub_81270E4(u16* oam);
     void sub_8127238();
     void sub_812791C();
     u8 sub_8127AB0();
     void sub_8127ADC(u16 color);
     void sub_8127B20();
-    void* sub_8127B90(void* buf);
+    u16* sub_8127B90(u16* oam);
 };
 
 #endif

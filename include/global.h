@@ -20,6 +20,16 @@ typedef u8 bool;
 
 #define ARRAY_COUNT(a) ((s32)(sizeof((a)) / sizeof((a)[0])))
 
+// OAM attribute 0 (bits 0-7 are the y position)
+#define OAM_SHAPE(n) ((n) << 14)
+
+// OAM attribute 1 (bits 0-8 are the x position); OAM_SIZE is the size of OAM memory
+#define OAM_OBJ_SIZE(n) ((n) << 14)
+
+// These macros are for OAM attribute 2.
+#define OAM_PRIORITY(n) ((n) << 10)
+#define OAM_PALETTE(n)  ((n) << 12)
+
 // Figure out if we need these defines later.
 // #define OFFSET_OF(type, element) ((int)&(((type *)0)->element))
 // #define GET_PROCESS_PARENT(type, proc) (type*)(((unsigned char*)proc) - OFFSET_OF(type, process))

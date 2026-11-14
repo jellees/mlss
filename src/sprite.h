@@ -22,7 +22,7 @@ struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cur
                             u8* tiles, s8* matrices, int matrix, u8* depth);
 struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
                             u8* tiles, s8* matrices, int matrix, u8* depth);
-int oam_nodes_copy(struct OamNode* node, int dest);
+u16* oam_nodes_copy(struct OamNode* node, u16* dest);
 void oam_nodes_sort(struct OamNode* head, struct OamNode* end);
 void oam_nodes_reset(struct OamNode* node, int count);
 void oam_nodes_init(struct OamNode* node, int count);

@@ -13,7 +13,7 @@ void sub_801DFB0(u8 flags) {
     gOamNodesSort = (void (*)(int, int))alloc_heap_8018CEC(
         0, ROUTINE_SIZE(arm_8000850) + ROUTINE_SIZE(arm_80008B8) + ROUTINE_SIZE(arm_80008F0), "ANMA");
     CpuCopy32(arm_8000850, gOamNodesSort, ROUTINE_SIZE(arm_8000850));
-    gOamNodesCopy = (int (*)(int, int))((u8*)gOamNodesSort + ROUTINE_SIZE(arm_8000850));
+    gOamNodesCopy = (u16 * (*)(int, u16*))((u8*)gOamNodesSort + ROUTINE_SIZE(arm_8000850));
     CpuCopy32(arm_80008B8, gOamNodesCopy, ROUTINE_SIZE(arm_80008B8));
     gOamNodesReset = (void (*)(u32, int))((u8*)gOamNodesCopy + ROUTINE_SIZE(arm_80008B8));
     CpuCopy32(arm_80008F0, gOamNodesReset, ROUTINE_SIZE(arm_80008F0));
@@ -504,7 +504,7 @@ struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u8** cur
 
     while (mask != 0) {
         if (mask & 1) {
-            *palette++ = bit << 12;
+            *palette++ = OAM_PALETTE(bit);
         }
         bit++;
         mask >>= 1;
@@ -604,7 +604,7 @@ struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u8** cur
         y += sprite->yPosition;
         if (x >= -width && x <= 239 && y >= -height && y <= 159) {
             int priority = priorities[(entry[5] >> 2) & 3];
-            int priorityBits = priority << 10;
+            int priorityBits = OAM_PRIORITY(priority);
             int paletteIndex;
             int tile;
             int attribute;
@@ -680,7 +680,7 @@ struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u8** cur
 
     while (mask != 0) {
         if (mask & 1) {
-            *palette++ = bit << 12;
+            *palette++ = OAM_PALETTE(bit);
         }
         bit++;
         mask >>= 1;
@@ -777,9 +777,9 @@ struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u8** cur
             u16* attributes;
 
             if ((entry[4] >> 1) & 1) {
-                priorityBits = sprite->field_1F_2 << 10;
+                priorityBits = OAM_PRIORITY(sprite->field_1F_2);
             } else {
-                priorityBits = sprite->field_1F_0 << 10;
+                priorityBits = OAM_PRIORITY(sprite->field_1F_0);
             }
             oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
@@ -847,7 +847,7 @@ struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u8** cur
 
     while (mask != 0) {
         if (mask & 1) {
-            *palette++ = bit << 12;
+            *palette++ = OAM_PALETTE(bit);
         }
         bit++;
         mask >>= 1;
@@ -863,7 +863,7 @@ struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u8** cur
         }
     }
 
-    priorityBits = sprite->field_1F_0 << 10;
+    priorityBits = OAM_PRIORITY(sprite->field_1F_0);
     entry = *cursor;
     for (i = 0; i < count; i++, entry += 4) {
         int width;
@@ -1069,9 +1069,9 @@ struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u8** cur
             u16* attributes;
 
             if ((flags >> 1) & 1) {
-                priorityBits = sprite->field_1F_2 << 10;
+                priorityBits = OAM_PRIORITY(sprite->field_1F_2);
             } else {
-                priorityBits = sprite->field_1F_0 << 10;
+                priorityBits = OAM_PRIORITY(sprite->field_1F_0);
             }
 
             oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
@@ -1142,7 +1142,7 @@ struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cur
         }
     }
 
-    priorityBits = sprite->field_1F_0 << 10;
+    priorityBits = OAM_PRIORITY(sprite->field_1F_0);
     entry = *cursor;
     for (i = 0; i < count; i++, entry += 3) {
         int width;
@@ -1284,7 +1284,7 @@ struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cur
         }
     }
 
-    priorityBits = sprite->field_1F_0 << 10;
+    priorityBits = OAM_PRIORITY(sprite->field_1F_0);
     entry = *cursor;
     for (i = 0; i < count; i++, entry += 3) {
         int width;
@@ -1397,20 +1397,18 @@ struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cur
 
 // Thumb version of arm_80008B8 (gOamNodesCopy): copies attributes 0-2 of the used nodes after head to
 // dest.
-int oam_nodes_copy(struct OamNode* node, int dest) {
-    u16* out = (u16*)dest;
-
+u16* oam_nodes_copy(struct OamNode* node, u16* dest) {
     while ((node = node->next) != 0) {
         if (!node->unused) {
             u32 attributes = *(u32*)&node->attr0;
             u16 attribute2 = node->attr2;
 
-            *(u32*)out = attributes;
-            out[2] = attribute2;
-            out += 4;
+            *(u32*)dest = attributes;
+            dest[2] = attribute2;
+            dest += 4;
         }
     }
-    return (int)out;
+    return dest;
 }
 
 // Thumb version of arm_8000850 (gOamNodesSort): insertion sort of the list by field_8, up to end.

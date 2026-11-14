@@ -7,14 +7,14 @@
 #include "save_menu.h"
 #include "field.h"
 
-inline void* SaveMenu::sub_812A930(void* buf) {
+inline u16* SaveMenu::sub_812A930(u16* oam) {
     if (this->field_B1) {
-        buf =
-            sub_8122198(buf, dword_3000FF4[0].field_30, dword_3000FF4[1].field_30, this->field_AF & 2);
+        oam =
+            sub_8122198(oam, dword_3000FF4[0].field_30, dword_3000FF4[1].field_30, this->field_AF & 2);
     } else {
-        buf = sub_8122198(buf, this->entry.field_14, this->entry.field_15, this->field_AF & 1);
+        oam = sub_8122198(oam, this->entry.field_14, this->entry.field_15, this->field_AF & 1);
     }
-    return buf;
+    return oam;
 }
 
 SaveMenu::SaveMenu(u8 priority, char* label, int arg3) : Process(priority, label) {
@@ -890,7 +890,7 @@ void SaveMenu::sub_812936C() {
     gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
 }
 
-void* SaveMenu::sub_8129B4C(void* buf) {
+u16* SaveMenu::sub_8129B4C(u16* oam) {
     u8 hours;
     u8 minutes;
     u32 time;
@@ -908,15 +908,15 @@ void* SaveMenu::sub_8129B4C(void* buf) {
             minutes = ((int (*)(int, int))((u8*)dword_3001038
                                            + ((u8*)&loc_8198350 - (u8*)&loc_8198220)))(time, 60);
         }
-        buf =
-            sub_8121F1C(buf, hours, minutes, this->save->slots[stru_3000D40.slot].data.entry.field_10);
-        buf = sub_8122098(buf, this->save->slots[stru_3000D40.slot].data.entry.items[0].field_4,
+        oam =
+            sub_8121F1C(oam, hours, minutes, this->save->slots[stru_3000D40.slot].data.entry.field_10);
+        oam = sub_8122098(oam, this->save->slots[stru_3000D40.slot].data.entry.items[0].field_4,
                           this->save->slots[stru_3000D40.slot].data.entry.items[1].field_4);
     } else {
-        buf = sub_8121F1C(buf, this->entry.field_16, this->entry.field_17, this->entry.field_10);
-        buf = sub_8122098(buf, this->entry.items[0].field_4, this->entry.items[1].field_4);
+        oam = sub_8121F1C(oam, this->entry.field_16, this->entry.field_17, this->entry.field_10);
+        oam = sub_8122098(oam, this->entry.items[0].field_4, this->entry.items[1].field_4);
     }
-    return buf;
+    return oam;
 }
 
 #define SAVE_TMEV_BASE(menu) (*(u32*)((menu)->tmev->field_28->field_4 + 0x194))
@@ -1216,7 +1216,7 @@ void SaveMenu::sub_812A42C() {
 
 void SaveMenuRenderer::update() {
     SaveMenu* menu = (SaveMenu*)parentProcess;
-    int buf = gGameState.oamCursor;
+    u16* buf = gGameState.oamCursor;
 
     if (menu->state > 4) {
         if (menu->field_67) {
@@ -1225,13 +1225,13 @@ void SaveMenuRenderer::update() {
         if (gGameState.field_888_4 == 0) {
             //! Possible fake match: `!(x & 1)` gives different code in C++ (bool), so `== 0`.
             if ((menu->field_B0 & 1) == 0) {
-                buf = (int)menu->sub_812A930((void*)buf);
+                buf = menu->sub_812A930(buf);
             }
             sub_8021F7C();
             sub_8020A78();
             gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
             buf = gOamNodesCopy(stru_203FFB8.field_3C, buf);
-            buf = (int)menu->sub_8129B4C((void*)buf);
+            buf = menu->sub_8129B4C(buf);
             gGameState.oamCursor = buf;
         }
     }

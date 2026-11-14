@@ -812,16 +812,16 @@ void LoadMenu::sub_8126C3C() {
     }
 }
 
-void* LoadMenu::sub_81270E4(void* buf) {
+u16* LoadMenu::sub_81270E4(u16* oam) {
     int slot;
     int a;
     int b;
     int c;
     int d;
 
-    buf = sub_8121F1C(buf, this->entries[this->field_FA].field_16,
+    oam = sub_8121F1C(oam, this->entries[this->field_FA].field_16,
                       this->entries[this->field_FA].field_17, this->entries[this->field_FA].field_10);
-    buf = sub_8122098(buf, this->entries[this->field_FA].items[0].field_4,
+    oam = sub_8122098(oam, this->entries[this->field_FA].items[0].field_4,
                       this->entries[this->field_FA].items[1].field_4);
 
     for (slot = 0; slot < 3; slot++) {
@@ -837,13 +837,13 @@ void* LoadMenu::sub_81270E4(void* buf) {
         }
         //! Possible fake match: `!(x & 1)` gives different code in C++ (bool), so `== 0`.
         if (((this->field_F1 >> slot) & 1) == 0) {
-            buf = sub_8122A20(buf, slot * 32 + 0x18, a, 0, d, 2, c + 0x20, 2, 3, 0, 0);
+            oam = sub_8122A20(oam, slot * 32 + 0x18, a, 0, d, 2, c + 0x20, 2, 3, 0, 0);
         } else {
-            buf = sub_8122A20(buf, slot * 32 + 0x20, b, 0, 1, 0, slot * 2 + 0x92, 2, 3, 0, 0);
-            buf = sub_8122A20(buf, slot * 32 + 0x18, a, 0, d, 2, c + 0x38, 2, 3, 0, 0);
+            oam = sub_8122A20(oam, slot * 32 + 0x20, b, 0, 1, 0, slot * 2 + 0x92, 2, 3, 0, 0);
+            oam = sub_8122A20(oam, slot * 32 + 0x18, a, 0, d, 2, c + 0x38, 2, 3, 0, 0);
         }
     }
-    return buf;
+    return oam;
 }
 
 #define TMEV_BASE(menu) (*(u32*)((menu)->field_160->field_28->field_4 + 0x194))
@@ -987,13 +987,13 @@ void LoadMenu::sub_812791C() {
     }
 }
 
-inline void* LoadMenu::sub_8127B90(void* buf) {
-    return sub_8122198(buf, this->entries[this->field_FA].field_14,
+inline u16* LoadMenu::sub_8127B90(u16* oam) {
+    return sub_8122198(oam, this->entries[this->field_FA].field_14,
                        this->entries[this->field_FA].field_15, this->field_F3 & (1 << this->field_FA));
 }
 
 void LoadMenuRenderer::update() {
-    int buf = gGameState.oamCursor;
+    u16* oam = gGameState.oamCursor;
     LoadMenu* menu = (LoadMenu*)parentProcess;
 
     if (menu->state > 3) {
@@ -1001,14 +1001,14 @@ void LoadMenuRenderer::update() {
             menu->sub_8127238();
         }
         if ((menu->field_F1 >> menu->field_FA) & 1) {
-            buf = (int)menu->sub_8127B90((void*)buf);
+            oam = menu->sub_8127B90(oam);
         }
         sub_8021F7C();
         sub_8020A78();
         gOamNodesSort(stru_203FFB8.field_3C, stru_203FFB8.field_3C + 0xA14);
-        buf = gOamNodesCopy(stru_203FFB8.field_3C, buf);
-        buf = (int)menu->sub_81270E4((void*)buf);
-        gGameState.oamCursor = buf;
+        oam = gOamNodesCopy(stru_203FFB8.field_3C, oam);
+        oam = menu->sub_81270E4(oam);
+        gGameState.oamCursor = oam;
     }
 }
 
