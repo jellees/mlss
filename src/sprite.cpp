@@ -1531,10 +1531,6 @@ void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
     oam_nodes_init((struct OamNode*)system->field_3C, 0x82);
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8020A78.s\"");
-#else
 // Builds the OAM list for the frame: gives every shown sprite its affine matrices and VRAM tiles
 // (shared with an earlier sprite that looks the same) and draws it.
 void sub_8020A78(void) {
@@ -1562,13 +1558,15 @@ void sub_8020A78(void) {
 
                 other = system->field_30;
                 while (other != sprite) {
-                    // field_11 & 0xC0: both flip bits (field_11_6, field_11_7)
+                    // field_1A is compared twice in the original (the compiler merges the two into
+                    // one masked comparison); maybe field_18 was meant for one of them.
                     if (!other->hidden && other->bank == sprite->bank
-                        && other->field_1A == sprite->field_1A && other->field_22 == sprite->field_22
-                        && *(u32*)&other->xScale == *(u32*)&sprite->xScale
-                        && *(u32*)&other->field_8 == *(u32*)&sprite->field_8
-                        && other->field_C == sprite->field_C
-                        && (*((u8*)other + 0x11) & 0xC0) == (*((u8*)sprite + 0x11) & 0xC0)) {
+                        && other->field_1A == sprite->field_1A && other->field_1A == sprite->field_1A
+                        && other->field_22 == sprite->field_22 && other->xScale == sprite->xScale
+                        && other->yScale == sprite->yScale && other->field_8 == sprite->field_8
+                        && other->field_A == sprite->field_A && other->field_C == sprite->field_C
+                        && other->field_11_6 == sprite->field_11_6
+                        && other->field_11_7 == sprite->field_11_7) {
                         found = 1;
                         break;
                     }
@@ -1595,8 +1593,8 @@ void sub_8020A78(void) {
                     other = system->field_30;
                     while (other != sprite) {
                         if (other->field_48->status == 0 && !other->hidden
-                            && other->bank == sprite->bank
-                            && *(u32*)&other->field_18 == *(u32*)&sprite->field_18
+                            && other->bank == sprite->bank && other->field_18 == sprite->field_18
+                            && other->field_1A == sprite->field_1A
                             && other->field_22 == sprite->field_22) {
                             shared = 1;
                             break;
@@ -1606,10 +1604,13 @@ void sub_8020A78(void) {
                             break;
                         }
                     }
-                }
-                if (shared) {
-                    sprite->field_2E = other->field_2E;
-                    sprite->field_28_10 = 1;
+                    if (shared) {
+                        sprite->field_2E = other->field_2E;
+                        sprite->field_28_10 = 1;
+                    } else {
+                        sprite->field_2E = vram;
+                        sprite->field_28_10 = 0;
+                    }
                 } else {
                     sprite->field_2E = vram;
                     sprite->field_28_10 = 0;
@@ -1625,7 +1626,6 @@ void sub_8020A78(void) {
     } while (sprite != 0);
     system->field_38 = oam;
 }
-#endif
 
 // Shows a hidden sprite again and reloads its palettes.
 void sprite_show(struct Sprite* sprite) {
