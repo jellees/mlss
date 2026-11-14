@@ -80,8 +80,10 @@ struct GameState {
     void* field_8D0;
 };
 
-// Background job queued with sub_8019808 (status 2 while queued, 0 when done)
-struct BackgroundJob {
+// Decompression of src to dest. sub_8019808 queues it (status 2) for sub_800063C, which runs the
+// queue in the CPU's idle time between frames, on its own stack, preempted by VBlank (crt0 IRQ handler).
+// Status 0 when done.
+struct DecompressJob {
     u32 status;
     void* src;
     void* dest;
@@ -228,7 +230,7 @@ struct Sprite {
     u8* field_3C;
     u8* field_40;
     u8* field_44;
-    struct BackgroundJob* field_48; // Tile upload (sub_80208E0)
+    struct DecompressJob* field_48; // Tile decompression (sub_80208E0)
     u8* field_4C;
     void* field_50;
     void* field_54;
@@ -497,7 +499,7 @@ void sub_801ABE8(u16, u16, int);
 void sub_801AD3C(void);
 u16* sub_80FB790(u16, u8*);
 void sub_80184F4(void*);
-void sub_8019808(struct BackgroundJob*);
+void sub_8019808(struct DecompressJob*);
 void sub_8116610(struct Process*);
 void sub_80507E0__12FieldMonster(struct FieldMonster*);
 u16* sub_80FB7BC(u16, u8*);
@@ -652,7 +654,7 @@ extern struct struc_3000FF4* dword_3000FF4;
 extern struct LoadMenuItem* dword_3000FF8;
 extern u8 byte_3000C80;
 extern struct struc_3000DD0 stru_3000DD0;
-extern struct BackgroundJob stru_3000DC0;
+extern struct DecompressJob stru_3000DC0;
 extern struct struc_3000D40 stru_3000D40;
 extern struct FieldManager* dword_3000D7C;
 extern struct struc_3000D44* dword_3000D44;

@@ -1477,7 +1477,7 @@ void sub_802083C(struct struc_11* node, int count) {
 
 // Queues the upload of the sprite's tiles (field_50 to field_4C) as a background job.
 void sub_80208E0(struct Sprite* sprite) {
-    struct BackgroundJob* job = sprite->field_48;
+    struct DecompressJob* job = sprite->field_48;
 
     job->status = 1;
     job->src = sprite->field_50;
@@ -1963,7 +1963,7 @@ void* sub_80213A0(int bank, int id, int tileCount, u8 arg3) {
     int tilesIndex;
     u8* animation;
     u8* tiles;
-    struct BackgroundJob* job;
+    struct DecompressJob* job;
 
     if (id & 0xF000) {
         bank = (id >> 12) - 1;
@@ -1985,10 +1985,10 @@ void* sub_80213A0(int bank, int id, int tileCount, u8 arg3) {
             }
         }
         tileCount *= 32;
-        job = (struct BackgroundJob*)sprite_heap_search(2, bank, tilesIndex);
+        job = (struct DecompressJob*)sprite_heap_search(2, bank, tilesIndex);
         if (job == 0) {
             tileCount += 16;
-            job = (struct BackgroundJob*)sprite_heap_alloc(2, tileCount, bank, tilesIndex);
+            job = (struct DecompressJob*)sprite_heap_alloc(2, tileCount, bank, tilesIndex);
             dword_3001034(0, job, tileCount);
             job->status = 1;
             job->src = tiles;
