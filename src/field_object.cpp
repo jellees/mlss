@@ -213,7 +213,7 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
         sub_801E150(sprite, animation, animation2, 0, 0);
     }
     if (sprite->field_48 != 0) {
-        int value = sub_80198B0(sprite->field_48->field_4) >> 5;
+        int value = sub_80198B0(sprite->field_48->src) >> 5;
 
         if (value > sprite->field_28_0) {
             sprite->field_28_0 = value;
@@ -279,7 +279,7 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
     }
     sub_801E150(sprite, animation, mode == 1 ? -1 : 0, 0, 0);
     if (mode == 1 && sprite->field_48 != 0) {
-        int size = sub_80198B0(sprite->field_48->field_4) >> 5;
+        int size = sub_80198B0(sprite->field_48->src) >> 5;
 
         if (size > sprite->field_28_0) {
             sprite->field_28_0 = size;

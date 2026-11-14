@@ -61,7 +61,7 @@ void sub_801E150(struct Sprite* sprite, int animation, int arg2, int arg3, int a
         if (sprite->field_44 != 0 && sprite->field_44[0] != 1) {
             sub_801E3EC(sprite->field_44, file);
         }
-        if (sprite->field_50 != 0 && sprite->field_48->field_0 == 1
+        if (sprite->field_50 != 0 && sprite->field_48->status == 1
             && (sprite->field_28_13 || dword_3000C78 != sub_800063C)) {
             int size = sprite->field_28_0 << 5;
             int used = sub_80198B0(sprite->field_50);
@@ -69,8 +69,8 @@ void sub_801E150(struct Sprite* sprite, int animation, int arg2, int arg3, int a
                 dword_3001034(0, sprite->field_4C + used, size - used);
                 sprite->field_28_0 = used / 32;
             }
-            dword_3000C84(sprite->field_48->field_4, sprite->field_48->field_8);
-            sprite->field_48->field_0 = 0;
+            dword_3000C84(sprite->field_48->src, sprite->field_48->dest);
+            sprite->field_48->status = 0;
             sprite->field_50 = 0;
             sprite->field_12_6 = gGameState.field_888_5 + 1;
         }
@@ -203,7 +203,7 @@ static inline SpriteCallback getCallback(struct Sprite* sprite) {
 void sub_801E68C(struct Sprite* sprite) {
     SpriteCallback callback;
 
-    if ((sprite->field_48 == 0 || sprite->field_48->field_0 == 0)
+    if ((sprite->field_48 == 0 || sprite->field_48->status == 0)
         && (sprite->field_44 == 0 || sprite->field_44[0] == 1) && !sprite->field_12_4
         && !sprite->hidden) {
         int wrapped = sprite->field_12_3;
@@ -283,7 +283,7 @@ void sub_801E68C(struct Sprite* sprite) {
 
 struct struc_11* sub_801E80C(struct Sprite* sprite, struct struc_11* arg1, u8* arg2) {
     if (sprite->field_50 != 0) {
-        if (sprite->field_48->field_0 == 1) {
+        if (sprite->field_48->status == 1) {
             int size = sprite->field_28_0 << 5;
             int done = sub_80198B0(sprite->field_50);
             int remaining = size - done;
@@ -292,14 +292,14 @@ struct struc_11* sub_801E80C(struct Sprite* sprite, struct struc_11* arg1, u8* a
                 CpuFastFill(0, sprite->field_4C + done, remaining);
                 sprite->field_28_0 = done / 32;
             }
-            sub_8019808((struct BackgroundJob*)sprite->field_48);
-        } else if (sprite->field_48->field_0 == 0) {
+            sub_8019808(sprite->field_48);
+        } else if (sprite->field_48->status == 0) {
             sprite->field_50 = 0;
             sprite->field_12_6 = gGameState.field_888_5 + 1;
         }
     }
 
-    if ((sprite->field_48 == 0 || sprite->field_48->field_0 == 0)
+    if ((sprite->field_48 == 0 || sprite->field_48->status == 0)
         && (sprite->field_44 == 0 || sprite->field_44[0] == 1)) {
         if (sprite->field_44 == 0 && sprite->field_12_6 != 0) {
             if (sprite->field_12_6 == 1) {
@@ -1477,11 +1477,11 @@ void sub_802083C(struct struc_11* node, int count) {
 
 // Queues the upload of the sprite's tiles (field_50 to field_4C) as a background job.
 void sub_80208E0(struct Sprite* sprite) {
-    struct struc_Sprite48* job = sprite->field_48;
+    struct BackgroundJob* job = sprite->field_48;
 
-    job->field_0 = 1;
-    job->field_4 = sprite->field_50;
-    job->field_8 = sprite->field_4C;
+    job->status = 1;
+    job->src = sprite->field_50;
+    job->dest = sprite->field_4C;
     job->field_C = 0;
 }
 
@@ -1597,7 +1597,7 @@ void sub_8020A78(void) {
                 if (system->field_0_0) {
                     other = system->field_30;
                     while (other != sprite) {
-                        if (other->field_48->field_0 == 0 && !other->hidden
+                        if (other->field_48->status == 0 && !other->hidden
                             && other->field_1E_0 == sprite->field_1E_0
                             && *(u32*)&other->field_18 == *(u32*)&sprite->field_18
                             && other->field_22 == sprite->field_22) {

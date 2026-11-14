@@ -112,14 +112,6 @@ struct struc_3000D18 {
     u32 field_C;
 };
 
-// Same layout as BackgroundJob (sub_80208E0 queues it, sub_8019808 runs it)
-struct struc_Sprite48 {
-    u32 field_0;
-    void* field_4;
-    void* field_8;
-    u32 field_C;
-};
-
 // Entries of off_839EE60[][]
 struct struc_839EE60 {
     u32 field_0_0 : 9; // Palette (off_839EEE4/off_839EF10, off_839EF3C)
@@ -236,7 +228,7 @@ struct Sprite {
     u8* field_3C;
     u8* field_40;
     u8* field_44;
-    struct struc_Sprite48* field_48;
+    struct BackgroundJob* field_48; // Tile upload (sub_80208E0)
     u8* field_4C;
     void* field_50;
     void* field_54;
