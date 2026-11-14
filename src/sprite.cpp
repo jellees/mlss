@@ -15,7 +15,7 @@ void sub_801DFB0(u8 flags) {
     CpuCopy32(arm_8000850, dword_3000D48, ROUTINE_SIZE(arm_8000850));
     dword_3000D4C = (int (*)(int, int))((u8*)dword_3000D48 + ROUTINE_SIZE(arm_8000850));
     CpuCopy32(arm_80008B8, dword_3000D4C, ROUTINE_SIZE(arm_80008B8));
-    dword_3000D50 = (u8*)dword_3000D4C + ROUTINE_SIZE(arm_80008B8);
+    dword_3000D50 = (void (*)(u32, int))((u8*)dword_3000D4C + ROUTINE_SIZE(arm_80008B8));
     CpuCopy32(arm_80008F0, dword_3000D50, ROUTINE_SIZE(arm_80008F0));
 
     CpuFill32(0, dword_3000D58, sizeof(dword_3000D58));
@@ -1532,4 +1532,116 @@ void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
     system->field_3C = (u32) new ((flags >> 7) ^ 1, "OAME", 0) struct struc_11[0x82];
     sub_801DFB0(flags);
     sub_802083C((struct struc_11*)system->field_3C, 0x82);
+}
+
+// Builds the OAM list for the frame: gives every shown sprite its affine matrices and VRAM tiles
+// (shared with an earlier sprite that looks the same) and draws it. https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8020A78.s\"");
+#else
+void sub_8020A78(void) {
+    struct struc_203FFB8* system = &stru_203FFB8;
+    struct Sprite* sprite = system->field_30;
+    u16 vram;
+    u8 matrix;
+    struct struc_11* oam;
+
+    system->field_2 = 0;
+    dword_3000D50(system->field_3C, 0x82);
+    if (sprite == 0) {
+        return;
+    }
+    vram = system->field_8;
+    matrix = system->field_6;
+    oam = ((struct struc_11*)system->field_3C)->field_10;
+    do {
+        if (sprite->field_28_14) {
+            struct Sprite* other;
+            int shared;
+
+            if (system->field_0_1) {
+                int found = 0;
+
+                other = system->field_30;
+                while (other != sprite) {
+                    // field_11 & 0xC0: both flip bits (field_11_6, field_11_7)
+                    if (!other->field_12_5 && other->field_1E_0 == sprite->field_1E_0
+                        && other->field_1A == sprite->field_1A && other->field_22 == sprite->field_22
+                        && *(u32*)&other->xScale == *(u32*)&sprite->xScale
+                        && *(u32*)&other->field_8 == *(u32*)&sprite->field_8
+                        && other->field_C == sprite->field_C
+                        && (*((u8*)other + 0x11) & 0xC0) == (*((u8*)sprite + 0x11) & 0xC0)) {
+                        found = 1;
+                        break;
+                    }
+                    other = other->field_68;
+                    if (other == 0) {
+                        break;
+                    }
+                }
+                if (found) {
+                    sprite->field_10_1 = other->field_10_1;
+                    sprite->field_28_11 = 1;
+                } else {
+                    sprite->field_10_1 = matrix;
+                    sprite->field_28_11 = 0;
+                }
+            } else {
+                sprite->field_10_1 = matrix;
+                sprite->field_28_11 = 0;
+            }
+
+            shared = 0;
+            if (sprite->field_44 != 0) {
+                if (system->field_0_0) {
+                    other = system->field_30;
+                    while (other != sprite) {
+                        if (other->field_48->field_0 == 0 && !other->field_12_5
+                            && other->field_1E_0 == sprite->field_1E_0
+                            && *(u32*)&other->field_18 == *(u32*)&sprite->field_18
+                            && other->field_22 == sprite->field_22) {
+                            shared = 1;
+                            break;
+                        }
+                        other = other->field_68;
+                        if (other == 0) {
+                            break;
+                        }
+                    }
+                }
+                if (shared) {
+                    sprite->field_2E = other->field_2E;
+                    sprite->field_28_10 = 1;
+                } else {
+                    sprite->field_2E = vram;
+                    sprite->field_28_10 = 0;
+                }
+            }
+            oam = sub_801E80C(sprite, oam, &system->field_2);
+            matrix += sprite->field_10_6;
+            if (sprite->field_44 != 0 && !shared) {
+                vram += sprite->field_30;
+            }
+        }
+        sprite = sprite->field_68;
+    } while (sprite != 0);
+    system->field_38 = oam;
+}
+#endif
+
+// Shows a hidden sprite again and reloads its palettes.
+void sprite_show_8020CBC(struct Sprite* sprite) {
+    if (sprite->field_12_5) {
+        sprite->field_12_5 = 0;
+        sprite->field_12_1 = 0;
+        if (sprite->field_54 != 0) {
+            if (sub_8021574(sprite->field_1E_4, sprite->field_1C, sprite->field_28_12, 1, 1,
+                            &sprite->field_14, -1)
+                == 2) {
+                sprite->field_13_0 = 0;
+            } else {
+                sprite->field_13_0 = gGameState.field_888_5 + 1;
+            }
+        }
+    }
 }

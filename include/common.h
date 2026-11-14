@@ -240,6 +240,8 @@ struct Sprite {
     u8* field_58;
     SpriteCallback field_5C;
     int field_60;
+    u8 pad64[0x4];
+    struct Sprite* field_68; // Next sprite in stru_203FFB8.field_30
 };
 
 struct struc_203FFF8 {
@@ -398,7 +400,8 @@ struct struc_203FFA8 {
 };
 
 struct struc_203FFB8 {
-    u8 field_0_0 : 2;
+    u8 field_0_0 : 1;
+    u8 field_0_1 : 1;
     u8 field_0_2 : 1;
     u8 field_1;
     u8 field_2;
@@ -411,7 +414,8 @@ struct struc_203FFB8 {
     u16 field_A;
     u16 field_C[16];
     struct struc_203FFA8* field_2C;
-    u8 pad30[0x8];
+    struct Sprite* field_30; // List of sprites (linked by Sprite::field_68)
+    u8 pad34[0x4];
     struct struc_11* field_38;
     u32 field_3C; // Pool of 0x82 OAM sort nodes (sub_8020994)
 };
@@ -559,7 +563,7 @@ u16 sub_8123DC4(u16, int);
 void sub_8021308(struct Sprite*);
 void sub_8123BA8(int);
 void sub_819A43C(void);
-void sub_8021574(int, int, int, int, int, void*, int);
+int sub_8021574(int, int, int, int, int, void*, int);
 void sub_802191C(int);
 u32** sub_81980C8(int);
 void sub_8127BC8(struct LoadMenuEntry*, u8);
@@ -661,7 +665,7 @@ extern u16 word_203FFC4[];
 // IWRAM
 extern void (*dword_3000D48)(int, int);
 extern int (*dword_3000D4C)(int, int);
-extern u8* dword_3000D50;
+extern void (*dword_3000D50)(u32, int);
 extern SpriteDrawRoutine dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)
 extern u8 byte_3000D70;
 extern struct ORSTData* dword_3000DA0;

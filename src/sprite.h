@@ -28,6 +28,7 @@ void sub_80207E8(struct struc_11* node, int count);
 void sub_802083C(struct struc_11* node, int count);
 void sub_80208E0(struct Sprite* sprite);
 void sub_80208F4(void);
+void sub_8020A78(void);
 
 #ifdef __cplusplus
 }
