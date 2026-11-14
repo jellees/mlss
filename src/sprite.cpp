@@ -2260,10 +2260,6 @@ struct struc_839EE60* sub_8021EA8(int bank, int id) {
     return &off_839EE60[bank][id];
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8021ED8.s\"");
-#else
 // Shows a hidden sprite, adding it back to the end of the sprite list if it isn't in it.
 void sub_8021ED8(struct Sprite* sprite) {
     if (sprite->field_12_5) {
@@ -2273,8 +2269,12 @@ void sub_8021ED8(struct Sprite* sprite) {
             if (system->field_30 == 0) {
                 system->field_30 = sprite;
             } else {
-                sprite->field_68 = system->field_34->field_68;
-                system->field_34->field_68 = sprite;
+                struct Sprite* last = system->field_34;
+
+                sprite->field_68 = last->field_68;
+                //! Possible fake match (permuter): storing sprite through last makes field_34 reload
+                last = sprite;
+                system->field_34->field_68 = last;
             }
             sprite->field_64 = system->field_34;
             system->field_34 = sprite;
@@ -2283,7 +2283,6 @@ void sub_8021ED8(struct Sprite* sprite) {
         sprite_show_8020CBC(sprite);
     }
 }
-#endif
 
 // Hides a sprite and frees its palette slots, but keeps it in the sprite list.
 void sprite_hide_8021F20(struct Sprite* sprite) {
