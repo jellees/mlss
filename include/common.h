@@ -194,7 +194,7 @@ struct Sprite {
     u32 field_12_1 : 2;
     u32 field_12_3 : 1;
     u32 field_12_4 : 1;
-    u32 field_12_5 : 1;
+    u32 hidden : 1;
     u32 field_12_6 : 2;
     u32 field_13_0 : 2;
     u32 field_13_2 : 2;
@@ -224,7 +224,7 @@ struct Sprite {
     u16 field_28_11 : 1;
     u16 field_28_12 : 1;
     u16 field_28_13 : 1;
-    u16 field_28_14 : 1;
+    u16 active : 1;
     u16 field_28_15 : 1;
     s16 field_2A;
     s16 field_2C;

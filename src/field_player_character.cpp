@@ -121,7 +121,7 @@ void FieldPlayerCharacter::method8(s16 cameraX, s16 cameraY, FieldObject** objec
     } else {
         FieldObject::method8(cameraX, cameraY, objects);
     }
-    if (!field_36C->field_12_5 && field_353_0) {
+    if (!field_36C->hidden && field_353_0) {
         field_36C->xPosition = sprite->xPosition + field_372;
         field_36C->yPosition = sprite->yPosition + field_373;
         field_36C->field_E = sprite->field_E + field_374;
@@ -154,7 +154,7 @@ void FieldPlayerCharacter::method2(u16* arg1, u16* arg2, void* arg3) {
 
 void FieldPlayerCharacter::method3() {
     FieldObject::method3();
-    if (!field_36C->field_12_5) {
+    if (!field_36C->hidden) {
         field_378_1 = field_36C->field_11_6;
         field_378_2 = field_36C->field_1F_0;
         field_378_4 = field_36C->field_1F_2;
@@ -2860,7 +2860,7 @@ void FieldPlayerShotBullet::sub_804E33C(FieldObject** objects, int count) {
         return;
     }
     if (sprite->field_21 > 4) {
-        if (sprite->field_12_5) {
+        if (sprite->hidden) {
             active = 0;
         }
         return;

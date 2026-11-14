@@ -1660,7 +1660,7 @@ void FieldManager::sub_80262CC(int x, int y, int z, int height, int type, bool a
         int animation = type - 1;
 
         for (i = 0; i < 4; i++) {
-            if (field_1C->field_25C[i].sprite->field_12_5) {
+            if (field_1C->field_25C[i].sprite->hidden) {
                 entry = &field_1C->field_25C[i];
                 break;
             }
@@ -2252,7 +2252,7 @@ void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMons
     sub_80F032C(evts);
     fmex = field_1C;
     for (i = 0; i < 4; i++) {
-        if (!fmex->field_25C[i].sprite->field_12_5) {
+        if (!fmex->field_25C[i].sprite->hidden) {
             sprite_remove(fmex->field_25C[i].sprite);
         }
     }
@@ -3125,7 +3125,7 @@ void FieldManager::sub_8029624() {
     int i;
 
     for (i = 0; i < 4; i++, entry++) {
-        if (!entry->sprite->field_12_5) {
+        if (!entry->sprite->hidden) {
             entry->sprite->xPosition = entry->field_4 - field_27E;
             entry->sprite->yPosition = entry->field_6 - field_280;
         }
@@ -3137,7 +3137,7 @@ void FieldManager::sub_80296D0() {
     int i;
 
     for (i = 0; i < 4; i++) {
-        if (!fmex->field_25C[i].sprite->field_12_5) {
+        if (!fmex->field_25C[i].sprite->hidden) {
             sprite_remove(fmex->field_25C[i].sprite);
         }
     }
@@ -3776,7 +3776,7 @@ void FieldManager::sub_802A740() {
         if (leader->field_35A_11 && leader->state <= 4) {
             int result = sub_80261C0(leader);
             if (result != -1) {
-                if (leader->field_36C->field_12_5 || leader->field_36C->field_16 != 0x54) {
+                if (leader->field_36C->hidden || leader->field_36C->field_16 != 0x54) {
                     leader->sub_80497A8();
                     sub_801ABE8(0, 0x1E, 0);
                 }
@@ -3787,7 +3787,7 @@ void FieldManager::sub_802A740() {
                     leader->field_36C->xScale = 0x100;
                     leader->field_36C->yScale = 0x100;
                 }
-            } else if (!leader->field_36C->field_12_5 && leader->field_36C->field_16 == 0x54) {
+            } else if (!leader->field_36C->hidden && leader->field_36C->field_16 == 0x54) {
                 sprite_remove(leader->field_36C);
                 sub_801AD3C();
             }

@@ -56,7 +56,7 @@ void sub_801E150(struct Sprite* sprite, int animation, int arg2, int arg3, int a
     if (arg2 == -1) {
         sprite->field_23 = 0;
         sprite->field_12_3 = 0;
-        sprite->field_12_5 = 1;
+        sprite->hidden = true;
         sprite->field_20 = 0x10;
         if (sprite->field_44 != 0 && sprite->field_44[0] != 1) {
             sub_801E3EC(sprite->field_44, file);
@@ -99,7 +99,7 @@ void sub_801E150(struct Sprite* sprite, int animation, int arg2, int arg3, int a
     sprite->field_2C = 0;
     sprite->field_3C = entry;
     sprite->field_40 = base + (base[sprite->field_22 * 2 + 1] | (base[sprite->field_22 * 2 + 2] << 8));
-    sprite->field_28_14 = 1;
+    sprite->active = true;
 }
 
 // Heap labels of the sprite routine copies (off_839EE40)
@@ -205,7 +205,7 @@ void sub_801E68C(struct Sprite* sprite) {
 
     if ((sprite->field_48 == 0 || sprite->field_48->field_0 == 0)
         && (sprite->field_44 == 0 || sprite->field_44[0] == 1) && !sprite->field_12_4
-        && !sprite->field_12_5) {
+        && !sprite->hidden) {
         int wrapped = sprite->field_12_3;
         u8* entry;
         int frameCount;
@@ -256,7 +256,7 @@ void sub_801E68C(struct Sprite* sprite) {
                 remaining = 1;
                 timer = 0;
             } else if (sprite->field_12_1 == 2) {
-                sprite->field_12_5 = 1;
+                sprite->hidden = true;
                 update = 0;
             }
         }
@@ -272,7 +272,7 @@ void sub_801E68C(struct Sprite* sprite) {
         }
     }
     callback = getCallback(sprite);
-    if (callback != 0 && (sprite->field_28_9 || (sprite->field_12_3 && !sprite->field_12_5))) {
+    if (callback != 0 && (sprite->field_28_9 || (sprite->field_12_3 && !sprite->hidden))) {
         callback(sprite, sprite->field_60);
     }
 }
@@ -312,7 +312,7 @@ struct struc_11* sub_801E80C(struct Sprite* sprite, struct struc_11* arg1, u8* a
             sprite->field_30 = 0;
         }
 
-        if (!sprite->field_12_5) {
+        if (!sprite->hidden) {
             s8 matrices[4];
             u8* cursor;
             u8* p;
@@ -1556,7 +1556,7 @@ void sub_8020A78(void) {
     matrix = system->field_6;
     oam = ((struct struc_11*)system->field_3C)->field_10;
     do {
-        if (sprite->field_28_14) {
+        if (sprite->active) {
             struct Sprite* other;
             int shared;
 
@@ -1566,7 +1566,7 @@ void sub_8020A78(void) {
                 other = system->field_30;
                 while (other != sprite) {
                     // field_11 & 0xC0: both flip bits (field_11_6, field_11_7)
-                    if (!other->field_12_5 && other->field_1E_0 == sprite->field_1E_0
+                    if (!other->hidden && other->field_1E_0 == sprite->field_1E_0
                         && other->field_1A == sprite->field_1A && other->field_22 == sprite->field_22
                         && *(u32*)&other->xScale == *(u32*)&sprite->xScale
                         && *(u32*)&other->field_8 == *(u32*)&sprite->field_8
@@ -1597,7 +1597,7 @@ void sub_8020A78(void) {
                 if (system->field_0_0) {
                     other = system->field_30;
                     while (other != sprite) {
-                        if (other->field_48->field_0 == 0 && !other->field_12_5
+                        if (other->field_48->field_0 == 0 && !other->hidden
                             && other->field_1E_0 == sprite->field_1E_0
                             && *(u32*)&other->field_18 == *(u32*)&sprite->field_18
                             && other->field_22 == sprite->field_22) {
@@ -1632,8 +1632,8 @@ void sub_8020A78(void) {
 
 // Shows a hidden sprite again and reloads its palettes.
 void sprite_show(struct Sprite* sprite) {
-    if (sprite->field_12_5) {
-        sprite->field_12_5 = 0;
+    if (sprite->hidden) {
+        sprite->hidden = false;
         sprite->field_12_1 = 0;
         if (sprite->field_54 != 0) {
             if (sub_8021574(sprite->field_1E_4, sprite->field_1C, sprite->field_28_12, 1, 1,
@@ -1651,8 +1651,8 @@ void sprite_show(struct Sprite* sprite) {
 void sprite_remove(struct Sprite* sprite) {
     struct struc_203FFB8* system;
 
-    if (!sprite->field_12_5) {
-        sprite->field_12_5 = 1;
+    if (!sprite->hidden) {
+        sprite->hidden = true;
         if (sub_8021A18(sprite, 2) == 0) {
             u16* slot = stru_203FFB8.field_C;
             int mask = sprite->field_14;
@@ -1775,7 +1775,7 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
         sprite->yScale = 0x100;
         sprite->field_8 = 0x100;
         sprite->field_A = 0x100;
-        sprite->field_12_5 = 1;
+        sprite->hidden = true;
         sprite->field_13_4 = paletteCount;
         sprite->field_16 = id;
         sprite->field_1A = animationIndex;
@@ -1796,7 +1796,7 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
         sprite->yScale = 0x100;
         sprite->field_8 = 0x100;
         sprite->field_A = 0x100;
-        sprite->field_12_5 = 1;
+        sprite->hidden = true;
         sprite->field_16 = 0xFFFF;
     }
 
@@ -1838,8 +1838,8 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
     int recordSize;
 
     if (sprite->field_16 != 0xFFFF) {
-        if (!sprite->field_12_5) {
-            sprite->field_12_5 = 1;
+        if (!sprite->hidden) {
+            sprite->hidden = true;
             if (sub_8021A18(sprite, 2) == 0) {
                 u16* slot = stru_203FFB8.field_C;
                 int mask = sprite->field_14;
@@ -1920,8 +1920,8 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
 void sprite_destroy(struct Sprite* sprite) {
     struct struc_203FFB8* system;
 
-    if (!sprite->field_12_5) {
-        sprite->field_12_5 = 1;
+    if (!sprite->hidden) {
+        sprite->hidden = true;
         if (sub_8021A18(sprite, 2) == 0) {
             u16* slot = stru_203FFB8.field_C;
             int mask = sprite->field_14;
@@ -2167,7 +2167,7 @@ struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
         if (type == 2) {
             do {
                 // field_1C and field_1E_4: the palette
-                if (other != sprite && !other->field_12_5 && !other->field_28_12
+                if (other != sprite && !other->hidden && !other->field_28_12
                     && (*(u32*)&other->field_1C & 0x00F0FFFF)
                            == (*(u32*)&sprite->field_1C & 0x00F0FFFF)) {
                     return other;
@@ -2262,7 +2262,7 @@ struct struc_839EE60* sub_8021EA8(int bank, int id) {
 
 // Shows a hidden sprite, adding it back to the end of the sprite list if it isn't in it.
 void sprite_restore(struct Sprite* sprite) {
-    if (sprite->field_12_5) {
+    if (sprite->hidden) {
         if (sprite->field_64 == sprite->field_68) {
             struct struc_203FFB8* system = &stru_203FFB8;
 
@@ -2286,8 +2286,8 @@ void sprite_restore(struct Sprite* sprite) {
 
 // Hides a sprite and frees its palette slots, but keeps it in the sprite list.
 void sprite_hide(struct Sprite* sprite) {
-    if (!sprite->field_12_5) {
-        sprite->field_12_5 = 1;
+    if (!sprite->hidden) {
+        sprite->hidden = true;
         if (sub_8021A18(sprite, 2) == 0) {
             u16* slot = stru_203FFB8.field_C;
             int mask = sprite->field_14;
@@ -2310,7 +2310,7 @@ void sub_8021F7C(void) {
     while (sprite != 0) {
         struct Sprite* next = sprite->field_68;
 
-        if (sprite->field_28_14) {
+        if (sprite->active) {
             sub_801E68C(sprite);
             if (sprite->field_12_3) {
                 if (sprite->field_12_1 == 2) {

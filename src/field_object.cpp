@@ -428,7 +428,7 @@ void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
             && (s16)spriteY <= field_283 + 0xD0
             && (field_8 <= (s16)spriteY || field_8 >= -16 - field_283))) {
         field_214_21 = 0;
-        if (spriteActive && sprite->field_12_5) {
+        if (spriteActive && sprite->hidden) {
             int value;
 
             field_214_24 = 1;
@@ -441,7 +441,7 @@ void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
         }
     } else {
         field_214_21 = field_20C_18 ^ 1;
-        if (spriteActive && sprite->field_12_5 == 0) {
+        if (spriteActive && !sprite->hidden) {
             if (field_26E != 0xFF) {
                 sub_8116680(field_334, field_26E);
             }
