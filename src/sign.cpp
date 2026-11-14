@@ -90,7 +90,7 @@ void Sign::update() {
             }
 
             panm->enable();
-            sprite_show_8020CBC(youAreHere);
+            sprite_show(youAreHere);
             scrollX = mapPositionX - 120;
             scrollY = mapPositionY - 88;
             sub_8051ACC();
@@ -148,27 +148,27 @@ void Sign::sub_8051A00() {
     youAreHere->yPosition = mapPositionY - scrollY;
 
     if (scrollY == 0) {
-        sprite_hide_8021F20(arrows[0]);
+        sprite_hide(arrows[0]);
     } else {
-        sprite_show_8020CBC(arrows[0]);
+        sprite_show(arrows[0]);
     }
 
     if (scrollX == width - 240) {
-        sprite_hide_8021F20(arrows[1]);
+        sprite_hide(arrows[1]);
     } else {
-        sprite_show_8020CBC(arrows[1]);
+        sprite_show(arrows[1]);
     }
 
     if (scrollY == height - 160) {
-        sprite_hide_8021F20(arrows[2]);
+        sprite_hide(arrows[2]);
     } else {
-        sprite_show_8020CBC(arrows[2]);
+        sprite_show(arrows[2]);
     }
 
     if (scrollX == 0) {
-        sprite_hide_8021F20(arrows[3]);
+        sprite_hide(arrows[3]);
     } else {
-        sprite_show_8020CBC(arrows[3]);
+        sprite_show(arrows[3]);
     }
 }
 

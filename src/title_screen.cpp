@@ -82,8 +82,8 @@ CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) 
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 = 0xFFFF;
 
-    sprite_show_8020CBC(mario);
-    sprite_show_8020CBC(luigi);
+    sprite_show(mario);
+    sprite_show(luigi);
 
     velocity = 0;
     acceleration = 117;
@@ -147,12 +147,12 @@ void CompanyIntro::update() {
             brightness--;
             BUFFER_REG_BLDY = 16 - brightness;
             if (brightness == 0) {
-                sprite_hide_8021F20(mario);
-                sprite_hide_8021F20(luigi);
+                sprite_hide(mario);
+                sprite_hide(luigi);
                 CpuFastSet(dword_83A3D60, (void*)(0x2000000 + 0x80), 8);
                 gGameState.field_2 = 0xFFFF;
                 BUFFER_REG_BG0CNT = BGCNT_CHARBASE(3) | BGCNT_SCREENBASE(29);
-                sprite_show_8020CBC(alphaDreamLogo);
+                sprite_show(alphaDreamLogo);
                 alphaDreamLogo->field_12_4 = 1;
                 brightness = 16;
                 state = 4;
@@ -208,7 +208,7 @@ void CompanyIntro::update() {
                 yPosLuigi = 24064;
                 sub_80210A8(mario, 2, 4109, 1, -1, -1, -1, -1);
                 sub_801E150(mario, 0, -1, 0, 0);
-                sprite_show_8020CBC(mario);
+                sprite_show(mario);
                 temp = mario->field_11_6;
                 temp ^= 1;
                 mario->field_11_6 = temp;
@@ -216,7 +216,7 @@ void CompanyIntro::update() {
 
                 sub_80210A8(luigi, 2, 4110, 1, -1, -1, -1, -1);
                 sub_801E150(luigi, 0, -1, 0, 0);
-                sprite_show_8020CBC(luigi);
+                sprite_show(luigi);
                 luigi->field_12_1 = 1;
                 flags = 0;
             }
@@ -302,7 +302,7 @@ TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(prio
         sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
         sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
         sprites[TS_SPRITE_SUITCASE]->field_E = 2;
-        sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE]);
+        sprite_show(sprites[TS_SPRITE_SUITCASE]);
     } else {
         prepareGameSelect(selection);
     }
@@ -354,7 +354,7 @@ inline TitleScreen::~TitleScreen() {
 }
 
 void TitleScreen::preparePressStart() {
-    sprite_hide_8021F20(sprites[TS_SPRITE_LICENSE_TEXT]);
+    sprite_hide(sprites[TS_SPRITE_LICENSE_TEXT]);
 
     sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
     sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
@@ -364,7 +364,7 @@ void TitleScreen::preparePressStart() {
     sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 0;
     sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 0;
     sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
-    sprite_show_8020CBC(sprites[TS_SPRITE_SS_TEXT]);
+    sprite_show(sprites[TS_SPRITE_SS_TEXT]);
 
     sub_801E150(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
     sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
@@ -373,7 +373,7 @@ void TitleScreen::preparePressStart() {
     sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
     sprites[TS_SPRITE_SUITCASE]->field_E = 2;
     sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
-    sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE]);
+    sprite_show(sprites[TS_SPRITE_SUITCASE]);
 
     xPosSuitcase = 30720;
     yPosSuitcase = 35840;
@@ -401,20 +401,20 @@ void TitleScreen::preparePressStart() {
 void TitleScreen::prepareGameSelect(int selection) {
     int i;
 
-    sprite_hide_8021F20(sprites[TS_SPRITE_LICENSE_TEXT]);
-    sprite_hide_8021F20(sprites[TS_SPRITE_PRESS_START_TEXT]);
+    sprite_hide(sprites[TS_SPRITE_LICENSE_TEXT]);
+    sprite_hide(sprites[TS_SPRITE_PRESS_START_TEXT]);
 
     for (i = 0; i < 3; i++) {
         sub_801E150(sprites[TS_SPRITE_ML_GAME_TEXT + i], 3 + i, 0, 0, 0);
         sprites[TS_SPRITE_ML_GAME_TEXT + i]->xPosition = 180;
         sprites[TS_SPRITE_ML_GAME_TEXT + i]->yPosition = 100 + i * 20;
-        sprite_show_8020CBC(sprites[TS_SPRITE_ML_GAME_TEXT + i]);
+        sprite_show(sprites[TS_SPRITE_ML_GAME_TEXT + i]);
     }
 
     sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
     sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 112;
     sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 92 + 20 * this->selection;
-    sprite_show_8020CBC(sprites[TS_SPRITE_BEAN_POINTER]);
+    sprite_show(sprites[TS_SPRITE_BEAN_POINTER]);
 
     sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
     sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
@@ -424,7 +424,7 @@ void TitleScreen::prepareGameSelect(int selection) {
     sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 0;
     sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 0;
     sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
-    sprite_show_8020CBC(sprites[TS_SPRITE_SS_TEXT]);
+    sprite_show(sprites[TS_SPRITE_SS_TEXT]);
 
     sub_801E150(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
     sprites[TS_SPRITE_SUITCASE]->xPosition = 64;
@@ -432,14 +432,14 @@ void TitleScreen::prepareGameSelect(int selection) {
     sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
     sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
     sprites[TS_SPRITE_SUITCASE]->field_E = 2;
-    sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE]);
+    sprite_show(sprites[TS_SPRITE_SUITCASE]);
 
     sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * (selection - 1) + 1, 0, 0, 0);
     sprites[TS_SPRITE_SUITCASE_VISUAL]->xPosition = 64;
     sprites[TS_SPRITE_SUITCASE_VISUAL]->yPosition = 140;
     sprites[TS_SPRITE_SUITCASE_VISUAL]->field_1F_0 = 1;
     sprites[TS_SPRITE_SUITCASE_VISUAL]->field_E = 1;
-    sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE_VISUAL]);
+    sprite_show(sprites[TS_SPRITE_SUITCASE_VISUAL]);
 
     suitcaseVisualState = TS_SV_STATE_IDLE;
 
@@ -614,7 +614,7 @@ void TitleScreen::update() {
                                             sprites[TS_SPRITE_SS_TEXT]->field_1F_0 = 1;
                                             sprites[TS_SPRITE_SS_TEXT]->field_1F_2 = 1;
                                             sprites[TS_SPRITE_SS_TEXT]->field_E = 0;
-                                            sprite_show_8020CBC(sprites[TS_SPRITE_SS_TEXT]);
+                                            sprite_show(sprites[TS_SPRITE_SS_TEXT]);
                                             states[TS_ITEM_SS_TEXT] = 0;
                                             break;
 
@@ -631,7 +631,7 @@ void TitleScreen::update() {
                                             sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_0 = 1;
                                             sprites[TS_SPRITE_LICENSE_TEXT]->field_1F_2 = 1;
                                             sprites[TS_SPRITE_LICENSE_TEXT]->field_E = 0;
-                                            sprite_show_8020CBC(sprites[TS_SPRITE_LICENSE_TEXT]);
+                                            sprite_show(sprites[TS_SPRITE_LICENSE_TEXT]);
                                             states[TS_ITEM_LICENSE_TEXT] = 0;
                                             break;
                                     }
@@ -643,7 +643,7 @@ void TitleScreen::update() {
                                 if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
                                     sub_801E150(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
                                     sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
-                                    sprite_hide_8021F20(sprites[TS_SPRITE_LICENSE_TEXT]);
+                                    sprite_hide(sprites[TS_SPRITE_LICENSE_TEXT]);
                                     states[TS_ITEM_SUITCASE] = -1;
                                     BUFFER_REG_BG0CNT = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(24);
                                     BUFFER_REG_BG0HOFS = 0;
@@ -798,7 +798,7 @@ void TitleScreen::update() {
                 sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_0 = 0;
                 sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_2 = 0;
                 sprites[TS_SPRITE_PRESS_START_TEXT]->field_E = 0;
-                sprite_show_8020CBC(sprites[TS_SPRITE_PRESS_START_TEXT]);
+                sprite_show(sprites[TS_SPRITE_PRESS_START_TEXT]);
                 state = TS_STATE_PRESS_START_WAIT;
             }
             break;
@@ -852,7 +852,7 @@ void TitleScreen::update() {
                                         sprites[TS_SPRITE_BEAN_POINTER]->field_1F_0 = 0;
                                         sprites[TS_SPRITE_BEAN_POINTER]->field_1F_2 = 0;
                                         sprites[TS_SPRITE_BEAN_POINTER]->field_E = 0;
-                                        sprite_show_8020CBC(sprites[TS_SPRITE_BEAN_POINTER]);
+                                        sprite_show(sprites[TS_SPRITE_BEAN_POINTER]);
                                         states[TS_ITEM_POINTER] = 0;
                                     }
                                     timer++;
@@ -868,7 +868,7 @@ void TitleScreen::update() {
                             psTextVelocity -= 98;
                             psTextPosY -= psTextVelocity;
                             if (psTextPosY > 45055) {
-                                sprite_hide_8021F20(sprites[TS_SPRITE_PRESS_START_TEXT]);
+                                sprite_hide(sprites[TS_SPRITE_PRESS_START_TEXT]);
                                 states[TS_ITEM_PRESS_START_TEXT] = -1;
                             }
                         }
@@ -893,7 +893,7 @@ void TitleScreen::update() {
                                     sub_801E150(sprites[spriteIdx + 2], spriteIdx + 3, 0, 0, 0);
                                     sprites[spriteIdx + 2]->xPosition = 180;
                                     sprites[spriteIdx + 2]->yPosition = 20 * spriteIdx + 100;
-                                    sprite_show_8020CBC(sprites[spriteIdx + 2]);
+                                    sprite_show(sprites[spriteIdx + 2]);
 
                                     if (spriteIdx == 0) {
                                         sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0, 0);
@@ -916,7 +916,7 @@ void TitleScreen::update() {
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->yPosition = 140;
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->field_1F_0 = 1;
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->field_E = 1;
-                                    sprite_show_8020CBC(sprites[TS_SPRITE_SUITCASE_VISUAL]);
+                                    sprite_show(sprites[TS_SPRITE_SUITCASE_VISUAL]);
                                     suitcaseVisualState = TS_SV_STATE_APPEAR;
 
                                     off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_WIN0_ON >> 8;

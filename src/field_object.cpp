@@ -293,7 +293,7 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
     if (spriteActive) {
         int value2 = sprite->field_12_1;
 
-        sub_8021ED8(sprite);
+        sprite_restore(sprite);
         sprite->field_12_1 = value2;
         if (mode != 0 && field_20C_22) {
             sub_8047DC8(0xFF);
@@ -433,7 +433,7 @@ void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
 
             field_214_24 = 1;
             value = sprite->field_12_1;
-            sub_8021ED8(sprite);
+            sprite_restore(sprite);
             sprite->field_12_1 = value;
             if (field_26E != 0xFF) {
                 sub_8116654(field_334, field_26E);
@@ -446,7 +446,7 @@ void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
                 sub_8116680(field_334, field_26E);
             }
             field_23D = 0;
-            sub_8020D40(sprite);
+            sprite_remove(sprite);
         }
     }
 }
@@ -742,7 +742,7 @@ inline void FieldObject::method4() {
 
         spriteActive = 1;
         value = sprite->field_12_1;
-        sub_8021ED8(sprite);
+        sprite_restore(sprite);
         sprite->field_12_1 = value;
         if (field_20C_22) {
             sub_8047DC8(0xFF);
@@ -3446,7 +3446,7 @@ void FieldObject::setSpriteActive(bool32 enable) {
     if (enable) {
         int value = sprite->field_12_1;
 
-        sub_8021ED8(sprite);
+        sprite_restore(sprite);
         sprite->field_12_1 = value;
         if (field_20C_22) {
             if (field_26E != 0xFF) {
@@ -3460,7 +3460,7 @@ void FieldObject::setSpriteActive(bool32 enable) {
             sub_8116680(field_334, field_26E);
         }
         field_23D = 0;
-        sub_8020D40(sprite);
+        sprite_remove(sprite);
     }
 }
 

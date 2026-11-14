@@ -1677,7 +1677,7 @@ void FieldManager::sub_80262CC(int x, int y, int z, int height, int type, bool a
         x /= 256;
         y = (y - z - height) / 256;
         sub_801E150(entry->sprite, animation, 0, 0, 0);
-        sub_8021ED8(entry->sprite);
+        sprite_restore(entry->sprite);
         entry->sprite->field_12_1 = 2;
         entry->sprite->field_E = 0x800 - y;
         entry->sprite->field_1F_0 = 1;
@@ -2253,7 +2253,7 @@ void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMons
     fmex = field_1C;
     for (i = 0; i < 4; i++) {
         if (!fmex->field_25C[i].sprite->field_12_5) {
-            sub_8020D40(fmex->field_25C[i].sprite);
+            sprite_remove(fmex->field_25C[i].sprite);
         }
     }
     field_10A = 0;
@@ -3138,7 +3138,7 @@ void FieldManager::sub_80296D0() {
 
     for (i = 0; i < 4; i++) {
         if (!fmex->field_25C[i].sprite->field_12_5) {
-            sub_8020D40(fmex->field_25C[i].sprite);
+            sprite_remove(fmex->field_25C[i].sprite);
         }
     }
 }
@@ -3572,8 +3572,8 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
         follower->state = 0;
         follower->field_214_0 = 3;
     }
-    sub_8020D40(leader->field_36C);
-    sub_8020D40(follower->field_36C);
+    sprite_remove(leader->field_36C);
+    sprite_remove(follower->field_36C);
     sub_802DDB4(this, leader, 0, 0);
     sub_802DDB4(this, follower, brothersTogether, 0);
     sub_802DF80(this, 0);
@@ -3788,7 +3788,7 @@ void FieldManager::sub_802A740() {
                     leader->field_36C->yScale = 0x100;
                 }
             } else if (!leader->field_36C->field_12_5 && leader->field_36C->field_16 == 0x54) {
-                sub_8020D40(leader->field_36C);
+                sprite_remove(leader->field_36C);
                 sub_801AD3C();
             }
         }
@@ -4747,7 +4747,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
 }
 
 void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
-    sub_8020D40(player->field_36C);
+    sprite_remove(player->field_36C);
     field_20B_7 = 0;
     field_208_0 = 1;
     field_246_2 = 0;

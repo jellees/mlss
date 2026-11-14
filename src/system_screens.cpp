@@ -303,7 +303,7 @@ OptionsMenu::OptionsMenu(u8 priority, char* label, int a4) : Process(priority, l
 
     this->sprite = sub_8020DD0(5, 24581, 1, -1, -1, -1, -1);
     sub_801E150(this->sprite, 0, -1, 0, 0);
-    sprite_show_8020CBC(this->sprite);
+    sprite_show(this->sprite);
     this->sprite->xPosition = 40;
     this->sprite->yPosition = 55;
 
@@ -883,7 +883,7 @@ SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, l
 
     this->sprite = sub_8020DD0(5, 0x6005, 1, -1, -1, -1, -1);
     sub_801E150(this->sprite, 0, -1, 0, 0);
-    sprite_show_8020CBC(this->sprite);
+    sprite_show(this->sprite);
     this->sprite->xPosition = 140;
     this->sprite->yPosition = 90;
 
@@ -1035,7 +1035,7 @@ void SaveClearScreen::update() {
                     if (this->popup.isClosing) {
                         showPopup(word_83A2944[4], word_83A2944[5]);
                         off_839EC80[0x4A] |= 0x10;
-                        sprite_hide_8021F20(this->sprite);
+                        sprite_hide(this->sprite);
                         this->state = 2;
                     }
                 }

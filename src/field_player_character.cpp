@@ -135,7 +135,7 @@ void FieldPlayerCharacter::method2(u16* arg1, u16* arg2, void* arg3) {
         field_36C = sub_8020DD0(0, field_370, 1, -1, -1, -1, -1);
         sub_801E150(field_36C, field_37B, -1, 0, 0);
         sub_801E150(field_36C, field_37B, field_37C, 0, 0);
-        sub_8021ED8(field_36C);
+        sprite_restore(field_36C);
         field_36C->field_11_6 = field_378_1;
         field_36C->field_1F_0 = field_378_2;
         field_36C->field_1F_2 = field_378_4;
@@ -493,7 +493,7 @@ void FieldPlayerCharacter::sub_8049430() {
 
 void FieldPlayerCharacter::sub_80494D4() {
     field_214_0 = 3;
-    sub_8020D40(field_36C);
+    sprite_remove(field_36C);
     sub_8049000(field_54 == 0 ? (field_35A_11 ? 0x1028 : 0x1001) : 0x1002);
     stop_sfx_80195A8(field_54 == 0 ? 0x157 : 0x87);
     stop_sfx_80195A8(field_54 == 0 ? 0x158 : 0x156);
@@ -506,7 +506,7 @@ void FieldPlayerCharacter::sub_804955C(int type) {
     field_370 = field_54 == 0 ? 0x1059 : 0x105A;
     sub_80210A8(field_36C, 0, field_370, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 0, -1, 0, 0);
-    sub_8021ED8(field_36C);
+    sprite_restore(field_36C);
     offsets = byte_83A09E4[type];
     field_353_0 = 1;
     field_372 = offsets[direction][0];
@@ -525,7 +525,7 @@ void FieldPlayerCharacter::sub_80496B4() {
     field_370 = 0x1045;
     sub_80210A8(field_36C, 0, 0x1045, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 1, -1, 0, 0);
-    sub_8021ED8(field_36C);
+    sprite_restore(field_36C);
     field_353_0 = 1;
     field_372 = 0;
     field_373 = 0;
@@ -543,7 +543,7 @@ void FieldPlayerCharacter::sub_80497A8() {
     field_370 = 0x1054;
     sub_80210A8(field_36C, 0, 0x1054, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 0, -1, 0, 0);
-    sub_8021ED8(field_36C);
+    sprite_restore(field_36C);
     field_353_0 = 1;
     field_372 = 0;
     field_373 = -16;
@@ -561,7 +561,7 @@ void FieldPlayerCharacter::sub_80498B0() {
     field_370 = 0x8004;
     sub_80210A8(field_36C, 0, field_370, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 0, -1, 0, 0);
-    sub_8021ED8(field_36C);
+    sprite_restore(field_36C);
     field_353_0 = 1;
     field_372 = 0;
     field_373 = -32;
@@ -579,7 +579,7 @@ void FieldPlayerCharacter::sub_80499B8() {
     field_370 = 0x800B;
     sub_80210A8(field_36C, 2, field_370, 1, -1, -1, -1, -1);
     sub_801E150(field_36C, 2, -1, 0, 0);
-    sub_8021ED8(field_36C);
+    sprite_restore(field_36C);
     field_353_0 = 0;
     field_372 = 0;
     field_373 = 0;
@@ -599,7 +599,7 @@ void FieldPlayerCharacter::sub_8049AB4(int mode, int animation) {
             field_370 = 0x800B;
             sub_80210A8(field_36C, 2, field_370, 1, -1, -1, -1, -1);
             sub_801E150(field_36C, animation, -1, 0, 0);
-            sub_8021ED8(field_36C);
+            sprite_restore(field_36C);
             field_353_0 = 0;
             field_36C->field_11_6 = 0;
             field_36C->field_1F_0 = sprite->field_1F_0;
@@ -2789,7 +2789,7 @@ void FieldPlayerShotBullet::sub_804DFE8() {
     animation = value & 0x7F;
     flag = value >> 7;
     sub_801E150(sprite, animation, -1, 0, 0);
-    sub_8021ED8(sprite);
+    sprite_restore(sprite);
     if (frame != 0) {
         int i = frame;
 
@@ -2819,7 +2819,7 @@ void FieldPlayerShotBullet::sub_804E0D8(int type, FieldObject* owner, int frame)
     animation = value & 0x7F;
     flag = value >> 7;
     sub_801E150(newSprite, animation, -1, 0, 0);
-    sub_8021ED8(sprite);
+    sprite_restore(sprite);
     if (frame != 0) {
         this->frame = frame;
         while (frame >= sprite->field_25) {
@@ -3753,7 +3753,7 @@ void FieldPlayerShotBullet::sub_804FA94(s16 cameraX, s16 cameraY) {
 }
 
 void FieldPlayerShotBullet::sub_804FAF8() {
-    sub_8020D40(sprite);
+    sprite_remove(sprite);
     active = 0;
 }
 

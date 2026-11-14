@@ -61088,7 +61088,7 @@ _0807BCA6:
 	lsls r0, r0, #0x1E
 	lsrs r5, r0, #0x1E
 	adds r0, r4, #0x0
-	bl sprite_show_8020CBC
+	bl sprite_show
 	cmp r5, #0x00
 	beq _0807BCD8
 	ldrb r1, [r4, #0x13]
@@ -61410,7 +61410,7 @@ _0807BF20:
 	ble _0807BEB6
 _0807BF28:
 	adds r0, r5, #0x0
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0807BF2E:
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -66576,7 +66576,7 @@ sub_807EA24:
 	adds r0, r4, #0x0
 	bl sub_8084294
 	adds r0, r4, #0x0
-	bl sub_8021308
+	bl sprite_destroy
 	ldr r1, [r6, #0x00]
 	ldr r0, [r5, #0x28]
 	adds r0, #0xEC
@@ -66618,7 +66618,7 @@ _0807EA82:
 	adds r0, r4, #0x0
 	bl sub_8084294
 	adds r0, r4, #0x0
-	bl sub_8021308
+	bl sprite_destroy
 	ldr r1, [r6, #0x00]
 	ldr r0, [r5, #0x28]
 	adds r0, #0xEC
@@ -68507,7 +68507,7 @@ sub_807FB34:
 	adds r0, r4, #0x0
 	bl sub_8084294
 	adds r0, r4, #0x0
-	bl sub_8021308
+	bl sprite_destroy
 _0807FB5C:
 	pop {r4}
 	pop {r0}
@@ -70593,7 +70593,7 @@ _08080C0C:
 	movs r3, #0x00
 	bl sub_801E150
 	adds r0, r4, #0x0
-	bl sprite_show_8020CBC
+	bl sprite_show
 	movs r0, #0x78
 	strh r0, [r4, #0x00]
 	movs r0, #0x50
@@ -70615,7 +70615,7 @@ _08080C0C:
 	ands r0, r1
 	strb r0, [r4, #0x13]
 	adds r0, r4, #0x0
-	bl sub_8021308
+	bl sprite_destroy
 	ldr r0, _08080DC0 @ =0x03000FD8
 	ldr r0, [r0, #0x00]
 	lsls r1, r7, #0x02
@@ -260388,7 +260388,7 @@ _080DCE94:
 	movs r3, #0x00
 	bl sub_801E150
 	adds r0, r5, #0x0
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r0, [r6, #0x08]
 	adds r0, #0x23
 	ldrb r2, [r0, #0x00]
@@ -260555,7 +260555,7 @@ _080DCFE8:
 	movs r3, #0x00
 	bl sub_801E150
 	adds r0, r5, #0x0
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r0, [r6, #0x08]
 	adds r0, #0x23
 	ldrb r2, [r0, #0x00]
@@ -261074,7 +261074,7 @@ sub_80DD40C:
 	cmp r0, #0x09
 	ble _080DD428
 	ldr r0, [r4, #0x08]
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x04]
 _080DD428:
@@ -278626,7 +278626,7 @@ _080E88B0:
 	strb r0, [r4, #0x1F]
 	strh r6, [r4, #0x0E]
 	adds r0, r4, #0x0
-	bl sprite_show_8020CBC
+	bl sprite_show
 	lsls r0, r7, #0x18
 	lsrs r0, r0, #0x18
 	b _080E8934
@@ -279393,7 +279393,7 @@ _080E8EB6:
 	ldr r4, [r4, #0x00]
 	adds r4, r4, r1
 	ldr r0, [r4, #0x00]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	strb r5, [r4, #0x0F]
 	movs r0, #0x00
 	b _080E8EDA
@@ -279411,7 +279411,7 @@ sub_80E8EE0:
 	ldr r4, [r0, #0x00]
 	adds r4, r4, r1
 	ldr r0, [r4, #0x00]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	movs r0, #0x00
 	strb r0, [r4, #0x0F]
 	pop {r4}
@@ -306221,7 +306221,7 @@ _080F94CC:
 	ldr r0, [r5, #0x00]
 	cmp r0, #0x00
 	beq _080F94E8
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r5, #0x00]
 	movs r0, #0x80
@@ -308556,7 +308556,7 @@ _080FADEA:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _080FADF8
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _080FADF8:
@@ -359591,7 +359591,7 @@ sub_8116728:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x1C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, [r5, #0x1C]
 	ldrb r1, [r2, #0x12]
 	movs r0, #0x07
@@ -361824,7 +361824,7 @@ _08119064:
 	b _081191E6
 _08119072:
 	ldr r0, [r6, #0x40]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	b _081191E6
 	.byte 0x00, 0x00
 _0811907C: .4byte 0x0000014F
@@ -363255,7 +363255,7 @@ _08119CE8:
 	ands r0, r1
 	strb r0, [r2, #0x00]
 	ldr r0, [r7, #0x30]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	b _08119DCE
 _08119D58: .4byte 0x0000019B
 _08119D5C: .4byte 0x00000191
@@ -363334,7 +363334,7 @@ _08119DCE:
 	cmp r0, #0x00
 	beq _08119DF6
 	ldr r0, [r7, #0x30]
-	bl sprite_show_8020CBC
+	bl sprite_show
 _08119DF6:
 	ldr r1, [r7, #0x30]
 	movs r4, #0x00
@@ -363447,7 +363447,7 @@ _08119E50:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x40]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	mov r0, r10
 	ldr r4, [sp, #0x038]
 	strb r0, [r4, #0x00]
@@ -363739,7 +363739,7 @@ _0811A100:
 	movs r0, #0x67
 	bl play_sfx_80195B4
 	ldr r0, [r7, #0x30]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	movs r4, #0xCC
 	lsls r4, r4, #0x01
 	adds r1, r7, r4
@@ -363865,7 +363865,7 @@ _0811A1BC:
 	ands r0, r2
 	strb r0, [r1, #0x00]
 	ldr r0, [r7, #0x30]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	b _0811A280
 _0811A208: .4byte 0x00000191
 _0811A20C: .4byte 0x0000018B
@@ -364246,7 +364246,7 @@ _0811A4E8:
 	str r3, [sp, #0x000]
 	bl sub_801E150
 	ldr r0, [r7, #0x40]
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0811A504:
 	movs r3, #0xA9
 	lsls r3, r3, #0x01
@@ -364487,7 +364487,7 @@ _0811A6D0:
 	str r3, [sp, #0x000]
 	bl sub_801E150
 	ldr r0, [r7, #0x40]
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0811A6EC:
 	movs r4, #0xA9
 	lsls r4, r4, #0x01
@@ -364758,7 +364758,7 @@ _0811A8BC:
 	cmp r0, #0x01
 	bne _0811A908
 	ldr r0, [r7, #0x40]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811A908:
 	ldr r3, _0811A9B8 @ =0x0000014F
 	adds r0, r7, r3
@@ -364864,7 +364864,7 @@ _0811A9C4:
 	cmp r0, #0x01
 	bne _0811A9E4
 	ldr r0, [r7, #0x40]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811A9E4:
 	ldrb r0, [r4, #0x00]
 	cmp r0, #0x00
@@ -364886,13 +364886,13 @@ _0811A9F0:
 	cmp r0, #0x00
 	bne _0811AA14
 	ldr r0, [r7, #0x30]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	b _0811AA1A
 	.byte 0x00, 0x00
 _0811AA10: .4byte 0x00000191
 _0811AA14:
 	ldr r0, [r7, #0x30]
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0811AA1A:
 	movs r3, #0xCA
 	lsls r3, r3, #0x01
@@ -364940,7 +364940,7 @@ _0811AA68:
 	cmp r0, #0x01
 	bne _0811AA7A
 	ldr r0, [r7, #0x40]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811AA7A:
 	ldrb r0, [r4, #0x00]
 	cmp r0, #0x02
@@ -364962,12 +364962,12 @@ _0811AA88:
 	cmp r0, #0x00
 	bne _0811AAA8
 	ldr r0, [r7, #0x30]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	b _0811AAAE
 _0811AAA4: .4byte 0x00000191
 _0811AAA8:
 	ldr r0, [r7, #0x30]
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0811AAAE:
 	movs r3, #0xCA
 	lsls r3, r3, #0x01
@@ -364977,7 +364977,7 @@ _0811AAAE:
 	bne _0811AAC2
 _0811AABA:
 	ldr r0, [r7, #0x40]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	b _0811AB2C
 _0811AAC2:
 	cmp r0, #0x00
@@ -365274,7 +365274,7 @@ _0811ACF8:
 	str r3, [sp, #0x000]
 	bl sub_801E150
 	ldr r0, [r7, #0x3C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, _0811AD54 @ =0x0200000C
 	ldrb r1, [r4, #0x00]
 	adds r1, #0x03
@@ -365789,7 +365789,7 @@ _0811B130:
 	ldr r6, [sp, #0x020]
 	strb r0, [r6, #0x00]
 	ldr r0, [r7, #0x3C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	b _0811B32A
 _0811B14A:
 	ldrh r1, [r2, #0x06]
@@ -366089,7 +366089,7 @@ _0811B396:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x3C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r0, [r7, #0x3C]
 	adds r0, #0x20
 	movs r1, #0xF0
@@ -366162,7 +366162,7 @@ _0811B42E:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x3C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r0, [r7, #0x3C]
 	adds r0, #0x20
 	movs r1, #0x10
@@ -366376,7 +366376,7 @@ _0811B5DC:
 	str r3, [sp, #0x000]
 	bl sub_801E150
 	ldr r0, [r7, #0x3C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r3, _0811B644 @ =0x0200000C
 	ldrb r0, [r4, #0x00]
 	lsls r0, r0, #0x02
@@ -366423,7 +366423,7 @@ _0811B648:
 	mov r1, r8
 	strb r0, [r1, #0x00]
 	ldr r0, [r7, #0x3C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B666:
 	ldr r0, [r4, #0x00]
 	ldrh r1, [r0, #0x02]
@@ -366480,7 +366480,7 @@ _0811B6BC:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x3C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r0, [r7, #0x3C]
 	adds r0, #0x20
 	movs r1, #0x10
@@ -366551,7 +366551,7 @@ _0811B74E:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x3C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r0, [r7, #0x3C]
 	adds r0, #0x20
 	movs r1, #0xF0
@@ -366604,73 +366604,73 @@ _0811B7BE:
 	ldr r0, [r5, #0x4C]
 	cmp r0, #0x00
 	beq _0811B7D0
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B7D0:
 	ldr r0, [r5, #0x50]
 	cmp r0, #0x00
 	beq _0811B7DA
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B7DA:
 	ldr r0, [r5, #0x54]
 	cmp r0, #0x00
 	beq _0811B7E4
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B7E4:
 	ldr r0, [r5, #0x58]
 	cmp r0, #0x00
 	beq _0811B7EE
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B7EE:
 	ldr r0, [r5, #0x5C]
 	cmp r0, #0x00
 	beq _0811B7F8
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B7F8:
 	movs r7, #0x00
 	ldr r0, [r5, #0x60]
 	cmp r0, #0x00
 	beq _0811B804
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B804:
 	ldr r0, [r5, #0x64]
 	cmp r0, #0x00
 	beq _0811B80E
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B80E:
 	ldr r0, [r5, #0x68]
 	cmp r0, #0x00
 	beq _0811B818
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B818:
 	ldr r0, [r5, #0x6C]
 	cmp r0, #0x00
 	beq _0811B822
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B822:
 	ldr r0, [r6, #0x08]
 	cmp r0, #0x00
 	beq _0811B82C
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B82C:
 	ldr r0, [r6, #0x0C]
 	cmp r0, #0x00
 	beq _0811B836
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B836:
 	ldr r0, [r6, #0x10]
 	cmp r0, #0x00
 	beq _0811B840
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B840:
 	ldr r0, [r6, #0x14]
 	cmp r0, #0x00
 	beq _0811B84A
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B84A:
 	ldr r0, [r6, #0x18]
 	cmp r0, #0x00
 	beq _0811B854
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0811B854:
 	ldr r0, [r5, #0x20]
 	ldr r1, _0811B8A0 @ =0x0000FFFF
@@ -366854,7 +366854,7 @@ _0811B998:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x30]
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0811B9D4:
 	add sp, #0x010
 	pop {r3, r4, r5}
@@ -366906,7 +366906,7 @@ sub_811B9E4:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x30]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, _0811BA6C @ =0x00000151
 	adds r0, r7, r2
 	ldrb r0, [r0, #0x00]
@@ -367055,7 +367055,7 @@ _0811BB5C:
 	bl sub_801E150
 _0811BB6E:
 	ldr r0, [r7, #0x34]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r7, #0x34]
 	movs r0, #0x18
 	strh r0, [r1, #0x00]
@@ -368189,7 +368189,7 @@ _0811C45A:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x00]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r4, #0x00]
 	movs r0, #0xCC
 	ldr r3, [sp, #0x018]
@@ -368304,7 +368304,7 @@ _0811C524:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x00]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r4, #0x00]
 	movs r0, #0xCC
 	ldr r2, [sp, #0x018]
@@ -368401,7 +368401,7 @@ _0811C632:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x38]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r7, #0x38]
 	movs r0, #0x78
 	strh r0, [r1, #0x00]
@@ -374108,12 +374108,12 @@ _0812129E:
 	cmp r0, #0x00
 	bne _081212BE
 	adds r0, r2, #0x0
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _081212BE:
 	ldr r0, [r7, #0x44]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r0, [r7, #0x48]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r2, [r7, #0x34]
 	ldr r3, _081212FC @ =0x0000014B
 	adds r0, r7, r3
@@ -374141,11 +374141,11 @@ _08121300:
 	cmp r0, #0x03
 	bne _08121338
 	ldr r0, [r7, #0x30]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r0, [r7, #0x44]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r0, [r7, #0x48]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r1, [r7, #0x34]
 	ldr r0, _0812135C @ =0x0000014B
 	adds r2, r7, r0
@@ -374339,7 +374339,7 @@ _081216CE:
 	cmp r0, #0x00
 	beq _08121704
 	adds r0, r2, #0x0
-	bl sprite_show_8020CBC
+	bl sprite_show
 	b _0812170A
 	.byte 0x89, 0x01, 0x00, 0x00
 _081216F8: .4byte 0x0000014F
@@ -374347,7 +374347,7 @@ _081216FC: .4byte 0x03000FF4
 _08121700: .4byte 0x00000151
 _08121704:
 	adds r0, r2, #0x0
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0812170A:
 	adds r0, r4, #0x1
 	movs r2, #0xAC
@@ -374366,11 +374366,11 @@ _0812170A:
 	cmp r0, #0x00
 	beq _08121732
 	adds r0, r2, #0x0
-	bl sprite_show_8020CBC
+	bl sprite_show
 	b _08121738
 _08121732:
 	adds r0, r2, #0x0
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _08121738:
 	adds r0, r4, #0x2
 	movs r3, #0xAC
@@ -374389,11 +374389,11 @@ _08121738:
 	cmp r0, #0x00
 	beq _08121760
 	adds r0, r2, #0x0
-	bl sprite_show_8020CBC
+	bl sprite_show
 	b _08121766
 _08121760:
 	adds r0, r2, #0x0
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _08121766:
 	adds r4, #0x03
 	cmp r4, #0x0B
@@ -374503,14 +374503,14 @@ _08121828: .4byte 0x0300034C
 sub_81218C8:
 	push {lr}
 	ldr r0, [r0, #0x30]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	pop {r0}
 	bx r0
 	thumb_func_start sub_81218D4
 sub_81218D4:
 	push {lr}
 	ldr r0, [r0, #0x30]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	pop {r0}
 	bx r0
 	thumb_func_start sub_81218E0

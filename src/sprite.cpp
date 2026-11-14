@@ -1631,7 +1631,7 @@ void sub_8020A78(void) {
 #endif
 
 // Shows a hidden sprite again and reloads its palettes.
-void sprite_show_8020CBC(struct Sprite* sprite) {
+void sprite_show(struct Sprite* sprite) {
     if (sprite->field_12_5) {
         sprite->field_12_5 = 0;
         sprite->field_12_1 = 0;
@@ -1648,7 +1648,7 @@ void sprite_show_8020CBC(struct Sprite* sprite) {
 }
 
 // Hides a sprite: frees its palette slots and removes it from the sprite list.
-void sub_8020D40(struct Sprite* sprite) {
+void sprite_remove(struct Sprite* sprite) {
     struct struc_203FFB8* system;
 
     if (!sprite->field_12_5) {
@@ -1917,7 +1917,7 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
 #endif
 
 // Destroys a sprite: hides it, removes it from the sprite list and frees it.
-void sub_8021308(struct Sprite* sprite) {
+void sprite_destroy(struct Sprite* sprite) {
     struct struc_203FFB8* system;
 
     if (!sprite->field_12_5) {
@@ -2053,7 +2053,7 @@ asm_unified(".include \"asm/nonmatching/sub_8021574.s\"");
 // Finds or loads a palette in the 16 OBJ palette slots (stru_203FFB8.field_C, from field_4 on). Returns
 // 2 if it is already loaded, 1 if the requested slot is taken or the slots run out, else 0; *mask gets
 // the slots.
-int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, u16* mask, int slot) {
+int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, void* mask, int slot) {
     struct struc_203FFB8* system = &stru_203FFB8;
     u16 free = 0;
     u16 used = 0;
@@ -2090,7 +2090,7 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, u16* mask, 
         }
     }
     if (used != 0) {
-        *mask = used;
+        *(u16*)mask = used;
         return 2;
     }
 
@@ -2111,7 +2111,7 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, u16* mask, 
         while (!((free >> slot) & 1)) {
             slot++;
             if (slot == 16) {
-                *mask = used;
+                *(u16*)mask = used;
                 return 1;
             }
         }
@@ -2125,7 +2125,7 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, u16* mask, 
         slot++;
         paletteData += 32;
     }
-    *mask = used;
+    *(u16*)mask = used;
     return 0;
 }
 #endif
@@ -2261,7 +2261,7 @@ struct struc_839EE60* sub_8021EA8(int bank, int id) {
 }
 
 // Shows a hidden sprite, adding it back to the end of the sprite list if it isn't in it.
-void sub_8021ED8(struct Sprite* sprite) {
+void sprite_restore(struct Sprite* sprite) {
     if (sprite->field_12_5) {
         if (sprite->field_64 == sprite->field_68) {
             struct struc_203FFB8* system = &stru_203FFB8;
@@ -2280,12 +2280,12 @@ void sub_8021ED8(struct Sprite* sprite) {
             system->field_34 = sprite;
             system->field_1++;
         }
-        sprite_show_8020CBC(sprite);
+        sprite_show(sprite);
     }
 }
 
 // Hides a sprite and frees its palette slots, but keeps it in the sprite list.
-void sprite_hide_8021F20(struct Sprite* sprite) {
+void sprite_hide(struct Sprite* sprite) {
     if (!sprite->field_12_5) {
         sprite->field_12_5 = 1;
         if (sub_8021A18(sprite, 2) == 0) {
@@ -2314,9 +2314,9 @@ void sub_8021F7C(void) {
             sub_801E68C(sprite);
             if (sprite->field_12_3) {
                 if (sprite->field_12_1 == 2) {
-                    sprite_hide_8021F20(sprite);
+                    sprite_hide(sprite);
                 } else if (sprite->field_12_1 == 3) {
-                    sub_8021308(sprite);
+                    sprite_destroy(sprite);
                 }
             }
         }

@@ -945,9 +945,9 @@ _08050FF0:
 	lsls r0, r0, #0x02
 	adds r4, r6, r0
 	ldr r0, [r4, #0x00]
-	bl sub_8020D40
+	bl sprite_remove
 	ldr r0, [r5, #0x00]
-	bl sub_8021ED8
+	bl sprite_restore
 	ldr r1, [r5, #0x00]
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x0E]
@@ -1007,7 +1007,7 @@ _08050FF0:
 	cmp r0, #0x00
 	bne _08051114
 	adds r0, r2, #0x0
-	bl sub_8020D40
+	bl sprite_remove
 	b _08051114
 _08051098: .4byte 0x0000020F
 _0805109C:
@@ -1113,9 +1113,9 @@ sub_805113C:
 	adds r3, #0x59
 	adds r4, r2, r3
 	ldr r0, [r4, #0x00]
-	bl sub_8020D40
+	bl sprite_remove
 	ldr r0, [r5, #0x00]
-	bl sub_8021ED8
+	bl sprite_restore
 	ldr r1, [r5, #0x00]
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x0E]
@@ -1369,7 +1369,7 @@ sub_8051368:
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
 	ldr r0, [r0, #0x00]
-	bl sub_8021ED8
+	bl sprite_restore
 	ldr r0, _08051398 @ =0x0000023D
 	adds r4, r4, r0
 	movs r0, #0x07

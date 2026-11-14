@@ -37,7 +37,7 @@ sub_80277C4__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb:
 	cmp r0, #0x00
 	bne _0802780A
 	adds r0, r2, #0x0
-	bl sub_8020D40
+	bl sprite_remove
 _0802780A:
 	movs r3, #0x00
 	mov r9, r3
@@ -51,7 +51,7 @@ _0802780A:
 	cmp r0, #0x00
 	bne _08027826
 	adds r0, r2, #0x0
-	bl sub_8020D40
+	bl sprite_remove
 _08027826:
 	movs r2, #0x9B
 	lsls r2, r2, #0x02
@@ -63,7 +63,7 @@ _08027826:
 	cmp r0, #0x00
 	bne _0802783E
 	adds r0, r2, #0x0
-	bl sub_8020D40
+	bl sprite_remove
 _0802783E:
 	movs r3, #0x9D
 	lsls r3, r3, #0x02
@@ -75,7 +75,7 @@ _0802783E:
 	cmp r0, #0x00
 	bne _08027856
 	adds r0, r2, #0x0
-	bl sub_8020D40
+	bl sprite_remove
 _08027856:
 	movs r1, #0x85
 	lsls r1, r1, #0x01

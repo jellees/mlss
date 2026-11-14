@@ -822,7 +822,7 @@ _0812BC4E:
 	cmp r0, #0x00
 	bne _0812BC6C
 	ldr r0, [r5, #0x2C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	movs r0, #0x02
 	b _0812BFA2
 _0812BC60: .4byte 0x03000FF4
@@ -1348,7 +1348,7 @@ _0812BFD2:
 	movs r0, #0x60
 	bl play_sfx_80195B4
 	ldr r0, [r5, #0x2C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0812C052:
 	ldr r2, [r5, #0x3C]
 	ldrh r1, [r2, #0x02]
@@ -1998,7 +1998,7 @@ _0812C524:
 	lsls r0, r0, #0x08
 	str r0, [r5, #0x6C]
 	ldr r0, [r5, #0x2C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	bl _0812CD32
 _0812C54E:
 	movs r0, #0x02
@@ -2055,7 +2055,7 @@ _0812C54E:
 	lsls r0, r0, #0x08
 	str r0, [r5, #0x6C]
 	ldr r0, [r5, #0x2C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	movs r1, #0x01
 	negs r1, r1
 	movs r0, #0x61
@@ -2403,7 +2403,7 @@ _0812C7AC:
 	lsls r0, r0, #0x08
 	str r0, [r5, #0x6C]
 	ldr r0, [r5, #0x2C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	b _0812CCBC
 	.byte 0x00, 0x00
 _0812C864: .4byte 0x083BE67C
@@ -2932,7 +2932,7 @@ sub_812CDA0:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x2C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	adds r0, r7, #0x0
 	adds r0, #0xBD
 	ldrb r0, [r0, #0x00]
@@ -13754,7 +13754,7 @@ sub_81344D4:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r6, #0x08]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r3, [r6, #0x08]
 	lsls r2, r5, #0x06
 	ldrb r1, [r3, #0x1F]
@@ -14091,7 +14091,7 @@ _08134874:
 	bl sub_801E150
 _08134880:
 	ldr r0, [r4, #0x0C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	b _0813488A
 _08134888:
 	movs r6, #0x03
@@ -14099,7 +14099,7 @@ _0813488A:
 	cmp r6, #0x02
 	ble _08134894
 	ldr r0, [r4, #0x0C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _08134894:
 	add sp, #0x004
 	pop {r4, r5, r6}
@@ -14140,7 +14140,7 @@ sub_8134928:
 	ldr r0, [r4, #0x0C]
 	cmp r0, #0x00
 	beq _0813493A
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x0C]
 _0813493A:
@@ -14154,7 +14154,7 @@ sub_8134940:
 	ldr r0, [r4, #0x08]
 	cmp r0, #0x00
 	beq _08134952
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x08]
 _08134952:
@@ -67341,7 +67341,7 @@ sub_8150F60:
 	ldr r0, [r4, #0x28]
 	cmp r0, #0x00
 	beq _08150F70
-	bl sub_8021308
+	bl sprite_destroy
 _08150F70:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
@@ -71474,7 +71474,7 @@ _08154128:
 	ldrh r0, [r0, #0x02]
 	strh r0, [r1, #0x02]
 	ldr r0, [r7, #0x38]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	movs r0, #0x05
 	strb r0, [r4, #0x00]
 	b _081542C8
@@ -71738,7 +71738,7 @@ _08154372:
 	bl sub_801E150
 _08154380:
 	ldr r0, [r5, #0x34]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, [r5, #0x34]
 	ldrb r0, [r2, #0x12]
 	movs r1, #0x20
@@ -72046,7 +72046,7 @@ sub_8154594:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x34]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, [r5, #0x34]
 	ldrb r0, [r2, #0x12]
 	movs r1, #0x20
@@ -72623,7 +72623,7 @@ sub_8154B24:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x00]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r4, #0x00]
 	movs r0, #0xD8
 	strh r0, [r1, #0x00]
@@ -72647,7 +72647,7 @@ sub_8154B24:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x04]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r4, #0x04]
 	movs r0, #0xE0
 	strh r0, [r1, #0x00]
@@ -72669,7 +72669,7 @@ sub_8154B24:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x08]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r4, #0x08]
 	movs r0, #0xE8
 	strh r0, [r1, #0x00]
@@ -72836,7 +72836,7 @@ _08154D00:
 	cmp r1, r0
 	ble _08154D30
 	ldr r0, [r4, #0x04]
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x04]
 	movs r0, #0x02
@@ -74654,7 +74654,7 @@ sub_81581FC:
 	ldr r0, [r4, #0x04]
 	cmp r0, #0x00
 	beq _0815820C
-	bl sub_8021308
+	bl sprite_destroy
 _0815820C:
 	movs r0, #0x01
 	ands r0, r5
@@ -74817,17 +74817,17 @@ sub_8158330:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _08158340
-	bl sub_8021308
+	bl sprite_destroy
 _08158340:
 	ldr r0, [r4, #0x04]
 	cmp r0, #0x00
 	beq _0815834A
-	bl sub_8021308
+	bl sprite_destroy
 _0815834A:
 	ldr r0, [r4, #0x08]
 	cmp r0, #0x00
 	beq _08158354
-	bl sub_8021308
+	bl sprite_destroy
 _08158354:
 	movs r0, #0x01
 	ands r0, r5
@@ -75328,7 +75328,7 @@ sub_8158764:
 	ldr r0, [r4, #0x34]
 	cmp r0, #0x00
 	beq _0815877C
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x34]
 _0815877C:
@@ -75853,7 +75853,7 @@ sub_8158BB4:
 	ldr r0, [r4, #0x40]
 	cmp r0, #0x00
 	beq _08158BCC
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x40]
 _08158BCC:
@@ -75903,7 +75903,7 @@ sub_8158BE0:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x40]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, [r5, #0x40]
 	ldrb r0, [r2, #0x12]
 	movs r1, #0x20
@@ -75950,7 +75950,7 @@ sub_8158C98:
 	ldr r0, [r4, #0x40]
 	cmp r0, #0x00
 	beq _08158CB0
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x40]
 _08158CB0:
@@ -76002,7 +76002,7 @@ sub_8158CC4:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x40]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, [r4, #0x40]
 	ldrb r0, [r2, #0x12]
 	movs r1, #0x20
@@ -77269,7 +77269,7 @@ sub_8159A64:
 	ldr r0, [r0, #0x00]
 	cmp r0, #0x00
 	beq _08159A78
-	bl sub_8021308
+	bl sprite_destroy
 _08159A78:
 	movs r0, #0x01
 	ands r0, r5
@@ -79359,7 +79359,7 @@ sub_815B820:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x3C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r5, #0x3C]
 	ldrb r0, [r1, #0x12]
 	movs r2, #0x20
@@ -79436,7 +79436,7 @@ sub_815B820:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x40]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r5, #0x40]
 	ldrb r0, [r1, #0x12]
 	mov r2, r9
@@ -79597,7 +79597,7 @@ sub_815BB4C:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x3C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r0, [r4, #0x3C]
 	mov r1, r8
 	strh r1, [r0, #0x0E]
@@ -79645,7 +79645,7 @@ sub_815BB4C:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x40]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r4, #0x40]
 	ldrb r0, [r1, #0x12]
 	orrs r0, r6
@@ -81072,7 +81072,7 @@ _0815CAAC:
 	ldrh r0, [r0, #0x02]
 	strh r0, [r1, #0x02]
 	ldr r0, [r7, #0x38]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	movs r0, #0x05
 	strb r0, [r4, #0x00]
 	b _0815CC4C
@@ -81311,7 +81311,7 @@ _0815CCC8:
 	bl sub_801E150
 _0815CCD6:
 	ldr r0, [r5, #0x34]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, [r5, #0x34]
 	ldrb r0, [r2, #0x12]
 	movs r1, #0x20
@@ -81981,7 +81981,7 @@ sub_815D1DC:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x00]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r5, #0x00]
 	movs r0, #0xD8
 	strh r0, [r1, #0x00]
@@ -82005,7 +82005,7 @@ sub_815D1DC:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x04]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r5, #0x04]
 	movs r0, #0xE0
 	strh r0, [r1, #0x00]
@@ -82027,7 +82027,7 @@ sub_815D1DC:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x08]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r5, #0x08]
 	movs r0, #0xE8
 	strh r0, [r1, #0x00]
@@ -82049,7 +82049,7 @@ sub_815D1DC:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x0C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r0, [r5, #0x0C]
 	ldr r1, _0815D2E4 @ =0x0000FFF0
 	strh r1, [r0, #0x00]
@@ -82561,15 +82561,15 @@ _0815D858:
 	cmp r1, r0
 	ble _0815D8C4
 	ldr r0, [r4, #0x04]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r0, [r5, #0x04]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r0, [r4, #0x0C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r0, [r4, #0x10]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r0, [r4, #0x14]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	movs r0, #0x02
 	b _0815D8C6
 _0815D8C0: .4byte 0x0000EFFF
@@ -82819,7 +82819,7 @@ sub_815DA48:
 	bl sub_801E150
 	mov r3, r10
 	ldr r0, [r3, #0x00]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	mov r0, sp
 	ldrh r1, [r0, #0x0C]
 	mov r0, r10
@@ -82864,7 +82864,7 @@ _0815DAC4:
 	negs r2, r2
 	bl sub_801E150
 	ldr r0, [r7, #0x00]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r0, [sp, #0x00C]
 	lsls r1, r0, #0x01
 	movs r2, #0x14
@@ -82917,7 +82917,7 @@ _0815DAC4:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x04]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	lsls r4, r4, #0x01
 	add r8, r4
 	movs r0, #0x00
@@ -83506,47 +83506,47 @@ _0815E266:
 	ldr r0, [r4, #0x04]
 	cmp r0, #0x00
 	beq _0815E27A
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815E27A:
 	ldr r0, [r5, #0x04]
 	cmp r0, #0x00
 	beq _0815E284
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815E284:
 	ldr r0, [r4, #0x0C]
 	cmp r0, #0x00
 	beq _0815E28E
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815E28E:
 	ldr r0, [r4, #0x10]
 	cmp r0, #0x00
 	beq _0815E298
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815E298:
 	ldr r0, [r4, #0x14]
 	cmp r0, #0x00
 	beq _0815E2A2
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815E2A2:
 	ldr r0, [r4, #0x18]
 	cmp r0, #0x00
 	beq _0815E2AC
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815E2AC:
 	ldr r0, [r4, #0x1C]
 	cmp r0, #0x00
 	beq _0815E2B6
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815E2B6:
 	ldr r0, [r4, #0x20]
 	cmp r0, #0x00
 	beq _0815E2C0
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815E2C0:
 	ldr r0, [r4, #0x24]
 	cmp r0, #0x00
 	beq _0815E2CA
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815E2CA:
 	adds r0, r6, #0x0
 	pop {r4, r5, r6}
@@ -84080,47 +84080,47 @@ sub_815EA64:
 	ldr r0, [r4, #0x04]
 	cmp r0, #0x00
 	beq _0815EA74
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815EA74:
 	ldr r0, [r5, #0x04]
 	cmp r0, #0x00
 	beq _0815EA7E
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815EA7E:
 	ldr r0, [r4, #0x0C]
 	cmp r0, #0x00
 	beq _0815EA88
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815EA88:
 	ldr r0, [r4, #0x10]
 	cmp r0, #0x00
 	beq _0815EA92
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815EA92:
 	ldr r0, [r4, #0x14]
 	cmp r0, #0x00
 	beq _0815EA9C
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815EA9C:
 	ldr r0, [r4, #0x18]
 	cmp r0, #0x00
 	beq _0815EAA6
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815EAA6:
 	ldr r0, [r4, #0x1C]
 	cmp r0, #0x00
 	beq _0815EAB0
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815EAB0:
 	ldr r0, [r4, #0x20]
 	cmp r0, #0x00
 	beq _0815EABA
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815EABA:
 	ldr r0, [r4, #0x24]
 	cmp r0, #0x00
 	beq _0815EAC4
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815EAC4:
 	pop {r4, r5}
 	pop {r0}
@@ -84135,47 +84135,47 @@ sub_815EACC:
 	ldr r0, [r4, #0x04]
 	cmp r0, #0x00
 	beq _0815EADE
-	bl sub_8021308
+	bl sprite_destroy
 _0815EADE:
 	ldr r0, [r5, #0x04]
 	cmp r0, #0x00
 	beq _0815EAE8
-	bl sub_8021308
+	bl sprite_destroy
 _0815EAE8:
 	ldr r0, [r4, #0x0C]
 	cmp r0, #0x00
 	beq _0815EAF2
-	bl sub_8021308
+	bl sprite_destroy
 _0815EAF2:
 	ldr r0, [r4, #0x10]
 	cmp r0, #0x00
 	beq _0815EAFC
-	bl sub_8021308
+	bl sprite_destroy
 _0815EAFC:
 	ldr r0, [r4, #0x14]
 	cmp r0, #0x00
 	beq _0815EB06
-	bl sub_8021308
+	bl sprite_destroy
 _0815EB06:
 	ldr r0, [r4, #0x18]
 	cmp r0, #0x00
 	beq _0815EB10
-	bl sub_8021308
+	bl sprite_destroy
 _0815EB10:
 	ldr r0, [r4, #0x1C]
 	cmp r0, #0x00
 	beq _0815EB1A
-	bl sub_8021308
+	bl sprite_destroy
 _0815EB1A:
 	ldr r0, [r4, #0x20]
 	cmp r0, #0x00
 	beq _0815EB24
-	bl sub_8021308
+	bl sprite_destroy
 _0815EB24:
 	ldr r0, [r4, #0x24]
 	cmp r0, #0x00
 	beq _0815EB2E
-	bl sub_8021308
+	bl sprite_destroy
 _0815EB2E:
 	movs r0, #0x01
 	ands r0, r6
@@ -84199,27 +84199,27 @@ sub_815EB70:
 	ldr r0, [r4, #0x04]
 	cmp r0, #0x00
 	beq _0815EB82
-	bl sub_8021308
+	bl sprite_destroy
 _0815EB82:
 	ldr r0, [r5, #0x04]
 	cmp r0, #0x00
 	beq _0815EB8C
-	bl sub_8021308
+	bl sprite_destroy
 _0815EB8C:
 	ldr r0, [r4, #0x0C]
 	cmp r0, #0x00
 	beq _0815EB96
-	bl sub_8021308
+	bl sprite_destroy
 _0815EB96:
 	ldr r0, [r4, #0x10]
 	cmp r0, #0x00
 	beq _0815EBA0
-	bl sub_8021308
+	bl sprite_destroy
 _0815EBA0:
 	ldr r0, [r4, #0x14]
 	cmp r0, #0x00
 	beq _0815EBAA
-	bl sub_8021308
+	bl sprite_destroy
 _0815EBAA:
 	movs r0, #0x01
 	ands r0, r6
@@ -84303,20 +84303,20 @@ sub_815ECA8:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _0815ECB8
-	bl sub_8021308
+	bl sprite_destroy
 _0815ECB8:
 	ldr r0, [r4, #0x04]
 	cmp r0, #0x00
 	beq _0815ECC2
-	bl sub_8021308
+	bl sprite_destroy
 _0815ECC2:
 	ldr r0, [r4, #0x08]
 	cmp r0, #0x00
 	beq _0815ECCC
-	bl sub_8021308
+	bl sprite_destroy
 _0815ECCC:
 	ldr r0, [r4, #0x0C]
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x01
 	ands r0, r5
 	cmp r0, #0x00
@@ -84697,7 +84697,7 @@ sub_815EFAC:
 	ldr r0, [r4, #0x34]
 	cmp r0, #0x00
 	beq _0815EFC4
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x34]
 _0815EFC4:
@@ -85231,14 +85231,14 @@ sub_815F3F0:
 	ldr r0, [r4, #0x40]
 	cmp r0, #0x00
 	beq _0815F408
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x40]
 _0815F408:
 	ldr r0, [r4, #0x3C]
 	cmp r0, #0x00
 	beq _0815F416
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x3C]
 _0815F416:
@@ -85298,14 +85298,14 @@ sub_815F474:
 	ldr r0, [r4, #0x40]
 	cmp r0, #0x00
 	beq _0815F48C
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x40]
 _0815F48C:
 	ldr r0, [r4, #0x3C]
 	cmp r0, #0x00
 	beq _0815F49A
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x3C]
 _0815F49A:
@@ -85759,7 +85759,7 @@ sub_815FA40:
 	ldr r0, [r0, #0x00]
 	cmp r0, #0x00
 	beq _0815FA4C
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _0815FA4C:
 	pop {r0}
 	bx r0
@@ -85769,7 +85769,7 @@ sub_815FA50:
 	ldr r0, [r0, #0x00]
 	cmp r0, #0x00
 	beq _0815FA5C
-	bl sprite_show_8020CBC
+	bl sprite_show
 _0815FA5C:
 	pop {r0}
 	bx r0
@@ -85860,7 +85860,7 @@ sub_815FAFC:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _0815FB0E
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _0815FB0E:
@@ -87772,11 +87772,11 @@ _081612CA:
 	cmp r5, #0x00
 	beq _081612D6
 	ldr r0, [r4, #0x0C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	b _081612DC
 _081612D6:
 	ldr r0, [r4, #0x0C]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _081612DC:
 	add sp, #0x004
 	pop {r4, r5}
@@ -87787,7 +87787,7 @@ sub_81612E4:
 	push {r4, lr}
 	adds r4, r0, #0x0
 	ldr r0, [r4, #0x0C]
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x00
 	str r0, [r4, #0x0C]
 	pop {r4}
@@ -88203,7 +88203,7 @@ _081616D6:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x00]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	adds r4, r6, #0x4
 	add r4, r8
 	ldr r0, [r6, #0x1C]
@@ -88336,7 +88336,7 @@ sub_81617F4:
 	adds r5, r0, #0x0
 	adds r4, r1, #0x0
 	ldr r0, [r5, #0x00]
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x01
 	ands r0, r4
 	cmp r0, #0x00
@@ -88438,7 +88438,7 @@ sub_8161888:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x08]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	str r6, [r5, #0x10]
 	ldr r0, [r5, #0x08]
 	strh r6, [r0, #0x00]
@@ -88464,7 +88464,7 @@ sub_8161888:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x0C]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	mov r0, r8
 	str r0, [r5, #0x14]
 	ldr r1, [r5, #0x0C]
@@ -88492,12 +88492,12 @@ sub_8161924:
 	ldr r0, [r4, #0x08]
 	cmp r0, #0x00
 	beq _08161934
-	bl sub_8021308
+	bl sprite_destroy
 _08161934:
 	ldr r0, [r4, #0x0C]
 	cmp r0, #0x00
 	beq _0816193E
-	bl sub_8021308
+	bl sprite_destroy
 _0816193E:
 	movs r0, #0x01
 	ands r0, r5
@@ -88643,7 +88643,7 @@ sub_8161A38:
 	adds r5, r0, #0x0
 	adds r4, r1, #0x0
 	ldr r0, [r5, #0x00]
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x01
 	ands r0, r4
 	cmp r0, #0x00
@@ -88677,7 +88677,7 @@ sub_8161A58:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x00]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r4, #0x00]
 	movs r0, #0x78
 	strh r0, [r1, #0x00]
@@ -88745,7 +88745,7 @@ _08161AEA:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r7, #0x00]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	adds r4, r6, #0x4
 	add r4, r8
 	ldr r0, [r6, #0x1C]
@@ -88878,7 +88878,7 @@ sub_8161C08:
 	adds r5, r0, #0x0
 	adds r4, r1, #0x0
 	ldr r0, [r5, #0x00]
-	bl sub_8021308
+	bl sprite_destroy
 	movs r0, #0x01
 	ands r0, r4
 	cmp r0, #0x00
@@ -89074,11 +89074,11 @@ _08161D80:
 	bl sub_801E150
 _08161D88:
 	ldr r0, [r4, #0x14]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	b _08161D96
 _08161D90:
 	ldr r0, [r4, #0x14]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _08161D96:
 	add sp, #0x004
 	pop {r4}
@@ -89617,7 +89617,7 @@ _081629B0:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x10]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r1, [r4, #0x10]
 	movs r0, #0x00
 	strb r0, [r1, #0x1F]
@@ -89628,7 +89628,7 @@ _081629B0:
 	str r0, [r4, #0x14]
 	ldr r0, [r5, #0x00]
 	ldr r0, [r0, #0x10]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	adds r7, #0x01
 	cmp r7, #0x02
 	ble _081629B0
@@ -89803,7 +89803,7 @@ _08162B3A:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x10]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, [r4, #0x10]
 	ldrb r1, [r2, #0x1F]
 	movs r0, #0x3F
@@ -90022,7 +90022,7 @@ _08162D0C:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r4, #0x10]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, [r4, #0x10]
 	ldrb r1, [r2, #0x1F]
 	movs r0, #0x3F
@@ -91698,12 +91698,12 @@ sub_8163A24:
 	ldr r0, [r4, #0x10]
 	cmp r0, #0x00
 	beq _08163A32
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _08163A32:
 	ldr r0, [r4, #0x14]
 	cmp r0, #0x00
 	beq _08163A3C
-	bl sprite_hide_8021F20
+	bl sprite_hide
 _08163A3C:
 	pop {r4}
 	pop {r0}
@@ -91716,12 +91716,12 @@ sub_8163A44:
 	ldr r0, [r4, #0x10]
 	cmp r0, #0x00
 	beq _08163A52
-	bl sprite_show_8020CBC
+	bl sprite_show
 _08163A52:
 	ldr r0, [r4, #0x14]
 	cmp r0, #0x00
 	beq _08163A5C
-	bl sprite_show_8020CBC
+	bl sprite_show
 _08163A5C:
 	pop {r4}
 	pop {r0}
@@ -91770,7 +91770,7 @@ sub_8163A80:
 	movs r3, #0x00
 	bl sub_801E150
 	ldr r0, [r5, #0x14]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r2, [r5, #0x14]
 	movs r0, #0x03
 	ands r6, r0
@@ -91818,7 +91818,7 @@ sub_8163ADC:
 	bl sub_801E150
 	mov r1, r8
 	ldr r0, [r1, #0x10]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	mov r0, r8
 	ldr r3, [r0, #0x10]
 	lsls r2, r5, #0x06
@@ -91866,12 +91866,12 @@ sub_8163B60:
 	ldr r0, [r4, #0x10]
 	cmp r0, #0x00
 	beq _08163B74
-	bl sub_8021308
+	bl sprite_destroy
 _08163B74:
 	ldr r0, [r4, #0x14]
 	cmp r0, #0x00
 	beq _08163B7E
-	bl sub_8021308
+	bl sprite_destroy
 _08163B7E:
 	ldr r0, _08163B9C @ =0x08CDD118
 	str r0, [r4, #0x0C]
@@ -93459,7 +93459,7 @@ _08164836:
 	str r4, [r6, #0x6C]
 	str r4, [r6, #0x60]
 	ldr r0, [r6, #0x00]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r1, [r6, #0x50]
 	ldr r0, [r6, #0x28]
 	negs r0, r0
@@ -93591,7 +93591,7 @@ _08164922:
 	str r4, [r6, #0x6C]
 	str r4, [r6, #0x60]
 	ldr r0, [r6, #0x00]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r1, [r6, #0x50]
 	ldr r0, [r6, #0x28]
 	negs r0, r0
@@ -93790,7 +93790,7 @@ _08164AD2:
 	strb r1, [r0, #0x11]
 _08164AEE:
 	ldr r0, [r4, #0x04]
-	bl sprite_show_8020CBC
+	bl sprite_show
 	ldr r3, [r4, #0x34]
 	lsrs r0, r3, #0x1F
 	adds r0, r3, r0
@@ -94025,9 +94025,9 @@ _08165030:
 	adds r0, #0x04
 	str r2, [r0, #0x00]
 	ldr r0, [r4, #0x00]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r0, [r4, #0x04]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -94066,9 +94066,9 @@ sub_816507C:
 	mov r0, sp
 	bl CpuFastSet
 	ldr r0, [r4, #0x00]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	ldr r0, [r4, #0x04]
-	bl sprite_hide_8021F20
+	bl sprite_hide
 	add sp, #0x004
 	pop {r4}
 	pop {r0}
@@ -94135,9 +94135,9 @@ sub_8165144:
 	ldr r0, [r4, #0x54]
 	strh r1, [r0, #0x00]
 	ldr r0, [r4, #0x00]
-	bl sub_8021308
+	bl sprite_destroy
 	ldr r0, [r4, #0x04]
-	bl sub_8021308
+	bl sprite_destroy
 	ldr r0, [r4, #0x48]
 	cmp r0, #0x00
 	beq _0816516A

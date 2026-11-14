@@ -207,7 +207,7 @@ _08040966:
 	ldrb r4, [r0, #0x12]
 	lsls r4, r4, #0x1D
 	lsrs r4, r4, #0x1E
-	bl sub_8021ED8
+	bl sprite_restore
 	ldr r2, [r5, #0x00]
 	lsls r4, r4, #0x01
 	ldrb r1, [r2, #0x12]

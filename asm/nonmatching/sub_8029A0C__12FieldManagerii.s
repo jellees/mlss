@@ -1341,14 +1341,14 @@ _0802A47C:
 	lsls r4, r4, #0x02
 	adds r0, r0, r4
 	ldr r0, [r0, #0x00]
-	bl sub_8020D40
+	bl sprite_remove
 	movs r0, #0x81
 	lsls r0, r0, #0x02
 	adds r5, r7, r0
 	ldr r0, [r5, #0x00]
 	adds r0, r0, r4
 	ldr r0, [r0, #0x00]
-	bl sub_8020D40
+	bl sprite_remove
 	ldr r1, [r6, #0x00]
 	adds r0, r7, #0x0
 	movs r2, #0x00

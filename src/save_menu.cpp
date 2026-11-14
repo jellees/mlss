@@ -588,7 +588,7 @@ u8 SaveMenu::sub_8128D74() {
             this->field_AE = 0x80;
             this->field_A4 = 1;
             this->field_62 = sub_81252BC(&this->field_63, 0x1E);
-            sprite_hide_8021F20(this->cursor);
+            sprite_hide(this->cursor);
             this->field_B3 = 2;
             this->field_67 = 1;
             this->field_68 = 1;
@@ -700,7 +700,7 @@ void SaveMenu::sub_812936C() {
 
     this->cursor = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
     sub_801E150(this->cursor, 0, -1, 0, 0);
-    sprite_show_8020CBC(this->cursor);
+    sprite_show(this->cursor);
     this->cursor->xPosition = 0x24;
     this->cursor->yPosition = this->field_AA[this->field_AD];
     this->cursor->field_1F_0 = 0;
@@ -714,7 +714,7 @@ void SaveMenu::sub_812936C() {
 
     this->field_3C = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
     sub_801E150(this->field_3C, 1, -1, 0, 0);
-    sprite_show_8020CBC(this->field_3C);
+    sprite_show(this->field_3C);
     this->field_3C->xPosition = 0x20;
     this->field_3C->yPosition = 0xC0;
     this->field_3C->field_E = 0xEFFF;
@@ -729,7 +729,7 @@ void SaveMenu::sub_812936C() {
 
     this->field_40 = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
     sub_801E150(this->field_40, 7, -1, 0, 0);
-    sprite_show_8020CBC(this->field_40);
+    sprite_show(this->field_40);
     this->field_40->xPosition = 0x20;
     this->field_40->yPosition = 0xC0;
     this->field_40->field_E = 0xEFFF;
@@ -744,7 +744,7 @@ void SaveMenu::sub_812936C() {
 
     this->field_44 = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
     sub_801E150(this->field_44, 8, -1, 0, 0);
-    sprite_show_8020CBC(this->field_44);
+    sprite_show(this->field_44);
     this->field_44->xPosition = 0x20;
     this->field_44->yPosition = 0xC0;
     this->field_44->field_E = 0xEFFF;
@@ -766,7 +766,7 @@ void SaveMenu::sub_812936C() {
             for (i = 0; i < 4; i++) {
                 this->arrows[i] = sub_8020DD0(5, 0x6005, 0, -1, -1, -1, -1);
                 sub_801E150(this->arrows[i], i + 2, -1, 0, 0);
-                sprite_show_8020CBC(this->arrows[i]);
+                sprite_show(this->arrows[i]);
                 this->arrows[i]->xPosition = arrowX[i];
                 this->arrows[i]->yPosition = arrowY[i];
                 this->arrows[i]->field_E = 0xEFFF;
@@ -804,7 +804,7 @@ void SaveMenu::sub_812936C() {
                     sub_801E150(this->fileSprites[i], this->entry.items[i].field_2, -1, 0, 0);
                     sub_801E150(this->fileSprites[i], this->entry.items[i].field_2,
                                 this->entry.items[i].field_3, 0, 0);
-                    sprite_show_8020CBC(this->fileSprites[i]);
+                    sprite_show(this->fileSprites[i]);
                     this->fileSprites[i]->xPosition = 0xBC - i * 40;
                     this->fileSprites[i]->yPosition = 0x68;
                     this->fileSprites[i]->field_E = 0xEFFF;
@@ -821,7 +821,7 @@ void SaveMenu::sub_812936C() {
                     sub_8021574(5, 0x6002, 0, 0, 0, this->field_60, -1);
                     this->fileSprites[i] = sub_8020DD0(5, 0x6006, 0, -1, -1, -1, -1);
                     sub_801E150(this->fileSprites[i], i, -1, 0, 0);
-                    sprite_show_8020CBC(this->fileSprites[i]);
+                    sprite_show(this->fileSprites[i]);
                     this->fileSprites[i]->xPosition = 0xBC - i * 40;
                     this->fileSprites[i]->yPosition = 0x68;
                     this->fileSprites[i]->field_E = 0xEFFF;
@@ -849,7 +849,7 @@ void SaveMenu::sub_812936C() {
                     sub_8021574(5, 0x6002, 0, 0, 0, this->field_60, -1);
                     this->currentSprites[i] = sub_8020DD0(5, 0x6006, 0, -1, -1, -1, -1);
                     sub_801E150(this->currentSprites[i], i, -1, 0, 0);
-                    sprite_show_8020CBC(this->currentSprites[i]);
+                    sprite_show(this->currentSprites[i]);
                     this->currentSprites[i]->xPosition = 0xBC - i * 40;
                     this->currentSprites[i]->yPosition = 0xB4;
                     this->currentSprites[i]->field_E = 0xEFFF;
@@ -867,7 +867,7 @@ void SaveMenu::sub_812936C() {
                     sub_801E150(this->currentSprites[i], dword_3000FF8[i].field_2, -1, 0, 0);
                     sub_801E150(this->currentSprites[i], dword_3000FF8[i].field_2,
                                 dword_3000FF8[i].field_3, 0, 0);
-                    sprite_show_8020CBC(this->currentSprites[i]);
+                    sprite_show(this->currentSprites[i]);
                     this->currentSprites[i]->xPosition = 0xBC - i * 40;
                     this->currentSprites[i]->yPosition = 0xB4;
                     this->currentSprites[i]->field_E = 0xEFFF;
