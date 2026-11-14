@@ -81,8 +81,8 @@ struct GameState {
 };
 
 // Decompression of src to dest. sub_8019808 queues it (status 2) for sub_800063C, which runs the
-// queue in the CPU's idle time between frames, on its own stack, preempted by VBlank (crt0 IRQ handler).
-// Status 0 when done.
+// queue in the CPU's idle time between frames, on its own stack, preempted by VBlank (crt0 IRQ
+// handler). Status 0 when done.
 struct DecompressJob {
     u32 status;
     void* src;
@@ -121,8 +121,8 @@ struct struc_3000D18 {
 
 // Entries of gSpriteInfo[][]
 struct SpriteInfo {
-    u32 palette : 9; // gSpritePalettes/off_839EF10, gSpritePaletteCounts
-    u32 tiles : 9; // gSpriteTiles
+    u32 palette : 9;   // gSpritePalettes/off_839EF10, gSpritePaletteCounts
+    u32 tiles : 9;     // gSpriteTiles
     u32 animation : 9; // gSpriteAnimations
     u32 field_0_27 : 1;
     u32 field_0_28 : 1;
@@ -159,7 +159,7 @@ struct Sprite;
 typedef void (*SpriteCallback)(struct Sprite*, int);
 // Sprite routines selected per frame by sub_801E80C (dword_3000D58)
 typedef struct OamNode* (*SpriteDrawRoutine)(struct OamNode*, struct Sprite*, u8**, int, u8*, s8*, int,
-                                                      u8*);
+                                             u8*);
 
 struct Sprite {
     s16 xPosition;
@@ -369,8 +369,8 @@ struct struc_3000D44 {
 };
 
 // One OBJ waiting to go into OAM. A pool of 0x82 is set up by oam_nodes_init; each frame gOamNodesReset
-// frees them, the sprite draw routines fill them, gOamNodesSort sorts them by sortKey and gOamNodesCopy copies
-// the used ones to gGameState.oamBuffers.
+// frees them, the sprite draw routines fill them, gOamNodesSort sorts them by sortKey and gOamNodesCopy
+// copies the used ones to gGameState.oamBuffers.
 struct OamNode {
     u16 attr0;
     u16 attr1;
@@ -381,15 +381,23 @@ struct OamNode {
     struct OamNode* next;
 };
 
-// Sprite heap block header. The heap grows down from stru_203FFA8; a block's data is the field_8 - 16
-// bytes just below its header (right after the next block's header).
-struct struc_203FFA8 {
-    struct struc_203FFA8* field_0; // Previous block (the one above)
-    struct struc_203FFA8* field_4; // Next block (the one below)
-    int field_8; // Size including the header
-    u8 field_C; // Type: 0 free, 1 sprite, 2 tile buffer (sub_80213A0), 3 tile map (sub_80214A4)
-    u8 field_D; // Bank
-    u16 field_E; // Index in the bank
+// The sprite heap's block types
+enum SpriteHeapBlockType {
+    SPRITE_HEAP_FREE,
+    SPRITE_HEAP_SPRITE,
+    SPRITE_HEAP_TILES,    // Tile buffer (sub_80213A0)
+    SPRITE_HEAP_TILE_MAP, // Tile map (sub_80214A4)
+};
+
+// Sprite heap block header. The heap grows down from gSpriteHeap; a block's data is the size - 16 bytes
+// just below its header (right after the next block's header).
+struct SpriteHeapBlock {
+    struct SpriteHeapBlock* previous; // The block above
+    struct SpriteHeapBlock* next;     // The block below
+    int size;                         // Including the header
+    u8 type;                          // SpriteHeapBlockType
+    u8 bank;
+    u16 index; // In the bank
 };
 
 struct struc_203FFB8 {
@@ -406,7 +414,7 @@ struct struc_203FFB8 {
     u16 field_8;
     u16 field_A;
     u16 field_C[16];
-    struct struc_203FFA8* field_2C;
+    struct SpriteHeapBlock* field_2C;
     struct Sprite* field_30; // First sprite of the list (linked by Sprite::field_64/field_68)
     struct Sprite* field_34; // Last sprite of the list
     struct OamNode* field_38;
@@ -635,7 +643,7 @@ void SoftResetRom(int);
 // EWRAM
 extern struct struc_203FFB8 stru_203FFB8;
 extern struct struc_203FFB8* dword_3000D74;
-extern struct struc_203FFA8 stru_203FFA8;
+extern struct SpriteHeapBlock gSpriteHeap;
 extern struct struc_203FFF8 stru_203FFF8;
 extern u16 word_203FFC4[];
 
@@ -643,7 +651,8 @@ extern u16 word_203FFC4[];
 extern void (*gOamNodesSort)(int, int);
 extern int (*gOamNodesCopy)(int, int);
 extern void (*gOamNodesReset)(u32, int);
-extern SpriteDrawRoutine dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)
+extern SpriteDrawRoutine
+    dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)
 extern u8 byte_3000D70;
 extern struct ORSTData* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
@@ -658,10 +667,14 @@ extern struct struc_3000D44* dword_3000D44;
 extern u16 word_2000272;
 extern u8 byte_3000C24;
 extern u32 dword_839F900[][2];
-extern u8 byte_839F910[]; // Angle per D-pad state ((keys & 0xF0) >> 4), 0xFF: none (FieldManager::sub_802C068)
-extern u8 byte_839F94C[]; // Indexed by direction (angle / 32), masked with FieldPlayerCharacter::field_350_0
-extern u8 byte_839F954[]; // FieldManager::sub_802C428: tile offset (x 32 bytes) per FieldStruct4::field_2
-extern u8 byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per FieldStruct4::field_2
+extern u8 byte_839F910[]; // Angle per D-pad state ((keys & 0xF0) >> 4), 0xFF: none
+                          // (FieldManager::sub_802C068)
+extern u8
+    byte_839F94C[]; // Indexed by direction (angle / 32), masked with FieldPlayerCharacter::field_350_0
+extern u8
+    byte_839F954[]; // FieldManager::sub_802C428: tile offset (x 32 bytes) per FieldStruct4::field_2
+extern u8
+    byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per FieldStruct4::field_2
 extern u16 word_839F974[]; // FieldManager::sub_802C774: 4 pairs of (frame, animation)
 extern void (*dword_3000D80[2])(void);
 extern u16 word_839F5CC[];
@@ -670,7 +683,7 @@ extern u32 dword_3000E00;
 extern u32 dword_3000E04;
 extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
 extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
-extern u8 byte_839F620[]; // Direction (0-7) per ArcTan2 result / 0x1000 (FieldManager::sub_802C208)
+extern u8 byte_839F620[];  // Direction (0-7) per ArcTan2 result / 0x1000 (FieldManager::sub_802C208)
 extern struct EventScriptProcess* dword_3000D78;
 extern struct struc_3000FD0* dword_3000FD0;
 extern void* dword_3000FC0;
@@ -688,11 +701,11 @@ extern struct struc_3000DD0 stru_83A78D4[]; // Header of each room
 extern u8 dword_839EF80[];
 extern u8 dword_839F024[];
 extern u8 dword_821F808[];
-extern u8 byte_83AAA6C[];   // 3 archive entries per room (0xFF: none) + 1 unused?
-extern u32 dword_86527F4[]; // Archive: offsets from its start
+extern u8 byte_83AAA6C[];                  // 3 archive entries per room (0xFF: none) + 1 unused?
+extern u32 dword_86527F4[];                // Archive: offsets from its start
 extern struct SignMapEntry stru_83A0D2C[]; // Sign zoom and center per room
-extern u16 word_83A0E64[];                // Sign arrow positions (x, y)
-extern s8 byte_83A0E74[];                 // Sign scroll steps (x, y) per D-pad state
+extern u16 word_83A0E64[];                 // Sign arrow positions (x, y)
+extern s8 byte_83A0E74[];                  // Sign scroll steps (x, y) per D-pad state
 extern int loc_8198220();
 // ARM routines in ROM that sub_801DFB0 copies to IWRAM (gOamNodesSort, gOamNodesCopy, gOamNodesReset)
 extern u8 arm_8000850[];
@@ -706,7 +719,7 @@ extern SpriteDrawRoutine off_839EE1C[6];
 extern u16 word_839EE34[6];
 extern char* off_839EE40[6];
 extern u8 byte_839EE04[4 * 4 * 2]; // OBJ width and height in pixels, by shape * 8 + size * 2
-extern u8 byte_839EE58[6]; // Record size per animation frame type (sub_801E3EC)
+extern u8 byte_839EE58[6];         // Record size per animation frame type (sub_801E3EC)
 extern int loc_819832C(int, int);
 extern int loc_8198350(int, int);
 extern u8 loc_81980D8[];
@@ -763,31 +776,36 @@ extern u8 byte_83A05EC[];
 extern u8 byte_83A061C[];
 extern u8 byte_83A0636[];
 extern s8 byte_83A0656[];
-extern s8* off_83A09DC[]; // Indexed by [FieldObject::field_54][state] (FieldPlayerCharacter::sub_8048174)
-extern u8* off_83A086C[]; // Indexed by [!FieldPlayerCharacter::field_352_7][state]
+extern s8*
+    off_83A09DC[]; // Indexed by [FieldObject::field_54][state] (FieldPlayerCharacter::sub_8048174)
+extern u8* off_83A086C[];       // Indexed by [!FieldPlayerCharacter::field_352_7][state]
 extern s8 byte_83A09E4[][8][3]; // FieldPlayerCharacter::field_372-374 per animation and direction
-extern u16 word_83A0A2C[]; // FieldPlayerCharacter::sub_804A124: corner masks that may match
+extern u16 word_83A0A2C[];      // FieldPlayerCharacter::sub_804A124: corner masks that may match
 extern u8 byte_83A0A2E[];
 extern u8 byte_83A0A38[]; // FieldPlayerCharacter::sub_804FC30, indexed by (angle / 32) * 4 + field_26_2
-extern u8 byte_83A0A58[8]; // FieldPlayerCharacter::sub_804B360 push directions per angle / 32 for a single blocked corner
+extern u8 byte_83A0A58[8]; // FieldPlayerCharacter::sub_804B360 push directions per angle / 32 for a
+                           // single blocked corner
 extern u8 byte_83A0A60[8];
 extern u8 byte_83A0A68[8];
 extern u8 byte_83A0A70[8];
 extern u16 word_83A0C5A[]; // FieldPlayerShotBullet animations, indexed by type - 2
 extern u16 word_83A0C60[]; // FieldPlayerShotBullet tables, indexed by type - 2
-extern s8 byte_83A0CD6[8][4]; // FieldPlayerShotBullet::sub_804EA68: sides to check per direction, ended by -1
+extern s8
+    byte_83A0CD6[8][4]; // FieldPlayerShotBullet::sub_804EA68: sides to check per direction, ended by -1
 extern s16 word_83A0C66[];
 extern u8 byte_83A0C6C[];
 extern s16 word_83A0C70[];
 extern s16 word_83A0C76[];
-extern s16 word_839F564[]; // Direction vectors
-extern s16 word_839F584[][2]; // Per direction (angle / 32): x and y, scaled by speed / 256 (FieldManager::sub_802BFB0)
-extern u8 byte_801349C[][7]; // Packed sprite boxes, indexed by Sprite::field_16
-extern s16 word_83A0B88[][8][6]; // FieldPlayerCharacter::sub_804DBD0 probe offsets
-extern s16 word_83A0A78[][2][8][4]; // FieldPlayerCharacter::sub_804D734 hammer boxes per mode, half and direction
-extern u8 byte_83A0B78[8]; // Sides hit per direction (this object)
-extern u8 byte_83A0B80[8]; // Sides hit per direction (the other object)
-extern u8 byte_83A0C48[]; // FieldPlayerCharacter::sub_804DBD0: 9 pairs of offset indices
+extern s16 word_839F564[];          // Direction vectors
+extern s16 word_839F584[][2];       // Per direction (angle / 32): x and y, scaled by speed / 256
+                                    // (FieldManager::sub_802BFB0)
+extern u8 byte_801349C[][7];        // Packed sprite boxes, indexed by Sprite::field_16
+extern s16 word_83A0B88[][8][6];    // FieldPlayerCharacter::sub_804DBD0 probe offsets
+extern s16 word_83A0A78[][2][8][4]; // FieldPlayerCharacter::sub_804D734 hammer boxes per mode, half and
+                                    // direction
+extern u8 byte_83A0B78[8];          // Sides hit per direction (this object)
+extern u8 byte_83A0B80[8];          // Sides hit per direction (the other object)
+extern u8 byte_83A0C48[];           // FieldPlayerCharacter::sub_804DBD0: 9 pairs of offset indices
 extern struct struc_83A065C stru_83A065C[];
 extern u8* off_83A069C[];
 extern s8 byte_83A06C0[8][4];

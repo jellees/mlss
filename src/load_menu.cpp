@@ -324,8 +324,7 @@ void LoadMenu::update() {
                                     this->entries[this->field_154[this->field_FB - 1]].items[i].field_2,
                                     this->entries[this->field_154[this->field_FB - 1]].items[i].field_3,
                                     0, 0);
-                                sprite_show(
-                                    this->sprites[this->field_154[this->field_FB - 1] * 2 + i]);
+                                sprite_show(this->sprites[this->field_154[this->field_FB - 1] * 2 + i]);
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->xPosition =
                                     0xBC - i * 40;
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->yPosition =
@@ -340,8 +339,7 @@ void LoadMenu::update() {
                                     sub_8020DD0(5, SPRITE_ID(5, 6), 1, -1, -1, -1, -1);
                                 sub_801E150(this->sprites[this->field_154[this->field_FB - 1] * 2 + i],
                                             i, -1, 0, 0);
-                                sprite_show(
-                                    this->sprites[this->field_154[this->field_FB - 1] * 2 + i]);
+                                sprite_show(this->sprites[this->field_154[this->field_FB - 1] * 2 + i]);
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->xPosition =
                                     0xBC - i * 40;
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->yPosition =

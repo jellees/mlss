@@ -1510,14 +1510,14 @@ void sub_80208F4(void) {
 // and allocates the pool of OAM sort nodes.
 void sub_8020994(u16 arg0, u8 arg1, u8 arg2, u8 flags) {
     struct struc_203FFB8* system = &stru_203FFB8;
-    struct struc_203FFA8* heap = &stru_203FFA8;
+    struct SpriteHeapBlock* heap = &gSpriteHeap;
     int i;
 
     dword_3000D74 = system;
-    heap->field_4 = 0;
-    heap->field_0 = 0;
-    heap->field_8 = 0x3FFB8;
-    heap->field_C = 0;
+    heap->next = 0;
+    heap->previous = 0;
+    heap->size = 0x3FFB8;
+    heap->type = SPRITE_HEAP_FREE;
     dword_3001034(0, system, sizeof(*system));
     system->field_8 = system->field_A = arg0;
     //! Possible fake match (permuter): the do-while(0) may be what's left of a macro
@@ -1767,7 +1767,7 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
         bufferSize += 3;
         bufferSize &= ~3;
 
-        sprite = (struct Sprite*)sprite_heap_alloc(1, 0x6C, 0, 0);
+        sprite = (struct Sprite*)sprite_heap_alloc(SPRITE_HEAP_SPRITE, 0x6C, 0, 0);
         dword_3001034(0, sprite, 0x6C);
         sprite->field_10_0 = 1;
         sprite->xPosition = 120;
@@ -1788,7 +1788,7 @@ struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, 
         sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, arg2 == 1 ? bufferSize : 0, flag,
                     0);
     } else {
-        sprite = (struct Sprite*)sprite_heap_alloc(1, 0x6C, 0, 0);
+        sprite = (struct Sprite*)sprite_heap_alloc(SPRITE_HEAP_SPRITE, 0x6C, 0, 0);
         dword_3001034(0, sprite, 0x6C);
         sprite->field_10_0 = 1;
         sprite->xPosition = 120;
@@ -1986,10 +1986,11 @@ void* sub_80213A0(int bank, int id, int tileCount, u8 arg3) {
             }
         }
         tileCount *= 32;
-        job = (struct DecompressJob*)sprite_heap_search(2, bank, tilesIndex);
+        job = (struct DecompressJob*)sprite_heap_search(SPRITE_HEAP_TILES, bank, tilesIndex);
         if (job == 0) {
             tileCount += 16;
-            job = (struct DecompressJob*)sprite_heap_alloc(2, tileCount, bank, tilesIndex);
+            job = (struct DecompressJob*)sprite_heap_alloc(SPRITE_HEAP_TILES, tileCount, bank,
+                                                           tilesIndex);
             dword_3001034(0, job, tileCount);
             job->status = 1;
             job->src = tiles;
@@ -2034,9 +2035,9 @@ void* sub_80214A4(int bank, int id, int size, u8 arg3) {
         }
         size += 3;
         size &= ~3;
-        map = (u8*)sprite_heap_search(3, bank, animationIndex);
+        map = (u8*)sprite_heap_search(SPRITE_HEAP_TILE_MAP, bank, animationIndex);
         if (map == 0) {
-            map = (u8*)sprite_heap_alloc(3, size, bank, animationIndex);
+            map = (u8*)sprite_heap_alloc(SPRITE_HEAP_TILE_MAP, size, bank, animationIndex);
             sub_801E3EC(map, animation);
         } else if (!arg3) {
             return 0;
@@ -2214,23 +2215,23 @@ asm_unified(".include \"asm/nonmatching/sprite_heap_alloc.s\"");
 // Frees a sprite heap block and merges it with free neighbours.
 void sprite_heap_free(void* p) {
     if (p != 0) {
-        struct struc_203FFA8* block = ((struct struc_203FFA8*)((u8*)p - 16))->field_0;
-        struct struc_203FFA8* previous = block->field_0;
-        struct struc_203FFA8* next = block->field_4;
+        struct SpriteHeapBlock* block = ((struct SpriteHeapBlock*)((u8*)p - 16))->previous;
+        struct SpriteHeapBlock* previous = block->previous;
+        struct SpriteHeapBlock* next = block->next;
 
-        block->field_C = 0;
-        if (next != 0 && next->field_C == 0) {
-            block->field_8 += next->field_8;
-            block->field_4 = next->field_4;
-            if (block->field_4 != 0) {
-                block->field_4->field_0 = block;
+        block->type = SPRITE_HEAP_FREE;
+        if (next != 0 && next->type == SPRITE_HEAP_FREE) {
+            block->size += next->size;
+            block->next = next->next;
+            if (block->next != 0) {
+                block->next->previous = block;
             }
         }
-        if (previous != 0 && previous->field_C == 0) {
-            previous->field_8 += block->field_8;
-            previous->field_4 = block->field_4;
-            if (previous->field_4 != 0) {
-                previous->field_4->field_0 = previous;
+        if (previous != 0 && previous->type == SPRITE_HEAP_FREE) {
+            previous->size += block->size;
+            previous->next = block->next;
+            if (previous->next != 0) {
+                previous->next->previous = previous;
             }
         }
     }
@@ -2238,13 +2239,13 @@ void sprite_heap_free(void* p) {
 
 // Finds the data of the sprite heap block with this type, bank and index.
 void* sprite_heap_search(int type, u8 bank, u16 index) {
-    struct struc_203FFA8* block = stru_203FFB8.field_2C;
+    struct SpriteHeapBlock* block = stru_203FFB8.field_2C;
 
     do {
-        if (block->field_C == type && block->field_D == bank && block->field_E == index) {
-            return (u8*)block - (block->field_8 - 16);
+        if (block->type == type && block->bank == bank && block->index == index) {
+            return (u8*)block - (block->size - 16);
         }
-        block = block->field_4;
+        block = block->next;
     } while (block != 0);
     return 0;
 }
