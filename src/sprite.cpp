@@ -1680,3 +1680,270 @@ void sub_8020D40(struct Sprite* sprite) {
         system->field_1--;
     }
 }
+
+// Creates a sprite and adds it to the end of the sprite list. id -1 makes an empty sprite; ids and
+// palettes with bits 12-15 set select the bank (bits 12-15 minus 1) themselves.
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8020DD0.s\"");
+#else
+struct Sprite* sub_8020DD0(int bank, int id, int arg2, int tileCount, int arg4, int bufferSize,
+                           int palette) {
+    struct Sprite* sprite;
+    struct struc_203FFB8* system;
+
+    if (id != -1) {
+        struct struc_839EE60* info;
+        int flag;
+        int animationIndex;
+        int tilesIndex;
+        int paletteBank;
+        u8* animation;
+        u8* tiles;
+        int paletteCount;
+        void** paletteTable;
+        void* paletteData;
+        u8* base;
+        int frames;
+        int records;
+        int recordSize;
+
+        if (id & 0xF000) {
+            bank = (id >> 12) - 1;
+            id &= 0xFFF;
+        }
+        info = &off_839EE60[bank][id];
+        flag = info->field_0_31;
+        animationIndex = info->field_0_18;
+        tilesIndex = info->field_0_9;
+        if (palette == -1) {
+            paletteBank = bank;
+            palette = info->field_0_0;
+        } else if (palette & 0xF000) {
+            paletteBank = (palette >> 12) - 1;
+            palette &= 0xFFF;
+        } else {
+            paletteBank = bank;
+        }
+        animation = off_839EE8C[bank][animationIndex];
+        tiles = (u8*)off_839EEB8[bank] + off_839EEB8[bank][tilesIndex];
+        paletteCount = off_839EF3C[paletteBank][palette];
+        if (gGameState.field_888_1 == 1 && off_839EEE4[paletteBank] != 0 && !stru_203FFB8.field_0_2) {
+            paletteTable = off_839EF10[paletteBank];
+        } else {
+            paletteTable = off_839EEE4[paletteBank];
+        }
+        paletteData = paletteTable[palette];
+
+        if (tileCount == -1) {
+            frames = (animation[4] | ((animation[5] & 1) << 8)) + 1;
+            if (!flag) {
+                tileCount = sub_80198B0(tiles) >> 5;
+            } else {
+                tileCount = 0;
+            }
+            if (tileCount < frames) {
+                tileCount = frames;
+            }
+        }
+        if (arg4 == -1) {
+            if (arg2 == 1) {
+                arg4 = (animation[3] >> 1) + 1;
+            } else {
+                arg4 = tileCount;
+            }
+        }
+        tileCount *= 32;
+        arg4 *= 32;
+        base = animation - (animation[0] | (animation[1] << 8));
+        records = (animation[6] & 0x7F) + 1;
+        recordSize = base[0];
+        if (bufferSize == -1) {
+            bufferSize = records * recordSize + 1;
+        }
+        bufferSize += 3;
+        bufferSize &= ~3;
+
+        sprite = (struct Sprite*)sprite_heap_alloc(1, 0x6C, 0, 0);
+        dword_3001034(0, sprite, 0x6C);
+        sprite->field_10_0 = 1;
+        sprite->xPosition = 120;
+        sprite->yPosition = 80;
+        sprite->xScale = 0x100;
+        sprite->yScale = 0x100;
+        sprite->field_8 = 0x100;
+        sprite->field_A = 0x100;
+        sprite->field_12_5 = 1;
+        sprite->field_13_4 = paletteCount;
+        sprite->field_16 = id;
+        sprite->field_1A = animationIndex;
+        sprite->field_18 = tilesIndex;
+        sprite->field_1C = palette;
+        sprite->field_1E_0 = bank;
+        sprite->field_1E_4 = paletteBank;
+        sprite->field_30 = arg4;
+        sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, arg2 == 1 ? bufferSize : 0, flag,
+                    0);
+    } else {
+        sprite = (struct Sprite*)sprite_heap_alloc(1, 0x6C, 0, 0);
+        dword_3001034(0, sprite, 0x6C);
+        sprite->field_10_0 = 1;
+        sprite->xPosition = 120;
+        sprite->yPosition = 80;
+        sprite->xScale = 0x100;
+        sprite->yScale = 0x100;
+        sprite->field_8 = 0x100;
+        sprite->field_A = 0x100;
+        sprite->field_12_5 = 1;
+        sprite->field_16 = 0xFFFF;
+    }
+
+    system = &stru_203FFB8;
+    if (system->field_30 == 0) {
+        system->field_30 = sprite;
+    } else {
+        sprite->field_68 = system->field_34->field_68;
+        system->field_34->field_68 = sprite;
+    }
+    sprite->field_64 = system->field_34;
+    system->field_34 = sprite;
+    system->field_1++;
+    return sprite;
+}
+#endif
+
+// Gives an existing sprite new graphics (see sub_8020DD0 for the parameters).
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80210A8.s\"");
+#else
+void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCount, int arg5,
+                 int bufferSize, int palette) {
+    struct struc_839EE60* info;
+    int flag;
+    int animationIndex;
+    int tilesIndex;
+    int paletteBank;
+    u8* animation;
+    u8* tiles;
+    int paletteCount;
+    void** paletteTable;
+    void* paletteData;
+    u8* base;
+    int frames;
+    int records;
+    int recordSize;
+
+    if (sprite->field_16 != 0xFFFF) {
+        if (!sprite->field_12_5) {
+            sprite->field_12_5 = 1;
+            if (sub_8021A18(sprite, 2) == 0) {
+                u16* slot = stru_203FFB8.field_C;
+                int mask = sprite->field_14;
+
+                while (mask != 0) {
+                    if ((*slot & 0x4000) && (mask & 1)) {
+                        *slot = 0xFFFF;
+                    }
+                    slot++;
+                    mask >>= 1;
+                }
+            }
+        }
+        sub_8021C24(sprite);
+    }
+
+    if (id & 0xF000) {
+        bank = (id >> 12) - 1;
+        id &= 0xFFF;
+    }
+    info = &off_839EE60[bank][id];
+    flag = info->field_0_31;
+    animationIndex = info->field_0_18;
+    tilesIndex = info->field_0_9;
+    if (palette == -1) {
+        paletteBank = bank;
+        palette = info->field_0_0;
+    } else if (palette & 0xF000) {
+        paletteBank = (palette >> 12) - 1;
+        palette &= 0xFFF;
+    } else {
+        paletteBank = bank;
+    }
+    animation = off_839EE8C[bank][animationIndex];
+    tiles = (u8*)off_839EEB8[bank] + off_839EEB8[bank][tilesIndex];
+    paletteCount = off_839EF3C[paletteBank][palette];
+    if (gGameState.field_888_1 == 1 && off_839EEE4[paletteBank] != 0 && !stru_203FFB8.field_0_2) {
+        paletteTable = off_839EF10[paletteBank];
+    } else {
+        paletteTable = off_839EEE4[paletteBank];
+    }
+    paletteData = paletteTable[palette];
+
+    if (tileCount == -1) {
+        frames = (animation[4] | ((animation[5] & 1) << 8)) + 1;
+        tileCount = !flag ? sub_80198B0(tiles) >> 5 : 0;
+        if (tileCount < frames) {
+            tileCount = frames;
+        }
+    }
+    // arg5 is unused, but this dead code is what leaves the original's lone load of it
+    if (arg5 == -1) {
+        arg5 = tileCount;
+    }
+    tileCount *= 32;
+    base = animation - (animation[0] | (animation[1] << 8));
+    records = (animation[6] & 0x7F) + 1;
+    recordSize = base[0];
+    if (bufferSize == -1) {
+        bufferSize = recordSize * records + 1;
+    }
+    bufferSize += 3;
+    bufferSize &= ~3;
+
+    sprite->field_12_1 = 0;
+    sprite->field_13_4 = paletteCount;
+    sprite->field_16 = id;
+    sprite->field_1A = animationIndex;
+    sprite->field_18 = tilesIndex;
+    sprite->field_1C = palette;
+    sprite->field_1E_0 = bank;
+    sprite->field_1E_4 = paletteBank;
+    sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, arg3 == 1 ? bufferSize : 0, flag, 1);
+}
+#endif
+
+// Destroys a sprite: hides it, removes it from the sprite list and frees it.
+void sub_8021308(struct Sprite* sprite) {
+    struct struc_203FFB8* system;
+
+    if (!sprite->field_12_5) {
+        sprite->field_12_5 = 1;
+        if (sub_8021A18(sprite, 2) == 0) {
+            u16* slot = stru_203FFB8.field_C;
+            int mask = sprite->field_14;
+
+            while (mask != 0) {
+                if ((*slot & 0x4000) && (mask & 1)) {
+                    *slot = 0xFFFF;
+                }
+                slot++;
+                mask >>= 1;
+            }
+        }
+    }
+    sub_8021C24(sprite);
+    system = &stru_203FFB8;
+    if (sprite->field_64 != 0) {
+        sprite->field_64->field_68 = sprite->field_68;
+    } else {
+        system->field_30 = sprite->field_68;
+    }
+    if (sprite->field_68 != 0) {
+        sprite->field_68->field_64 = sprite->field_64;
+    } else {
+        system->field_34 = sprite->field_64;
+    }
+    sprite_heap_free(sprite);
+    system->field_1--;
+}

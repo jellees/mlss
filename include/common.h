@@ -122,7 +122,10 @@ struct struc_Sprite48 {
 
 // Entries of off_839EE60[][]
 struct struc_839EE60 {
-    u32 field_0_0 : 28;
+    u32 field_0_0 : 9; // Palette (off_839EEE4/off_839EF10, off_839EF3C)
+    u32 field_0_9 : 9; // Tiles (off_839EEB8)
+    u32 field_0_18 : 9; // Animation file (off_839EE8C)
+    u32 field_0_27 : 1;
     u32 field_0_28 : 1;
     u32 field_0_29 : 2;
     u32 field_0_31 : 1;
@@ -776,6 +779,12 @@ extern u8* off_839EC80;
 extern u16 word_839F5A4[]; // Up, Up, Down, Down, Left, Right, Left, Right, B, A
 extern u8 byte_839F5B8[];
 extern struct struc_839EE60* off_839EE60[];
+// Per sprite bank, indexed by the fields of struc_839EE60 (sub_8020DD0)
+extern u8** off_839EE8C[];
+extern u32* off_839EEB8[];
+extern void** off_839EEE4[];
+extern void** off_839EF10[];
+extern u8* off_839EF3C[];
 extern u8 byte_83A05EC[];
 extern u8 byte_83A061C[];
 extern u8 byte_83A0636[];
