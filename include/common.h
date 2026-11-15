@@ -496,7 +496,6 @@ void sub_8033B98(struct FieldManager*, struct FieldObject*);
 void sub_8034870(struct FieldManager*, struct FieldObject*);
 void sub_80346FC(struct FieldManager*, struct FieldObject*);
 int sub_803C544(struct FieldManager*);
-void sub_802DDB4(struct FieldManager*, struct FieldObject*, int, int);
 void sub_8029888(void (*)(void), int);
 void sub_8029910(void);
 void sub_805BFF0(struct Process*);
@@ -545,9 +544,9 @@ extern struct FieldManager* dword_3000D7C;
 extern struct struc_3000D44* dword_3000D44;
 extern u16 word_2000272;
 extern u8 byte_3000C24;
-extern u32 dword_839F900[][2];
-extern u8 byte_839F910[]; // Angle per D-pad state ((keys & 0xF0) >> 4), 0xFF: none
-                          // (FieldManager::sub_802C068)
+extern s8** dword_839F900[][2]; // FieldStruct4::field_8 per player character
+extern u8 byte_839F910[];       // Angle per D-pad state ((keys & 0xF0) >> 4), 0xFF: none
+                                // (FieldManager::sub_802C068)
 extern u8
     byte_839F94C[]; // Indexed by direction (angle / 32), masked with FieldPlayerCharacter::field_350_0
 extern u8
@@ -555,6 +554,11 @@ extern u8
 extern u8
     byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per FieldStruct4::field_2
 extern u16 word_839F974[]; // FieldManager::sub_802C774: 4 pairs of (frame, animation)
+extern u16 word_839F984[]; // FieldManager::sub_802DDB4: [field_54][index]
+extern u16
+    word_839F98C[]; // FieldManager::sub_802DDB4: flag per [field_54][index][FieldStruct4::field_2]
+extern u8
+    byte_839F9FC[]; // FieldManager::sub_802DDB4: sound per [field_54][index][FieldStruct4::field_2]
 extern void (*dword_3000D80[2])(void);
 extern u16 word_839F5CC[];
 extern u16 word_839F5E2[];

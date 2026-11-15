@@ -945,8 +945,8 @@ void FieldManager::update_field_8023DD4() {
                 follower->field_368->field_6 = 0x200;
                 leader->field_350_14 = 0;
                 follower->field_350_14 = 0;
-                sub_802DDB4(this, leader, 0, 0);
-                sub_802DDB4(this, follower, 0, 0);
+                sub_802DDB4(leader, 0, 0);
+                sub_802DDB4(follower, 0, 0);
                 {
                     u32 temp = field_E8;
                     field_E8 = field_EC;
@@ -1034,8 +1034,8 @@ void FieldManager::update_field_8023DD4() {
                     int oldDirection;
                     s32 oldX, oldY, oldZ, oldHeight;
 
-                    sub_802DDB4(this, leader, 0, 0);
-                    sub_802DDB4(this, follower, 0, 0);
+                    sub_802DDB4(leader, 0, 0);
+                    sub_802DDB4(follower, 0, 0);
                     luigiLeads ^= 1;
                     dword_3000FD0->field_528 = luigiLeads;
                     follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
@@ -3227,8 +3227,8 @@ void FieldManager::sub_8029934() {
     dword_3001034(0, field_20C, 0x30);
     for (i = 0; i < 2; i++) {
         field_20C[i].field_0 = 0;
-        field_20C[i].field_8 = dword_839F900[i][0];
-        field_20C[i].field_C = dword_839F900[i][1];
+        field_20C[i].field_8[0] = dword_839F900[i][0];
+        field_20C[i].field_8[1] = dword_839F900[i][1];
         field_20C[i].field_10[0] = 0;
         field_20C[i].field_10[1] = 0;
         field_20C[i].field_12 = -1;
@@ -3575,8 +3575,8 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
     }
     sprite_remove(leader->field_36C);
     sprite_remove(follower->field_36C);
-    sub_802DDB4(this, leader, 0, 0);
-    sub_802DDB4(this, follower, brothersTogether, 0);
+    sub_802DDB4(leader, 0, 0);
+    sub_802DDB4(follower, brothersTogether, 0);
     sub_802DF80(this, 0);
 }
 #endif
@@ -4131,13 +4131,13 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, u8 arg2) {
     if (!field_209_0 && field_12A != 0 && field_12A <= 2 && (brothersTogether || player->field_352_7)) {
         if (player->field_340 == 2) {
             player->sub_8049BD8(1);
-            sub_802DDB4(this, player, player->field_352_7 ? 0 : brothersTogether, 0);
+            sub_802DDB4(player, player->field_352_7 ? 0 : brothersTogether, 0);
         } else if (player->field_352_7 && player->field_340 == 3) {
             player->sub_8049BD8(2);
-            sub_802DDB4(this, player, player->field_352_7 ? 0 : brothersTogether, 0);
+            sub_802DDB4(player, player->field_352_7 ? 0 : brothersTogether, 0);
         } else if (player->field_341 != player->field_340) {
             player->sub_804FC90();
-            sub_802DDB4(this, player, player->field_352_7 ? 0 : brothersTogether, 0);
+            sub_802DDB4(player, player->field_352_7 ? 0 : brothersTogether, 0);
         }
     } else {
         player->sub_804FC90();
@@ -4688,11 +4688,11 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             field_20B_4 = 0;
             player->field_368->field_10[0] = player->field_368->field_12;
             player->field_368->field_12 = -1;
-            sub_802DDB4(this, player, 0, 0);
+            sub_802DDB4(player, 0, 0);
             if (!brothersTogether && !player->field_352_7) {
                 player->field_368->field_14 = player->field_368->field_10[0];
                 player->field_368->field_10[0] = 0;
-                sub_802DDB4(this, player, 0, 0);
+                sub_802DDB4(player, 0, 0);
             }
             break;
         }
@@ -4766,16 +4766,16 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
     player->field_260 = player->field_23E = field_100;
     player->field_368->field_10[0] = player->field_368->field_12;
     player->field_368->field_12 = -1;
-    sub_802DDB4(this, player, 0, 0);
+    sub_802DDB4(player, 0, 0);
     if (!brothersTogether && !player->field_352_7) {
         player->field_368->field_14 = player->field_368->field_10[0];
         player->field_368->field_10[0] = 0;
-        sub_802DDB4(this, player, 0, 0);
+        sub_802DDB4(player, 0, 0);
     }
     player->field_388->field_350_14 = 0;
     if (brothersTogether) {
         player->field_388->state = 0;
-        sub_802DDB4(this, player->field_388, player->field_352_7, 0);
+        sub_802DDB4(player->field_388, player->field_352_7, 0);
         {
             FieldPlayerCharacter* other = player->field_388;
 
@@ -4799,7 +4799,7 @@ void FieldManager::sub_802D46C(struct struc_3000388* arg) {
             }
         }
     }
-    sub_802DDB4(this, leader, 0, (int)arg);
+    sub_802DDB4(leader, 0, arg);
 }
 
 void FieldManager::sub_802D544(struct struc_3000388* arg) {
@@ -4884,7 +4884,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
             }
         }
     }
-    sub_802DDB4(this, follower, brothersTogether, brothersTogether ? (int)arg : 0);
+    sub_802DDB4(follower, brothersTogether, brothersTogether ? arg : NULL);
     if (!brothersTogether && sub_8025D24(3)) {
         sub_8029878();
     }
@@ -5020,4 +5020,48 @@ bool FieldManager::sub_802DC0C(FieldPlayerCharacter* player) {
         }
     }
     return false;
+}
+
+void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct struc_3000388* arg) {
+    FieldStruct4* data = player->field_368;
+    s8* list = data->field_8[index][data->field_0];
+    s8 previous;
+    int changed;
+    s8 value;
+    u16 flag;
+
+    if (list[0] == -1) {
+        return;
+    }
+    previous = data->field_2;
+    changed = 0;
+    if (!player->field_2B5_0 && !player->field_2B5_3 && arg != NULL
+        && sub_8025D24((player->field_352_7 ^ 1) + 2)
+        && sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, word_839F984[player->field_54 * 2 + index])) {
+        do {
+            data->field_10[index]++;
+            value = list[(s8)data->field_10[index]];
+            if (value == -1) {
+                data->field_10[index] = 0;
+                value = list[0];
+            }
+            flag = word_839F98C[player->field_54 * 28 + index * 14 + value];
+        } while (flag != 0 && !sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, flag));
+        changed = 1;
+    }
+    data->field_2 = list[(s8)data->field_10[index]];
+    if (data->field_2 != previous) {
+        sub_8018218(field_1C->field_0[4]->field_8 + byte_839F954[player->field_368->field_2] * 32,
+                    (void*)(0x6010DC0 + player->field_54 * 0x400),
+                    byte_839F962[player->field_368->field_2] * 32, 0x20, 0);
+        if (changed) {
+            int sound = byte_839F9FC[player->field_54 * 28 + index * 14 + data->field_2];
+
+            if (sound != 0) {
+                play_sfx_80195B4(sound, -1);
+            }
+        }
+    } else if (changed) {
+        sub_8029878();
+    }
 }

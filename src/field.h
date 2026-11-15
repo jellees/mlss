@@ -433,6 +433,7 @@ class FieldManager : public Process {
     void sub_802D92C();
     void sub_802DA10();
     bool sub_802DC0C(FieldPlayerCharacter* player);
+    void sub_802DDB4(FieldPlayerCharacter* player, int index, struct struc_3000388* arg);
     void sub_802E2F4();
     u8 sub_802E688(u8 arg1);
     void sub_802E754(int arg1, int arg2, int arg3);

@@ -1353,7 +1353,7 @@ _0802A47C:
 	adds r0, r7, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
 	ldr r1, [r5, #0x00]
 	movs r2, #0x82
 	lsls r2, r2, #0x02
@@ -1363,7 +1363,7 @@ _0802A47C:
 	lsrs r2, r2, #0x1F
 	adds r0, r7, #0x0
 	movs r3, #0x00
-	bl sub_802DDB4
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
 	adds r0, r7, #0x0
 	movs r1, #0x00
 	bl sub_802DF80

@@ -17,9 +17,8 @@ struct FieldStruct4 {
     u8 pad_3;
     u16 field_4;
     u16 field_6;
-    u32 field_8;
-    u32 field_C;
-    u8 field_10[2]; // Indexed by !FieldPlayerCharacter::field_352_7
+    s8** field_8[2]; // Lists of field_2 values, ended by -1, per field_0 (dword_839F900)
+    u8 field_10[2];  // Indexed by !FieldPlayerCharacter::field_352_7
     s8 field_12 : 8;
     s8 field_13 : 8;
     s8 field_14 : 8;

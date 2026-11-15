@@ -637,12 +637,12 @@ _0802424E:
 	mov r0, r10
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
 	ldr r1, [r7, #0x00]
 	mov r0, r10
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
 	mov r2, r10
 	adds r2, #0xE8
 	ldr r3, [r2, #0x00]
@@ -908,7 +908,7 @@ _08024548:
 	mov r0, r10
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
 	movs r4, #0x81
 	lsls r4, r4, #0x02
 	add r4, r10
@@ -917,7 +917,7 @@ _08024548:
 	mov r0, r10
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
 	movs r4, #0x82
 	lsls r4, r4, #0x02
 	add r4, r10
