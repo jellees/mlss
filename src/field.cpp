@@ -4912,3 +4912,73 @@ void FieldManager::sub_802D92C() {
     follower->field_358_3 = leader->field_358_3 = 1;
     follower->state = leader->state = 13;
 }
+
+void FieldManager::sub_802DA10() {
+    if (follower->state == 13) {
+        follower->sub_80461B4(objects);
+        if (!follower->sub_8047B78()) {
+            field_209_5 = 0;
+        }
+        follower->sub_80465D8();
+        follower->sub_804FB64(objects, 0, 0);
+        if (follower->z + follower->height != leader->z + leader->height) {
+            follower->height = leader->z + leader->height - follower->z;
+        }
+    }
+    if (field_209_5) {
+        return;
+    }
+    switch (follower->field_368->field_2) {
+        case 1:
+            if (field_246_2 == 0 || field_246_2 == 2) {
+                if (follower->field_54 == 0) {
+                    if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x206)) {
+                        sub_80339B8(this);
+                    } else {
+                        sub_8039078(this);
+                    }
+                } else {
+                    if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x207)) {
+                        sub_8035974(this);
+                    } else {
+                        sub_8039078(this);
+                    }
+                }
+            } else if (field_246_2 == 1) {
+                sub_80313C0(this);
+            } else if (field_246_2 == 4) {
+                sub_803495C(this);
+            } else {
+                follower->startHammer(field_FA_10);
+            }
+            break;
+        case 2:
+            if (field_246_2 == 0) {
+                if (follower->field_54 == 0) {
+                    if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x20A)) {
+                        sub_8036E14(this);
+                    } else {
+                        sub_8039A00(this);
+                    }
+                } else {
+                    if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x20B)) {
+                        sub_8038140(this);
+                    } else {
+                        sub_8039B5C(this);
+                    }
+                }
+            } else if (field_246_2 == 2) {
+                sub_803A438(this);
+            } else if (field_246_2 == 1) {
+                sub_8031518(this);
+            } else if (field_246_2 == 4) {
+                sub_803A438(this);
+            } else {
+                follower->startHandPower();
+            }
+            break;
+        default:
+            return;
+    }
+    leader->field_350_14 = 1;
+}
