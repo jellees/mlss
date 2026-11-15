@@ -784,30 +784,37 @@ void FieldManager::update_field_8023DD4() {
         sub_8028FBC();
         return;
     }
+
     if (inBattle) {
         start_battle_8027AC4();
         return;
     }
+
     if (field_12C_2 != -2) {
         sub_8027558();
         return;
     }
+
     if (field_12C_0) {
         sub_80275F4();
         return;
     }
+
     if (field_12C_1) {
         sub_8027688();
         return;
     }
+
     if (field_12D_0) {
         sub_802772C();
         return;
     }
+
     if (field_12D_4) {
         sub_802814C();
         return;
     }
+
     if (field_12D_5) {
         sub_8028EF4();
         return;
@@ -858,35 +865,11 @@ void FieldManager::update_field_8023DD4() {
         case 3:
             follower->sub_80461B4(objects);
             if (!follower->sub_8047B78()) {
-                {
-                    FieldPlayerCharacter* first = leader;
-                    FieldPlayerCharacter* second = follower;
-                    second->velocityY = 0;
-                    second->velocityX = 0;
-                    first->velocityY = 0;
-                    first->velocityX = 0;
-                }
-                {
-                    FieldPlayerCharacter* first = leader;
-                    FieldPlayerCharacter* second = follower;
-                    second->field_2B6_7 = 0;
-                    second->field_2B6_6 = 0;
-                    first->field_2B6_7 = 0;
-                    first->field_2B6_6 = 0;
-                }
-                {
-                    FieldPlayerCharacter* first = leader;
-                    FieldPlayerCharacter* second = follower;
-                    second->field_350_14 = 0;
-                    first->field_350_14 = 0;
-                }
-                {
-                    FieldPlayerCharacter* second = follower;
-                    FieldPlayerCharacter* first = leader;
-                    first->field_23E = first->field_260;
-                    second->field_23E = first->field_260;
-                }
-                
+                leader->velocityX = leader->velocityY = follower->velocityX = follower->velocityY = 0;
+                leader->field_2B6_6 = leader->field_2B6_7 = follower->field_2B6_6 =
+                    follower->field_2B6_7 = 0;
+                leader->field_350_14 = follower->field_350_14 = 0;
+                follower->field_23E = leader->field_23E = leader->field_260;
                 brothersTogether = 1;
                 sub_802DF80(this, 0);
 
