@@ -4846,7 +4846,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                             follower->startHammer(field_FA_10);
                             leader->field_350_14 = 1;
                         } else {
-                            sub_802D92C(this);
+                            sub_802D92C();
                         }
                         break;
                     case 2:
@@ -4855,7 +4855,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                             follower->startHandPower();
                             leader->field_350_14 = 1;
                         } else {
-                            sub_802D92C(this);
+                            sub_802D92C();
                         }
                         break;
                     case 4:
@@ -4888,4 +4888,27 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
     if (!brothersTogether && sub_8025D24(3)) {
         sub_8029878();
     }
+}
+
+void FieldManager::sub_802D92C() {
+    u8 angle;
+    int offsetX;
+    int offsetY;
+
+    if (!field_209_6 && follower->field_368->field_2 == 1) {
+        angle = (leader->direction ^ 4) << 5;
+        field_248 = follower->x / 256;
+        field_24A = follower->y / 256;
+        // An offset away from the direction the leader faces, scaled by field_240, that is never used.
+        // agbcc still emits both multiplies: jump2 deletes the sign test of each `/ 0x4000` only
+        // after reload, when it no longer deletes the computation feeding it.
+        offsetX = (s16)field_240 * word_8198504[angle];
+        offsetX /= 0x4000;
+        offsetY = (s16)field_240 * word_8198584[angle];
+        offsetY /= 0x4000;
+    }
+    field_20B_7 = 1;
+    field_209_5 = 1;
+    follower->field_358_3 = leader->field_358_3 = 1;
+    follower->state = leader->state = 13;
 }

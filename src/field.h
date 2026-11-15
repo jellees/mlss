@@ -229,7 +229,10 @@ class FieldManager : public Process {
     u8 field_246_1 : 1;
     u8 field_246_2 : 3;
     u8 field_246_5 : 3;
-    u8 pad_247[0x1A];
+    u8 pad_247;
+    s16 field_248;
+    s16 field_24A;
+    u8 pad_24C[0x15];
     s8 field_261;
     u8 pad_262[0x6];
     u16 field_268;
@@ -427,6 +430,7 @@ class FieldManager : public Process {
     void sub_802D2F4(FieldPlayerCharacter* player);
     void sub_802D46C(struct struc_3000388* arg);
     void sub_802D544(struct struc_3000388* arg);
+    void sub_802D92C();
     void sub_802E2F4();
     u8 sub_802E688(u8 arg1);
     void sub_802E754(int arg1, int arg2, int arg3);
