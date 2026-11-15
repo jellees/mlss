@@ -120,7 +120,7 @@ _08029AF0:
 	adds r4, r7, r2
 	ldr r1, [r4, #0x00]
 	adds r0, r7, #0x0
-	bl sub_802DC0C
+	bl sub_802DC0C__12FieldManagerP20FieldPlayerCharacter
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _08029B50

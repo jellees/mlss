@@ -607,7 +607,7 @@ void FieldManager::update() {
                     follower->height = leader->height;
                     if ((u8)follower->sub_8045A94(1, 0, leader->x / 256, leader->y / 256,
                                                   leader->z / 256, field_100)) {
-                        while (getDistance(follower, leader) > 0x1000 || sub_802DC0C(this, follower)) {
+                        while (getDistance(follower, leader) > 0x1000 || sub_802DC0C(follower)) {
                             follower->sub_80461B4(objects);
                             if (!follower->sub_8047B78()) {
                                 break;
@@ -3266,7 +3266,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
 
     switch (mode) {
         case 0:
-            if (arg2 && sub_802DC0C(this, follower)) {
+            if (arg2 && sub_802DC0C(follower)) {
                 follower->x = leader->x;
                 follower->y = leader->y;
                 follower->z = leader->z;
@@ -4981,4 +4981,43 @@ void FieldManager::sub_802DA10() {
             return;
     }
     leader->field_350_14 = 1;
+}
+
+bool FieldManager::sub_802DC0C(FieldPlayerCharacter* player) {
+    FieldObject** objects;
+    int start;
+
+    if (player->sub_804D18C()) {
+        return true;
+    }
+    if (field_110 != 0) {
+        objects = &this->objects[field_110];
+        int count = field_111;
+        while (count != 0) {
+            if (player->sub_804B25C(*objects)) {
+                return true;
+            }
+            count--;
+            objects++;
+        }
+    }
+    if (field_114 != 0) {
+        start = field_114;
+    } else if (field_116 != 0) {
+        start = field_116;
+    } else {
+        start = 0;
+    }
+    if (start > 0) {
+        objects = &this->objects[start];
+        int count = field_115 + field_117;
+        while (count != 0) {
+            if (player->sub_804B25C(*objects)) {
+                return true;
+            }
+            count--;
+            objects++;
+        }
+    }
+    return false;
 }
