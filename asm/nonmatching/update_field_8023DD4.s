@@ -301,7 +301,7 @@ _0802404A:
 	bl sub_802D544
 	ldr r1, [r4, #0x00]
 	mov r0, r10
-	bl sub_802D46C
+	bl sub_802D46C__12FieldManagerP13struc_3000388
 	b _0802476C
 _08024060: .4byte 0x02000272
 _08024064: .4byte 0x0300034C

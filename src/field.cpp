@@ -857,7 +857,7 @@ void FieldManager::update_field_8023DD4() {
             }
             if (!field_209_0 && !field_20B_4) {
                 sub_802D544(this, field_D0);
-                sub_802D46C(this, field_D0);
+                sub_802D46C(field_D0);
             }
             break;
 
@@ -4784,4 +4784,20 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
         }
         sub_802DF80(this, 0);
     }
+}
+
+void FieldManager::sub_802D46C(struct struc_3000388* arg) {
+    if (!field_2B8_4 && !field_291_0 && !leader->field_2B5_3 && arg != NULL && follower->state <= 4) {
+        if ((field_FA_10 && leader->field_368->field_2 == 0 && leader->state <= 4)
+            || leader->state <= 1) {
+            if (sub_8025D24(0)) {
+                if (!leader->field_368->field_16_7) {
+                    sub_802C588(leader);
+                } else {
+                    sub_8029878();
+                }
+            }
+        }
+    }
+    sub_802DDB4(this, leader, 0, (int)arg);
 }
