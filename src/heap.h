@@ -25,8 +25,8 @@ void* operator new[](unsigned long size, int heap, char* label, u8 clear);
 void operator delete(void* p);
 void operator delete[](void* p);
 
-void init_heap();
-void free_heap_memory_8018C68(void* p);
-void* alloc_heap_8018CEC(int heap, u32 size, char* label);
+void heap_init();
+void heap_free(void* p);
+void* heap_alloc(int heap, u32 size, char* label);
 
 #endif

@@ -97,7 +97,7 @@ void LoadMenu::update() {
             gGameState.field_884 = 0;
             this->field_C8 = sub_8127ECC(6, 0);
             this->field_D0 = sub_80198B0((int*)this->field_C8);
-            this->field_CC = alloc_heap_8018CEC(1, this->field_D0, "WORK");
+            this->field_CC = heap_alloc(1, this->field_D0, "WORK");
             dword_3000C84((int*)this->field_C8, this->field_CC);
             this->state = 2;
             break;
@@ -105,7 +105,7 @@ void LoadMenu::update() {
         case 2:
             sub_81229F0(this->field_CC);
             CpuCopy32(this->field_CC, (void*)0x6010400, this->field_D0);
-            free_heap_memory_8018C68(this->field_CC);
+            heap_free(this->field_CC);
             this->state = 3;
             break;
 

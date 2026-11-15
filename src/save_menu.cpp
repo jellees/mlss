@@ -185,14 +185,14 @@ void SaveMenu::update() {
             gGameState.field_884 = 0;
             this->field_94 = sub_8127ECC(6, 0);
             this->field_90 = sub_80198B0(this->field_94);
-            this->field_98 = alloc_heap_8018CEC(1, this->field_90, "WORK");
+            this->field_98 = heap_alloc(1, this->field_90, "WORK");
             dword_3000C84(this->field_94, this->field_98);
             sub_81229F0(this->field_98);
             this->state = 2;
             break;
         case 2:
             CpuCopy32(this->field_98, (void*)0x6010400, this->field_90);
-            free_heap_memory_8018C68(this->field_98);
+            heap_free(this->field_98);
             this->state = 3;
             break;
         case 3:
@@ -217,7 +217,7 @@ void SaveMenu::update() {
             this->field_A0 = 0;
             this->field_94 = sub_8127ECC(0x25, 0);
             this->field_9C = sub_80198B0(this->field_94);
-            this->field_98 = alloc_heap_8018CEC(1, this->field_9C, "WORK");
+            this->field_98 = heap_alloc(1, this->field_9C, "WORK");
             dword_3000C84(this->field_94, this->field_98);
             this->field_94 = sub_8127ECC(gGameState.field_8C0 + 0x26, 0);
             sub_8127E50(this->field_94, (u8*)this->field_98 + 0x1400, 0);
@@ -225,7 +225,7 @@ void SaveMenu::update() {
             break;
         case 7:
             CpuCopy32(this->field_98, (void*)(VRAM + this->field_A0), this->field_9C);
-            free_heap_memory_8018C68(this->field_98);
+            heap_free(this->field_98);
             this->field_A0 += this->field_9C;
             VRAM_ALIGN_800(this->field_A0);
             this->state = 8;

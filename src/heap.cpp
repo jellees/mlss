@@ -2,7 +2,7 @@
 #include "common.h"
 #include "heap.h"
 
-void init_heap() {
+void heap_init() {
     int i;
 
     CpuFill32(0, &gIwramHeap, (u32)gIwramHeapEnd - 0x200 - (u32)&gIwramHeap);
@@ -24,7 +24,7 @@ void init_heap() {
     }
 }
 
-void free_heap_memory_8018C68(void* p) {
+void heap_free(void* p) {
     int i;
 
     if (p != NULL) {
@@ -55,7 +55,7 @@ void free_heap_memory_8018C68(void* p) {
     }
 }
 
-void* alloc_heap_8018CEC(int heap, u32 size, char* label) {
+void* heap_alloc(int heap, u32 size, char* label) {
     HeapBlock* block;
     int i;
     HeapBlock* next;
@@ -106,15 +106,15 @@ void* alloc_heap_8018CEC(int heap, u32 size, char* label) {
 }
 
 void operator delete[](void* p) {
-    free_heap_memory_8018C68(p);
+    heap_free(p);
 }
 
 void operator delete(void* p) {
-    free_heap_memory_8018C68(p);
+    heap_free(p);
 }
 
 void* operator new[](unsigned long size, int heap, char* label, u8 clear) {
-    void* p = alloc_heap_8018CEC(heap, size, label);
+    void* p = heap_alloc(heap, size, label);
 
     if (clear) {
         CpuFill32(0, p, size);
@@ -123,7 +123,7 @@ void* operator new[](unsigned long size, int heap, char* label, u8 clear) {
 }
 
 void* operator new(unsigned long size, int heap, char* label, u8 clear) {
-    void* p = alloc_heap_8018CEC(heap, size, label);
+    void* p = heap_alloc(heap, size, label);
 
     if (clear) {
         CpuFill32(0, p, size);

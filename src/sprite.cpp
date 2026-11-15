@@ -97,7 +97,7 @@ u8* dSpritePaletteCounts[11] = {
 static void sprite_routines_copy(u8 flags) {
     int i;
 
-    gOamNodesSort = (void (*)(struct OamNode*, struct OamNode*))alloc_heap_8018CEC(
+    gOamNodesSort = (void (*)(struct OamNode*, struct OamNode*))heap_alloc(
         0, ROUTINE_SIZE(arm_8000850) + ROUTINE_SIZE(arm_80008B8) + ROUTINE_SIZE(arm_80008F0), "ANMA");
     CpuCopy32(arm_8000850, gOamNodesSort, ROUTINE_SIZE(arm_8000850));
 
@@ -112,7 +112,7 @@ static void sprite_routines_copy(u8 flags) {
     for (i = 0; i < SPRITE_DRAW_ROUTINES_COUNT; i++) {
         if ((flags >> i) & 1) {
             gSpriteDrawRoutines[i] =
-                (SpriteDrawRoutine)alloc_heap_8018CEC(0, dSpriteDrawRoutineSizes[i], off_839EE40[i]);
+                (SpriteDrawRoutine)heap_alloc(0, dSpriteDrawRoutineSizes[i], off_839EE40[i]);
             CpuCopy32(dSpriteDrawRoutines[i], gSpriteDrawRoutines[i], dSpriteDrawRoutineSizes[i]);
             gSpriteDrawRoutines[i] = (SpriteDrawRoutine)((u8*)gSpriteDrawRoutines[i] + 1);
         } else {
@@ -1578,7 +1578,7 @@ void sub_80208E0(struct Sprite* sprite) {
 static void sprite_routines_free(void) {
     int i;
 
-    free_heap_memory_8018C68(gOamNodesSort);
+    heap_free(gOamNodesSort);
     gOamNodesSort = 0;
     gOamNodesCopy = 0;
     gOamNodesReset = 0;
@@ -1588,7 +1588,7 @@ static void sprite_routines_free(void) {
 
             // Thumb bit
             *slot = (SpriteDrawRoutine)((u8*)*slot - 1);
-            free_heap_memory_8018C68(*slot);
+            heap_free(*slot);
             *slot = 0;
         }
     }

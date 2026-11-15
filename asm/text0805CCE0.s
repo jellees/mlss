@@ -57997,7 +57997,7 @@ _08079F3E:
 	ldr r0, [r3, #0x1C]
 	cmp r0, #0x00
 	beq _08079F5A
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 _08079F5A:
 	mov r4, r8
 	ldr r1, [r4, #0x20]
@@ -58160,7 +58160,7 @@ sub_807A658:
 	ldr r0, [r4, #0x1C]
 	cmp r0, #0x00
 	beq _0807A67A
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 _0807A67A:
 	ldr r1, [r4, #0x20]
 	cmp r1, #0x00
@@ -59397,7 +59397,7 @@ _0807AFB4:
 	ldr r0, [r4, #0x0C]
 	cmp r0, #0x00
 	beq _0807AFC4
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 _0807AFC4:
 	movs r0, #0x00
 	str r0, [r4, #0x04]
@@ -76846,7 +76846,7 @@ sub_80843C0:
 	ldr r2, _080844BC @ =0x082000D4
 	movs r0, #0x01
 	adds r1, r5, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	movs r2, #0xA2
 	lsls r2, r2, #0x02
@@ -78211,7 +78211,7 @@ sub_80854F8:
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
 	ldr r0, [r0, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x01
 	ands r0, r4
 	cmp r0, #0x00
@@ -264157,7 +264157,7 @@ sub_80DEEA8:
 	lsls r1, r1, #0x02
 	ldr r2, _080DF00C @ =0x082000E0
 	movs r0, #0x01
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r5, r0, #0x0
 	str r5, [r4, #0x0C]
 	subs r7, #0x01
@@ -272426,7 +272426,7 @@ sub_80E4FC8:
 	push {r4, lr}
 	ldr r4, _080E4FE8 @ =0x03000F94
 	ldr r0, [r4, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 	ldr r0, _080E4FEC @ =0x03000FA0
@@ -273009,7 +273009,7 @@ _080E5400:
 	lsls r1, r1, #0x03
 	ldr r2, _080E5470 @ =0x08200120
 	movs r0, #0x01
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	str r0, [r6, #0x00]
 	ldr r0, _080E5474 @ =0x03000F98
 	str r5, [r0, #0x00]
@@ -273155,7 +273155,7 @@ sub_80E57FC:
 	push {lr}
 	ldr r0, _080E580C @ =0x03000FB4
 	ldr r0, [r0, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00
@@ -273180,7 +273180,7 @@ sub_80E5810:
 	adds r1, r4, r1
 	ldr r2, _080E5884 @ =0x08200130
 	movs r0, #0x00
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r6, #0x00]
 	lsls r2, r5, #0x09
@@ -273250,7 +273250,7 @@ sub_80E588C:
 	ldr r2, _080E5958 @ =0x08200148
 	movs r0, #0x01
 	adds r1, r4, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	mov r0, r8
 	str r1, [r0, #0x04]
@@ -273273,7 +273273,7 @@ sub_80E588C:
 	ldr r2, _080E5960 @ =0x08200158
 	movs r0, #0x01
 	adds r1, r6, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	mov r3, r8
 	ldr r2, [r3, #0x04]
 	movs r3, #0xBE
@@ -273442,10 +273442,10 @@ _080E5A62:
 	ldr r0, [r0, #0x00]
 	cmp r0, #0x00
 	beq _080E5A74
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 _080E5A74:
 	ldr r0, [r7, #0x04]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x00
 	str r0, [r7, #0x04]
 _080E5A7E:
@@ -277001,7 +277001,7 @@ sub_80E7B48:
 	ldr r2, _080E7DEC @ =0x08200160
 	movs r0, #0x01
 	movs r1, #0x80
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	str r0, [sp, #0x020]
 	ldr r4, _080E7DF0 @ =0x040000D4
 	adds r0, r7, #0x0
@@ -277283,7 +277283,7 @@ sub_80E7B48:
 	mov r3, r9
 	bl _call_via_r4
 	ldr r0, [sp, #0x020]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	add sp, #0x058
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -277335,7 +277335,7 @@ sub_80E7E0C:
 	ldr r2, _080E8208 @ =0x08200160
 	movs r0, #0x01
 	movs r1, #0x80
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	mov r9, r0
 	ldr r4, _080E820C @ =0x040000D4
 	movs r1, #0xC8
@@ -277788,7 +277788,7 @@ sub_80E7E0C:
 	ldr r3, [sp, #0x05C]
 	bl _call_via_r4
 	mov r0, r9
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	add sp, #0x064
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -277843,7 +277843,7 @@ sub_80E8228:
 	ldr r2, _080E849C @ =0x08200160
 	movs r0, #0x01
 	movs r1, #0x80
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	str r0, [sp, #0x018]
 	movs r4, #0x90
 	lsls r4, r4, #0x03
@@ -278102,7 +278102,7 @@ sub_80E8228:
 	mov r3, r9
 	bl _call_via_r6
 	ldr r0, [sp, #0x018]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	add sp, #0x040
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -278486,7 +278486,7 @@ sub_80E87E4:
 	ldr r2, _080E8864 @ =0x08200168
 	movs r0, #0x01
 	movs r1, #0x40
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	str r0, [r7, #0x00]
 	adds r4, r0, #0x0
 	ldr r0, _080E8868 @ =0x03001034
@@ -279243,7 +279243,7 @@ sub_80E8D74:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _080E8D86
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _080E8D86:
@@ -279258,7 +279258,7 @@ sub_80E8D90:
 	ldr r2, _080E8DB8 @ =0x08200180
 	movs r0, #0x01
 	movs r1, #0x34
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r4, #0x00]
 	ldr r0, _080E8DBC @ =0x03001034
@@ -279280,7 +279280,7 @@ sub_80E8DC0:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _080E8DD6
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _080E8DD6:
@@ -279299,7 +279299,7 @@ sub_80E8DE4:
 	ldr r2, _080E8E58 @ =0x08200170
 	movs r0, #0x01
 	movs r1, #0x34
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r4, #0x00]
 	ldr r0, _080E8E5C @ =0x03001034
@@ -279317,7 +279317,7 @@ sub_80E8DE4:
 	adds r1, r0, #0x0
 	ldr r2, _080E8E64 @ =0x08200178
 	movs r0, #0x01
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r5, r0, #0x0
 	ldr r0, _080E8E68 @ =0x03000C84
 	ldr r2, [r0, #0x00]
@@ -279332,7 +279332,7 @@ sub_80E8DE4:
 	str r0, [r1, #0x08]
 	ldr r0, [r1, #0x08]
 	adds r0, r5, #0x0
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -279424,7 +279424,7 @@ sub_80E8EFC:
 	adds r5, r0, #0x0
 	adds r4, r1, #0x0
 	ldr r0, [r5, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x01
 	ands r0, r4
 	cmp r0, #0x00
@@ -280019,7 +280019,7 @@ sub_80E9484:
 	ldr r0, [r4, #0x0C]
 	cmp r0, #0x00
 	beq _080E9498
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x0C]
 _080E9498:
@@ -280056,7 +280056,7 @@ sub_80E94AC:
 	ldr r2, _080E9504 @ =0x08200188
 	movs r0, #0x01
 	adds r1, r4, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r6, #0x0C]
 	ldr r0, _080E9508 @ =0x03001034
@@ -280730,7 +280730,7 @@ sub_80E9AF8:
 	push {lr}
 	ldr r0, _080E9B08 @ =0x03000FC4
 	ldr r0, [r0, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	pop {r0}
 	bx r0
 	.byte 0x00, 0x00
@@ -280745,7 +280745,7 @@ sub_80E9B0C:
 	ldr r2, _080E9B44 @ =0x08200198
 	movs r0, #0x00
 	adds r1, r4, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r6, #0x00]
 	lsls r4, r4, #0x0A
@@ -280970,7 +280970,7 @@ sub_80E9D04:
 	push {r4, lr}
 	ldr r4, _080E9D18 @ =0x03000FC0
 	ldr r0, [r4, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 	pop {r4}
@@ -280986,7 +280986,7 @@ sub_80E9D1C:
 	ldr r2, _080E9D48 @ =0x08200190
 	movs r0, #0x01
 	adds r1, r5, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r4, #0x00]
 	ldr r0, _080E9D4C @ =0x03001034
@@ -288491,7 +288491,7 @@ _080EF442:
 	ldr r2, _080EF4C8 @ =0x082001A0
 	movs r0, #0x01
 	adds r1, r4, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r5, #0x00]
 	ldr r0, _080EF4CC @ =0x03001034
@@ -289252,7 +289252,7 @@ sub_80EFA14:
 	ldr r2, _080EFB10 @ =0x082001B0
 	movs r0, #0x01
 	adds r1, r5, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	ldr r0, [r7, #0x00]
 	ldr r4, _080EFB14 @ =0x000004AC
@@ -290142,7 +290142,7 @@ sub_80F0184:
 	ldr r4, _080F01C8 @ =0x000004AC
 	adds r0, r0, r4
 	ldr r0, [r0, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	ldr r0, [r5, #0x00]
 	adds r0, r0, r4
 	movs r4, #0x00
@@ -290334,7 +290334,7 @@ _080F037E:
 	bl sub_80E8DC0
 	ldr r0, _080F03C0 @ =0x03000FD0
 	ldr r0, [r0, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x02
 	mov r1, r8
 	ands r0, r1
@@ -293665,7 +293665,7 @@ sub_80F1EE8:
 	ldr r2, _080F1F68 @ =0x082001C0
 	movs r0, #0x01
 	movs r1, #0x40
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	str r0, [r7, #0x00]
 	adds r5, r0, #0x0
 	ldr r0, _080F1F6C @ =0x03001034
@@ -293861,7 +293861,7 @@ init_ybai_process_80F2070: @ 080F2070
 	ldr r2, _080F2100 @ =0x082001C8
 	movs r0, #0x01
 	adds r1, r4, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r5, #0x2C]
 	ldr r0, _080F2104 @ =0x03001034
@@ -293961,7 +293961,7 @@ _080F2150:
 	cmp r4, #0x00
 	beq _080F2174
 	ldr r0, [r4, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	adds r0, r4, #0x0
 	bl __builtin_delete
 	str r7, [r5, #0x28]
@@ -293969,7 +293969,7 @@ _080F2174:
 	ldr r0, [r5, #0x2C]
 	cmp r0, #0x00
 	beq _080F2180
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	str r7, [r5, #0x2C]
 _080F2180:
 	str r7, [r5, #0x30]
@@ -308812,7 +308812,7 @@ _080FAFF8:
 	str r0, [r4, #0x28]
 _080FB008:
 	ldr r0, [r4, #0x24]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	ldr r0, _080FB05C @ =0x03000FC0
 	ldr r1, [r0, #0x00]
 	ldr r0, _080FB060 @ =0x0000055C
@@ -308875,7 +308875,7 @@ sub_80FB080:
 	ldr r2, _080FB0FC @ =0x082001E0
 	movs r0, #0x01
 	adds r1, r5, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r4, #0x24]
 	ldr r0, _080FB100 @ =0x03001034
@@ -311341,7 +311341,7 @@ _080FC3C0:
 	adds r0, #0x02
 	strh r1, [r0, #0x00]
 	ldr r0, [r4, #0x00]
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 	bl sprite_context_release
@@ -311350,7 +311350,7 @@ _080FC3F0:
 	ldr r0, [r4, #0x00]
 	cmp r0, #0x00
 	beq _080FC400
-	bl free_heap_memory_8018C68__FPv
+	bl heap_free__FPv
 	movs r0, #0x00
 	str r0, [r4, #0x00]
 _080FC400:
@@ -311388,7 +311388,7 @@ btl_80FC438: @ 080FC438
 	ldr r2, _080FC58C @ =0x082001F8
 	movs r0, #0x00
 	adds r1, r4, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	mov r2, r8
 	str r1, [r2, #0x00]
@@ -311409,7 +311409,7 @@ btl_80FC438: @ 080FC438
 	ldr r2, _080FC59C @ =0x08200200
 	movs r0, #0x01
 	adds r1, r6, #0x0
-	bl alloc_heap_8018CEC__FiUiPc
+	bl heap_alloc__FiUiPc
 	adds r1, r0, #0x0
 	str r1, [r5, #0x00]
 	mov r0, r9
