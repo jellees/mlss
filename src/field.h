@@ -276,7 +276,7 @@ class FieldManager : public Process {
     u8 field_2A9_1 : 1;
     u8 field_2A9_2 : 3; // Battle: mode passed to sub_80277C4
     u8 field_2A9_5 : 1;
-    u8 field_2A9_6 : 1;
+    u16 field_2A9_6 : 1;
     u8 field_2A9_7 : 1;
     u16 field_2AA;
     u16 field_2AC;

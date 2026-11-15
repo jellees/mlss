@@ -774,15 +774,9 @@ asm_unified(".section .rodata\n"
             ".byte 0xFF, 0x0B, 0x01, 0xFF, 0x35, 0xFF, 0x41, 0xFF, 0x25, 0x00, 0x00, 0x00\n"
             ".text");
 
-// https://decomp.me/scratch/p5m2d
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/update_field_8023DD4.s\"");
-#else
 void FieldManager::update_field_8023DD4() {
-    int i;
-    int count;
+    FieldPlayerShotBullet** bullet;
     FieldObject** object;
-    FieldPlayerCharacter* player;
     FieldObject* other;
     int layer;
 
@@ -892,8 +886,10 @@ void FieldManager::update_field_8023DD4() {
                     first->field_23E = first->field_260;
                     second->field_23E = first->field_260;
                 }
+                
                 brothersTogether = 1;
                 sub_802DF80(this, 0);
+
                 switch (field_246_2) {
                     case 2:
                         if (follower->field_54 == 0) {
@@ -901,20 +897,23 @@ void FieldManager::update_field_8023DD4() {
                             sub_8035974(this);
                         }
                         break;
+
                     case 3:
                         if (follower->field_54 == 1) {
                             field_20B_4 = 1;
                             sub_8033B98(this, follower);
                         }
                         break;
+
                     case 4:
                         if (follower->field_54 == 1) {
                             field_20B_4 = 1;
                             sub_8034870(this, follower);
-                            leader->field_2B6_6 = 1;
+                            leader->field_350_14 = 1;
                         }
                         break;
                 }
+
                 field_12A = 2;
                 field_F9_4 = 0;
             }
@@ -927,11 +926,14 @@ void FieldManager::update_field_8023DD4() {
                     follower->field_368->field_10[0] = follower->field_368->field_14;
                     follower->field_368->field_14 = 0xFF;
                 }
+
                 leader->field_368->field_14 = leader->field_368->field_10[0];
                 leader->field_368->field_10[0] = 0;
+
                 if (field_FA_5 == luigiLeads) {
-                    field_FA_5 ^= 1;
+                    field_FA_5 = luigiLeads ^ 1;
                 }
+
                 luigiLeads ^= 1;
                 dword_3000FD0->field_528 = luigiLeads;
                 dword_3000FD0->field_530 = field_FA_5;
@@ -947,11 +949,9 @@ void FieldManager::update_field_8023DD4() {
                 follower->field_350_14 = 0;
                 sub_802DDB4(leader, 0, 0);
                 sub_802DDB4(follower, 0, 0);
-                {
-                    u32 temp = field_E8;
-                    field_E8 = field_EC;
-                    field_EC = temp;
-                }
+                u32 temp = field_E8;
+                field_E8 = field_EC;
+                field_EC = temp;
                 field_12A = 2;
                 field_F9_4 = 0;
             }
@@ -985,6 +985,7 @@ void FieldManager::update_field_8023DD4() {
                 }
                 break;
             }
+
             switch (field_12A) {
                 case 7:
                 case 8:
@@ -996,55 +997,60 @@ void FieldManager::update_field_8023DD4() {
                     sub_8027D64();
                     field_2B8_6 = field_12A == 8;
                     break;
+
                 case 9:
                     sub_8029024(0);
                     sub_8028FBC();
                     field_F9_4 = 1;
                     break;
+
                 case 11:
                     sub_80290CC(-1);
                     sub_8027558();
                     field_F9_4 = 1;
                     break;
+
                 case 12:
                     sub_8029070();
                     sub_80275F4();
                     field_F9_4 = 1;
                     break;
+
                 case 13:
                     sub_8029060();
                     sub_8027688();
                     field_F9_4 = 1;
                     break;
+
                 case 14:
                     sub_8029030(0, 0);
                     sub_802772C();
                     field_F9_4 = 1;
                     break;
+
                 case 15:
                     sub_8028F40();
                     sub_802814C();
                     return;
+
                 case 16:
                     sub_8028F2C();
                     sub_8028EF4();
                     return;
-                case 17: {
-                    int oldRoomId;
-                    int oldDirection;
-                    s32 oldX, oldY, oldZ, oldHeight;
 
+                case 17: {
                     sub_802DDB4(leader, 0, 0);
                     sub_802DDB4(follower, 0, 0);
                     luigiLeads ^= 1;
                     dword_3000FD0->field_528 = luigiLeads;
                     follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
-                    oldRoomId = followerRoomId;
-                    oldDirection = field_2D8_5;
-                    oldX = field_2DC;
-                    oldY = field_2E0;
-                    oldZ = field_2E4;
-                    oldHeight = field_2E8;
+                    int oldRoomId = followerRoomId;
+                    u8 oldDirection = field_2D8_5;
+                    s32 oldX = field_2DC;
+                    s32 oldY = field_2E0;
+                    s32 oldZ = field_2E4;
+                    s32 oldHeight = field_2E8;
+
                     field_2D8_0 = luigiLeads ^ 1;
                     followerRoomId = roomId;
                     field_2D8_5 = follower->direction;
@@ -1061,6 +1067,7 @@ void FieldManager::update_field_8023DD4() {
                     break;
                 }
             }
+
             field_12A = 0;
             return;
 
@@ -1070,8 +1077,8 @@ void FieldManager::update_field_8023DD4() {
                 if (!sub_803E9F0(this)) {
                     field_F9_6 = 1;
                     if (field_291_2) {
-                        sub_8027A04(field_2AA, field_2A8_0, field_2A8_5, field_2A9_2, -1, -1, 0, 0, 0,
-                                    field_2A9_5);
+                        sub_8027A04(field_2AA, field_2A8_0, field_2A8_5 != 0, field_2A9_2, -1, -1, 0, 0,
+                                    0, field_2A9_5);
                         start_battle_8027AC4();
                         field_12A = 0;
                         return;
@@ -1110,6 +1117,7 @@ void FieldManager::update_field_8023DD4() {
                 sub_8029878();
             }
         }
+
         if (sub_8025D24(5) && sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x224)) {
             if (!field_20B_7) {
                 sub_8027030(2, 8, 0, 0xFFFF, 0xFFFF);
@@ -1123,31 +1131,36 @@ void FieldManager::update_field_8023DD4() {
 
     if (!field_291_0 || field_290 < 0) {
         object = objects;
-        for (count = field_10B; count != 0; count--, object++) {
+        for (int count = field_10B; count != 0; count--, object++) {
             if (*object != NULL) {
                 (*object)->method11();
                 (*object)->updateFlicker();
             }
         }
+
         if (field_11A != 0) {
-            object = &objects[field_11A];
-            for (count = field_11B; count != 0; count--, object++) {
-                if (!(*object)->field_214_21) {
-                    sub_8051208(*object, frames);
+            FieldObject** block = &objects[field_11A];
+
+            for (int blockCount = field_11B; blockCount != 0; blockCount--, block++) {
+                if (!(*block)->field_214_21) {
+                    sub_8051208(*block, frames);
                 }
             }
         }
+
         if (field_11C != 0) {
             object = &objects[field_11C];
-            for (count = field_11D; count != 0; count--, object++) {
+            for (int count = field_11D; count != 0; count--, object++) {
                 if (!(*object)->field_2B5_3) {
                     (*object)->updateAirborne();
                 }
             }
         }
+
         if (field_209_0) {
             sub_803C5A4(this);
         }
+
         if (!field_2A9_6) {
             if (field_291_0) {
                 sub_803CF64(this);
@@ -1157,17 +1170,23 @@ void FieldManager::update_field_8023DD4() {
                 sub_802A740();
             }
         }
+
         sub_802FD70(this);
         leader->sub_8048174(field_246_2);
         follower->sub_8048174(field_246_2);
+
         if (field_113 != 0) {
-            object = &objects[field_112];
-            for (count = field_113; count != 0; count--, object++) {
-                ((FieldMonster*)*object)->sub_8050078();
+            FieldObject** monster = &objects[field_112];
+
+            for (int monsterCount = field_113; monsterCount != 0; monsterCount--, monster++) {
+                ((FieldMonster*)*monster)->sub_8050078();
             }
         }
-        for (i = 0; i < 8; i++) {
-            shotBullets[i]->sub_804E33C(objects, field_10B);
+
+        bullet = shotBullets;
+
+        for (int count = 8; count != 0; count--, bullet++) {
+            (*bullet)->sub_804E33C(objects, field_10B);
         }
     }
 
@@ -1175,34 +1194,42 @@ void FieldManager::update_field_8023DD4() {
         if ((field_12A != 7 && field_12A != 8) && field_F8_6 && field_F9_0 == 0) {
             sub_80286AC(field_FA_5);
         }
+
         field_27E = field_27A + field_12E;
         field_280 = field_27C + field_130;
+
         if (field_27E < 0) {
             field_27E = 0;
         } else if (field_27E > field_286 - 240) {
             field_27E = field_286 - 240;
         }
+
         if (field_280 < 0) {
             field_280 = 0;
         } else if (field_280 > field_288 - 160) {
             field_280 = field_288 - 160;
         }
+
+        object = objects;
+
         if (!field_291_0) {
-            count = field_10B;
-            for (i = 0; i < count; i++) {
-                objects[i]->method8(field_27E, field_280, objects);
-                objects[i]->method6(0);
-                objects[i]->method9();
+            for (int count = field_10B; count != 0; count--, object++) {
+                (*object)->method8(field_27E, field_280, objects);
+                (*object)->method6(0);
+                (*object)->method9();
             }
         } else {
-            for (count = field_10B, i = 0; count != 0; count--, i++) {
-                objects[i]->method8(field_27E, field_280, objects);
-                objects[i]->method9();
+            for (int count = field_10B; count != 0; count--, object++) {
+                (*object)->method8(field_27E, field_280, objects);
+                (*object)->method9();
             }
         }
-        for (i = 0; i < 8; i++) {
-            shotBullets[i]->sub_804FA94(field_27E, field_280);
-            shotBullets[i]->sub_804E450();
+
+        bullet = shotBullets;
+
+        for (int count = 8; count != 0; count--, bullet++) {
+            (*bullet)->sub_804FA94(field_27E, field_280);
+            (*bullet)->sub_804E450();
         }
     }
 
@@ -1214,83 +1241,102 @@ void FieldManager::update_field_8023DD4() {
                 follower->sprite->field_E--;
             }
         }
+
         if ((s8)leader->field_1 != -1) {
             other = objects[(s8)leader->field_1];
-            {
-                u32 low = other->sprite->field_1F_0;
-                u32 high = other->sprite->field_1F_2;
-
-                layer = high > low ? low : high;
-            }
-            if ((int)layer < leader->sprite->field_1F_0) {
+            layer = other->sprite->field_1F_2 > other->sprite->field_1F_0 ? other->sprite->field_1F_0
+                                                                          : other->sprite->field_1F_2;
+            if (layer < leader->sprite->field_1F_0) {
                 leader->sprite->field_1F_0 = layer;
             }
-            if ((int)layer < leader->sprite->field_1F_2) {
+
+            if (layer < leader->sprite->field_1F_2) {
                 leader->sprite->field_1F_2 = layer;
             }
-            if ((int)layer < leader->field_36C->field_1F_0) {
+
+            if (layer < leader->field_36C->field_1F_0) {
                 leader->field_36C->field_1F_0 = layer;
             }
-            if ((int)layer < leader->field_36C->field_1F_2) {
+
+            if (layer < leader->field_36C->field_1F_2) {
                 leader->field_36C->field_1F_2 = layer;
             }
+
             if (leader->sprite->field_E >= other->sprite->field_E) {
                 leader->sprite->field_E = other->sprite->field_E - 1;
             }
+
             if (leader->field_36C->field_E >= other->sprite->field_E) {
                 leader->field_36C->field_E = other->sprite->field_E - 1;
             }
         }
+
         if ((s8)follower->field_1 != -1) {
             other = objects[(s8)follower->field_1];
-            {
-                u32 low = other->sprite->field_1F_0;
-                u32 high = other->sprite->field_1F_2;
-
-                layer = high > low ? low : high;
-            }
-            if ((int)layer < follower->sprite->field_1F_0) {
+            layer = other->sprite->field_1F_2 > other->sprite->field_1F_0 ? other->sprite->field_1F_0
+                                                                          : other->sprite->field_1F_2;
+            if (layer < follower->sprite->field_1F_0) {
                 follower->sprite->field_1F_0 = layer;
             }
-            if ((int)layer < follower->sprite->field_1F_2) {
+
+            if (layer < follower->sprite->field_1F_2) {
                 follower->sprite->field_1F_2 = layer;
             }
-            if ((int)layer < follower->field_36C->field_1F_0) {
+
+            if (layer < follower->field_36C->field_1F_0) {
                 follower->field_36C->field_1F_0 = layer;
             }
-            if ((int)layer < follower->field_36C->field_1F_2) {
+
+            if (layer < follower->field_36C->field_1F_2) {
                 follower->field_36C->field_1F_2 = layer;
             }
+
             if (follower->sprite->field_E >= other->sprite->field_E) {
                 follower->sprite->field_E = other->sprite->field_E - 1;
             }
+
             if (follower->field_36C->field_E >= other->sprite->field_E) {
                 follower->field_36C->field_E = other->sprite->field_E - 1;
             }
         }
+
         if (leader->y / 256 < follower->y / 256
             || (leader->y / 256 == follower->y / 256 && field_209_7 == 2)) {
             leader->sub_8049C38(objects, field_10B);
             follower->sub_8049C38(objects, field_10B);
         } else {
             follower->sub_8049C38(objects, field_10B);
-            leader->sub_8049C38(field_246_2 == 3 ? &objects[1] : objects,
-                                field_246_2 == 3 ? field_10B - 1 : field_10B);
+            FieldPlayerCharacter* player = leader;
+            FieldObject** list = objects;
+            int listCount;
+
+            if (field_246_2 == 3) {
+                list = &objects[1];
+            }
+            listCount = field_10B;
+            if (field_246_2 == 3) {
+                listCount--;
+            }
+            player->sub_8049C38(list, listCount);
         }
+
         sub_8029624();
         sprites_update();
+
         if (leader->field_350_0 || leader->field_350_4) {
             field_11E = field_D0->field_0;
         }
     }
 
     field_304->sub_8057C9C(field_27E, field_280);
+
     if (field_FC_2) {
-        sub_80EF618(evts, field_FC_1 == 0 ? 4 : 0x74, field_1C->field_27C, 0);
+        u8* data = field_1C->field_27C;
+
+        sub_80EF618(evts, field_FC_1 == 0 ? 4 : 0x74, data, 0);
         field_FC_2 = 0;
     }
 }
-#endif
 
 void FieldManager::sub_80254C0() {
     CpuCopy32(dword_3000FC0, field_20->data, 0x574);
