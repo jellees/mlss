@@ -2,6 +2,7 @@
 #include "global.h"
 #include "common.h"
 #include "heap.h"
+#include "sprite.h"
 #include "field_monster.h"
 
 void sub_804FE68(FieldObject* object, FieldObject** objects) {

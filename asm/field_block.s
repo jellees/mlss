@@ -427,7 +427,7 @@ _08050BFC:
 	movs r0, #0x00
 	movs r2, #0x00
 	adds r3, r4, #0x0
-	bl sprite_create
+	bl sprite_create__Fiiiiiii
 	movs r3, #0xD3
 	lsls r3, r3, #0x02
 	adds r5, r6, r3
@@ -436,7 +436,7 @@ _08050BFC:
 	movs r1, #0x03
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	mov r0, r8
 	ldrb r1, [r0, #0x00]
 	movs r0, #0x01
@@ -532,7 +532,7 @@ _08050CCA:
 	adds r1, r2, #0x0
 	movs r2, #0x00
 	adds r3, r4, #0x0
-	bl sprite_create
+	bl sprite_create__Fiiiiiii
 	adds r5, r0, #0x0
 	ldr r1, _08050D60 @ =0x00000216
 	adds r2, r6, r1
@@ -550,7 +550,7 @@ _08050CCA:
 	adds r1, r7, #0x0
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, [r5, #0x48]
 	cmp r0, #0x00
 	beq _08050D2C
@@ -945,9 +945,9 @@ _08050FF0:
 	lsls r0, r0, #0x02
 	adds r4, r6, r0
 	ldr r0, [r4, #0x00]
-	bl sprite_remove
+	bl sprite_remove__FP6Sprite
 	ldr r0, [r5, #0x00]
-	bl sprite_restore
+	bl sprite_restore__FP6Sprite
 	ldr r1, [r5, #0x00]
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x0E]
@@ -1007,7 +1007,7 @@ _08050FF0:
 	cmp r0, #0x00
 	bne _08051114
 	adds r0, r2, #0x0
-	bl sprite_remove
+	bl sprite_remove__FP6Sprite
 	b _08051114
 _08051098: .4byte 0x0000020F
 _0805109C:
@@ -1026,7 +1026,7 @@ _0805109C:
 	str r7, [sp, #0x000]
 	movs r2, #0x01
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, _08051124 @ =0x03000FC0
 	ldr r0, [r0, #0x00]
 	movs r3, #0xE3
@@ -1113,9 +1113,9 @@ sub_805113C:
 	adds r3, #0x59
 	adds r4, r2, r3
 	ldr r0, [r4, #0x00]
-	bl sprite_remove
+	bl sprite_remove__FP6Sprite
 	ldr r0, [r5, #0x00]
-	bl sprite_restore
+	bl sprite_restore__FP6Sprite
 	ldr r1, [r5, #0x00]
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x0E]
@@ -1179,7 +1179,7 @@ _080511EC:
 	movs r1, #0x03
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 _08051200:
 	add sp, #0x004
 	pop {r4, r5}
@@ -1319,7 +1319,7 @@ _080512C8:
 	str r3, [sp, #0x000]
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 _08051320:
 	add sp, #0x004
 	pop {r4, r5, r6}
@@ -1369,7 +1369,7 @@ sub_8051368:
 	lsls r1, r1, #0x02
 	adds r0, r4, r1
 	ldr r0, [r0, #0x00]
-	bl sprite_restore
+	bl sprite_restore__FP6Sprite
 	ldr r0, _08051398 @ =0x0000023D
 	adds r4, r4, r0
 	movs r0, #0x07

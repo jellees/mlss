@@ -156,85 +156,6 @@ struct Coldef {
 };
 
 struct Sprite;
-typedef void (*SpriteCallback)(struct Sprite*, int);
-// Sprite routines selected per frame by sprite_draw (gSpriteDrawRoutines)
-typedef struct OamNode* (*SpriteDrawRoutine)(struct OamNode*, struct Sprite*, u8**, int, u8*, s8*, int,
-                                             u8*);
-
-struct Sprite {
-    s16 xPosition;
-    s16 yPosition;
-    s16 xScale;
-    s16 yScale;
-    s16 field_8;
-    s16 field_A;
-    s16 field_C;
-    u16 field_E;
-    u32 field_10_0 : 1;
-    u32 field_10_1 : 5;
-    u32 field_10_6 : 4;
-    u32 field_11_2 : 2;
-    u32 field_11_4 : 1;
-    u32 field_11_5 : 1;
-    u32 field_11_6 : 1;
-    u32 field_11_7 : 1;
-    u32 field_12_0 : 1;
-    u32 field_12_1 : 2;
-    u32 field_12_3 : 1;
-    u32 field_12_4 : 1;
-    u32 hidden : 1;
-    u32 field_12_6 : 2;
-    u32 field_13_0 : 2;
-    u32 field_13_2 : 1; // field_48 is a sprite heap tile buffer
-    u32 field_13_3 : 1; // field_44 is a sprite heap tile map
-    u32 field_13_4 : 4;
-    u16 field_14;
-    u16 field_16;
-    u16 field_18;
-    u16 field_1A;
-    u16 field_1C;
-    u8 bank : 4;
-    u8 paletteBank : 4;
-    u8 field_1F_0 : 2;
-    u8 field_1F_2 : 2;
-    u8 field_1F_4 : 2;
-    u8 field_1F_6 : 2;
-    s8 field_20;
-    u8 field_21; // Animation index (sub_801E150)
-    u8 field_22;
-    u8 field_23;
-    u8 field_24;
-    u8 field_25; // Frame count (FieldPlayerShotBullet::sub_804DFE8)
-    u8 field_26;
-    u8 field_27;
-    u16 field_28_0 : 9;
-    u16 field_28_9 : 1;
-    u16 field_28_10 : 1;
-    u16 field_28_11 : 1;
-    u16 field_28_12 : 1;
-    u16 field_28_13 : 1;
-    u16 active : 1;
-    u16 field_28_15 : 1;
-    s16 field_2A;
-    s16 field_2C;
-    u16 field_2E;
-    u16 field_30;
-    u8 pad32[0x2];
-    struct OamNode* field_34;
-    u8* field_38; // Animation file (sub_801E150)
-    u8* field_3C;
-    u8* field_40;
-    u8* field_44;
-    struct DecompressJob* field_48; // Tile decompression (sub_80208E0)
-    u8* field_4C;
-    void* field_50;
-    void* field_54;
-    u8* field_58;
-    SpriteCallback field_5C;
-    int field_60;
-    struct Sprite* field_64; // Previous sprite in gSpriteContext's list
-    struct Sprite* field_68; // Next sprite in gSpriteContext's list
-};
 
 struct struc_203FFF8 {
     u32 field_0;
@@ -367,59 +288,6 @@ struct struc_3000D44 {
     u8 field_28_0 : 1;
     u8 field_28_1 : 1;
     u8 field_28_2 : 4;
-};
-
-// One OBJ waiting to go into OAM. A pool of OAM_NODE_COUNT is set up by oam_nodes_init; each frame
-// gOamNodesReset frees them, the sprite draw routines fill them, gOamNodesSort sorts them by sortKey
-// and gOamNodesCopy copies the used ones to gGameState.oamBuffers.
-struct OamNode {
-    u16 attr0;
-    u16 attr1;
-    u16 attr2;
-    bool16 unused;
-    u32 sortKey; // priority << 30 | Sprite::field_E << 14 | depth << 7 | index
-    struct OamNode* previous;
-    struct OamNode* next;
-};
-
-// The sprite heap's block types
-enum SpriteHeapBlockType {
-    SPRITE_HEAP_FREE,
-    SPRITE_HEAP_SPRITE,
-    SPRITE_HEAP_TILES,    // Tile buffer (sub_80213A0)
-    SPRITE_HEAP_TILE_MAP, // Tile map (sub_80214A4)
-};
-
-// Sprite heap block header. The heap grows down from gSpriteHeap; a block's data is the size - 16 bytes
-// just below its header (right after the next block's header).
-struct SpriteHeapBlock {
-    struct SpriteHeapBlock* previous; // The block above
-    struct SpriteHeapBlock* next;     // The block below
-    int size;                         // Including the header
-    u8 type;                          // SpriteHeapBlockType
-    u8 bank;
-    u16 index; // In the bank
-};
-
-struct SpriteContext {
-    u8 field_0_0 : 1;
-    u8 field_0_1 : 1;
-    u8 field_0_2 : 1;
-    u8 field_1;
-    u8 field_2;
-    u8 field_3;
-    u8 field_4;
-    u8 field_5;
-    u8 field_6;
-    u8 pad7;
-    u16 field_8;
-    u16 field_A;
-    u16 field_C[16];
-    struct SpriteHeapBlock* field_2C;
-    struct Sprite* field_30; // First sprite of the list (linked by Sprite::field_64/field_68)
-    struct Sprite* field_34; // Last sprite of the list
-    struct OamNode* field_38;
-    struct OamNode* oamNodes; // Pool of OAM_NODE_COUNT OAM sort nodes (sprite_context_init)
 };
 
 struct Popup {
@@ -642,18 +510,16 @@ void sub_8199D78(struct struc_15*, void*, int, int, int, int, int, int, int, int
 void SoftResetRom(int);
 
 // EWRAM
+// These have likely their address defined by hand as they are at the end of EWRAM. We should find a
+// neat place for them later. For gSpriteContext, there actually exists a pointer in IWRAM that points
+// to this, which kind of explains why that pointer exists. So maybe some of these symbols have
+// hardcoded addresses as macros, but I am not sure about it yet.
 extern struct SpriteContext gSpriteContext;
-extern struct SpriteContext* dword_3000D74;
 extern struct SpriteHeapBlock gSpriteHeap;
 extern struct struc_203FFF8 stru_203FFF8;
 extern u16 word_203FFC4[];
 
 // IWRAM
-extern void (*gOamNodesSort)(struct OamNode* head, struct OamNode* end);
-extern u16* (*gOamNodesCopy)(struct OamNode* head, u16* dest);
-extern void (*gOamNodesReset)(struct OamNode* head, int count);
-extern SpriteDrawRoutine gSpriteDrawRoutines[6];
-extern u8 byte_3000D70;
 extern struct ORSTData* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
 extern struct struc_3000FF4* dword_3000FF4;

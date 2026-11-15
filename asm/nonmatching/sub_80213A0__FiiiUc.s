@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_80213A0
-sub_80213A0:
+	thumb_func_start sub_80213A0__FiiiUc
+sub_80213A0__FiiiUc:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9
@@ -80,7 +80,7 @@ _08021424:
 	movs r0, #0x02
 	adds r1, r7, #0x0
 	adds r2, r6, #0x0
-	bl sprite_heap_search
+	bl sprite_heap_search__FiUcUs
 	adds r5, r0, #0x0
 	cmp r5, #0x00
 	beq _08021454
@@ -98,7 +98,7 @@ _08021454:
 	adds r1, r4, #0x0
 	adds r2, r7, #0x0
 	adds r3, r6, #0x0
-	bl sprite_heap_alloc
+	bl sprite_heap_alloc__FiiUcUs
 	adds r5, r0, #0x0
 	ldr r0, _08021490 @ =0x03001034
 	ldr r3, [r0, #0x00]

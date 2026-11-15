@@ -665,7 +665,7 @@ _0802AD3C:
 	cmp r0, #0x54
 	bne _0802AD60
 	adds r0, r2, #0x0
-	bl sprite_remove
+	bl sprite_remove__FP6Sprite
 	bl sub_801AD3C
 _0802AD60:
 	movs r2, #0x80

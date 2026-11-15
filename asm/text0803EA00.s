@@ -1037,7 +1037,7 @@ _0803F6C8:
 	ands r1, r4
 	strb r1, [r3, #0x00]
 _0803F6FC:
-	bl sprites_draw
+	bl sprites_draw__Fv
 	movs r4, #0x00
 	movs r0, #0x80
 	lsls r0, r0, #0x02

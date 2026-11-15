@@ -124,7 +124,7 @@ _080408E0:
 	adds r0, r1, #0x0
 	adds r1, r7, #0x0
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	mov r0, r9
 	cmp r0, #0x01
 	bne _0804091E
@@ -207,7 +207,7 @@ _08040966:
 	ldrb r4, [r0, #0x12]
 	lsls r4, r4, #0x1D
 	lsrs r4, r4, #0x1E
-	bl sprite_restore
+	bl sprite_restore__FP6Sprite
 	ldr r2, [r5, #0x00]
 	lsls r4, r4, #0x01
 	ldrb r1, [r2, #0x12]

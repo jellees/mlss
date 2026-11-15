@@ -12,6 +12,7 @@ SECTIONS
     .bss (NOLOAD) :
     ALIGN(0)
     {
+        . = 0x00000D48; src/sprite.o(.bss);
         . = 0x00001A20; *libgcc.a:dp-bit.o(.bss);
         *libgcc.a:fp-bit.o(.bss);
         . = 0x00001A68; *libc.a:syscalls.o(.bss);

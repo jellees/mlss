@@ -555,7 +555,7 @@ _08025A40:
 	str r1, [sp, #0x000]
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, [r5, #0x00]
 	adds r0, r0, r6
 	ldr r2, [r0, #0x00]

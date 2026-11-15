@@ -3,10 +3,38 @@
 #include "heap.h"
 #include "sprite.h"
 
-// Size of a ROM routine delimited by name and name##_end.
-#define ROUTINE_SIZE(name) ((u32)(name##_end - name))
-
 #define SPRITE_DRAW_ROUTINES_COUNT 6
+
+// The sprite heap's block types
+enum SpriteHeapBlockType {
+    SPRITE_HEAP_FREE,
+    SPRITE_HEAP_SPRITE,
+    SPRITE_HEAP_TILES,    // Tile buffer (sub_80213A0)
+    SPRITE_HEAP_TILE_MAP, // Tile map (sub_80214A4)
+};
+
+// Sprite heap block header. The heap grows down from gSpriteHeap; a block's data is the size - 16 bytes
+// just below its header (right after the next block's header).
+struct SpriteHeapBlock {
+    struct SpriteHeapBlock* previous; // The block above
+    struct SpriteHeapBlock* next;     // The block below
+    int size;                         // Including the header
+    u8 type;                          // SpriteHeapBlockType
+    u8 bank;
+    u16 index; // In the bank
+};
+
+OamNodesSortRoutine gOamNodesSort;
+OamNodesCopyRoutine gOamNodesCopy;
+OamNodesResetRoutine gOamNodesReset;
+
+u32 dword_3000D54; // Unreferenced
+
+SpriteDrawRoutine gSpriteDrawRoutines[SPRITE_DRAW_ROUTINES_COUNT];
+
+u8 byte_3000D70;
+
+struct SpriteContext* dword_3000D74;
 
 // Unreferenced.
 u8 byte_839EDC4[4][16] = {
@@ -97,14 +125,17 @@ u8* dSpritePaletteCounts[11] = {
 static void sprite_routines_copy(u8 flags) {
     int i;
 
-    gOamNodesSort = (void (*)(struct OamNode*, struct OamNode*))heap_alloc(
+    // Check how we should handle this later when the assembly sit in its own file.
+#define ROUTINE_SIZE(name) ((u32)(name##_end - name))
+
+    gOamNodesSort = (OamNodesSortRoutine)heap_alloc(
         0, ROUTINE_SIZE(arm_8000850) + ROUTINE_SIZE(arm_80008B8) + ROUTINE_SIZE(arm_80008F0), "ANMA");
     CpuCopy32(arm_8000850, gOamNodesSort, ROUTINE_SIZE(arm_8000850));
 
-    gOamNodesCopy = (u16 * (*)(struct OamNode*, u16*))((u8*)gOamNodesSort + ROUTINE_SIZE(arm_8000850));
+    gOamNodesCopy = (OamNodesCopyRoutine)((u8*)gOamNodesSort + ROUTINE_SIZE(arm_8000850));
     CpuCopy32(arm_80008B8, gOamNodesCopy, ROUTINE_SIZE(arm_80008B8));
 
-    gOamNodesReset = (void (*)(struct OamNode*, int))((u8*)gOamNodesCopy + ROUTINE_SIZE(arm_80008B8));
+    gOamNodesReset = (OamNodesResetRoutine)((u8*)gOamNodesCopy + ROUTINE_SIZE(arm_80008B8));
     CpuCopy32(arm_80008F0, gOamNodesReset, ROUTINE_SIZE(arm_80008F0));
 
     CpuFill32(0, gSpriteDrawRoutines, sizeof(gSpriteDrawRoutines));
@@ -2065,7 +2096,7 @@ void sprite_destroy(struct Sprite* sprite) {
 
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_80213A0.s\"");
+asm_unified(".include \"asm/nonmatching/sub_80213A0__FiiiUc.s\"");
 #else
 // Loads a sprite's tiles into a shared buffer (or finds the buffer loaded before) with a background
 // job. Returns 0 for sprites without such tiles, and for an existing buffer unless arg3 is set.
@@ -2161,7 +2192,7 @@ void* sub_80214A4(int bank, int id, int size, u8 arg3) {
 
 // https://decomp.me/scratch/TODO
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8021574.s\"");
+asm_unified(".include \"asm/nonmatching/sub_8021574__FiiiiiPvi.s\"");
 #else
 // Finds or loads a palette in the 16 OBJ palette slots (gSpriteContext.field_C, from field_4 on).
 // Returns 2 if it is already loaded, 1 if the requested slot is taken or the slots run out, else 0;

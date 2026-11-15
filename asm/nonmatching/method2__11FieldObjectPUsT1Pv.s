@@ -53,7 +53,7 @@ method2__11FieldObjectPUsT1Pv:
 	ldrh r0, [r0, #0x00]
 	str r0, [sp, #0x008]
 	movs r0, #0x00
-	bl sprite_create
+	bl sprite_create__Fiiiiiii
 	adds r7, r0, #0x0
 	ldrh r1, [r4, #0x00]
 	mov r0, r8
@@ -98,7 +98,7 @@ _0804043C:
 	ldrh r0, [r5, #0x00]
 	str r0, [sp, #0x008]
 	movs r0, #0x00
-	bl sprite_create
+	bl sprite_create__Fiiiiiii
 	adds r7, r0, #0x0
 	ldrh r1, [r4, #0x00]
 	mov r0, r8
@@ -124,7 +124,7 @@ _080404A0:
 	str r3, [sp, #0x008]
 	movs r0, #0x00
 	adds r1, r4, #0x0
-	bl sprite_create
+	bl sprite_create__Fiiiiiii
 	adds r7, r0, #0x0
 	movs r1, #0x86
 	lsls r1, r1, #0x02
@@ -286,7 +286,7 @@ _080405F2:
 	adds r0, r7, #0x0
 	adds r1, r5, #0x0
 	adds r2, r4, #0x0
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	cmp r10, r4
 	beq _0804061A
 	mov r0, r9
@@ -295,7 +295,7 @@ _080405F2:
 	adds r1, r5, #0x0
 	mov r2, r10
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 _0804061A:
 	ldr r0, [r7, #0x48]
 	cmp r0, #0x00

@@ -1,14 +1,11 @@
 
 gSpriteContext = 0x0203FFB8;
 gSpriteHeap = 0x0203FFA8;
-dword_3000D74 = 0x03000D74;
 stru_203FFF8 = 0x0203FFF8;
 
 dword_3000DA0 = 0x03000DA0;
 
 dword_3000D44 = 0x03000D44;
-gOamNodesSort = 0x03000D48;
-gOamNodesCopy = 0x03000D4C;
 dword_3000FFC = 0x03000FFC;
 dword_3000FF4 = 0x03000FF4;
 dword_3000FF8 = 0x03000FF8;
@@ -160,9 +157,6 @@ dword_839EF80 = 0x0839EF80;
 dword_839F024 = 0x0839F024;
 dword_821F808 = 0x0821F808;
 _vt.4FMDR = 0x08CDBDD8;
-gOamNodesReset = 0x03000D50;
-gSpriteDrawRoutines = 0x03000D58;
-byte_3000D70 = 0x03000D70;
 arm_8000850 = 0x08000850;
 arm_8000850_end = 0x080008B8;
 arm_80008B8 = 0x080008B8;

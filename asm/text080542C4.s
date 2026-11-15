@@ -306,7 +306,7 @@ _080545E2:
 	movs r1, #0x00
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sprite_context_init
+	bl sprite_context_init__FUsUcUcUc
 	ldr r1, _080546D0 @ =0x00006003
 	mov r2, r10
 	str r2, [sp, #0x000]
@@ -318,7 +318,7 @@ _080545E2:
 	movs r0, #0x05
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_8021574
+	bl sub_8021574__FiiiiiPvi
 	ldr r1, _080546D4 @ =0x00006002
 	mov r0, r10
 	str r0, [sp, #0x000]
@@ -328,7 +328,7 @@ _080545E2:
 	movs r0, #0x05
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_8021574
+	bl sub_8021574__FiiiiiPvi
 	ldr r1, _080546D8 @ =0x00006005
 	str r4, [sp, #0x000]
 	str r4, [sp, #0x004]
@@ -336,7 +336,7 @@ _080545E2:
 	movs r0, #0x05
 	movs r2, #0x01
 	adds r3, r4, #0x0
-	bl sprite_create
+	bl sprite_create__Fiiiiiii
 	mov r3, r9
 	str r0, [r3, #0x44]
 	mov r1, r10
@@ -344,10 +344,10 @@ _080545E2:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	mov r2, r9
 	ldr r0, [r2, #0x44]
-	bl sprite_show
+	bl sprite_show__FP6Sprite
 	mov r3, r9
 	ldr r1, [r3, #0x44]
 	movs r0, #0x20
@@ -476,7 +476,7 @@ _08054756:
 	str r3, [sp, #0x008]
 	movs r0, #0x00
 	movs r2, #0x01
-	bl sprite_create
+	bl sprite_create__Fiiiiiii
 	str r0, [r6, #0x00]
 	adds r2, r0, #0x0
 	cmp r4, #0x00
@@ -501,7 +501,7 @@ _0805478A:
 	movs r2, #0x01
 	negs r2, r2
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	ldr r3, [r6, #0x00]
 	adds r0, r3, #0x0
 	adds r0, #0x21
@@ -523,7 +523,7 @@ _080547B8:
 	str r0, [sp, #0x000]
 	adds r0, r3, #0x0
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	ldr r3, [r6, #0x00]
 	adds r4, r7, #0x0
 	mov r0, r10
@@ -602,7 +602,7 @@ _0805484C:
 	ldr r1, [sp, #0x038]
 	adds r0, r1, r0
 	ldr r0, [r0, #0x00]
-	bl sprite_show
+	bl sprite_show__FP6Sprite
 	ldr r2, [sp, #0x028]
 	ldrb r1, [r2, #0x00]
 	movs r0, #0x02
@@ -612,7 +612,7 @@ _0805484C:
 	ldr r3, [sp, #0x038]
 	adds r0, r3, r0
 	ldr r0, [r0, #0x00]
-	bl sprite_show
+	bl sprite_show__FP6Sprite
 	movs r0, #0x00
 	mov r10, r0
 	movs r7, #0x01
@@ -628,7 +628,7 @@ _08054884:
 	ldr r1, _08054A28 @ =0x00006005
 	movs r2, #0x01
 	adds r3, r7, #0x0
-	bl sprite_create
+	bl sprite_create__Fiiiiiii
 	str r0, [r6, #0x00]
 	mov r1, r10
 	adds r1, #0x03
@@ -636,9 +636,9 @@ _08054884:
 	str r2, [sp, #0x000]
 	adds r2, r7, #0x0
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, [r6, #0x00]
-	bl sprite_show
+	bl sprite_show__FP6Sprite
 	ldr r1, [r6, #0x00]
 	mov r3, r8
 	ldrh r0, [r3, #0x00]
@@ -660,7 +660,7 @@ _08054884:
 	ldr r1, _08054A28 @ =0x00006005
 	movs r2, #0x01
 	adds r3, r7, #0x0
-	bl sprite_create
+	bl sprite_create__Fiiiiiii
 	str r0, [r6, #0x04]
 	mov r1, r10
 	adds r1, #0x04
@@ -668,9 +668,9 @@ _08054884:
 	str r2, [sp, #0x000]
 	adds r2, r7, #0x0
 	movs r3, #0x00
-	bl sub_801E150
+	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, [r6, #0x04]
-	bl sprite_show
+	bl sprite_show__FP6Sprite
 	ldr r1, [r6, #0x04]
 	mov r3, r8
 	ldrh r0, [r3, #0x04]
@@ -1293,7 +1293,7 @@ _08054D90: .4byte 0x08054D94
 	.byte 0xF4, 0x0F, 0x00, 0x03, 0x0B, 0x48, 0x02, 0x68, 0x10, 0x21, 0xC9, 0x1A, 0x54, 0x32, 0x1F, 0x20
 	.byte 0x01, 0x40, 0x13, 0x78, 0x20, 0x20, 0x40, 0x42, 0x18, 0x40, 0x08, 0x43, 0x10, 0x70
 _08055152:
-	bl sprites_update
+	bl sprites_update__Fv
 	add sp, #0x004
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -1430,7 +1430,7 @@ _0805520A:
 	adds r1, r4, #0x0
 	bl sub_8121F1C
 	adds r7, r0, #0x0
-	bl sprites_draw
+	bl sprites_draw__Fv
 	ldr r2, _080552C8 @ =0x03000D48
 	ldr r4, _080552CC @ =0x0203FFB8
 	ldr r0, [r4, #0x3C]

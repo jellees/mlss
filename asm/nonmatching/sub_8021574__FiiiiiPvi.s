@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_8021574
-sub_8021574:
+	thumb_func_start sub_8021574__FiiiiiPvi
+sub_8021574__FiiiiiPvi:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9
