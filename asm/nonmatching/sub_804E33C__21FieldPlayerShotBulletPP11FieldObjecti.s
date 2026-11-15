@@ -44,7 +44,7 @@ _0804E370:
 	adds r0, r2, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r4, #0x0
 	adds r1, r5, #0x0
 	adds r2, r6, #0x0
@@ -97,7 +97,7 @@ _0804E3E4:
 	movs r2, #0x00
 	str r2, [sp, #0x000]
 	movs r3, #0x00
-	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r1, r4, #0x0
 	adds r1, #0x3E
 	movs r0, #0x00
@@ -127,7 +127,7 @@ _0804E41E:
 	str r2, [sp, #0x000]
 	adds r2, r3, #0x0
 	movs r3, #0x00
-	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
 _0804E432:
 	ldr r2, [r4, #0x44]
 	ldrb r1, [r2, #0x12]

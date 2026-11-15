@@ -124,7 +124,7 @@ _080408E0:
 	adds r0, r1, #0x0
 	adds r1, r7, #0x0
 	movs r3, #0x00
-	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
 	mov r0, r9
 	cmp r0, #0x01
 	bne _0804091E

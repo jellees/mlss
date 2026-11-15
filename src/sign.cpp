@@ -71,13 +71,13 @@ void Sign::update() {
 
             for (i = 0; i < 4; i++) {
                 arrows[i] = sprite_create(0, SPRITE_ID(7, 254), 1, -1, -1, -1, -1);
-                sub_801E150(arrows[i], i, -1, 0, 0);
+                sprite_play_animation(arrows[i], i, -1, 0, 0);
                 arrows[i]->xPosition = word_83A0E64[i * 2];
                 arrows[i]->yPosition = word_83A0E64[i * 2 + 1];
             }
 
             youAreHere = sprite_create(0, SPRITE_ID(7, 253), 1, -1, -1, -1, -1);
-            sub_801E150(youAreHere, 0, -1, 0, 0);
+            sprite_play_animation(youAreHere, 0, -1, 0, 0);
             youAreHere->field_1F_0 = 2;
             renderer->enable();
             sub_805A0EC(map, 2, &width, &height);

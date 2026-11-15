@@ -30,18 +30,18 @@ CompanyIntro::CompanyIntro(u8 priority, char* label) : Process(priority, label) 
     gSpriteContext.field_0_2 = 1;
 
     mario = sprite_create(2, SPRITE_ID(0, 1), 1, -1, -1, -1, -1);
-    sub_801E150(mario, 12, -1, 0, 0);
+    sprite_play_animation(mario, 12, -1, 0, 0);
     mario->xPosition = 80;
     mario->yPosition = -35;
-    mario->field_11_6 = 1;
+    mario->hFlip = true;
 
     luigi = sprite_create(2, SPRITE_ID(0, 2), 1, -1, -1, -1, -1);
-    sub_801E150(luigi, 12, -1, 0, 0);
+    sprite_play_animation(luigi, 12, -1, 0, 0);
     luigi->xPosition = 160;
     luigi->yPosition = -35;
 
     alphaDreamLogo = sprite_create(7, SPRITE_ID(7, 335), 1, -1, -1, -1, -1);
-    sub_801E150(alphaDreamLogo, 0, -1, 0, 0);
+    sprite_play_animation(alphaDreamLogo, 0, -1, 0, 0);
     alphaDreamLogo->xPosition = 120;
     alphaDreamLogo->yPosition = 74;
 
@@ -207,16 +207,16 @@ void CompanyIntro::update() {
                 bool32 temp;
                 yPosMario = 24064;
                 yPosLuigi = 24064;
-                sub_80210A8(mario, 2, SPRITE_ID(0, 13), 1, -1, -1, -1, -1);
-                sub_801E150(mario, 0, -1, 0, 0);
+                sprite_change(mario, 2, SPRITE_ID(0, 13), 1, -1, -1, -1, -1);
+                sprite_play_animation(mario, 0, -1, 0, 0);
                 sprite_show(mario);
-                temp = mario->field_11_6;
+                temp = mario->hFlip;
                 temp ^= 1;
-                mario->field_11_6 = temp;
+                mario->hFlip = temp;
                 mario->field_12_1 = 1;
 
-                sub_80210A8(luigi, 2, SPRITE_ID(0, 14), 1, -1, -1, -1, -1);
-                sub_801E150(luigi, 0, -1, 0, 0);
+                sprite_change(luigi, 2, SPRITE_ID(0, 14), 1, -1, -1, -1, -1);
+                sprite_play_animation(luigi, 0, -1, 0, 0);
                 sprite_show(luigi);
                 luigi->field_12_1 = 1;
                 flags = 0;
@@ -293,14 +293,14 @@ TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(prio
 
     for (i = 0; i < 9; i++) {
         sprites[i] = sprite_create(0, word_83A74C0[i * 2], word_83A74C0[i * 2 + 1], -1, -1, -1, -1);
-        sub_801E150(sprites[i], 0, -1, 0, 0);
+        sprite_play_animation(sprites[i], 0, -1, 0, 0);
     }
 
     if (selection == 0) {
         xPosSuitcase = 30720;
         yPosSuitcase = 0;
         yVelocitySuitcase = 512;
-        sub_801E150(sprites[TS_SPRITE_SUITCASE], 0, 0, 0, 0);
+        sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 0, 0, 0, 0);
         sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
         sprites[TS_SPRITE_SUITCASE]->yPosition = 0;
         sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
@@ -363,7 +363,7 @@ inline TitleScreen::~TitleScreen() {
 void TitleScreen::preparePressStart() {
     sprite_hide(sprites[TS_SPRITE_LICENSE_TEXT]);
 
-    sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
+    sprite_play_animation(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
     sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
     sprites[TS_SPRITE_SS_TEXT]->yPosition = 80;
     sprites[TS_SPRITE_SS_TEXT]->xScale = 256;
@@ -373,7 +373,7 @@ void TitleScreen::preparePressStart() {
     sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
     sprite_show(sprites[TS_SPRITE_SS_TEXT]);
 
-    sub_801E150(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
     sprites[TS_SPRITE_SUITCASE]->xPosition = 120;
     sprites[TS_SPRITE_SUITCASE]->yPosition = 140;
     sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
@@ -412,18 +412,18 @@ void TitleScreen::prepareGameSelect(int selection) {
     sprite_hide(sprites[TS_SPRITE_PRESS_START_TEXT]);
 
     for (i = 0; i < 3; i++) {
-        sub_801E150(sprites[TS_SPRITE_ML_GAME_TEXT + i], 3 + i, 0, 0, 0);
+        sprite_play_animation(sprites[TS_SPRITE_ML_GAME_TEXT + i], 3 + i, 0, 0, 0);
         sprites[TS_SPRITE_ML_GAME_TEXT + i]->xPosition = 180;
         sprites[TS_SPRITE_ML_GAME_TEXT + i]->yPosition = 100 + i * 20;
         sprite_show(sprites[TS_SPRITE_ML_GAME_TEXT + i]);
     }
 
-    sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
+    sprite_play_animation(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
     sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 112;
     sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 92 + 20 * this->selection;
     sprite_show(sprites[TS_SPRITE_BEAN_POINTER]);
 
-    sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
+    sprite_play_animation(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
     sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
     sprites[TS_SPRITE_SS_TEXT]->yPosition = 80;
     sprites[TS_SPRITE_SS_TEXT]->xScale = 256;
@@ -433,7 +433,7 @@ void TitleScreen::prepareGameSelect(int selection) {
     sprites[TS_SPRITE_SS_TEXT]->field_E = 2;
     sprite_show(sprites[TS_SPRITE_SS_TEXT]);
 
-    sub_801E150(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
     sprites[TS_SPRITE_SUITCASE]->xPosition = 64;
     sprites[TS_SPRITE_SUITCASE]->yPosition = 140;
     sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
@@ -441,7 +441,7 @@ void TitleScreen::prepareGameSelect(int selection) {
     sprites[TS_SPRITE_SUITCASE]->field_E = 2;
     sprite_show(sprites[TS_SPRITE_SUITCASE]);
 
-    sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * (selection - 1) + 1, 0, 0, 0);
+    sprite_play_animation(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * (selection - 1) + 1, 0, 0, 0);
     sprites[TS_SPRITE_SUITCASE_VISUAL]->xPosition = 64;
     sprites[TS_SPRITE_SUITCASE_VISUAL]->yPosition = 140;
     sprites[TS_SPRITE_SUITCASE_VISUAL]->field_1F_0 = 1;
@@ -562,7 +562,7 @@ void TitleScreen::update() {
                                 yVelocitySuitcase += 32;
                                 if (yPosSuitcase > 35839) {
                                     yPosSuitcase = 35840;
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 1, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 1, 0, 0, 0);
                                     sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
                                     states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_HIT_GROUND;
                                 }
@@ -570,7 +570,7 @@ void TitleScreen::update() {
 
                             case TS_ITEM_SC_STATE_HIT_GROUND:
                                 if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
                                     sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
                                     states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_FALL_OVER;
                                 }
@@ -578,7 +578,7 @@ void TitleScreen::update() {
 
                             case TS_ITEM_SC_STATE_FALL_OVER:
                                 if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 3, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 3, 0, 0, 0);
                                     sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
                                     states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_OPEN;
                                 }
@@ -586,7 +586,7 @@ void TitleScreen::update() {
 
                             case TS_ITEM_SC_STATE_OPEN:
                                 if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
                                     BUFFER_REG_DISPCNT |= DISPCNT_BG2_ON;
                                     mlTextProgression = 2560;
                                     mlTextPosY = 37120;
@@ -613,7 +613,8 @@ void TitleScreen::update() {
                                             ssTextPosY = 37376;
                                             ssTextScaleX = 51;
                                             ssTextScaleY = 51;
-                                            sub_801E150(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0, 0);
+                                            sprite_play_animation(sprites[TS_SPRITE_SS_TEXT], 0, 0, 0,
+                                                                  0);
                                             sprites[TS_SPRITE_SS_TEXT]->xPosition = 121;
                                             sprites[TS_SPRITE_SS_TEXT]->yPosition = 146;
                                             sprites[TS_SPRITE_SS_TEXT]->xScale = 51;
@@ -630,7 +631,8 @@ void TitleScreen::update() {
                                             nTextPosY = 36608;
                                             nTextScaleX = 51;
                                             nTextScaleY = 51;
-                                            sub_801E150(sprites[TS_SPRITE_LICENSE_TEXT], 0, 0, 0, 0);
+                                            sprite_play_animation(sprites[TS_SPRITE_LICENSE_TEXT], 0, 0,
+                                                                  0, 0);
                                             sprites[TS_SPRITE_LICENSE_TEXT]->xPosition = 118;
                                             sprites[TS_SPRITE_LICENSE_TEXT]->yPosition = 143;
                                             sprites[TS_SPRITE_LICENSE_TEXT]->xScale = 51;
@@ -648,7 +650,7 @@ void TitleScreen::update() {
 
                             case TS_ITEM_SC_STATE_CLOSE:
                                 if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
                                     sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
                                     sprite_hide(sprites[TS_SPRITE_LICENSE_TEXT]);
                                     states[TS_ITEM_SUITCASE] = -1;
@@ -761,7 +763,7 @@ void TitleScreen::update() {
                                 nTextScaleY = word_83A7574[2 * nTextProgression + 1];
                                 nTextProgression++;
                                 if ((u16)nTextProgression == 17) {
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 5, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 5, 0, 0, 0);
                                     states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_CLOSE;
                                     skipSuitcaseAnim = FALSE;
                                     states[TS_ITEM_LICENSE_TEXT] = -1;
@@ -799,7 +801,7 @@ void TitleScreen::update() {
             brightness--;
             if (brightness == 0) {
                 psTextPosY = 30720;
-                sub_801E150(sprites[TS_SPRITE_PRESS_START_TEXT], 0, 0, 0, 0);
+                sprite_play_animation(sprites[TS_SPRITE_PRESS_START_TEXT], 0, 0, 0, 0);
                 sprites[TS_SPRITE_PRESS_START_TEXT]->xPosition = 120;
                 sprites[TS_SPRITE_PRESS_START_TEXT]->yPosition = 120;
                 sprites[TS_SPRITE_PRESS_START_TEXT]->field_1F_0 = 0;
@@ -835,7 +837,7 @@ void TitleScreen::update() {
                                 xPosSuitcase += xVelocitySuitcase;
                                 if (xPosSuitcase <= 0x2000) {
                                     xPosSuitcase = 0x4000;
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 6, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 6, 0, 0, 0);
                                     timer = 0;
                                     states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_BUMP_OPEN;
                                 }
@@ -843,7 +845,7 @@ void TitleScreen::update() {
 
                             case TS_ITEM_SC_STATE_BUMP_OPEN:
                                 if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
                                     states[TS_ITEM_SUITCASE] = -1;
                                 }
 
@@ -853,7 +855,8 @@ void TitleScreen::update() {
                                         beanPosY = 33280;
                                         beanVelocityX = 384;
                                         beanVelocityY = 1536;
-                                        sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 11, 0, 0, 0);
+                                        sprite_play_animation(sprites[TS_SPRITE_BEAN_POINTER], 11, 0, 0,
+                                                              0);
                                         sprites[TS_SPRITE_BEAN_POINTER]->xPosition = 64;
                                         sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 130;
                                         sprites[TS_SPRITE_BEAN_POINTER]->field_1F_0 = 0;
@@ -897,13 +900,15 @@ void TitleScreen::update() {
 
                             case 1:
                                 if (beanPosY / 256 <= 20 * spriteIdx + 92) {
-                                    sub_801E150(sprites[spriteIdx + 2], spriteIdx + 3, 0, 0, 0);
+                                    sprite_play_animation(sprites[spriteIdx + 2], spriteIdx + 3, 0, 0,
+                                                          0);
                                     sprites[spriteIdx + 2]->xPosition = 180;
                                     sprites[spriteIdx + 2]->yPosition = 20 * spriteIdx + 100;
                                     sprite_show(sprites[spriteIdx + 2]);
 
                                     if (spriteIdx == 0) {
-                                        sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0, 0);
+                                        sprite_play_animation(sprites[TS_SPRITE_BEAN_POINTER], 12, 0, 0,
+                                                              0);
                                         states[TS_ITEM_POINTER] = 2;
                                     } else {
                                         spriteIdx--;
@@ -917,8 +922,9 @@ void TitleScreen::update() {
 
                             case 2:
                                 if (sprites[TS_SPRITE_BEAN_POINTER]->field_12_3) {
-                                    sub_801E150(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
-                                    sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 0, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
+                                    sprite_play_animation(sprites[TS_SPRITE_SUITCASE_VISUAL], 0, 0, 0,
+                                                          0);
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->xPosition = 64;
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->yPosition = 140;
                                     sprites[TS_SPRITE_SUITCASE_VISUAL]->field_1F_0 = 1;
@@ -982,7 +988,8 @@ void TitleScreen::update() {
 
                 if (this->selection != selection) {
                     if (suitcaseVisualState != TS_SV_STATE_DISAPPEAR) {
-                        sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * selection + 2, 0, 0, 0);
+                        sprite_play_animation(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * selection + 2, 0,
+                                              0, 0);
                     }
                     suitcaseVisualState = TS_SV_STATE_DISAPPEAR;
                     sprites[TS_SPRITE_BEAN_POINTER]->yPosition = 20 * this->selection + 92;
@@ -1027,14 +1034,15 @@ void TitleScreen::update() {
     switch (suitcaseVisualState) {
         case TS_SV_STATE_APPEAR:
             if (sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
-                sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection + 1, 0, 0, 0);
+                sprite_play_animation(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection + 1, 0, 0,
+                                      0);
                 suitcaseVisualState = TS_SV_STATE_IDLE;
             }
             break;
 
         case TS_SV_STATE_DISAPPEAR:
             if (sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
-                sub_801E150(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection, 0, 0, 0);
+                sprite_play_animation(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection, 0, 0, 0);
                 suitcaseVisualState = TS_SV_STATE_APPEAR;
             }
             break;

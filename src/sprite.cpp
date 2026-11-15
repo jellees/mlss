@@ -154,38 +154,42 @@ static void sprite_routines_copy(u8 flags) {
     byte_3000D70 = flags;
 }
 
-void sub_801E150(struct Sprite* sprite, int animation, int arg2, SpriteCallback arg3, int arg4) {
+void sprite_play_animation(struct Sprite* sprite, int animation, int frame,
+                           SpriteCallback onAnimationFinished, int callbackArgument) {
     u8* file = sprite->field_38;
-    u8* base = file - (file[0] | (file[1] << 8));
-    u32 value = file[4] | (file[5] << 8);
+    u8* images = file - (file[0] | (file[1] << 8));
+    u32 counts = file[4] | (file[5] << 8);
     u8* entry;
     u8 frameCount;
-    u8 flags;
-    u8* frame;
+    u8 mirror;
+    u8* frameEntry;
 
-    sprite->field_27 = (value >> 9) + 1;
-    sprite->field_28_0 = (value & 0x1FF) + 1;
+    sprite->field_27 = (counts >> 9) + 1;
+    sprite->field_28_0 = (counts & 0x1FF) + 1;
     sprite->field_11_5 = file[6] >> 7;
     sprite->field_26 = (file[6] & 0x7F) + 1;
     sprite->field_24 = file[7];
     entry = file + (file[animation * 2 + 8] | (file[animation * 2 + 9] << 8));
     sprite->field_12_4 = 0;
     sprite->field_12_1 = 0;
-    sprite->field_5C = arg3;
-    sprite->field_60 = arg4;
+    sprite->onAnimationFinished = onAnimationFinished;
+    sprite->callbackArgument = callbackArgument;
 
-    if (arg2 == -1) {
+    if (frame == -1) {
         sprite->field_23 = 0;
         sprite->field_12_3 = 0;
         sprite->hidden = true;
         sprite->field_20 = 0x10;
+
         if (sprite->field_44 != 0 && sprite->field_44[0] != 1) {
             sub_801E3EC(sprite->field_44, file);
         }
+
         if (sprite->field_50 != 0 && sprite->field_48->status == 1
             && (sprite->field_28_13 || dword_3000C78 != sub_800063C)) {
             int size = sprite->field_28_0 << 5;
             int used = sub_80198B0(sprite->field_50);
+
             if (size - used > 0) {
                 dword_3001034(0, sprite->field_4C + used, size - used);
                 sprite->field_28_0 = used / 32;
@@ -202,24 +206,27 @@ void sub_801E150(struct Sprite* sprite, int animation, int arg2, SpriteCallback 
             sprite->field_13_0 = gGameState.field_888_5 + 1;
         }
     } else {
-        sprite->field_23 = arg2;
+        sprite->field_23 = frame;
     }
 
     frameCount = entry[0];
-    if (frameCount == 0 && ((flags = entry[1]) & 0xC0)) {
-        entry = file + (file[(flags & 0x3F) * 2 + 8] | (file[(flags & 0x3F) * 2 + 9] << 8));
-        sprite->field_11_6 = flags >> 6;
-        sprite->field_11_7 = flags >> 7;
+    if (frameCount == 0 && ((mirror = entry[1]) & 0xC0)) {
+        entry = file + (file[(mirror & 0x3F) * 2 + 8] | (file[(mirror & 0x3F) * 2 + 9] << 8));
+        sprite->hFlip = mirror >> 6;
+        sprite->vFlip = mirror >> 7;
         frameCount = entry[0];
     }
-    frame = entry + (sprite->field_23 * 2 + 1);
-    sprite->field_22 = frame[0];
-    sprite->field_2A = (frame[1] << 4) + (sprite->field_20 < 0 ? -sprite->field_20 : sprite->field_20);
+
+    frameEntry = entry + (sprite->field_23 * 2 + 1);
+    sprite->field_22 = frameEntry[0];
+    sprite->field_2A =
+        (frameEntry[1] << 4) + (sprite->field_20 < 0 ? -sprite->field_20 : sprite->field_20);
     sprite->field_21 = animation;
     sprite->field_25 = frameCount;
     sprite->field_2C = 0;
     sprite->field_3C = entry;
-    sprite->field_40 = base + (base[sprite->field_22 * 2 + 1] | (base[sprite->field_22 * 2 + 2] << 8));
+    sprite->field_40 =
+        images + (images[sprite->field_22 * 2 + 1] | (images[sprite->field_22 * 2 + 2] << 8));
     sprite->active = true;
 }
 
@@ -317,12 +324,12 @@ void sub_801E3EC(u8* tileMap, u8* file) {
     delete[] tiles;
 }
 
-static inline SpriteCallback getCallback(struct Sprite* sprite) {
-    return sprite->field_5C;
+static inline SpriteCallback getOnAnimationFinished(struct Sprite* sprite) {
+    return sprite->onAnimationFinished;
 }
 
 void sprite_update(struct Sprite* sprite) {
-    SpriteCallback callback;
+    SpriteCallback onAnimationFinished;
 
     if ((sprite->field_48 == 0 || sprite->field_48->status == 0)
         && (sprite->field_44 == 0 || sprite->field_44[0] == 1) && !sprite->field_12_4
@@ -392,9 +399,9 @@ void sprite_update(struct Sprite* sprite) {
             sprite->field_22 = image;
         }
     }
-    callback = getCallback(sprite);
-    if (callback != 0 && (sprite->field_28_9 || (sprite->field_12_3 && !sprite->hidden))) {
-        callback(sprite, sprite->field_60);
+    onAnimationFinished = getOnAnimationFinished(sprite);
+    if (onAnimationFinished != 0 && (sprite->field_28_9 || (sprite->field_12_3 && !sprite->hidden))) {
+        onAnimationFinished(sprite, sprite->callbackArgument);
     }
 }
 
@@ -449,7 +456,7 @@ struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg
                     int mask = sprite->field_14;
                     int j;
 
-                    for (j = 0; j < sprite->field_13_4; j++) {
+                    for (j = 0; j < sprite->paletteCount; j++) {
                         while (!(mask & 1)) {
                             bit++;
                             mask >>= 1;
@@ -487,21 +494,21 @@ struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg
 
                         x = p[2] | (p[3] << 8);
                         x = IWRAM_DIV(0x1000000, sprite->xScale * x);
-                        if (sprite->field_11_6) {
+                        if (sprite->hFlip) {
                             x = -x;
                         }
                         src.xScale = x;
                         y = p[4] | (p[5] << 8);
                         y = IWRAM_DIV(0x1000000, sprite->yScale * y);
-                        if (sprite->field_11_7) {
+                        if (sprite->vFlip) {
                             y = -y;
                         }
                         src.yScale = y;
                         rotation = p[0] | (p[1] << 8);
-                        if (sprite->field_11_6) {
+                        if (sprite->hFlip) {
                             rotation = -rotation;
                         }
-                        if (sprite->field_11_7) {
+                        if (sprite->vFlip) {
                             rotation = -rotation;
                         }
                         src.rotation = sprite->field_C - rotation;
@@ -683,7 +690,7 @@ static struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u
             x /= 256;
             width /= 256;
         }
-        if (sprite->field_11_6) {
+        if (sprite->hFlip) {
             x = -x - width;
         }
         if (sprite->yScale != 0x100) {
@@ -693,7 +700,7 @@ static struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u
             y /= 256;
             height /= 256;
         }
-        if (sprite->field_11_7) {
+        if (sprite->vFlip) {
             y = -y - height;
         }
 
@@ -735,7 +742,7 @@ static struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u
             oam->sortKey = (priority << 30) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
             if (affineMode != ST_OAM_AFFINE_OFF && affine == ST_OAM_AFFINE_OFF) {
-                flip = ((entry[3] >> 4) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
+                flip = ((entry[3] >> 4) & 3) ^ (sprite->hFlip | (sprite->vFlip << 1));
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
                     matrix++;
@@ -764,8 +771,8 @@ static struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u
                 }
                 attributes[1] = matrixBits | sizeBits | xBits;
             } else {
-                attributes[1] = ((entry[3] & 0xC0) | ((entry[3] & 0x10) ^ (sprite->field_11_6 << 4))
-                                 | ((entry[3] & 0x20) ^ (sprite->field_11_7 << 5)))
+                attributes[1] = ((entry[3] & 0xC0) | ((entry[3] & 0x10) ^ (sprite->hFlip << 4))
+                                 | ((entry[3] & 0x20) ^ (sprite->vFlip << 5)))
                                     << 8
                                 | (x & 0x1FF);
             }
@@ -851,7 +858,7 @@ static struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u
             x /= 256;
             width /= 256;
         }
-        if (sprite->field_11_6) {
+        if (sprite->hFlip) {
             x = -x - width;
         }
         if (sprite->yScale != 0x100) {
@@ -861,7 +868,7 @@ static struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u
             y /= 256;
             height /= 256;
         }
-        if (sprite->field_11_7) {
+        if (sprite->vFlip) {
             y = -y - height;
         }
 
@@ -906,7 +913,7 @@ static struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u
             oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
             if (affineMode != ST_OAM_AFFINE_OFF && affine == ST_OAM_AFFINE_OFF) {
-                flip = ((entry[2] >> 2) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
+                flip = ((entry[2] >> 2) & 3) ^ (sprite->hFlip | (sprite->vFlip << 1));
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
                     matrix++;
@@ -931,8 +938,8 @@ static struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u
                 attributes[1] = (matrixNum << 9) | sizeBits | xBits;
             } else {
                 attributes[1] = ((entry[4] & 0x30)
-                                 | (((entry[2] & 4) ^ (sprite->field_11_6 << 2))
-                                    | ((entry[2] & 8) ^ (sprite->field_11_7 << 3))))
+                                 | (((entry[2] & 4) ^ (sprite->hFlip << 2))
+                                    | ((entry[2] & 8) ^ (sprite->vFlip << 3))))
                                     << 10
                                 | (x & 0x1FF);
             }
@@ -1008,7 +1015,7 @@ static struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u
             x /= 256;
             width /= 256;
         }
-        if (sprite->field_11_6) {
+        if (sprite->hFlip) {
             x = -x - width;
         }
         if (sprite->yScale != 0x100) {
@@ -1018,7 +1025,7 @@ static struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u
             y /= 256;
             height /= 256;
         }
-        if (sprite->field_11_7) {
+        if (sprite->vFlip) {
             y = -y - height;
         }
 
@@ -1057,7 +1064,7 @@ static struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u
             oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
             if (mode != ST_OAM_AFFINE_OFF) {
-                flip = ((flags >> 2) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
+                flip = ((flags >> 2) & 3) ^ (sprite->hFlip | (sprite->vFlip << 1));
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
                     matrix++;
@@ -1072,8 +1079,7 @@ static struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u
             if (mode != ST_OAM_AFFINE_OFF) {
                 oam->attr1 = ((flags & 0x30) << 10) | (matrices[flip] << 9) | (x & 0x1FF);
             } else {
-                oam->attr1 = ((flags & 0x3C) ^ ((sprite->field_11_6 << 2) | (sprite->field_11_7 << 3)))
-                                 << 10
+                oam->attr1 = ((flags & 0x3C) ^ ((sprite->hFlip << 2) | (sprite->vFlip << 3))) << 10
                              | (x & 0x1FF);
             }
             paletteIndex = flags & 3;
@@ -1142,7 +1148,7 @@ static struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u
             x /= 256;
             width /= 256;
         }
-        if (sprite->field_11_6) {
+        if (sprite->hFlip) {
             x = -x - width;
         }
         if (sprite->yScale != 0x100) {
@@ -1152,7 +1158,7 @@ static struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u
             y /= 256;
             height /= 256;
         }
-        if (sprite->field_11_7) {
+        if (sprite->vFlip) {
             y = -y - height;
         }
 
@@ -1199,7 +1205,7 @@ static struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u
             oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
             if (mode != ST_OAM_AFFINE_OFF) {
-                flip = ((flags >> 2) & 3) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
+                flip = ((flags >> 2) & 3) ^ (sprite->hFlip | (sprite->vFlip << 1));
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
                     matrix++;
@@ -1214,8 +1220,7 @@ static struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u
             if (mode != ST_OAM_AFFINE_OFF) {
                 oam->attr1 = ((flags & 0x30) << 10) | (matrices[flip] << 9) | (x & 0x1FF);
             } else {
-                oam->attr1 = ((flags & 0x3C) ^ ((sprite->field_11_6 << 2) | (sprite->field_11_7 << 3)))
-                                 << 10
+                oam->attr1 = ((flags & 0x3C) ^ ((sprite->hFlip << 2) | (sprite->vFlip << 3))) << 10
                              | (x & 0x1FF);
             }
             if (tiles == 0) {
@@ -1295,7 +1300,7 @@ static struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u
             x /= 256;
             width /= 256;
         }
-        if (sprite->field_11_6) {
+        if (sprite->hFlip) {
             x = -x - width;
         }
         if (sprite->yScale != 0x100) {
@@ -1305,7 +1310,7 @@ static struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u
             y /= 256;
             height /= 256;
         }
-        if (sprite->field_11_7) {
+        if (sprite->vFlip) {
             y = -y - height;
         }
 
@@ -1342,7 +1347,7 @@ static struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u
 
             oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
-            flip = (tileFlip >> 7) ^ (sprite->field_11_6 | (sprite->field_11_7 << 1));
+            flip = (tileFlip >> 7) ^ (sprite->hFlip | (sprite->vFlip << 1));
             if (mode != ST_OAM_AFFINE_OFF) {
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
@@ -1438,7 +1443,7 @@ static struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u
             x /= 256;
             width /= 256;
         }
-        if (sprite->field_11_6) {
+        if (sprite->hFlip) {
             x = -x - width;
         }
         if (sprite->yScale != 0x100) {
@@ -1448,7 +1453,7 @@ static struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u
             y /= 256;
             height /= 256;
         }
-        if (sprite->field_11_7) {
+        if (sprite->vFlip) {
             y = -y - height;
         }
 
@@ -1485,7 +1490,7 @@ static struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u
 
             oam->sortKey = (priorityBits << 20) | (sprite->field_E << 14) | (*depth << 7) | i;
             (*depth)++;
-            flip = sprite->field_11_6 | (sprite->field_11_7 << 1);
+            flip = sprite->hFlip | (sprite->vFlip << 1);
             if (mode != ST_OAM_AFFINE_OFF) {
                 if (matrices[flip] == -1) {
                     matrices[flip] = matrix;
@@ -1689,19 +1694,19 @@ void sprites_draw(void) {
 
                 other = context->field_30;
                 while (other != sprite) {
-                    // field_1A is compared twice in the original (the compiler merges the two into
-                    // one masked comparison); maybe field_18 was meant for one of them.
+                    // animationIndex is compared twice in the original (the compiler merges the two
+                    // into one masked comparison); maybe tilesIndex was meant for one of them.
                     if (!other->hidden && other->bank == sprite->bank
-                        && other->field_1A == sprite->field_1A && other->field_1A == sprite->field_1A
+                        && other->animationIndex == sprite->animationIndex
+                        && other->animationIndex == sprite->animationIndex
                         && other->field_22 == sprite->field_22 && other->xScale == sprite->xScale
                         && other->yScale == sprite->yScale && other->field_8 == sprite->field_8
                         && other->field_A == sprite->field_A && other->field_C == sprite->field_C
-                        && other->field_11_6 == sprite->field_11_6
-                        && other->field_11_7 == sprite->field_11_7) {
+                        && other->hFlip == sprite->hFlip && other->vFlip == sprite->vFlip) {
                         found = 1;
                         break;
                     }
-                    other = other->field_68;
+                    other = other->next;
                     if (other == 0) {
                         break;
                     }
@@ -1724,13 +1729,13 @@ void sprites_draw(void) {
                     other = context->field_30;
                     while (other != sprite) {
                         if (other->field_48->status == 0 && !other->hidden
-                            && other->bank == sprite->bank && other->field_18 == sprite->field_18
-                            && other->field_1A == sprite->field_1A
+                            && other->bank == sprite->bank && other->tilesIndex == sprite->tilesIndex
+                            && other->animationIndex == sprite->animationIndex
                             && other->field_22 == sprite->field_22) {
                             shared = 1;
                             break;
                         }
-                        other = other->field_68;
+                        other = other->next;
                         if (other == 0) {
                             break;
                         }
@@ -1753,7 +1758,7 @@ void sprites_draw(void) {
                 vram += sprite->field_30;
             }
         }
-        sprite = sprite->field_68;
+        sprite = sprite->next;
     } while (sprite != 0);
     context->field_38 = oam;
 }
@@ -1764,7 +1769,7 @@ void sprite_show(struct Sprite* sprite) {
         sprite->hidden = false;
         sprite->field_12_1 = 0;
         if (sprite->field_54 != 0) {
-            if (sub_8021574(sprite->paletteBank, sprite->field_1C, sprite->field_28_12, 1, 1,
+            if (sub_8021574(sprite->paletteBank, sprite->paletteIndex, sprite->field_28_12, 1, 1,
                             &sprite->field_14, -1)
                 == 2) {
                 sprite->field_13_0 = 0;
@@ -1794,26 +1799,26 @@ void sprite_remove(struct Sprite* sprite) {
             }
         }
         context = &gSpriteContext;
-        if (sprite->field_64 != 0) {
-            sprite->field_64->field_68 = sprite->field_68;
+        if (sprite->previous != 0) {
+            sprite->previous->next = sprite->next;
         } else {
-            context->field_30 = sprite->field_68;
+            context->field_30 = sprite->next;
         }
-        if (sprite->field_68 != 0) {
-            sprite->field_68->field_64 = sprite->field_64;
+        if (sprite->next != 0) {
+            sprite->next->previous = sprite->previous;
         } else {
-            context->field_34 = sprite->field_64;
+            context->field_34 = sprite->previous;
         }
-        sprite->field_68 = 0;
-        sprite->field_64 = 0;
+        sprite->next = 0;
+        sprite->previous = 0;
         context->field_1--;
     }
 }
 
 // Creates a sprite and adds it to the end of the sprite list. id -1 makes an empty sprite; ids and
 // palettes with bits 12-15 set select the bank (bits 12-15 minus 1) themselves.
-struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4, int bufferSize,
-                             int palette) {
+struct Sprite* sprite_create(int bank, int id, int useTileMap, int tileCount, int vramTileCount,
+                             int bufferSize, int palette) {
     struct Sprite* sprite;
     struct SpriteContext* context;
 
@@ -1878,17 +1883,17 @@ struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4
             }
         }
 
-        if (arg4 == -1) {
-            if (arg2 == 1) {
-                arg4 = animation[3] >> 1;
-                arg4++;
+        if (vramTileCount == -1) {
+            if (useTileMap == 1) {
+                vramTileCount = animation[3] >> 1;
+                vramTileCount++;
             } else {
-                arg4 = tileCount;
+                vramTileCount = tileCount;
             }
         }
 
         tileCount *= 32;
-        arg4 *= 32;
+        vramTileCount *= 32;
         base = animation - (animation[0] | (animation[1] << 8));
         records = (animation[6] & 0x7F) + 1;
         recordSize = base[0];
@@ -1910,16 +1915,16 @@ struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4
         sprite->field_8 = 0x100;
         sprite->field_A = 0x100;
         sprite->hidden = true;
-        sprite->field_13_4 = paletteCount;
-        sprite->field_16 = id;
-        sprite->field_1A = animationIndex;
-        sprite->field_18 = tilesIndex;
-        sprite->field_1C = palette;
+        sprite->paletteCount = paletteCount;
+        sprite->id = id;
+        sprite->animationIndex = animationIndex;
+        sprite->tilesIndex = tilesIndex;
+        sprite->paletteIndex = palette;
         sprite->bank = bank;
         sprite->paletteBank = paletteBank;
-        sprite->field_30 = arg4;
-        sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, arg2 == 1 ? bufferSize : 0, flag,
-                    0);
+        sprite->field_30 = vramTileCount;
+        sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, useTileMap == 1 ? bufferSize : 0,
+                    flag, 0);
     } else {
         sprite = (struct Sprite*)sprite_heap_alloc(SPRITE_HEAP_SPRITE, 0x6C, 0, 0);
         dword_3001034(0, sprite, 0x6C);
@@ -1931,7 +1936,7 @@ struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4
         sprite->field_8 = 0x100;
         sprite->field_A = 0x100;
         sprite->hidden = true;
-        sprite->field_16 = 0xFFFF;
+        sprite->id = 0xFFFF;
     }
 
     context = &gSpriteContext;
@@ -1939,11 +1944,11 @@ struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4
     if (context->field_30 == 0) {
         context->field_30 = sprite;
     } else {
-        sprite->field_68 = context->field_34->field_68;
-        context->field_34->field_68 = sprite;
+        sprite->next = context->field_34->next;
+        context->field_34->next = sprite;
     }
 
-    sprite->field_64 = context->field_34;
+    sprite->previous = context->field_34;
     context->field_34 = sprite;
     context->field_1++;
 
@@ -1951,8 +1956,8 @@ struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4
 }
 
 // Gives an existing sprite new graphics (see sprite_create for the parameters).
-void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCount, int arg5,
-                 int bufferSize, int palette) {
+void sprite_change(struct Sprite* sprite, int bank, int id, int useTileMap, int tileCount,
+                   int vramTileCount, int bufferSize, int palette) {
     struct SpriteInfo* info;
     int flag;
     int animationIndex;
@@ -1967,7 +1972,7 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
     int records;
     int recordSize;
 
-    if (sprite->field_16 != 0xFFFF) {
+    if (sprite->id != 0xFFFF) {
         if (!sprite->hidden) {
             sprite->hidden = true;
             if (sub_8021A18(sprite, 2) == 0) {
@@ -2031,9 +2036,9 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
         }
     }
 
-    // arg5 is unused, but this dead code is what leaves the original's lone load of it
-    if (arg5 == -1) {
-        arg5 = tileCount;
+    // vramTileCount is unused, but this dead code is what leaves the original's lone load of it
+    if (vramTileCount == -1) {
+        vramTileCount = tileCount;
     }
 
     tileCount *= 32;
@@ -2049,14 +2054,15 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
     bufferSize &= ~3;
 
     sprite->field_12_1 = 0;
-    sprite->field_13_4 = paletteCount;
-    sprite->field_16 = id;
-    sprite->field_1A = animationIndex;
-    sprite->field_18 = tilesIndex;
-    sprite->field_1C = palette;
+    sprite->paletteCount = paletteCount;
+    sprite->id = id;
+    sprite->animationIndex = animationIndex;
+    sprite->tilesIndex = tilesIndex;
+    sprite->paletteIndex = palette;
     sprite->bank = bank;
     sprite->paletteBank = paletteBank;
-    sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, arg3 == 1 ? bufferSize : 0, flag, 1);
+    sub_8021AC8(sprite, tiles, animation, paletteData, tileCount, useTileMap == 1 ? bufferSize : 0,
+                flag, 1);
 }
 
 // Destroys a sprite: hides it, removes it from the sprite list and frees it.
@@ -2080,15 +2086,15 @@ void sprite_destroy(struct Sprite* sprite) {
     }
     sub_8021C24(sprite);
     context = &gSpriteContext;
-    if (sprite->field_64 != 0) {
-        sprite->field_64->field_68 = sprite->field_68;
+    if (sprite->previous != 0) {
+        sprite->previous->next = sprite->next;
     } else {
-        context->field_30 = sprite->field_68;
+        context->field_30 = sprite->next;
     }
-    if (sprite->field_68 != 0) {
-        sprite->field_68->field_64 = sprite->field_64;
+    if (sprite->next != 0) {
+        sprite->next->previous = sprite->previous;
     } else {
-        context->field_34 = sprite->field_64;
+        context->field_34 = sprite->previous;
     }
     sprite_heap_free(sprite);
     context->field_1--;
@@ -2310,27 +2316,27 @@ struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
     if (other != 0) {
         if (type == 2) {
             do {
-                // field_1C and paletteBank: the palette
+                // paletteIndex and paletteBank: the palette
                 if (other != sprite && !other->hidden && !other->field_28_12
-                    && (*(u32*)&other->field_1C & 0x00F0FFFF)
-                           == (*(u32*)&sprite->field_1C & 0x00F0FFFF)) {
+                    && (*(u32*)&other->paletteIndex & 0x00F0FFFF)
+                           == (*(u32*)&sprite->paletteIndex & 0x00F0FFFF)) {
                     return other;
                 }
-                other = other->field_68;
+                other = other->next;
             } while (other != 0);
         } else {
             do {
                 if (other != sprite && other->bank == sprite->bank) {
-                    if (type == 0 && other->field_18 == sprite->field_18) {
+                    if (type == 0 && other->tilesIndex == sprite->tilesIndex) {
                         return other;
                     }
-                    if (type == 1 && other->field_1A == sprite->field_1A) {
+                    if (type == 1 && other->animationIndex == sprite->animationIndex) {
                         return other;
                     }
                     if (type == 3 && other->field_2E == sprite->field_2E) {
                         return other;
                     }
-                    if (type == 4 && other->field_18 == sprite->field_18 && other->field_44 == 0) {
+                    if (type == 4 && other->tilesIndex == sprite->tilesIndex && other->field_44 == 0) {
                         //! Possible fake match (permuter): makes this the return block the others jump
                         //! to
                         do {
@@ -2338,7 +2344,7 @@ struct Sprite* sub_8021A18(struct Sprite* sprite, int type) {
                         } while (0);
                     }
                 }
-                other = other->field_68;
+                other = other->next;
             } while (other != 0);
         }
     }
@@ -2364,11 +2370,11 @@ void sub_8021AC8(struct Sprite* sprite, u8* tiles, u8* animation, void* palette,
                  int bufferSize, int uncompressed, int arg7) {
     if (!uncompressed) {
         struct DecompressJob* job = (struct DecompressJob*)sprite_heap_search_inline(
-            SPRITE_HEAP_TILES, sprite->bank, sprite->field_18);
+            SPRITE_HEAP_TILES, sprite->bank, sprite->tilesIndex);
 
         if (job == 0) {
             u8* buffer = (u8*)sprite_heap_alloc(SPRITE_HEAP_TILES, tileSize + 16, sprite->bank,
-                                                sprite->field_18);
+                                                sprite->tilesIndex);
             sprite->field_48 = (struct DecompressJob*)buffer;
             sprite->field_50 = tiles;
             sprite->field_4C = buffer + 16;
@@ -2390,10 +2396,11 @@ void sub_8021AC8(struct Sprite* sprite, u8* tiles, u8* animation, void* palette,
         u8* map;
 
         if (offset == 0) {
-            map = (u8*)sprite_heap_search_inline(SPRITE_HEAP_TILE_MAP, sprite->bank, sprite->field_1A);
+            map = (u8*)sprite_heap_search_inline(SPRITE_HEAP_TILE_MAP, sprite->bank,
+                                                 sprite->animationIndex);
             if (map == 0) {
                 map = (u8*)sprite_heap_alloc(SPRITE_HEAP_TILE_MAP, bufferSize, sprite->bank,
-                                             sprite->field_1A);
+                                             sprite->animationIndex);
                 sprite->field_13_3 = 1;
             } else {
                 sprite->field_13_3 = 0;
@@ -2579,7 +2586,7 @@ struct SpriteInfo* sprite_get_info(int bank, int id) {
 // Shows a hidden sprite, adding it back to the end of the sprite list if it isn't in it.
 void sprite_restore(struct Sprite* sprite) {
     if (sprite->hidden) {
-        if (sprite->field_64 == sprite->field_68) {
+        if (sprite->previous == sprite->next) {
             struct SpriteContext* context = &gSpriteContext;
 
             if (context->field_30 == 0) {
@@ -2587,12 +2594,12 @@ void sprite_restore(struct Sprite* sprite) {
             } else {
                 struct Sprite* last = context->field_34;
 
-                sprite->field_68 = last->field_68;
+                sprite->next = last->next;
                 //! Possible fake match (permuter): storing sprite through last makes field_34 reload
                 last = sprite;
-                context->field_34->field_68 = last;
+                context->field_34->next = last;
             }
-            sprite->field_64 = context->field_34;
+            sprite->previous = context->field_34;
             context->field_34 = sprite;
             context->field_1++;
         }
@@ -2624,7 +2631,7 @@ void sprites_update(void) {
     struct Sprite* sprite = gSpriteContext.field_30;
 
     while (sprite != 0) {
-        struct Sprite* next = sprite->field_68;
+        struct Sprite* next = sprite->next;
 
         if (sprite->active) {
             sprite_update(sprite);

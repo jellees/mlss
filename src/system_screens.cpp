@@ -314,7 +314,7 @@ OptionsMenu::OptionsMenu(u8 priority, char* label, int a4) : Process(priority, l
     sprite_context_init(0x3000, 8, 0, 0x80u);
 
     this->sprite = sprite_create(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
-    sub_801E150(this->sprite, 0, -1, 0, 0);
+    sprite_play_animation(this->sprite, 0, -1, 0, 0);
     sprite_show(this->sprite);
     this->sprite->xPosition = 40;
     this->sprite->yPosition = 55;
@@ -894,7 +894,7 @@ SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, l
     sprite_context_init(0x2000, 8, 0, 0);
 
     this->sprite = sprite_create(5, SPRITE_ID(5, 5), 1, -1, -1, -1, -1);
-    sub_801E150(this->sprite, 0, -1, 0, 0);
+    sprite_play_animation(this->sprite, 0, -1, 0, 0);
     sprite_show(this->sprite);
     this->sprite->xPosition = 140;
     this->sprite->yPosition = 90;

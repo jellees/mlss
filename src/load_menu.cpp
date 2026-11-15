@@ -315,11 +315,11 @@ void LoadMenu::update() {
                                         0,
                                         this->entries[this->field_154[this->field_FB - 1]].items[i].id,
                                         1, -1, -1, -1, -1);
-                                sub_801E150(
+                                sprite_play_animation(
                                     this->sprites[this->field_154[this->field_FB - 1] * 2 + i],
                                     this->entries[this->field_154[this->field_FB - 1]].items[i].field_2,
                                     -1, 0, 0);
-                                sub_801E150(
+                                sprite_play_animation(
                                     this->sprites[this->field_154[this->field_FB - 1] * 2 + i],
                                     this->entries[this->field_154[this->field_FB - 1]].items[i].field_2,
                                     this->entries[this->field_154[this->field_FB - 1]].items[i].field_3,
@@ -337,8 +337,9 @@ void LoadMenu::update() {
                                 sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_4C, -1);
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i] =
                                     sprite_create(5, SPRITE_ID(5, 6), 1, -1, -1, -1, -1);
-                                sub_801E150(this->sprites[this->field_154[this->field_FB - 1] * 2 + i],
-                                            i, -1, 0, 0);
+                                sprite_play_animation(
+                                    this->sprites[this->field_154[this->field_FB - 1] * 2 + i], i, -1,
+                                    0, 0);
                                 sprite_show(this->sprites[this->field_154[this->field_FB - 1] * 2 + i]);
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->xPosition =
                                     0xBC - i * 40;
@@ -725,7 +726,7 @@ void LoadMenu::sub_8126C3C() {
     if (this->field_F2 == 0) {
         sub_8021574(5, PALETTE_ID(5, 3), 0, 0, 0, this->field_4C, -1);
         this->cursor = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
-        sub_801E150(this->cursor, 0, -1, 0, 0);
+        sprite_play_animation(this->cursor, 0, -1, 0, 0);
         sprite_show(this->cursor);
         this->cursor->xPosition = this->field_FA * 32 + 32;
         this->cursor->yPosition = 22;
@@ -740,7 +741,7 @@ void LoadMenu::sub_8126C3C() {
         this->field_F2 = 1;
     } else if (this->field_F2 == 1) {
         this->arrows[this->field_EC] = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
-        sub_801E150(this->arrows[this->field_EC], this->field_EC + 3, -1, 0, 0);
+        sprite_play_animation(this->arrows[this->field_EC], this->field_EC + 3, -1, 0, 0);
         sprite_show(this->arrows[this->field_EC]);
         this->arrows[this->field_EC]->xPosition = arrowX[this->field_EC];
         this->arrows[this->field_EC]->yPosition = arrowY[this->field_EC];
@@ -768,9 +769,10 @@ void LoadMenu::sub_8126C3C() {
                     && (this->entries[slot].field_18 == 2 || this->entries[slot].field_18 == i)) {
                     this->sprites[index] =
                         sprite_create(0, this->entries[slot].items[i].id, 1, -1, -1, -1, -1);
-                    sub_801E150(this->sprites[index], this->entries[slot].items[i].field_2, -1, 0, 0);
-                    sub_801E150(this->sprites[index], this->entries[slot].items[i].field_2,
-                                this->entries[slot].items[i].field_3, 0, 0);
+                    sprite_play_animation(this->sprites[index], this->entries[slot].items[i].field_2,
+                                          -1, 0, 0);
+                    sprite_play_animation(this->sprites[index], this->entries[slot].items[i].field_2,
+                                          this->entries[slot].items[i].field_3, 0, 0);
                     sprite_show(this->sprites[index]);
                     this->sprites[index]->xPosition = 0xBC - i * 40;
                     this->sprites[index]->yPosition = slot != 0 ? 0xB4 : 0x68;
@@ -787,7 +789,7 @@ void LoadMenu::sub_8126C3C() {
                 } else if ((this->field_F1 >> slot) & 1) {
                     sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_4C, -1);
                     this->sprites[index] = sprite_create(5, SPRITE_ID(5, 6), 1, -1, -1, -1, -1);
-                    sub_801E150(this->sprites[index], i, -1, 0, 0);
+                    sprite_play_animation(this->sprites[index], i, -1, 0, 0);
                     sprite_show(this->sprites[index]);
                     this->sprites[index]->xPosition = 0xBC - i * 40;
                     this->sprites[index]->yPosition = slot != 0 ? 0xB4 : 0x68;

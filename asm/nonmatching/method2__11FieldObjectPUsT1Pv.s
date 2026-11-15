@@ -286,7 +286,7 @@ _080405F2:
 	adds r0, r7, #0x0
 	adds r1, r5, #0x0
 	adds r2, r4, #0x0
-	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
 	cmp r10, r4
 	beq _0804061A
 	mov r0, r9
@@ -295,7 +295,7 @@ _080405F2:
 	adds r1, r5, #0x0
 	mov r2, r10
 	movs r3, #0x00
-	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
 _0804061A:
 	ldr r0, [r7, #0x48]
 	cmp r0, #0x00

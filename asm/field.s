@@ -7257,7 +7257,7 @@ _08031A2A:
 	adds r1, #0x05
 	str r2, [sp, #0x000]
 	movs r3, #0x00
-	bl sub_801E150__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
 	ldr r2, [r4, #0x00]
 	movs r4, #0x80
 	lsls r4, r4, #0x02

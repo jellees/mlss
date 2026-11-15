@@ -1399,7 +1399,7 @@ void FieldManager::sub_802563C() {
                 if ((*objects)->sprite->field_21 == 1 && (*objects)->sprite->field_12_3) {
                     (*objects)->setSpriteActive(false);
                     (*objects)->field_214_0 = 0;
-                    sub_801E150((*objects)->sprite, 0, 0, 0, 0);
+                    sprite_play_animation((*objects)->sprite, 0, 0, 0, 0);
                     (*objects)->sprite->field_12_1 = 0;
                     (*objects)->sprite->field_12_3 = 0;
                 }
@@ -1677,7 +1677,7 @@ void FieldManager::sub_80262CC(int x, int y, int z, int height, int type, bool a
         }
         x /= 256;
         y = (y - z - height) / 256;
-        sub_801E150(entry->sprite, animation, 0, 0, 0);
+        sprite_play_animation(entry->sprite, animation, 0, 0, 0);
         sprite_restore(entry->sprite);
         entry->sprite->field_12_1 = 2;
         entry->sprite->field_E = 0x800 - y;
@@ -1760,7 +1760,7 @@ void FieldManager::sub_80265EC(u16 arg1) {
 
     for (i = 0; i < 4; i++) {
         field_1C->field_25C[i].sprite = sprite_create(0, SPRITE_ID(7, 9), 1, -1, -1, -1, -1);
-        sub_801E150(field_1C->field_25C[i].sprite, 0, -1, 0, 0);
+        sprite_play_animation(field_1C->field_25C[i].sprite, 0, -1, 0, 0);
     }
 
     objects[luigiLeads]->method2(field_C8, field_CC, field_314);
@@ -2323,7 +2323,7 @@ void FieldManager::start_battle_8027AC4() {
         if (player->field_298_0) {
             player->field_218 = player->field_356;
             player->direction = player->field_358_0;
-            player->sprite->field_11_6 = player->field_298_1;
+            player->sprite->hFlip = player->field_298_1;
             player->sprite->field_1F_0 = player->field_298_2;
             player->sprite->field_1F_2 = player->field_298_4;
             player->sprite->field_12_1 = player->field_298_6;
@@ -3777,7 +3777,7 @@ void FieldManager::sub_802A740() {
         if (leader->isMini && leader->state <= 4) {
             int result = sub_80261C0(leader);
             if (result != -1) {
-                if (leader->field_36C->hidden || leader->field_36C->field_16 != 0x54) {
+                if (leader->field_36C->hidden || leader->field_36C->id != 0x54) {
                     leader->sub_80497A8();
                     sub_801ABE8(0, 0x1E, 0);
                 }
@@ -3788,7 +3788,7 @@ void FieldManager::sub_802A740() {
                     leader->field_36C->xScale = 0x100;
                     leader->field_36C->yScale = 0x100;
                 }
-            } else if (!leader->field_36C->hidden && leader->field_36C->field_16 == 0x54) {
+            } else if (!leader->field_36C->hidden && leader->field_36C->id == 0x54) {
                 sprite_remove(leader->field_36C);
                 sub_801AD3C();
             }
@@ -4551,7 +4551,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                         animation += 5;
                     }
                 }
-                sub_801E150(player->sprite, animation, 0, 0, 0);
+                sprite_play_animation(player->sprite, animation, 0, 0, 0);
                 player->field_355 = 20;
             }
             break;
@@ -4579,7 +4579,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 entry = word_839F974;
                 for (i = 0; i < 4; i++, entry += 2) {
                     if (entry[0] == player->field_355) {
-                        sub_801E150(player->field_36C, entry[1], 0, 0, 0);
+                        sprite_play_animation(player->field_36C, entry[1], 0, 0, 0);
                         if (player->field_355 == 59) {
                             stop_sfx_80195A8(player->field_54 == 0 ? 0x157 : 0x87);
                             play_sfx_80195B4(player->field_54 == 0 ? 0x158 : 0x156, -1);
@@ -4613,14 +4613,14 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 }
                 player->field_214_0 = 0;
                 player->state = 12;
-                sub_801E150(player->field_36C, 5, 0, 0, 0);
+                sprite_play_animation(player->field_36C, 5, 0, 0, 0);
                 player->field_36C->field_12_1 = 1;
             }
             break;
 
         case 12:
             if (player->field_36C->field_21 == 5 && player->field_36C->field_12_3) {
-                sub_801E150(player->field_36C, 6, 0, 0, 0);
+                sprite_play_animation(player->field_36C, 6, 0, 0, 0);
             }
             if (player->field_355 != 0 && --player->field_355 == 0) {
                 player->stopHandPower();
