@@ -18,8 +18,10 @@ FieldBlock::FieldBlock(int roomId, int index) : FieldObject(roomId, index) {
 }
 
 FieldBlock::FieldBlock(u8* data, u16 dataIndex, int roomId, int index) : FieldObject(roomId, index) {
-    int x = ((data[1] << 4) + ((data[3] >> 7) | ((data[4] << 1) & 0x1E) | ((data[4] & 8) ? ~0x1F : 0))) << 8;
-    int y = ((data[2] << 4) + ((data[4] >> 4) | ((data[5] << 4) & 0x10) | ((data[5] & 1) ? ~0x1F : 0))) << 8;
+    int x = ((data[1] << 4) + ((data[3] >> 7) | ((data[4] << 1) & 0x1E) | ((data[4] & 8) ? ~0x1F : 0)))
+            << 8;
+    int y = ((data[2] << 4) + ((data[4] >> 4) | ((data[5] << 4) & 0x10) | ((data[5] & 1) ? ~0x1F : 0)))
+            << 8;
     int z = (((data[3] & 0x7F) << 3) + ((data[5] >> 1) | ((data[5] & 0x20) ? ~0x1F : 0))) << 8;
 
     sub_8047F60(x, y, z, 0, 0);
