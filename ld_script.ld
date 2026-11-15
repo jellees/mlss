@@ -34,7 +34,6 @@ SECTIONS
         src/game_mode.o(.text);
         asm/text0801B0B8.o(.text);
         src/sprite.o(.text);
-        asm/sprite.o(.text);
         src/field.o(.text);
         asm/field.o(.text);
         asm/text0803EA00.o(.text);
@@ -102,7 +101,6 @@ SECTIONS
         src/game_mode.o(.rodata);
         asm/rodata081E23B8.o(.rodata);
         src/sprite.o(.rodata);
-        asm/sprite.o(.rodata);
         src/field.o(.rodata);
         asm/field.o(.rodata);
         src/field_monster.o(.rodata);
@@ -125,7 +123,7 @@ SECTIONS
     .data :
     {
         asm/data0821DC0C.o(.data);
-        asm/sprite.o(.data);
+        src/sprite.o(.data);
         asm/data0839EF68.o(.data);
         asm/field.o(.data);
         asm/data083A0508.o(.data);

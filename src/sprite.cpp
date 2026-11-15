@@ -6,6 +6,93 @@
 // Size of a ROM routine delimited by name and name##_end.
 #define ROUTINE_SIZE(name) ((u32)(name##_end - name))
 
+#define SPRITE_DRAW_ROUTINES_COUNT 6
+
+// Unreferenced.
+u8 byte_839EDC4[4][16] = {
+    { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+};
+
+u8 dObjSize[3 * 4 * 2] = {
+    8,  8,  16, 16, 32, 32, 64, 64, // Square
+    16, 8,  32, 8,  32, 16, 64, 32, // Horizontal
+    8,  16, 8,  32, 16, 32, 32, 64, // Vertical
+};
+
+static struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth);
+static struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth);
+static struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth);
+static struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth);
+static struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth);
+static struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth);
+
+SpriteDrawRoutine dSpriteDrawRoutines[SPRITE_DRAW_ROUTINES_COUNT] = {
+    sub_801EEBC, sub_801F370, sub_801F7D0, sub_801FBAC, sub_801FFA8, sub_802039C,
+};
+
+u16 dSpriteDrawRoutineSizes[6] = { 0x500, 0x480, 0x400, 0x400, 0x400, 0x400 };
+
+extern const char sAosaLabel[];
+extern const char sAosbLabel[];
+extern const char sAoscLabel[];
+extern const char sAosdLabel[];
+extern const char sAoseLabel[];
+extern const char sAosfLabel[];
+char* off_839EE40[6] = {
+    (char*)sAosaLabel, (char*)sAosbLabel, (char*)sAoscLabel,
+    (char*)sAosdLabel, (char*)sAoseLabel, (char*)sAosfLabel,
+};
+
+// Record size per animation frame type (sub_801E3EC)
+u8 byte_839EE58[6] = { 6, 5, 4, 4, 3, 3 };
+
+struct SpriteInfo* dSpriteInfo[11] = {
+    (struct SpriteInfo*)0x083CC2FC, (struct SpriteInfo*)0x084F4768, (struct SpriteInfo*)0x083CCC2C,
+    (struct SpriteInfo*)0x084F5368, (struct SpriteInfo*)0x0851A0EC, (struct SpriteInfo*)0x08518D8C,
+    (struct SpriteInfo*)0x084FB5E0, (struct SpriteInfo*)0x083D03D0, (struct SpriteInfo*)0x083D6008,
+    (struct SpriteInfo*)0x085191E8, (struct SpriteInfo*)0x084F5314,
+};
+
+u8** dSpriteAnimations[11] = {
+    (u8**)0x083CC5A0, (u8**)0x084F4A50, (u8**)0x083CD1EC, (u8**)0x084F59BC,
+    (u8**)0x0851A124, (u8**)0x08518DA8, (u8**)0x084FB638, (u8**)0x083D0938,
+    (u8**)0x083D60B0, (u8**)0x08519294, (u8**)0x084F5318,
+};
+
+u32* dSpriteTiles[11] = {
+    (u32*)0x085202BC, (u32*)0x0898751C, (u32*)0x08577A7C, (u32*)0x089C3A3C,
+    (u32*)0x08A7358C, (u32*)0x08A62CE4, (u32*)0x089F4698, (u32*)0x085FC7B8,
+    (u32*)0x086420C4, (u32*)0x08A66CE0, (u32*)0x089C3638,
+};
+
+void** dSpritePalettes[11] = {
+    (void**)0x083CCBB4, (void**)0x084F524C, (void**)0x083CFE6C, (void**)0x084FACC8,
+    (void**)0x0851AF9C, (void**)0x085191C4, (void**)0x084FB800, (void**)0x083D56C0,
+    (void**)0x083D6AF8, (void**)0x08519FF0, (void**)0x084F535C,
+};
+
+// Alternative palettes.
+void** off_839EF10[11] = {
+    (void**)0x083CCBE8, (void**)0x084F52A4, (void**)0x083D00D0, (void**)0x084FB06C,
+    (void**)0x0851AFD0, (void**)0x085191D4, (void**)0x084FB808, (void**)0x083D5AE0,
+    (void**)0x083D6B94, (void**)0x0851A060, (void**)0x084F5360,
+};
+
+u8* dSpritePaletteCounts[11] = {
+    (u8*)0x083CCC1C, (u8*)0x084F52FC, (u8*)0x083D0334, (u8*)0x084FB410,
+    (u8*)0x0851B004, (u8*)0x085191E4, (u8*)0x084FB810, (u8*)0x083D5F00,
+    (u8*)0x083D6C30, (u8*)0x0851A0D0, (u8*)0x084F5364,
+};
+
 // Copies the ARM routines and the sprite routines selected by flags (bit i = routine i) to IWRAM.
 static void sprite_routines_copy(u8 flags) {
     int i;
@@ -20,17 +107,16 @@ static void sprite_routines_copy(u8 flags) {
     gOamNodesReset = (void (*)(struct OamNode*, int))((u8*)gOamNodesCopy + ROUTINE_SIZE(arm_80008B8));
     CpuCopy32(arm_80008F0, gOamNodesReset, ROUTINE_SIZE(arm_80008F0));
 
-    CpuFill32(0, dword_3000D58, sizeof(dword_3000D58));
+    CpuFill32(0, gSpriteDrawRoutines, sizeof(gSpriteDrawRoutines));
 
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < SPRITE_DRAW_ROUTINES_COUNT; i++) {
         if ((flags >> i) & 1) {
-            dword_3000D58[i] =
-                (SpriteDrawRoutine)alloc_heap_8018CEC(0, word_839EE34[i], off_839EE40[i]);
-            CpuCopy32(off_839EE1C[i], dword_3000D58[i], word_839EE34[i]);
-            // Thumb bit
-            dword_3000D58[i] = (SpriteDrawRoutine)((u8*)dword_3000D58[i] + 1);
+            gSpriteDrawRoutines[i] =
+                (SpriteDrawRoutine)alloc_heap_8018CEC(0, dSpriteDrawRoutineSizes[i], off_839EE40[i]);
+            CpuCopy32(dSpriteDrawRoutines[i], gSpriteDrawRoutines[i], dSpriteDrawRoutineSizes[i]);
+            gSpriteDrawRoutines[i] = (SpriteDrawRoutine)((u8*)gSpriteDrawRoutines[i] + 1);
         } else {
-            dword_3000D58[i] = off_839EE1C[i];
+            gSpriteDrawRoutines[i] = dSpriteDrawRoutines[i];
         }
     }
 
@@ -106,7 +192,7 @@ void sub_801E150(struct Sprite* sprite, int animation, int arg2, SpriteCallback 
     sprite->active = true;
 }
 
-// Heap labels of the sprite routine copies (off_839EE40)
+// Heap labels of the IWRAM copies of the draw routines (off_839EE40)
 extern const char sAosaLabel[] = "AOSA";
 extern const char sAosbLabel[] = "AOSB";
 extern const char sAoscLabel[] = "AOSC";
@@ -416,7 +502,8 @@ struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg
             // All four slots set to -1 with one word store
             *(int*)matrices = -1;
             sprite->field_34 = arg1;
-            arg1 = dword_3000D58[renderer](arg1, sprite, &cursor, count, tiles, matrices, matrix, arg2);
+            arg1 = gSpriteDrawRoutines[renderer](arg1, sprite, &cursor, count, tiles, matrices, matrix,
+                                                 arg2);
             p = cursor;
 
             if (!sprite->field_28_11) {
@@ -491,9 +578,9 @@ struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg
     return arg1;
 }
 
-// Sprite routine 0 (off_839EE1C[0]): adds one OAM entry per object of the frame.
-struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth) {
+// Sprite routine 0 (dSpriteDrawRoutines[0]): adds one OAM entry per object of the frame.
+static struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth) {
     u16 palettes[16];
     u8 priorities[4];
     u16* palette = palettes;
@@ -545,7 +632,7 @@ struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u8** cur
             }
         }
 
-        size = &byte_839EE04[(entry[1] >> 6) * 8 + (entry[3] >> 6) * 2];
+        size = &dObjSize[(entry[1] >> 6) * 8 + (entry[3] >> 6) * 2];
         width = size[0];
         height = size[1];
         x = entry[2];
@@ -668,9 +755,9 @@ struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u8** cur
     return oam;
 }
 
-// Sprite routine 1 (off_839EE1C[1]): like routine 0, with 5-byte frame objects.
-struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth) {
+// Sprite routine 1 (dSpriteDrawRoutines[1]): like routine 0, with 5-byte frame objects.
+static struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth) {
     u16 palettes[16];
     u16* palette = palettes;
     int bit = 0;
@@ -716,7 +803,7 @@ struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u8** cur
             }
         }
 
-        size = &byte_839EE04[(entry[4] >> 4) * 2];
+        size = &dObjSize[(entry[4] >> 4) * 2];
         width = size[0];
         height = size[1];
         x = (s8)entry[0];
@@ -835,9 +922,9 @@ struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u8** cur
     return oam;
 }
 
-// Sprite routine 2 (off_839EE1C[2]): 4-byte frame objects without their own affine mode.
-struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth) {
+// Sprite routine 2 (dSpriteDrawRoutines[2]): 4-byte frame objects without their own affine mode.
+static struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth) {
     u16 palettes[16];
     u16* palette = palettes;
     int bit = 0;
@@ -877,7 +964,7 @@ struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u8** cur
         u8* size;
 
         flags = entry[3];
-        size = &byte_839EE04[(flags >> 4) * 2];
+        size = &dObjSize[(flags >> 4) * 2];
         width = size[0];
         height = size[1];
         x = (s8)entry[0];
@@ -975,9 +1062,9 @@ struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u8** cur
     return oam;
 }
 
-// Sprite routine 3 (off_839EE1C[3]): like routine 2, with one palette for the whole sprite.
-struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth) {
+// Sprite routine 3 (dSpriteDrawRoutines[3]): like routine 2, with one palette for the whole sprite.
+static struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth) {
     int palette = 0;
     int mask = sprite->field_14;
     int mode;
@@ -1011,7 +1098,7 @@ struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u8** cur
         u8* size;
 
         flags = entry[3];
-        size = &byte_839EE04[(flags >> 4) * 2];
+        size = &dObjSize[(flags >> 4) * 2];
         width = size[0];
         height = size[1];
         x = (s8)entry[0];
@@ -1116,9 +1203,9 @@ struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u8** cur
     return oam;
 }
 
-// Sprite routine 4 (off_839EE1C[4]): 3-byte frame objects, one palette for the whole sprite.
-struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth) {
+// Sprite routine 4 (dSpriteDrawRoutines[4]): 3-byte frame objects, one palette for the whole sprite.
+static struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth) {
     int palette = 0;
     int mask = sprite->field_14;
     int mode;
@@ -1158,7 +1245,7 @@ struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cur
         shapeX = entry[0];
         sizeY = entry[1];
         tileFlip = entry[2];
-        size = &byte_839EE04[(shapeX >> 6) * 8 + (sizeY >> 6) * 2];
+        size = &dObjSize[(shapeX >> 6) * 8 + (sizeY >> 6) * 2];
         width = size[0];
         height = size[1];
         x = shapeX & 0x3F;
@@ -1258,9 +1345,10 @@ struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cur
     return oam;
 }
 
-// Sprite routine 5 (off_839EE1C[5]): like routine 4, with an 8-bit tile and no flip bit per object.
-struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth) {
+// Sprite routine 5 (dSpriteDrawRoutines[5]): like routine 4, with an 8-bit tile and no flip bit per
+// object.
+static struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
+                                   u8* tiles, s8* matrices, int matrix, u8* depth) {
     int palette = 0;
     int mask = sprite->field_14;
     int mode;
@@ -1300,7 +1388,7 @@ struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cur
         shapeX = entry[0];
         sizeY = entry[1];
         tileNumber = entry[2];
-        size = &byte_839EE04[(shapeX >> 6) * 8 + (sizeY >> 6) * 2];
+        size = &dObjSize[(shapeX >> 6) * 8 + (sizeY >> 6) * 2];
         width = size[0];
         height = size[1];
         x = shapeX & 0x3F;
@@ -1496,7 +1584,7 @@ static void sprite_routines_free(void) {
     gOamNodesReset = 0;
     for (i = 0; i < 6; i++) {
         if ((byte_3000D70 >> i) & 1) {
-            SpriteDrawRoutine* slot = &dword_3000D58[i];
+            SpriteDrawRoutine* slot = &gSpriteDrawRoutines[i];
 
             // Thumb bit
             *slot = (SpriteDrawRoutine)((u8*)*slot - 1);
@@ -1718,7 +1806,7 @@ struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4
             id &= 0xFFF;
         }
 
-        info = &gSpriteInfo[bank][id];
+        info = &dSpriteInfo[bank][id];
         flag = info->uncompressed;
         animationIndex = info->animation;
         tilesIndex = info->tiles;
@@ -1733,15 +1821,15 @@ struct Sprite* sprite_create(int bank, int id, int arg2, int tileCount, int arg4
             paletteBank = bank;
         }
 
-        animation = gSpriteAnimations[bank][animationIndex];
-        tiles = (u8*)gSpriteTiles[bank] + gSpriteTiles[bank][tilesIndex];
-        paletteCount = gSpritePaletteCounts[paletteBank][palette];
+        animation = dSpriteAnimations[bank][animationIndex];
+        tiles = (u8*)dSpriteTiles[bank] + dSpriteTiles[bank][tilesIndex];
+        paletteCount = dSpritePaletteCounts[paletteBank][palette];
 
-        if (gGameState.field_888_1 == 1 && gSpritePalettes[paletteBank] != 0
+        if (gGameState.field_888_1 == 1 && dSpritePalettes[paletteBank] != 0
             && !gSpriteContext.field_0_2) {
             paletteData = off_839EF10[paletteBank][palette];
         } else {
-            paletteData = gSpritePalettes[paletteBank][palette];
+            paletteData = dSpritePalettes[paletteBank][palette];
         }
 
         if (tileCount == -1) {
@@ -1872,7 +1960,7 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
         id &= 0xFFF;
     }
 
-    info = &gSpriteInfo[bank][id];
+    info = &dSpriteInfo[bank][id];
     flag = info->uncompressed;
     animationIndex = info->animation;
     tilesIndex = info->tiles;
@@ -1887,14 +1975,14 @@ void sub_80210A8(struct Sprite* sprite, int bank, int id, int arg3, int tileCoun
         paletteBank = bank;
     }
 
-    animation = gSpriteAnimations[bank][animationIndex];
-    tiles = (u8*)gSpriteTiles[bank] + gSpriteTiles[bank][tilesIndex];
-    paletteCount = gSpritePaletteCounts[paletteBank][palette];
+    animation = dSpriteAnimations[bank][animationIndex];
+    tiles = (u8*)dSpriteTiles[bank] + dSpriteTiles[bank][tilesIndex];
+    paletteCount = dSpritePaletteCounts[paletteBank][palette];
 
-    if (gGameState.field_888_1 == 1 && gSpritePalettes[paletteBank] != 0 && !gSpriteContext.field_0_2) {
+    if (gGameState.field_888_1 == 1 && dSpritePalettes[paletteBank] != 0 && !gSpriteContext.field_0_2) {
         paletteData = off_839EF10[paletteBank][palette];
     } else {
-        paletteData = gSpritePalettes[paletteBank][palette];
+        paletteData = dSpritePalettes[paletteBank][palette];
     }
 
     if (tileCount == -1) {
@@ -1993,13 +2081,13 @@ void* sub_80213A0(int bank, int id, int tileCount, u8 arg3) {
         bank = (id >> 12) - 1;
         id &= 0xFFF;
     }
-    info = &gSpriteInfo[bank][id];
+    info = &dSpriteInfo[bank][id];
     // Bit 31 (uncompressed) tested as the sign of the whole word
     if (*(s32*)info >= 0) {
         animationIndex = info->animation;
         tilesIndex = info->tiles;
-        animation = gSpriteAnimations[bank][animationIndex];
-        tiles = (u8*)gSpriteTiles[bank] + gSpriteTiles[bank][tilesIndex];
+        animation = dSpriteAnimations[bank][animationIndex];
+        tiles = (u8*)dSpriteTiles[bank] + dSpriteTiles[bank][tilesIndex];
         if (tileCount == -1) {
             int frames = (animation[4] | ((animation[5] & 1) << 8)) + 1;
 
@@ -2045,9 +2133,9 @@ void* sub_80214A4(int bank, int id, int size, u8 arg3) {
         bank = (id >> 12) - 1;
         id &= 0xFFF;
     }
-    info = &gSpriteInfo[bank][id];
+    info = &dSpriteInfo[bank][id];
     animationIndex = info->animation;
-    animation = gSpriteAnimations[bank][animationIndex];
+    animation = dSpriteAnimations[bank][animationIndex];
     offset = animation[2] | (animation[3] << 8);
     if (offset == 0) {
         base = animation - (animation[0] | (animation[1] << 8));
@@ -2119,11 +2207,11 @@ int sub_8021574(int bank, int palette, int arg2, int arg3, int arg4, void* mask,
         return 2;
     }
 
-    count = gSpritePaletteCounts[bank][palette];
-    if (gGameState.field_888_1 == 1 && gSpritePalettes[bank] != 0 && !gSpriteContext.field_0_2) {
+    count = dSpritePaletteCounts[bank][palette];
+    if (gGameState.field_888_1 == 1 && dSpritePalettes[bank] != 0 && !gSpriteContext.field_0_2) {
         paletteTable = off_839EF10[bank];
     } else {
-        paletteTable = gSpritePalettes[bank];
+        paletteTable = dSpritePalettes[bank];
     }
     paletteData = (u8*)paletteTable[palette];
     if (slot == -1) {
@@ -2448,13 +2536,13 @@ u16 sub_8021DD8(int bank, int palette) {
     return freed;
 }
 
-// Returns the gSpriteInfo entry of a sprite (bits 12-15 of id, if set, select the bank).
+// Returns the dSpriteInfo entry of a sprite (bits 12-15 of id, if set, select the bank).
 struct SpriteInfo* sprite_get_info(int bank, int id) {
     if (id & 0xF000) {
         bank = (id >> 12) - 1;
         id &= 0xFFF;
     }
-    return &gSpriteInfo[bank][id];
+    return &dSpriteInfo[bank][id];
 }
 
 // Shows a hidden sprite, adding it back to the end of the sprite list if it isn't in it.

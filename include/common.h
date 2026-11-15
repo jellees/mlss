@@ -114,16 +114,16 @@ struct struc_3000D18 {
     u32 field_C;
 };
 
-// Sprite id of a gSpriteInfo entry: bits 12-15 hold the bank + 1, bits 0-11 the index in the bank
+// Sprite id of a dSpriteInfo entry: bits 12-15 hold the bank + 1, bits 0-11 the index in the bank
 #define SPRITE_ID(bank, index) ((((bank) + 1) << 12) | (index))
-// Palette id of a gSpritePalettes entry, encoded the same way
+// Palette id of a dSpritePalettes entry, encoded the same way
 #define PALETTE_ID(bank, index) ((((bank) + 1) << 12) | (index))
 
-// Entries of gSpriteInfo[][]
+// Entries of dSpriteInfo[][]
 struct SpriteInfo {
-    u32 palette : 9;   // gSpritePalettes/off_839EF10, gSpritePaletteCounts
-    u32 tiles : 9;     // gSpriteTiles
-    u32 animation : 9; // gSpriteAnimations
+    u32 palette : 9;   // dSpritePalettes/off_839EF10, dSpritePaletteCounts
+    u32 tiles : 9;     // dSpriteTiles
+    u32 animation : 9; // dSpriteAnimations
     u32 field_0_27 : 1;
     u32 field_0_28 : 1;
     u32 field_0_29 : 2;
@@ -157,7 +157,7 @@ struct Coldef {
 
 struct Sprite;
 typedef void (*SpriteCallback)(struct Sprite*, int);
-// Sprite routines selected per frame by sprite_draw (dword_3000D58)
+// Sprite routines selected per frame by sprite_draw (gSpriteDrawRoutines)
 typedef struct OamNode* (*SpriteDrawRoutine)(struct OamNode*, struct Sprite*, u8**, int, u8*, s8*, int,
                                              u8*);
 
@@ -652,8 +652,7 @@ extern u16 word_203FFC4[];
 extern void (*gOamNodesSort)(struct OamNode* head, struct OamNode* end);
 extern u16* (*gOamNodesCopy)(struct OamNode* head, u16* dest);
 extern void (*gOamNodesReset)(struct OamNode* head, int count);
-extern SpriteDrawRoutine
-    dword_3000D58[6]; // IWRAM copies of the sprite routines in off_839EE1C (thumb bit set)
+extern SpriteDrawRoutine gSpriteDrawRoutines[6];
 extern u8 byte_3000D70;
 extern struct ORSTData* dword_3000DA0;
 extern struct EeprStruct1* dword_3000FFC;
@@ -716,12 +715,6 @@ extern u8 arm_80008B8[];
 extern u8 arm_80008B8_end[];
 extern u8 arm_80008F0[];
 extern u8 arm_80008F0_end[];
-// Sprite routines copied to IWRAM by sprite_routines_copy: ROM address, size and heap label
-extern SpriteDrawRoutine off_839EE1C[6];
-extern u16 word_839EE34[6];
-extern char* off_839EE40[6];
-extern u8 byte_839EE04[4 * 4 * 2]; // OBJ width and height in pixels, by shape * 8 + size * 2
-extern u8 byte_839EE58[6];         // Record size per animation frame type (sub_801E3EC)
 extern int loc_819832C(int, int);
 extern int loc_8198350(int, int);
 extern u8 loc_81980D8[];
@@ -767,13 +760,6 @@ extern s16 word_83A75C8[];
 extern u8* off_839EC80;
 extern u16 word_839F5A4[]; // Up, Up, Down, Down, Left, Right, Left, Right, B, A
 extern u8 byte_839F5B8[];
-extern struct SpriteInfo* gSpriteInfo[];
-// Per sprite bank, indexed by the fields of SpriteInfo (sprite_create)
-extern u8** gSpriteAnimations[];
-extern u32* gSpriteTiles[];
-extern void** gSpritePalettes[];
-extern void** off_839EF10[];
-extern u8* gSpritePaletteCounts[];
 extern u8 byte_83A05EC[];
 extern u8 byte_83A061C[];
 extern u8 byte_83A0636[];

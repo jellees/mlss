@@ -189,7 +189,7 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
     field_214_23 =
         field_218 == SPRITE_ID(0, 1) || field_218 == SPRITE_ID(0, 2) || field_218 == SPRITE_ID(0, 40);
     field_214_22 = 0;
-    entry = &gSpriteInfo[sprite->bank][sprite->field_16];
+    entry = &dSpriteInfo[sprite->bank][sprite->field_16];
     field_214_18 = entry->field_0_29;
     field_214_20 = entry->field_0_28;
     animation2 = -1;
@@ -269,7 +269,7 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
         field_26C = sub_81152FC(field_334, (sprite->bank + 1) << 12 | sprite->field_16);
         field_214_22 = 0;
     }
-    entry = &gSpriteInfo[sprite->bank][sprite->field_16];
+    entry = &dSpriteInfo[sprite->bank][sprite->field_16];
     field_214_18 = entry->field_0_29;
     field_214_20 = entry->field_0_28;
     value = byte_83A05EC[field_214_18 * 16 + field_214_20 * 8 + direction];

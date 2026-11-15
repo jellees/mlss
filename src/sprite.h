@@ -8,22 +8,12 @@
 extern "C" {
 #endif
 
+extern struct SpriteInfo* dSpriteInfo[11];
+
 void sub_801E150(struct Sprite* sprite, int animation, int arg2, SpriteCallback arg3, int arg4);
 void sub_801E3EC(u8* tileMap, u8* file);
 void sprite_update(struct Sprite* sprite);
 struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg2);
-struct OamNode* sub_801EEBC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth);
-struct OamNode* sub_801F370(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth);
-struct OamNode* sub_801F7D0(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth);
-struct OamNode* sub_801FBAC(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth);
-struct OamNode* sub_801FFA8(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth);
-struct OamNode* sub_802039C(struct OamNode* oam, struct Sprite* sprite, u8** cursor, int count,
-                            u8* tiles, s8* matrices, int matrix, u8* depth);
 u16* oam_nodes_copy(struct OamNode* head, u16* dest);
 void oam_nodes_sort(struct OamNode* head, struct OamNode* end);
 void oam_nodes_reset(struct OamNode* head, int count);
