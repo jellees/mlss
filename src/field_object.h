@@ -149,7 +149,7 @@ class FieldObject {
     u8 field_222;
     u8 field_223;
     struct Coldef* field_224; // Last wall cell hit (method13)
-    u8 pad_228[0x4];
+    u32 field_228;
     u32 field_22C_0 : 10;
     u32 field_22C_10 : 12;
     u32 field_22C_22 : 10;

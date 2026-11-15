@@ -41,6 +41,7 @@ SECTIONS
         src/field_object.o(.text);
         src/field_player_character.o(.text);
         src/field_monster.o(.text);
+        src/field_block.o(.text);
         asm/field_block.o(.text);
         asm/field_sprite_layout.o(.text);
         src/sign.o(.text);
