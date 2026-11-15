@@ -171,7 +171,7 @@ class FieldManager : public Process {
     u8 field_12A;
     s8 field_12B;
     u8 field_12C_0 : 1;
-    u8 field_12C_1 : 1;
+    u8 viewingSignRequested : 1;
     s8 field_12C_2 : 6;
     u8 field_12D_0 : 1;
     u8 field_12D_1 : 1;
@@ -359,7 +359,7 @@ class FieldManager : public Process {
     void sub_80273E4();
     void sub_8027558();
     void sub_80275F4();
-    void sub_8027688();
+    void startViewingSign();
     void sub_802772C();
     void sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMonster* monster, bool arg4);
     void update_field_8023DD4();
@@ -386,7 +386,7 @@ class FieldManager : public Process {
     void sub_8028FBC();
     void sub_8029024(int value);
     void sub_8029030(int arg1, int arg2);
-    void sub_8029060();
+    void requestViewingSign();
     void sub_8029070();
     void sub_8029080();
     void sub_80290CC(int value);

@@ -77,7 +77,7 @@ FieldManager::FieldManager(u8 priority, char* label, int roomId, bool arg4, bool
     fldm->field_2B8_6 = 0;
     fldm->field_12B = -1;
     fldm->field_12C_2 = -2;
-    fldm->field_12C_1 = 0;
+    fldm->viewingSignRequested = false;
     fldm->field_12D_0 = 0;
     fldm->field_12D_4 = 0;
     fldm->field_12D_5 = 0;
@@ -728,7 +728,7 @@ void FieldManager::update() {
 
             inBattle = 0;
             field_12C_0 = 0;
-            field_12C_1 = 0;
+            viewingSignRequested = false;
             field_12D_0 = 0;
             field_12D_4 = 0;
             field_12C_2 = -2;
@@ -800,8 +800,8 @@ void FieldManager::update_field_8023DD4() {
         return;
     }
 
-    if (field_12C_1) {
-        sub_8027688();
+    if (viewingSignRequested) {
+        startViewingSign();
         return;
     }
 
@@ -1000,8 +1000,8 @@ void FieldManager::update_field_8023DD4() {
                     break;
 
                 case 13:
-                    sub_8029060();
-                    sub_8027688();
+                    requestViewingSign();
+                    startViewingSign();
                     field_F9_4 = 1;
                     break;
 
@@ -2227,26 +2227,31 @@ void FieldManager::sub_80275F4() {
 }
 
 // Like sub_8027558, but deletes field_304 and starts a "SIGN" process for the current room.
-void FieldManager::sub_8027688() {
+void FieldManager::startViewingSign() {
     sub_801A6B0();
     field_1FA = gGameState.field_89C;
     sub_80193B4(0, 0x80, 8);
     field_FC_0 = 1;
     sub_80273E4();
+
     if (field_304) {
         delete field_304;
         field_304 = NULL;
     }
+
     runtime_install_interrupt_callback(2, NULL);
+
     state = 2;
     byte_3000C24 = 2;
+
     if (dword_3000C78 == NULL) {
         dword_3000C78 = sub_800063C;
     }
+
     new (0, "SIGN", 0) Sign(8, "SIGN", roomId);
 }
 
-// Like sub_8027688, but ends with sub_812F5A4 instead of the "SIGN" process.
+// Like startViewingSign, but ends with sub_812F5A4 instead of the "SIGN" process.
 void FieldManager::sub_802772C() {
     sub_801A6B0();
     field_1FA = gGameState.field_89C;
@@ -2972,8 +2977,8 @@ void FieldManager::sub_8029030(int arg1, int arg2) {
     field_12D_2 = arg2;
 }
 
-void FieldManager::sub_8029060() {
-    field_12C_1 = 1;
+void FieldManager::requestViewingSign() {
+    viewingSignRequested = true;
 }
 
 void FieldManager::sub_8029070() {

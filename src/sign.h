@@ -5,8 +5,8 @@
 #include "text080575C8.h"
 
 // "SIGN": the map shown when the player reads a sign on the field (created by
-// FieldManager::sub_8027688). The screen fades to black, then into the map, which can be scrolled; B
-// fades back out.
+// FieldManager::startViewingSign). The screen fades to black, then into the map, which can be scrolled;
+// B fades back out.
 #pragma interface
 
 // "SBDR": the renderer of the sign (parentProcess is the Sign). Its update is the same as
