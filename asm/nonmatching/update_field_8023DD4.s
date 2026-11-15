@@ -298,7 +298,7 @@ _0802404A:
 	adds r4, #0xD0
 	ldr r1, [r4, #0x00]
 	mov r0, r10
-	bl sub_802D544
+	bl sub_802D544__12FieldManagerP13struc_3000388
 	ldr r1, [r4, #0x00]
 	mov r0, r10
 	bl sub_802D46C__12FieldManagerP13struc_3000388

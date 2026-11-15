@@ -856,7 +856,7 @@ void FieldManager::update_field_8023DD4() {
                 sub_803C720(this, 3);
             }
             if (!field_209_0 && !field_20B_4) {
-                sub_802D544(this, field_D0);
+                sub_802D544(field_D0);
                 sub_802D46C(field_D0);
             }
             break;
@@ -4800,4 +4800,92 @@ void FieldManager::sub_802D46C(struct struc_3000388* arg) {
         }
     }
     sub_802DDB4(this, leader, 0, (int)arg);
+}
+
+void FieldManager::sub_802D544(struct struc_3000388* arg) {
+    if (!field_2B8_4 && !field_291_0 && !follower->field_2B5_3 && arg != NULL
+        && ((field_FA_10 && follower->field_368->field_2 == 0 && follower->state <= 4)
+            || follower->state <= 1)
+        && sub_8025D24(1)) {
+        if (!brothersTogether) {
+            if ((gGameState.field_3C.field_3C_0 & 8) && follower->field_20C_0
+                && !follower->field_368->field_16_7) {
+                sub_802C588(follower);
+            } else {
+                sub_8029878();
+            }
+        } else {
+            struct FieldStruct4* data = follower->field_368;
+
+            if (data->field_16_7 || data->field_2 == 0) {
+                if ((field_246_2 == 0 || field_246_2 == 2 || field_246_2 == 3 || field_246_2 == 4)
+                    && field_FA_10) {
+                    follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                    follower->sub_8049224();
+                } else {
+                    int sound;
+
+                    follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                    follower->startAirborne(follower->defaultJumpVelocity, follower->defaultGravity,
+                                            (s16)follower->field_23E);
+                    follower->state = FIELD_OBJECT_STATE_RISING;
+                    if (follower->field_54 == 0) {
+                        sound = follower->isMini ? 0x2F : 0x2B;
+                    } else {
+                        sound = 0x2B;
+                    }
+                    play_sfx_80195B4(sound, -1);
+                }
+            } else if ((u16)leader->state <= 1) {
+                switch (data->field_2) {
+                    case 0:
+                        break;
+                    case 1:
+                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        if (field_246_2 == 3) {
+                            follower->startHammer(field_FA_10);
+                            leader->field_350_14 = 1;
+                        } else {
+                            sub_802D92C(this);
+                        }
+                        break;
+                    case 2:
+                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        if (field_246_2 == 3) {
+                            follower->startHandPower();
+                            leader->field_350_14 = 1;
+                        } else {
+                            sub_802D92C(this);
+                        }
+                        break;
+                    case 4:
+                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        if (field_246_2 == 1) {
+                            sub_8031234(this);
+                        } else if (field_246_2 == 2) {
+                            sub_8035B98(this);
+                        } else {
+                            sub_8030484(this);
+                        }
+                        break;
+                    case 3:
+                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        if (field_246_2 == 3) {
+                            sub_8033E30(this);
+                        } else {
+                            sub_8032514(this);
+                        }
+                        break;
+                    case 7:
+                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        sub_8034A5C(this);
+                        break;
+                }
+            }
+        }
+    }
+    sub_802DDB4(this, follower, brothersTogether, brothersTogether ? (int)arg : 0);
+    if (!brothersTogether && sub_8025D24(3)) {
+        sub_8029878();
+    }
 }
