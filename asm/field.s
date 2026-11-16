@@ -1871,8 +1871,8 @@ _0802EDB2:
 	bx r0
 _0802EDBC: .4byte 0x0000FFFF
 _0802EDC0: .4byte 0x0000020D
-	thumb_func_start sub_802EDC4__12FieldManagerP20FieldPlayerCharacteriUcUc
-sub_802EDC4__12FieldManagerP20FieldPlayerCharacteriUcUc:
+	thumb_func_start sub_802EDC4__12FieldManagerP20FieldPlayerCharacterbN22
+sub_802EDC4__12FieldManagerP20FieldPlayerCharacterbN22:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -3465,14 +3465,14 @@ _0802FA82:
 	ldr r1, [r0, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_802B804__12FieldManagerP20FieldPlayerCharacterUc
+	bl sub_802B804__12FieldManagerP20FieldPlayerCharacterb
 	movs r1, #0x81
 	lsls r1, r1, #0x02
 	adds r0, r5, r1
 	ldr r1, [r0, #0x00]
 	adds r0, r5, #0x0
 	movs r2, #0x00
-	bl sub_802B804__12FieldManagerP20FieldPlayerCharacterUc
+	bl sub_802B804__12FieldManagerP20FieldPlayerCharacterb
 	b _0802FAD6
 _0802FABE:
 	movs r1, #0x80
@@ -4741,7 +4741,7 @@ _080307B0:
 	adds r1, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	movs r0, #0x81
 	lsls r0, r0, #0x02
 	adds r5, r7, r0
@@ -4824,7 +4824,7 @@ _08030868:
 	adds r1, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 _08030898:
 	movs r1, #0x81
 	lsls r1, r1, #0x02
@@ -6436,7 +6436,7 @@ _08031D58:
 	adds r1, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	b _080324FC
 _08031D7C:
 	adds r0, r1, #0x0
@@ -6501,7 +6501,7 @@ _08031EF4:
 	adds r1, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	movs r0, #0x81
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
@@ -6523,7 +6523,7 @@ _08031EF4:
 	adds r1, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x04]
 	subs r0, #0x2E
@@ -7443,7 +7443,7 @@ _08032D12:
 	adds r0, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 _08032D56:
 	movs r0, #0x81
 	lsls r0, r0, #0x02
@@ -7621,7 +7621,7 @@ _08032E92:
 	adds r1, #0x28
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 _08032EC0:
 	movs r4, #0x81
 	lsls r4, r4, #0x02
@@ -9552,7 +9552,7 @@ _0803513A:
 	adds r1, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	adds r7, #0x04
 	adds r0, r6, r7
 	ldr r0, [r0, #0x00]
@@ -9659,7 +9659,7 @@ _08035582:
 	mov r1, r9
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x04]
 	subs r0, #0x51
@@ -10358,7 +10358,7 @@ _08035E26:
 	adds r1, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	movs r4, #0x81
 	lsls r4, r4, #0x02
 	add r4, r9
@@ -10380,7 +10380,7 @@ _08035E26:
 	adds r1, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	ldr r0, [r4, #0x00]
 	ldrh r0, [r0, #0x04]
 	subs r0, #0x65
@@ -11002,7 +11002,7 @@ _0803704A:
 	adds r0, r2, #0x0
 	movs r2, #0x00
 	movs r3, #0x01
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 _08037084:
 	adds r0, r7, #0x0
 	bl sub_802E2F4__12FieldManager
@@ -11038,7 +11038,7 @@ _08037094:
 	adds r1, #0x28
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	ldr r0, [r4, #0x00]
 	bl sub_804FB3C__20FieldPlayerCharacter
 	adds r1, r0, #0x0
@@ -11105,7 +11105,7 @@ _08037150:
 	adds r0, r2, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 _08037168:
 	movs r5, #0x80
 	lsls r5, r5, #0x02
@@ -11236,7 +11236,7 @@ _0803726E:
 	adds r0, r2, #0x0
 	movs r2, #0x00
 	movs r3, #0x01
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	b _0803730C
 _080372A4: .4byte 0x00000353
 _080372A8:
@@ -11264,7 +11264,7 @@ _080372A8:
 	adds r1, #0x28
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	adds r0, r7, #0x0
 	bl sub_802A4E8__12FieldManager
 	subs r5, #0x04
@@ -11917,7 +11917,7 @@ _08038446:
 	strb r0, [r3, #0x00]
 	adds r0, r7, #0x0
 	movs r3, #0x01
-	bl sub_802EDC4__12FieldManagerP20FieldPlayerCharacteriUcUc
+	bl sub_802EDC4__12FieldManagerP20FieldPlayerCharacterbN22
 	lsls r0, r0, #0x18
 	lsrs r3, r0, #0x18
 	cmp r3, #0x00
@@ -11938,7 +11938,7 @@ _08038472:
 	strb r3, [r0, #0x00]
 	adds r0, r7, #0x0
 	movs r3, #0x01
-	bl sub_802EDC4__12FieldManagerP20FieldPlayerCharacteriUcUc
+	bl sub_802EDC4__12FieldManagerP20FieldPlayerCharacterbN22
 _0803847E:
 	movs r1, #0x81
 	lsls r1, r1, #0x02
@@ -12049,7 +12049,7 @@ _0803854E:
 	mov r1, r10
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	movs r2, #0x81
 	lsls r2, r2, #0x02
 	adds r0, r7, r2
@@ -12057,7 +12057,7 @@ _0803854E:
 	mov r1, r10
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	ldr r0, [r4, #0x00]
 	bl sub_804FB3C__20FieldPlayerCharacter
 	adds r1, r0, #0x0
@@ -16568,7 +16568,7 @@ _0803DAC8:
 	adds r1, r5, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	movs r2, #0x81
 	lsls r2, r2, #0x02
 	adds r4, r7, r2
@@ -16578,7 +16578,7 @@ _0803DAC8:
 	adds r1, r5, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcUc
+	bl sub_804FB64__20FieldPlayerCharacterPP11FieldObjectUcb
 	add sp, #0x004
 	pop {r3, r4, r5}
 	mov r8, r3

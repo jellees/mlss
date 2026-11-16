@@ -420,7 +420,7 @@ void FieldPlayerCharacter::sub_8049000(u16 animation) {
     }
 }
 
-void FieldPlayerCharacter::sub_80490CC(u8 arg) {
+void FieldPlayerCharacter::sub_80490CC(bool arg) {
     if (field_20C_0 && !field_214_21) {
         if (airFrames >= 0) {
             if (arg != 0 && !field_2B5_0 && !field_2B5_3) {
@@ -3777,7 +3777,7 @@ int FieldPlayerCharacter::sub_804FB3C() {
     return -1;
 }
 
-void FieldPlayerCharacter::sub_804FB64(FieldObject** objects, u8 arg1, u8 arg2) {
+void FieldPlayerCharacter::sub_804FB64(FieldObject** objects, u8 arg1, bool arg2) {
     FieldObject* below;
 
     sub_804B360(arg1, arg2);

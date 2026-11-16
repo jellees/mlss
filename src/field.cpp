@@ -3672,25 +3672,18 @@ void FieldManager::sub_802A608() {
     }
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_802A740__12FieldManager.s\"");
-#else
-static inline void setField_16_0(FieldManager* manager, u8 value) {
-    manager->leader->field_368->field_16_0 = value;
-    manager->follower->field_368->field_16_0 = value;
-}
-
 void FieldManager::sub_802A740() {
     u8 field_2B8_4Copy;
     int start;
 
     if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x2A2)) {
-        setField_16_0(this, 0x7F);
+        leader->field_368->field_16_0 |= 0x7F;
+        follower->field_368->field_16_0 |= 0x7F;
     } else {
-        setField_16_0(this, 0);
+        leader->field_368->field_16_0 = 0;
+        follower->field_368->field_16_0 = 0;
     }
-    field_2B8_4Copy = field_2B8_4;
+    field_2B8_4Copy = field_2B8_4 != 0;
 
     if (field_12A != 0) {
         if (field_2B8_4) {
@@ -3705,16 +3698,14 @@ void FieldManager::sub_802A740() {
                 follower->height = leader->height;
             }
         }
-        {
-            int i;
-            for (i = 2; i < field_10B; i++) {
-                objects[i]->sub_80418E8(objects);
-            }
+        for (int i = 2; i < field_10B; i++) {
+            objects[i]->sub_80418E8(objects);
         }
         sub_802563C();
         sub_8025ACC();
-        objects[0]->sub_80418E8(objects);
-        objects[1]->sub_80418E8(objects);
+        for (int i = 0; i < 2; i++) {
+            objects[i]->sub_80418E8(objects);
+        }
     }
 
     if (field_FA_10 && !leader->field_2B5_0 && !leader->field_2B5_3 && !follower->field_2B5_0
@@ -3822,16 +3813,8 @@ void FieldManager::sub_802A740() {
         }
 
         if (brothersTogether && !follower->field_214_7 && !follower->field_214_8) {
-            struct Sprite* sprite = follower->sprite;
-            u8 frame;
-
-            if (follower->state == 1) {
-                frame = (s16)follower->field_23E / 32;
-            } else {
-                frame = field_FA_11;
-            }
-            sprite->field_20 = frame;
-            follower->field_239 = frame;
+            follower->field_239 = follower->sprite->field_20 =
+                follower->state == 1 ? (s16)follower->field_23E / 32 : field_FA_11;
         }
 
         switch (follower->state) {
@@ -3903,7 +3886,7 @@ void FieldManager::sub_802A740() {
             if (start > 0) {
                 follower->method12(&objects[start], field_10B - start, 0);
             }
-            if (follower->field_353_3 && follower->airFrames == -1) {
+            if (follower->field_2B5_3 && follower->airFrames == -1) {
                 follower->sub_8046A10();
                 follower->field_23E = leader->field_23E;
             }
@@ -3964,11 +3947,9 @@ void FieldManager::sub_802A740() {
             }
         }
 
-        if (!field_209_0 && sub_802EDC4(leader, 1, field_FA_10 ^ 1, 0)) {
-            leader->velocityY = 0;
-            leader->velocityX = 0;
-            follower->velocityY = 0;
-            follower->velocityX = 0;
+        if (!field_209_0 && sub_802EDC4(leader, 1, !field_FA_10, 0)) {
+            leader->velocityX = leader->velocityY = 0;
+            follower->velocityX = follower->velocityY = 0;
         }
     } else {
         sub_8025ACC();
@@ -3988,7 +3969,6 @@ void FieldManager::sub_802A740() {
         sub_802DF80(this, 0);
     }
 }
-#endif
 
 void FieldManager::sub_802B654(FieldPlayerCharacter* player) {
     int start;
@@ -4026,7 +4006,7 @@ void FieldManager::sub_802B654(FieldPlayerCharacter* player) {
     player->sub_804FB64(objects, 0, 0);
 }
 
-void FieldManager::sub_802B804(FieldPlayerCharacter* player, u8 arg2) {
+void FieldManager::sub_802B804(FieldPlayerCharacter* player, bool arg2) {
     FieldObject** others;
     int count;
     int start;

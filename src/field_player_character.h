@@ -140,7 +140,7 @@ class FieldPlayerCharacter : public FieldObject {
     FieldPlayerCharacter(int roomId, int index);                  // 0x08048064
     void sub_8048174(int arg);                                    // 0x08048174
     void sub_8049000(u16 animation);                              // 0x08049000
-    void sub_80490CC(u8 arg);                                     // 0x080490CC
+    void sub_80490CC(bool arg);                                   // 0x080490CC
     void sub_8049224();                                           // 0x08049224
     void sub_80492DC();                                           // 0x080492DC
     void startHammer(bool arg);                                   // 0x08049370
@@ -164,7 +164,7 @@ class FieldPlayerCharacter : public FieldObject {
     bool sub_804DBD0(int mode);                                   // 0x0804DBD0
     void sub_804DDF4(FieldObject** objects, int count);           // 0x0804DDF4
     int sub_804FB3C();                                            // 0x0804FB3C
-    void sub_804FB64(FieldObject** objects, u8 arg1, u8 arg2);    // 0x0804FB64
+    void sub_804FB64(FieldObject** objects, u8 arg1, bool arg2);  // 0x0804FB64
     void sub_804FC30();                                           // 0x0804FC30
     void sub_804FC90();                                           // 0x0804FC90
     void sub_804FD3C();                                           // 0x0804FD3C
