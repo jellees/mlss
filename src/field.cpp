@@ -1808,15 +1808,7 @@ void FieldManager::sub_80265EC(u16 arg1) {
     }
 }
 
-// Same instructions, but the original passes i * 4 and &field_FB into the code after the switch from
-// every case (and shares the field_X++ increments), where this recomputes them after one shared block.
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/make_field_objects_80267C0__12FieldManageri.s\"");
-#else
 void FieldManager::make_field_objects_80267C0(int roomId) {
-    FieldObject* object;
-    int i;
-
     get_field_object_count(roomId, &field_10B);
     field_10E = 0;
     field_10F = 0;
@@ -1832,7 +1824,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
     field_119 = 0;
     field_110 = 0;
     field_111 = 0;
-    for (i = 0; i < field_10B; i++) {
+    for (int i = 0; i < field_10B; i++) {
         switch (get_field_object_type(roomId, i)) {
             case 0: {
                 FieldPlayerCharacter* player = new (1, "FPC", 1) FieldPlayerCharacter(roomId, i);
@@ -1846,23 +1838,27 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 objects[i] = player;
                 break;
             }
-            case 1:
-                object = new (1, "FCHR", 1) FieldObject(roomId, i);
+            case 1: {
+                FieldObject* object = new (1, "FCHR", 1) FieldObject(roomId, i);
+
                 objects[i] = object;
                 if (field_10E == 0) {
                     field_10E = i;
                 }
                 field_10F++;
                 break;
-            case 2:
+            }
+            case 2: {
                 // Seems to be various bigger objects. Like boo statues, the magic tree etc.
-                object = new (1, "FBRD", 1) FieldObject(roomId, i);
+                FieldObject* object = new (1, "FBRD", 1) FieldObject(roomId, i);
+
                 objects[i] = object;
                 if (field_110 == 0) {
                     field_110 = i;
                 }
                 field_111++;
                 break;
+            }
             case 3: {
                 FieldMonster* object = new (1, "FMON", 1) FieldMonster(roomId, i);
 
@@ -1876,15 +1872,17 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_113++;
                 break;
             }
-            case 4:
+            case 4: {
                 // Field barrel, the barrel that luigi can use.
-                object = new (1, "FBRL", 1) FieldObject(roomId, i);
+                FieldObject* object = new (1, "FBRL", 1) FieldObject(roomId, i);
+
                 objects[i] = object;
                 if (field_114 == 0) {
                     field_114 = i;
                 }
                 field_115++;
                 break;
+            }
             case 5: {
                 // Field rock, the rocks that you can break in game. They are gone forever once broken.
                 FieldObject* object = new (1, "FRCK", 1) FieldObject(roomId, i);
@@ -1901,22 +1899,26 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_117++;
                 break;
             }
-            case 6:
-                object = new (1, "FSPL", 1) FieldSpriteLayout(roomId, i);
+            case 6: {
+                FieldSpriteLayout* object = new (1, "FSPL", 1) FieldSpriteLayout(roomId, i);
+
                 objects[i] = object;
                 if (field_118 == 0) {
                     field_118 = i;
                 }
                 field_119++;
                 break;
-            case 7:
-                object = new (1, "FBLK", 1) FieldBlock(roomId, i);
+            }
+            case 7: {
+                FieldBlock* object = new (1, "FBLK", 1) FieldBlock(roomId, i);
+
                 objects[i] = object;
                 if (field_11A == 0) {
                     field_11A = i;
                 }
                 field_11B++;
                 break;
+            }
             default:
                 objects[i] = 0;
                 break;
@@ -1926,19 +1928,12 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
         objects[i]->field_54 = i;
     }
     ((FieldPlayerCharacter*)objects[luigiLeads])->field_352_7 = 1;
-    if (field_10E != 0) {
-        field_11C = field_10E;
-    } else if (field_110 != 0) {
-        field_11C = field_110;
-    } else {
-        field_11C = field_112;
-    }
+    field_11C = field_10E != 0 ? field_10E : field_110 != 0 ? field_110 : field_112;
     field_11D = field_10F + field_111 + field_113;
-    for (i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         shotBullets[i] = new (1, "FPSB", 1) FieldPlayerShotBullet(i);
     }
 }
-#endif
 
 // Creates the "SBLK" objects and fills field_134 from the entries at field_DC.
 void FieldManager::sub_8026C78() {
