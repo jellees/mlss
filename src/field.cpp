@@ -1940,10 +1940,6 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
 }
 #endif
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8026C78__12FieldManager.s\"");
-#else
 // Creates the "SBLK" objects and fills field_134 from the entries at field_DC.
 void FieldManager::sub_8026C78() {
     u8* header = field_DC;
@@ -1982,9 +1978,10 @@ void FieldManager::sub_8026C78() {
                     sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, (u16)(index + 0x1360));
                 field_134[field_1F4].field_1 = entry[1];
                 field_134[field_1F4].field_2 = entry[2];
-                offset = (u8)(entry[5] >> 1);
                 field_134[field_1F4].field_3 =
-                    (entry[3] & 0x7F) + ((entry[5] & 0x20) ? (u32)(offset | ~0x1F) >> 3 : offset >> 3);
+                    (offset = entry[5] >> 1,
+                     (entry[3] & 0x7F)
+                         + ((entry[5] & 0x20) ? (u32)(offset | ~0x1F) >> 3 : offset >> 3));
                 field_134[field_1F4].field_4 = index;
                 field_134[field_1F4].field_8 = entry;
                 field_1F4++;
@@ -1992,7 +1989,6 @@ void FieldManager::sub_8026C78() {
         }
     }
 }
-#endif
 
 void FieldManager::sub_8026E94() {
     struct struc_3000D44* process;
