@@ -56,6 +56,7 @@ SECTIONS
         asm/text080575C8.o(.text);
         asm/text0805CCE0.o(.text);
         asm/shared_script_commands.o(.text);
+        src/field_event_script.o(.text);
         asm/field_event_script.o(.text);
         asm/battle_event_script.o(.text);
         asm/menu_event_script.o(.text);

@@ -30,6 +30,20 @@ enum FieldObjectFlickerMode {
     FIELD_OBJECT_FLICKER_OUT,
 };
 
+struct FieldManager;
+
+// Script state of an object (FieldObject::script). The field event script code
+// (asm/field_event_script.s) runs a script per object (sub_80EB248) with script_read_next_line /
+// fld_script_execute_next_command.
+struct ScriptContext {
+    u8 pad_0[0x18];
+    u8 field_18[0x88]; // Passed to sub_80E9C4C
+    u16 field_A0;      // Flags
+    u8 pad_A2[0x9E];
+    void (*field_140)(FieldManager* fieldManager, class FieldObject* object);
+    u8 pad_144[0x50];
+};
+
 class FieldObject {
   public:
     s8 field_0;
@@ -81,7 +95,8 @@ class FieldObject {
     s16 field_52;
     u8 field_54;
     u8 initialDirection; // Starting direction, used by method2
-    u8 pad_56[0x196];
+    u8 pad_56[0x2];
+    struct ScriptContext script;
     u8 field_1EC[0x20];
     u32 field_20C_0 : 1;
     u32 field_20C_1 : 3;

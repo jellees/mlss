@@ -11,27 +11,18 @@
 
 FieldManager::FieldManager(u8 priority, char* label, int roomId, bool arg4, bool arg5)
     : Process(priority, label) {
-    Process* process;
-    struct EventScriptProcess** script;
-
     field_F8_1 = (roomId == -1);
 
-    script = &bevs;
-    *script = bevs_process_init_80F048C(operator new(sizeof(struct EventScriptProcess), 0, "BEVS", 0),
-                                        1, 7, "BEVS");
-    process = (*script)->process;
-    process->parentProcess = this;
-    process->disable();
-    script = &evts;
-    *script = evts_process_init_80EF3FC(operator new(sizeof(struct EventScriptProcess), 0, "EVTS", 0),
-                                        1, 6, "EVTS");
-    process = (*script)->process;
-    process->parentProcess = this;
-    process->disable();
+    bevs = new (0, "BEVS", 0) BEVS(7, "BEVS");
+    bevs->parentProcess = this;
+    bevs->disable();
+    evts = new (0, "EVTS", 0) EVTS(6, "EVTS");
+    evts->parentProcess = this;
+    evts->disable();
 
     sub_819A138(gGameState.field_8D0, gGameState.field_1C);
     dword_3000D7C = this;
-    dword_3000D78 = *script;
+    dword_3000D78 = evts;
     BUFFER_REG_DISPCNT = 0;
     field_D0 = &gGameState.field_3C;
     field_1C = new (1, "FMEX", 1) FieldStruct2;
@@ -163,12 +154,8 @@ FieldManager::~FieldManager() {
     operator delete(field_20);
     operator delete(field_23C);
     operator delete(field_24);
-    if (evts) {
-        sub_80F034C(evts, 3);
-    }
-    if (bevs) {
-        sub_80F0420(bevs, 3);
-    }
+    delete evts;
+    delete bevs;
     sub_80F0184(evts);
     sprite_context_release();
     runtime_install_interrupt_callback(2, NULL);
@@ -712,8 +699,8 @@ void FieldManager::update() {
                 }
                 state = 14;
             } else {
-                evts->process->enable();
-                bevs->process->enable();
+                evts->enable();
+                bevs->enable();
                 state = 15;
             }
 
@@ -732,8 +719,8 @@ void FieldManager::update() {
 
         case 14:
             sub_8027030(1, 8, 0, 0xFFFF, 0xFFFF);
-            evts->process->enable();
-            bevs->process->enable();
+            evts->enable();
+            bevs->enable();
             if (field_2A9_7) {
                 int floor;
                 int x;
@@ -2162,8 +2149,8 @@ void FieldManager::sub_80273E4() {
         sub_81166AC(field_314, 3);
         field_314 = NULL;
     }
-    evts->process->disable();
-    bevs->process->disable();
+    evts->disable();
+    bevs->disable();
     disable();
     for (i = 0; i < field_10B; i++) {
         objects[i]->method3();
@@ -2466,8 +2453,8 @@ void FieldManager::sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y,
         field_304 = NULL;
     }
     runtime_install_interrupt_callback(2, NULL);
-    evts->process->disable();
-    bevs->process->disable();
+    evts->disable();
+    bevs->disable();
 
     field_2B8_4 = arg2;
     field_2B8_1 = direction;

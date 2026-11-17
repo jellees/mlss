@@ -9,12 +9,7 @@
 #include "field_monster.h"
 #include "field_sprite_layout.h"
 #include "field_block.h"
-
-// Handle returned by bevs_process_init_80F048C and evts_process_init_80EF3FC.
-struct EventScriptProcess {
-    struct Process* process;
-    u8 data[0x20];
-};
+#include "field_event_script.h"
 
 #pragma interface
 
@@ -331,8 +326,8 @@ class FieldManager : public Process {
     FieldProcess803EA00* field_310;
     PANM* field_314;
     Process* field_318; // "WIPE"
-    struct EventScriptProcess* evts;
-    struct EventScriptProcess* bevs;
+    EVTS* evts;
+    BEVS* bevs;
 
     FieldManager(u8 priority, char* label, int roomId, bool arg4, bool arg5);
     ~FieldManager();
