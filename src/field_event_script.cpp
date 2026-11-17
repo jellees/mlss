@@ -105,7 +105,7 @@ void FieldEventScript::sub_80EB490(FieldObject* object, ScriptContext* script) {
 // Starts the script arg in the object's script context (type 4) or in one of the four script slots of
 // dword_3000FD0 (types 0-3), but only if that context isn't running (field_A0 bit 0). Any other
 // type picks the first free one in the order object, slot 1, slot 2, slot 3, slot 0.
-void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, void* arg) {
+void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
     ScriptSlot* slot;
 
     switch (type) {
@@ -281,7 +281,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 3:
             return script_cmd_wait_frames(&field_1C, script, command);
         case 4:
-            return sub_80EC970(this, object, script, command, dword_3000FD0->field_548);
+            return sub_80EC970(object, script, command, dword_3000FD0->field_548);
         case 5:
             return sub_80F1CF8(this, script, command);
         case 6:
@@ -675,4 +675,69 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
     }
 
     return TRUE;
+}
+
+// Called by sub_80EC970 before it starts a new script on target: calls a FieldObject method for each
+// of flags 2, 0x40 and 0x20 of the target's script.
+inline void FieldEventScript::sub_80EC970_prepare(FieldObject* target, ScriptContext* targetScript) {
+    if (targetScript->field_A0 & 2) {
+        target->sub_8046980();
+    }
+    if (targetScript->field_A0 & 0x40) {
+        target->sub_8046A10();
+    }
+    if (targetScript->field_A0 & 0x20) {
+        target->sub_80473DC();
+    }
+}
+
+// Script command 4: starts the script at command[2] on the object command[1]. command[0] bit 0 makes
+// this script wait for it (flag 4); modes 2-3 and 6-7 don't pass this script's position, and modes
+// 4-7 use sub_80EA584 instead if the target's script is already running. Returns FALSE while waiting.
+s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32* command, u8 index) {
+    FieldObject* target = *(((FieldManager*)parentProcess)->objects + command[1]);
+    ScriptContext* targetScript = &target->script;
+    int flags = 1;
+
+    if (object != NULL) {
+        index = object->field_54 + 4;
+    }
+    if (command[0] & flags) {
+        script->field_A0 |= 4;
+        flags = 9;
+    }
+
+    switch (command[0]) {
+        case 0:
+        case 1:
+            sub_80EC970_prepare(target, targetScript);
+            sub_80EA5C8(&field_1C, targetScript, script->field_0, command[2], flags, index);
+            script->field_0 = command[2];
+            break;
+        case 2:
+        case 3:
+            sub_80EC970_prepare(target, targetScript);
+            sub_80EA5C8(&field_1C, targetScript, command[2], 0, flags, index);
+            break;
+        case 4:
+        case 5:
+            if (!(targetScript->field_A0 & 1)) {
+                sub_80EC970_prepare(target, targetScript);
+                sub_80EA5C8(&field_1C, targetScript, script->field_0, command[2], flags, index);
+            } else {
+                sub_80EA584(&field_1C, targetScript, script->field_0, command[2], flags, index);
+            }
+            script->field_0 = command[2];
+            break;
+        case 6:
+        case 7:
+            if (!(targetScript->field_A0 & 1)) {
+                sub_80EC970_prepare(target, targetScript);
+                sub_80EA5C8(&field_1C, targetScript, command[2], 0, flags, index);
+            } else {
+                sub_80EA584(&field_1C, targetScript, command[2], 0, flags, index);
+            }
+            break;
+    }
+    return !(script->field_A0 & 4);
 }

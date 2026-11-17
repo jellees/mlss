@@ -463,7 +463,8 @@ void sub_80FC198(void);
 void sub_812335C(void);
 void sub_8018A4C(u32);
 void sub_80E9C4C(void*, void*, void*, int, int, int);
-void sub_80EA5C8(void*, void*, void*, int, int, int);
+void sub_80EA5C8(void*, void*, int, int, int, int);
+void sub_80EA584(void*, void*, int, int, int, int);
 void script_read_next_line(struct ScriptContext*, s32*, void*, void*, void*, int);
 // Command handlers of FieldEventScript::executeNextCommand
 s8 script_cmd_80F17C4(struct FieldEventScript*, struct ScriptContext*, s32*);
@@ -629,7 +630,6 @@ s8 sub_80F1BA4(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80F1C0C(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80F1C34(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80F1CF8(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EC970(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*, u8);
 s8 sub_80F1C7C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*, u8, u8);
 s8 sub_80EAB98(void*, struct ScriptContext*, s32*, void*, void*, int);
 void sub_80E71D0(void*, u8, s16, s16, s16);
