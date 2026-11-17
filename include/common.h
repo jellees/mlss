@@ -258,11 +258,24 @@ struct struc_3000FF4 {
     u8 pad31[0xB];
 };
 
+// A 0xA8-byte script slot (the start of ScriptContext has the same layout).
+struct ScriptSlot {
+    u8 pad_0[0xA0];
+    u16 field_A0; // Flags
+    u8 pad_A2[0x6];
+};
+
 struct struc_3000FD0 {
-    u8 pad_0[0x528];
+    struct ScriptSlot scripts[4];
+    u8 pad_2A0[0x288];
     u32 field_528;
     u8 pad_52C[0x4];
     u32 field_530;
+    u8 pad_534[0x26];
+    u16 field_55A_0 : 1;
+    u16 field_55A_1 : 1;
+    u16 field_55A_2 : 4;
+    u16 field_55A_6 : 2;
 };
 
 struct struc_3000D40 {
@@ -431,6 +444,7 @@ void sub_80FC198(void);
 void sub_812335C(void);
 void sub_8018A4C(u32);
 void sub_80E9C4C(void*, void*, void*, int, int, int);
+void sub_80EA5C8(void*, void*, void*, int, int, int);
 void script_read_next_line(struct ScriptContext*, u8*, void*, void*, void*, int);
 u8 sub_80EB838(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*);
 u8 fld_script_execute_next_command(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, u8*);

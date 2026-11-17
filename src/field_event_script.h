@@ -23,6 +23,7 @@ class FieldEventScript : public Process {
     }
     void sub_80EB248();
     void sub_80EB490(FieldObject* object, ScriptContext* script);
+    void sub_80EB524(FieldObject* object, u8 type, void* arg);
     bool sub_80F1E44(FieldObject* object, ScriptContext* script); // inline, in the .cpp
 };
 

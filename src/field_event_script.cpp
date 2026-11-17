@@ -101,3 +101,92 @@ void FieldEventScript::sub_80EB490(FieldObject* object, ScriptContext* script) {
         object->sprite->animationEndAction = ANIMATION_END_LOOP;
     }
 }
+
+// Starts the script arg in the object's script context (type 4) or in one of the four script slots of
+// dword_3000FD0 (types 0-3), but only if that context isn't running (field_A0 bit 0). Any other
+// type picks the first free one in the order object, slot 1, slot 2, slot 3, slot 0.
+void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, void* arg) {
+    ScriptSlot* slot;
+
+    switch (type) {
+        case 4:
+            if (object != NULL && !(object->script.field_A0 & 1)) {
+                sub_80EA5C8(&field_1C, &object->script, arg, 0, 1, 0xFF);
+            }
+            break;
+        case 2:
+            slot = &dword_3000FD0->scripts[1];
+            if (!(slot->field_A0 & 1)) {
+                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                FieldManager* fieldManager = (FieldManager*)parentProcess;
+                if (fieldManager->objects[0]->field_20C_8) {
+                    dword_3000FD0->field_55A_6 &= ~1;
+                    fieldManager->objects[0]->field_20C_8 = 0;
+                }
+                if (fieldManager->objects[1]->field_20C_8) {
+                    dword_3000FD0->field_55A_6 &= ~2;
+                    fieldManager->objects[1]->field_20C_8 = 0;
+                }
+                if (!dword_3000FD0->field_55A_1) {
+                    ((FieldManager*)parentProcess)->sub_8028D6C(0x3FF);
+                }
+                break;
+            }
+            // fallthrough
+        case 3:
+            slot = &dword_3000FD0->scripts[2];
+            if (!(slot->field_A0 & 1) && dword_3000FD0->field_55A_0) {
+                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+            }
+            break;
+        case 0:
+            slot = &dword_3000FD0->scripts[0];
+            if (!(slot->field_A0 & 1)) {
+                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+            }
+            break;
+        case 1:
+            slot = &dword_3000FD0->scripts[3];
+            if (!(slot->field_A0 & 1)) {
+                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+            }
+            break;
+        default:
+            if (object != NULL && !(object->script.field_A0 & 1)) {
+                sub_80EA5C8(&field_1C, &object->script, arg, 0, 1, 0xFF);
+                break;
+            }
+            slot = &dword_3000FD0->scripts[1];
+            if (!(slot->field_A0 & 1)) {
+                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                FieldManager* fieldManager = (FieldManager*)parentProcess;
+                if (fieldManager->objects[0]->field_20C_8) {
+                    dword_3000FD0->field_55A_6 &= ~1;
+                    fieldManager->objects[0]->field_20C_8 = 0;
+                }
+                if (fieldManager->objects[1]->field_20C_8) {
+                    dword_3000FD0->field_55A_6 &= ~2;
+                    fieldManager->objects[1]->field_20C_8 = 0;
+                }
+                if (!dword_3000FD0->field_55A_1) {
+                    ((FieldManager*)parentProcess)->sub_8028D6C(0x3FF);
+                }
+                break;
+            }
+            slot = &dword_3000FD0->scripts[2];
+            if (!(slot->field_A0 & 1) && dword_3000FD0->field_55A_0) {
+                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                break;
+            }
+            slot = &dword_3000FD0->scripts[3];
+            if (!(slot->field_A0 & 1)) {
+                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                break;
+            }
+            slot = &dword_3000FD0->scripts[0];
+            if (!(slot->field_A0 & 1)) {
+                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+            }
+            break;
+    }
+}
