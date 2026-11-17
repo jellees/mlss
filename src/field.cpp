@@ -2295,7 +2295,7 @@ void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMons
 }
 #endif
 
-void FieldManager::sub_8027A04(u16 arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6,
+void FieldManager::sub_8027A04(int arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6,
                                int arg7, int arg8, int arg9, int arg10) {
     int value = arg3;
 

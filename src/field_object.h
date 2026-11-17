@@ -33,8 +33,8 @@ enum FieldObjectFlickerMode {
 struct FieldManager;
 
 // Script state of an object (FieldObject::script). The field event script code
-// (asm/field_event_script.s) runs a script per object (sub_80EB248) with script_read_next_line /
-// fld_script_execute_next_command.
+// (src/field_event_script.cpp) runs a script per object (sub_80EB248) with script_read_next_line /
+// FieldEventScript::executeNextCommand.
 struct ScriptContext : ScriptSlot {
     u8 pad_A8[0x98];
     void (*field_140)(FieldManager* fieldManager, class FieldObject* object);
