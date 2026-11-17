@@ -332,7 +332,7 @@ void SaveMenu::update() {
                     this->state = 18;
                     break;
                 }
-                if (this->arrows[0]->field_23 == 9 && this->field_B1 == 0) {
+                if (this->arrows[0]->frame == 9 && this->field_B1 == 0) {
                     play_sfx_80195B4(0xA2, -1);
                     this->field_B1 = 1;
                     if (this->field_B0 & 1) {
@@ -1157,7 +1157,7 @@ void SaveMenu::sub_812A42C() {
             this->field_40->paused = false;
             break;
         case 6:
-            if (this->field_40->field_2C)
+            if (this->field_40->animationTicks)
                 ;
             if (this->field_B0 & 2) {
                 if (this->field_B6 + 0x20 < this->field_40->xPosition) {

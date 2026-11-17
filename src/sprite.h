@@ -71,24 +71,44 @@ struct Sprite {
     u8 field_1F_2 : 2;
     u8 field_1F_4 : 2;
     u8 field_1F_6 : 2;
-    s8 field_20;
+
+    /**
+     * How many ticks are advanced per update.
+     */
+    s8 speed;
+
     u8 field_21; // Animation index (sprite_set_animation)
     u8 field_22;
-    u8 field_23;
+    u8 frame; // Current frame of the animation
     u8 field_24;
     u8 field_25; // Frame count (FieldPlayerShotBullet::sub_804DFE8)
     u8 field_26;
     u8 field_27;
     u16 field_28_0 : 9;
+
+    /**
+     * If true, the callback provided with sprite_set_animation gets called every update as opposed to
+     * getting called when the animation has completed.
+     */
     u16 callbackEveryFrame : 1;
+
     u16 field_28_10 : 1;
     u16 field_28_11 : 1;
     u16 field_28_12 : 1;
     u16 field_28_13 : 1;
     u16 active : 1;
     u16 field_28_15 : 1;
-    s16 field_2A;
-    s16 field_2C;
+
+    /**
+     * How many ticks until the next frame.
+     */
+    s16 frameTicksLeft;
+
+    /**
+     * Ticks since the animation has started this pass.
+     */
+    s16 animationTicks;
+
     u16 field_2E;
     u16 field_30;
     u8 pad32[0x2];
@@ -148,7 +168,7 @@ extern OamNodesSortRoutine gOamNodesSort;
 extern OamNodesCopyRoutine gOamNodesCopy;
 
 void sprite_set_animation(struct Sprite* sprite, int animation, int frame = -1,
-                           SpriteCallback onUpdateCallback = NULL, int callbackArgument = 0);
+                          SpriteCallback onUpdateCallback = NULL, int callbackArgument = 0);
 void sub_801E3EC(u8* tileMap, u8* file);
 void sprite_update(struct Sprite* sprite);
 struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg2);

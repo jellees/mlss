@@ -142,8 +142,8 @@ void FieldPlayerCharacter::method2(u16* arg1, u16* arg2, void* arg3) {
         field_36C->animationEndAction = field_378_6;
         field_36C->animationComplete = field_379_0;
         field_36C->paused = field_379_1;
-        field_36C->field_2A = field_37E;
-        field_36C->field_2C = field_380;
+        field_36C->frameTicksLeft = field_37E;
+        field_36C->animationTicks = field_380;
         field_36C->xScale = field_382;
         field_36C->yScale = field_384;
         field_378_0 = 0;
@@ -162,9 +162,9 @@ void FieldPlayerCharacter::method3() {
         field_379_0 = field_36C->animationComplete;
         field_379_1 = field_36C->paused;
         field_37B = field_36C->field_21;
-        field_37C = field_36C->field_23;
-        field_37E = field_36C->field_2A;
-        field_380 = field_36C->field_2C;
+        field_37C = field_36C->frame;
+        field_37E = field_36C->frameTicksLeft;
+        field_380 = field_36C->animationTicks;
         field_382 = field_36C->xScale;
         field_384 = field_36C->yScale;
         field_378_0 = 1;
@@ -2512,13 +2512,13 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
     int bottom;
     int bottom2;
 
-    if (mode != 1 && !(isMini && sprite->field_23 > 2 && sprite->field_23 <= 4)
-        && !(sprite->field_23 == 3 || sprite->field_23 == 4)) {
+    if (mode != 1 && !(isMini && sprite->frame > 2 && sprite->frame <= 4)
+        && !(sprite->frame == 3 || sprite->frame == 4)) {
         return FALSE;
     }
     if (mode == 0) {
         if (isMini) {
-            switch (sprite->field_23) {
+            switch (sprite->frame) {
                 case 3:
                     high = 0x1800;
                     low = 0x100;
@@ -2529,7 +2529,7 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
                     break;
             }
         } else {
-            switch (sprite->field_23) {
+            switch (sprite->frame) {
                 case 3:
                     high = 0x2800;
                     low = 0x1000;
@@ -2629,14 +2629,14 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
     int ceiling;
     int objectTop;
 
-    if (mode != 1 && !(isMini && sprite->field_23 > 2 && sprite->field_23 <= 4)
-        && !(sprite->field_23 == 3 || sprite->field_23 == 4)) {
+    if (mode != 1 && !(isMini && sprite->frame > 2 && sprite->frame <= 4)
+        && !(sprite->frame == 3 || sprite->frame == 4)) {
         return FALSE;
     }
     offsets = word_83A0B88[mode][direction];
     if (mode == 0) {
         if (isMini) {
-            switch (sprite->field_23) {
+            switch (sprite->frame) {
                 case 3:
                     high = 0x1800;
                     low = 0x100;
@@ -2647,7 +2647,7 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
                     break;
             }
         } else {
-            switch (sprite->field_23) {
+            switch (sprite->frame) {
                 case 3:
                     high = 0x2800;
                     low = 0x1000;

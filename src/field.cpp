@@ -1684,9 +1684,9 @@ void FieldManager::sub_80262CC(int x, int y, int z, int height, int type, bool a
         if (entry == 0) {
             int max = -1;
             for (i = 0; i < 4; i++) {
-                if (field_1C->field_25C[i].sprite->field_23 > max) {
+                if (field_1C->field_25C[i].sprite->frame > max) {
                     entry = &field_1C->field_25C[i];
-                    max = field_1C->field_25C[i].sprite->field_23;
+                    max = field_1C->field_25C[i].sprite->frame;
                 }
             }
         }
@@ -2341,9 +2341,9 @@ void FieldManager::start_battle_8027AC4() {
             player->sprite->animationComplete = player->field_299_0;
             player->sprite->paused = player->field_299_1;
             player->sprite->field_21 = player->field_29B;
-            player->sprite->field_23 = player->field_29C;
-            player->sprite->field_2A = player->field_29E;
-            player->sprite->field_2C = player->field_2A0;
+            player->sprite->frame = player->field_29C;
+            player->sprite->frameTicksLeft = player->field_29E;
+            player->sprite->animationTicks = player->field_2A0;
             player->sprite->xScale = player->field_2A2;
             player->sprite->yScale = player->field_2A4;
             player->field_298_0 = 0;
@@ -3808,7 +3808,7 @@ void FieldManager::sub_802A740() {
         }
 
         if (brothersTogether && !follower->field_214_7 && !follower->field_214_8) {
-            follower->field_239 = follower->sprite->field_20 =
+            follower->field_239 = follower->sprite->speed =
                 follower->state == 1 ? (s16)follower->field_23E / 32 : field_FA_11;
         }
 
@@ -4178,7 +4178,7 @@ u8 FieldManager::sub_802BD2C() {
                         if (stuck) {
                             sub_802E754(0, 1, 1);
                             follower->field_23E = follower->field_260 = field_100;
-                            follower->sprite->field_20 = follower->field_239 = field_FA_11;
+                            follower->sprite->speed = follower->field_239 = field_FA_11;
                             follower->velocityX = follower->velocityY = 0;
                             {
                                 FieldPlayerCharacter* player = leader;
@@ -4400,12 +4400,12 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
     switch (player->field_368->field_2) {
         case 0:
             if ((field_246_2 == 0 || field_246_2 == 2) && field_FA_10) {
-                player->field_239 = player->sprite->field_20 = field_FA_11;
+                player->field_239 = player->sprite->speed = field_FA_11;
                 player->sub_8049224();
             } else {
                 int sound;
 
-                player->field_239 = player->sprite->field_20 = field_FA_11;
+                player->field_239 = player->sprite->speed = field_FA_11;
                 player->startAirborne(player->defaultJumpVelocity, player->defaultGravity, -1);
                 player->state = FIELD_OBJECT_STATE_RISING;
                 if (player->field_54 == 0) {
@@ -4417,15 +4417,15 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
             }
             break;
         case 1:
-            player->field_239 = player->sprite->field_20 = field_FA_11;
+            player->field_239 = player->sprite->speed = field_FA_11;
             player->startHammer(field_FA_10);
             break;
         case 2:
-            player->field_239 = player->sprite->field_20 = field_FA_11;
+            player->field_239 = player->sprite->speed = field_FA_11;
             player->startHandPower();
             break;
         case 8: // Luigi comes up from underground.
-            player->field_239 = player->sprite->field_20 = field_FA_11;
+            player->field_239 = player->sprite->speed = field_FA_11;
             if (player->field_33E != -1 && objects[player->field_33E]->field_20C_19 == 4) {
                 sub_80346FC(this, player);
             } else {
@@ -4433,7 +4433,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
             }
             break;
         case 10: // Luigi breaks the barrel.
-            player->field_239 = player->sprite->field_20 = field_FA_11;
+            player->field_239 = player->sprite->speed = field_FA_11;
             sub_8034870(this, player);
             break;
         case 13: // Plays buzzer sound.
@@ -4478,7 +4478,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             if (player->field_353_2 || hit || player->sub_804DBD0(0)) {
                 if (player->isMini) {
                     if (player->field_353_2) {
-                        if (player->sprite->field_23 == 4) {
+                        if (player->sprite->frame == 4) {
                             player->state = 9;
                         }
                     } else if (hit) {
@@ -4493,14 +4493,14 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                                 play_sfx_80195B4(0x46, -1);
                             }
                         } else {
-                            player->state = player->sprite->field_23 == 3 ? 8 : 9;
+                            player->state = player->sprite->frame == 3 ? 8 : 9;
                         }
                     } else {
-                        player->state = player->sprite->field_23 == 3 ? 6 : 7;
+                        player->state = player->sprite->frame == 3 ? 6 : 7;
                     }
                 } else {
                     if (player->field_353_2) {
-                        if (player->sprite->field_23 == 4) {
+                        if (player->sprite->frame == 4) {
                             player->state = 9;
                         }
                     } else if (hit) {
@@ -4515,10 +4515,10 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                                 play_sfx_80195B4(0x46, -1);
                             }
                         } else {
-                            player->state = player->sprite->field_23 == 3 ? 8 : 9;
+                            player->state = player->sprite->frame == 3 ? 8 : 9;
                         }
                     } else {
-                        player->state = player->sprite->field_23 == 3 ? 6 : 7;
+                        player->state = player->sprite->frame == 3 ? 6 : 7;
                     }
                 }
             }
@@ -4530,13 +4530,13 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 int animation = player->sprite->field_21;
 
                 if (player->isMini) {
-                    if (player->sprite->field_23 == 3) {
+                    if (player->sprite->frame == 3) {
                         animation += 10;
                     } else {
                         animation += 5;
                     }
                 } else {
-                    if (player->sprite->field_23 == 3) {
+                    if (player->sprite->frame == 3) {
                         animation += 10;
                     } else {
                         animation += 5;
@@ -4811,12 +4811,12 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
             if (data->field_16_7 || data->field_2 == 0) {
                 if ((field_246_2 == 0 || field_246_2 == 2 || field_246_2 == 3 || field_246_2 == 4)
                     && field_FA_10) {
-                    follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                    follower->field_239 = follower->sprite->speed = field_FA_11;
                     follower->sub_8049224();
                 } else {
                     int sound;
 
-                    follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                    follower->field_239 = follower->sprite->speed = field_FA_11;
                     follower->startAirborne(follower->defaultJumpVelocity, follower->defaultGravity,
                                             (s16)follower->field_23E);
                     follower->state = FIELD_OBJECT_STATE_RISING;
@@ -4832,7 +4832,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                     case 0:
                         break;
                     case 1:
-                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        follower->field_239 = follower->sprite->speed = field_FA_11;
                         if (field_246_2 == 3) {
                             follower->startHammer(field_FA_10);
                             leader->field_350_14 = 1;
@@ -4841,7 +4841,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                         }
                         break;
                     case 2:
-                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        follower->field_239 = follower->sprite->speed = field_FA_11;
                         if (field_246_2 == 3) {
                             follower->startHandPower();
                             leader->field_350_14 = 1;
@@ -4850,7 +4850,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                         }
                         break;
                     case 4:
-                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        follower->field_239 = follower->sprite->speed = field_FA_11;
                         if (field_246_2 == 1) {
                             sub_8031234(this);
                         } else if (field_246_2 == 2) {
@@ -4860,7 +4860,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                         }
                         break;
                     case 3:
-                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        follower->field_239 = follower->sprite->speed = field_FA_11;
                         if (field_246_2 == 3) {
                             sub_8033E30(this);
                         } else {
@@ -4868,7 +4868,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                         }
                         break;
                     case 7:
-                        follower->field_239 = follower->sprite->field_20 = field_FA_11;
+                        follower->field_239 = follower->sprite->speed = field_FA_11;
                         sub_8034A5C(this);
                         break;
                 }

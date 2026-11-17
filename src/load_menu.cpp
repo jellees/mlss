@@ -355,7 +355,8 @@ void LoadMenu::update() {
                             this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_1F_4 = 3;
                             this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_1F_6 = 3;
                             this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_10_1 = 0;
-                            this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->callbackEveryFrame = false;
+                            this->sprites[this->field_154[this->field_FB - 1] * 2 + i]
+                                ->callbackEveryFrame = false;
                             this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_28_13 = 0;
                         }
                         stru_3000D40.slot = 0;

@@ -183,10 +183,10 @@ void sprite_set_animation(struct Sprite* sprite, int animation, int frame,
     sprite->callbackArgument = callbackArgument;
 
     if (frame == -1) {
-        sprite->field_23 = 0;
+        sprite->frame = 0;
         sprite->animationComplete = false;
         sprite->hidden = true;
-        sprite->field_20 = 0x10;
+        sprite->speed = 16;
 
         if (sprite->field_44 != 0 && sprite->field_44[0] != 1) {
             sub_801E3EC(sprite->field_44, file);
@@ -201,19 +201,22 @@ void sprite_set_animation(struct Sprite* sprite, int animation, int frame,
                 dword_3001034(0, sprite->field_4C + used, size - used);
                 sprite->field_28_0 = used / 32;
             }
+
             dword_3000C84(sprite->field_48->src, sprite->field_48->dest);
             sprite->field_48->status = 0;
             sprite->field_50 = 0;
             sprite->field_12_6 = gGameState.field_888_5 + 1;
         }
+
         if (sprite->field_50 == 0 && sprite->field_44 == 0) {
             sprite->field_12_6 = gGameState.field_888_5 + 1;
         }
+
         if (sprite->field_54 != 0) {
             sprite->field_13_0 = gGameState.field_888_5 + 1;
         }
     } else {
-        sprite->field_23 = frame;
+        sprite->frame = frame;
     }
 
     frameCount = entry[0];
@@ -224,13 +227,13 @@ void sprite_set_animation(struct Sprite* sprite, int animation, int frame,
         frameCount = entry[0];
     }
 
-    frameEntry = entry + (sprite->field_23 * 2 + 1);
+    frameEntry = entry + (sprite->frame * 2 + 1);
     sprite->field_22 = frameEntry[0];
-    sprite->field_2A =
-        (frameEntry[1] << 4) + (sprite->field_20 < 0 ? -sprite->field_20 : sprite->field_20);
+    sprite->frameTicksLeft =
+        (frameEntry[1] << 4) + (sprite->speed < 0 ? -sprite->speed : sprite->speed);
     sprite->field_21 = animation;
     sprite->field_25 = frameCount;
-    sprite->field_2C = 0;
+    sprite->animationTicks = 0;
     sprite->field_3C = entry;
     sprite->field_40 =
         images + (images[sprite->field_22 * 2 + 1] | (images[sprite->field_22 * 2 + 2] << 8));
@@ -354,15 +357,15 @@ void sprite_update(struct Sprite* sprite) {
         sprite->animationComplete = false;
         entry = sprite->field_3C;
         frameCount = sprite->field_25;
-        timer = sprite->field_2C;
-        remaining = sprite->field_2A;
-        frame = sprite->field_23;
+        timer = sprite->animationTicks;
+        remaining = sprite->frameTicksLeft;
+        frame = sprite->frame;
         image = sprite->field_22;
-        speed = sprite->field_20 < 0 ? -sprite->field_20 : sprite->field_20;
+        speed = sprite->speed < 0 ? -sprite->speed : sprite->speed;
         timer += speed;
         remaining -= speed;
         while (remaining <= 0) {
-            if (sprite->field_20 > 0) {
+            if (sprite->speed > 0) {
                 if (++frame >= frameCount) {
                     frame = 0;
                     timer = 0;
@@ -400,9 +403,9 @@ void sprite_update(struct Sprite* sprite) {
             u8* base = file - (file[0] | (file[1] << 8));
 
             sprite->field_40 = base + (base[image * 2 + 1] | (base[image * 2 + 2] << 8));
-            sprite->field_2C = timer;
-            sprite->field_2A = remaining;
-            sprite->field_23 = frame;
+            sprite->animationTicks = timer;
+            sprite->frameTicksLeft = remaining;
+            sprite->frame = frame;
             sprite->field_22 = image;
         }
     }

@@ -227,15 +227,15 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
         sprite->animationEndAction = field_298_6;
         sprite->animationComplete = field_299_0;
         sprite->paused = field_299_1;
-        sprite->field_2A = field_29E;
-        sprite->field_2C = field_2A0;
+        sprite->frameTicksLeft = field_29E;
+        sprite->animationTicks = field_2A0;
         sprite->xScale = field_2A2;
         sprite->yScale = field_2A4;
     } else {
         sprite->field_1F_2 = 1;
         sprite->field_1F_0 = 1;
     }
-    sprite->field_20 = field_239;
+    sprite->speed = field_239;
     field_298_0 = 0;
     if (field_214_0 == 0 || field_214_0 == 2 || field_214_0 == 3 || field_214_0 == 5) {
         sprite->paused = true;
@@ -291,7 +291,7 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
     if (field_214_0 == 0 || field_214_0 == 2 || field_214_0 == 3 || field_214_0 == 5) {
         sprite->paused = true;
     }
-    sprite->field_20 = field_239;
+    sprite->speed = field_239;
     if (spriteActive) {
         int endAction = sprite->animationEndAction;
         sprite_restore(sprite);
@@ -315,9 +315,9 @@ void FieldObject::method3() {
     field_299_0 = sprite->animationComplete;
     field_299_1 = sprite->paused & 1;
     field_29B = sprite->field_21;
-    field_29C = sprite->field_23;
-    field_29E = sprite->field_2A;
-    field_2A0 = sprite->field_2C;
+    field_29C = sprite->frame;
+    field_29E = sprite->frameTicksLeft;
+    field_2A0 = sprite->animationTicks;
     field_2A2 = sprite->xScale;
     field_2A4 = sprite->yScale;
     field_298_0 = 1;
@@ -3523,7 +3523,7 @@ void FieldObject::sub_80478AC(u8 newDirection) {
 
 void FieldObject::sub_804790C(u8 value) {
     field_239 = value;
-    sprite->field_20 = value;
+    sprite->speed = value;
 }
 
 void FieldObject::sub_8047928() {
