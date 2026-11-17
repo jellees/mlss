@@ -55,6 +55,7 @@ SECTIONS
         src/text080575C8.o(.text);
         asm/text080575C8.o(.text);
         asm/text0805CCE0.o(.text);
+        asm/shared_script_commands.o(.text);
         asm/field_event_script.o(.text);
         asm/text080F1EE8.o(.text);
         src/load_menu.o(.text);
@@ -115,6 +116,7 @@ SECTIONS
         src/text080575C8.o(.rodata);
         asm/rodata081E2794.o(.rodata);
         asm/rodata081E2840.o(.rodata);
+        asm/shared_script_commands.o(.rodata);
         asm/field_event_script.o(.rodata);
         asm/rodata082001C0.o(.rodata);
         src/load_menu.o(.rodata);
