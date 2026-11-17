@@ -154,8 +154,15 @@ static void sprite_routines_copy(u8 flags) {
     byte_3000D70 = flags;
 }
 
+/**
+ * Sets an animation to sprite. If no frame is given (or frame is -1) the sprite is hidden, otherwise
+ * the sprite will continue its updates.
+ *
+ * \param onUpdateCallback Gets called every update if callbackEveryFrame is true. If callbackEveryFrame
+ * is false the function gets called when the animation completes.
+ */
 void sprite_set_animation(struct Sprite* sprite, int animation, int frame,
-                          SpriteCallback onAnimationComplete, int callbackArgument) {
+                          SpriteCallback onUpdateCallback, int callbackArgument) {
     u8* file = sprite->field_38;
     u8* images = file - (file[0] | (file[1] << 8));
     u32 counts = file[4] | (file[5] << 8);
@@ -172,7 +179,7 @@ void sprite_set_animation(struct Sprite* sprite, int animation, int frame,
     entry = file + (file[animation * 2 + 8] | (file[animation * 2 + 9] << 8));
     sprite->paused = false;
     sprite->animationEndAction = ANIMATION_END_LOOP;
-    sprite->onAnimationComplete = onAnimationComplete;
+    sprite->onUpdateCallback = onUpdateCallback;
     sprite->callbackArgument = callbackArgument;
 
     if (frame == -1) {
@@ -324,12 +331,12 @@ void sub_801E3EC(u8* tileMap, u8* file) {
     delete[] tiles;
 }
 
-static inline SpriteCallback getonAnimationComplete(struct Sprite* sprite) {
-    return sprite->onAnimationComplete;
+static inline SpriteCallback getonUpdateCallback(struct Sprite* sprite) {
+    return sprite->onUpdateCallback;
 }
 
 void sprite_update(struct Sprite* sprite) {
-    SpriteCallback onAnimationComplete;
+    SpriteCallback onUpdateCallback;
 
     if ((sprite->field_48 == 0 || sprite->field_48->status == 0)
         && (sprite->field_44 == 0 || sprite->field_44[0] == 1) && !sprite->paused && !sprite->hidden) {
@@ -387,6 +394,7 @@ void sprite_update(struct Sprite* sprite) {
                 update = 0;
             }
         }
+
         if (update) {
             u8* file = sprite->field_38;
             u8* base = file - (file[0] | (file[1] << 8));
@@ -398,10 +406,11 @@ void sprite_update(struct Sprite* sprite) {
             sprite->field_22 = image;
         }
     }
-    onAnimationComplete = getonAnimationComplete(sprite);
-    if (onAnimationComplete != 0
-        && (sprite->field_28_9 || (sprite->animationComplete && !sprite->hidden))) {
-        onAnimationComplete(sprite, sprite->callbackArgument);
+
+    onUpdateCallback = getonUpdateCallback(sprite);
+    if (onUpdateCallback != NULL
+        && (sprite->callbackEveryFrame || (sprite->animationComplete && !sprite->hidden))) {
+        onUpdateCallback(sprite, sprite->callbackArgument);
     }
 }
 

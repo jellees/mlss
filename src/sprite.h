@@ -80,7 +80,7 @@ struct Sprite {
     u8 field_26;
     u8 field_27;
     u16 field_28_0 : 9;
-    u16 field_28_9 : 1;
+    u16 callbackEveryFrame : 1;
     u16 field_28_10 : 1;
     u16 field_28_11 : 1;
     u16 field_28_12 : 1;
@@ -102,7 +102,7 @@ struct Sprite {
     void* field_50;
     void* field_54;
     u8* field_58;
-    SpriteCallback onAnimationComplete;
+    SpriteCallback onUpdateCallback;
     int callbackArgument;
     struct Sprite* previous; // Previous sprite in gSpriteContext's list
     struct Sprite* next;     // Next sprite in gSpriteContext's list
@@ -148,7 +148,7 @@ extern OamNodesSortRoutine gOamNodesSort;
 extern OamNodesCopyRoutine gOamNodesCopy;
 
 void sprite_set_animation(struct Sprite* sprite, int animation, int frame = -1,
-                           SpriteCallback onAnimationComplete = NULL, int callbackArgument = 0);
+                           SpriteCallback onUpdateCallback = NULL, int callbackArgument = 0);
 void sub_801E3EC(u8* tileMap, u8* file);
 void sprite_update(struct Sprite* sprite);
 struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg2);

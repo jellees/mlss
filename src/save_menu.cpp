@@ -710,7 +710,7 @@ void SaveMenu::sub_812936C() {
     this->cursor->field_1F_6 = 0;
     this->cursor->field_E = 0xEFFF;
     this->cursor->field_10_1 = 0;
-    this->cursor->field_28_9 = 0;
+    this->cursor->callbackEveryFrame = false;
     this->cursor->field_28_13 = 0;
 
     this->field_3C = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
@@ -724,7 +724,7 @@ void SaveMenu::sub_812936C() {
     this->field_3C->field_1F_4 = 0;
     this->field_3C->field_1F_6 = 0;
     this->field_3C->field_10_1 = 0;
-    this->field_3C->field_28_9 = 0;
+    this->field_3C->callbackEveryFrame = false;
     this->field_3C->field_28_13 = 0;
     this->field_3C->paused = true;
 
@@ -739,7 +739,7 @@ void SaveMenu::sub_812936C() {
     this->field_40->field_1F_4 = 0;
     this->field_40->field_1F_6 = 0;
     this->field_40->field_10_1 = 0;
-    this->field_40->field_28_9 = 0;
+    this->field_40->callbackEveryFrame = false;
     this->field_40->field_28_13 = 0;
     this->field_40->paused = true;
 
@@ -754,7 +754,7 @@ void SaveMenu::sub_812936C() {
     this->field_44->field_1F_4 = 0;
     this->field_44->field_1F_6 = 0;
     this->field_44->field_10_1 = 0;
-    this->field_44->field_28_9 = 0;
+    this->field_44->callbackEveryFrame = false;
     this->field_44->field_28_13 = 0;
     this->field_44->paused = true;
 
@@ -783,7 +783,7 @@ void SaveMenu::sub_812936C() {
                     this->arrows[i]->field_1F_6 = 1;
                 }
                 this->arrows[i]->field_10_1 = 0;
-                this->arrows[i]->field_28_9 = 0;
+                this->arrows[i]->callbackEveryFrame = false;
                 this->arrows[i]->field_28_13 = 0;
                 this->arrows[i]->paused = true;
                 this->arrows[i]->animationEndAction = ANIMATION_END_STOP;
@@ -804,7 +804,7 @@ void SaveMenu::sub_812936C() {
                     this->fileSprites[i] = sprite_create(0, this->entry.items[i].id, 1, -1, -1, -1, -1);
                     sprite_set_animation(this->fileSprites[i], this->entry.items[i].field_2);
                     sprite_set_animation(this->fileSprites[i], this->entry.items[i].field_2,
-                                          this->entry.items[i].field_3);
+                                         this->entry.items[i].field_3);
                     sprite_show(this->fileSprites[i]);
                     this->fileSprites[i]->xPosition = 0xBC - i * 40;
                     this->fileSprites[i]->yPosition = 0x68;
@@ -814,7 +814,7 @@ void SaveMenu::sub_812936C() {
                     this->fileSprites[i]->field_1F_4 = 3;
                     this->fileSprites[i]->field_1F_6 = 3;
                     this->fileSprites[i]->field_10_1 = 0;
-                    this->fileSprites[i]->field_28_9 = 0;
+                    this->fileSprites[i]->callbackEveryFrame = false;
                     this->fileSprites[i]->field_28_13 = 0;
                     this->fileSprites[i]->paused = true;
                     this->fileSprites[i]->animationEndAction = ANIMATION_END_STOP;
@@ -831,7 +831,7 @@ void SaveMenu::sub_812936C() {
                     this->fileSprites[i]->field_1F_4 = 3;
                     this->fileSprites[i]->field_1F_6 = 3;
                     this->fileSprites[i]->field_10_1 = 0;
-                    this->fileSprites[i]->field_28_9 = 0;
+                    this->fileSprites[i]->callbackEveryFrame = false;
                     this->fileSprites[i]->field_28_13 = 0;
                 }
             }
@@ -859,7 +859,7 @@ void SaveMenu::sub_812936C() {
                     this->currentSprites[i]->field_1F_4 = 3;
                     this->currentSprites[i]->field_1F_6 = 3;
                     this->currentSprites[i]->field_10_1 = 0;
-                    this->currentSprites[i]->field_28_9 = 0;
+                    this->currentSprites[i]->callbackEveryFrame = false;
                     this->currentSprites[i]->field_28_13 = 0;
                 } else {
                     sub_8021574(0, sprite_get_info(0, dword_3000FF8[i].id)->palette, 0, 0, 0,
@@ -867,7 +867,7 @@ void SaveMenu::sub_812936C() {
                     this->currentSprites[i] = sprite_create(0, dword_3000FF8[i].id, 1, -1, -1, -1, -1);
                     sprite_set_animation(this->currentSprites[i], dword_3000FF8[i].field_2);
                     sprite_set_animation(this->currentSprites[i], dword_3000FF8[i].field_2,
-                                          dword_3000FF8[i].field_3);
+                                         dword_3000FF8[i].field_3);
                     sprite_show(this->currentSprites[i]);
                     this->currentSprites[i]->xPosition = 0xBC - i * 40;
                     this->currentSprites[i]->yPosition = 0xB4;
@@ -877,7 +877,7 @@ void SaveMenu::sub_812936C() {
                     this->currentSprites[i]->field_1F_4 = 3;
                     this->currentSprites[i]->field_1F_6 = 3;
                     this->currentSprites[i]->field_10_1 = 0;
-                    this->currentSprites[i]->field_28_9 = 0;
+                    this->currentSprites[i]->callbackEveryFrame = false;
                     this->currentSprites[i]->field_28_13 = 0;
                     this->currentSprites[i]->paused = true;
                     this->currentSprites[i]->animationEndAction = ANIMATION_END_STOP;
