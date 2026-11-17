@@ -258,11 +258,20 @@ struct struc_3000FF4 {
     u8 pad31[0xB];
 };
 
-// A 0xA8-byte script slot (the start of ScriptContext has the same layout).
+// A 0xA8-byte script slot. ScriptContext (the script of a field object) extends it.
 struct ScriptSlot {
-    u8 pad_0[0xA0];
-    u16 field_A0; // Flags
-    u8 pad_A2[0x6];
+    u32 field_0;
+    u32 field_4;
+    u32 field_8; // Saved field_0 (restored by sub_80EB838)
+    u32 field_C; // Saved field_4
+    u8 pad_10[0x8];
+    u8 field_18[0x84]; // Passed to sub_80E9C4C
+    s32 field_9C;      // Counter (sub_80EB490)
+    u16 field_A0;      // Flags
+    u16 field_A2;      // Saved field_A0
+    u8 field_A4;       // Index of a script slot (0-3) or field object (4+)
+    u8 field_A5;       // Saved field_A4
+    u8 pad_A6[0x2];
 };
 
 struct struc_3000FD0 {
@@ -271,10 +280,18 @@ struct struc_3000FD0 {
     u32 field_528;
     u8 pad_52C[0x4];
     u32 field_530;
-    u8 pad_534[0x26];
+    u8 pad_534[0x10];
+    u8 field_544[2]; // Object indices, one per entry of field_550
+    u8 field_546[2]; // Angles
+    u8 field_548;
+    u8 pad_549[0x7];
+    u32 field_550; // Bit mask
+    u16 field_554;
+    u8 pad_556[0x4];
     u16 field_55A_0 : 1;
     u16 field_55A_1 : 1;
-    u16 field_55A_2 : 4;
+    u16 field_55A_2 : 1;
+    u16 field_55A_3 : 3;
     u16 field_55A_6 : 2;
 };
 
@@ -446,7 +463,6 @@ void sub_8018A4C(u32);
 void sub_80E9C4C(void*, void*, void*, int, int, int);
 void sub_80EA5C8(void*, void*, void*, int, int, int);
 void script_read_next_line(struct ScriptContext*, u8*, void*, void*, void*, int);
-u8 sub_80EB838(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*);
 u8 fld_script_execute_next_command(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, u8*);
 void sub_819A138(void*, u32);
 void sub_805A0EC(struct Process*, int, u16*, u16*);

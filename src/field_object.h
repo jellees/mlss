@@ -35,12 +35,8 @@ struct FieldManager;
 // Script state of an object (FieldObject::script). The field event script code
 // (asm/field_event_script.s) runs a script per object (sub_80EB248) with script_read_next_line /
 // fld_script_execute_next_command.
-struct ScriptContext {
-    u8 pad_0[0x18];
-    u8 field_18[0x84]; // Passed to sub_80E9C4C
-    s32 field_9C;      // Counter (sub_80EB490)
-    u16 field_A0;      // Flags
-    u8 pad_A2[0x9E];
+struct ScriptContext : ScriptSlot {
+    u8 pad_A8[0x98];
     void (*field_140)(FieldManager* fieldManager, class FieldObject* object);
     u8 pad_144[0x50];
 };

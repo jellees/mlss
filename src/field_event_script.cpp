@@ -14,7 +14,7 @@ inline bool FieldEventScript::sub_80F1E44(FieldObject* object, ScriptContext* sc
     if (!(script->field_A0 & 1)) {
         return FALSE;
     }
-    while (sub_80EB838(this, object, script) == 0) {
+    while (sub_80EB838(object, script) == 0) {
         script_read_next_line(script, command, dword_3000FC0, (u8*)dword_3000FD0 + 0x4B0,
                               (u8*)dword_3000FC0 + 0x38C, 0);
         if (!fld_script_execute_next_command(this, object, script, command)) {
@@ -189,4 +189,81 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, void* arg) {
             }
             break;
     }
+}
+
+// Checked before each command of a script (sub_80F1E44 stops when it returns TRUE). Returns FALSE
+// while the script hasn't reached field_4, or after restoring the saved script in field_8. With
+// flag 8 set it clears flag 4 of the script context selected by field_A4 (a slot of dword_3000FD0
+// for 0-3, field object index + 4 otherwise).
+bool FieldEventScript::sub_80EB838(FieldObject* object, ScriptContext* script) {
+    if (script->field_0 != script->field_4) {
+        return FALSE;
+    }
+
+    if (script->field_A0 & 8) {
+        u8 index = script->field_A4;
+        ScriptSlot* other;
+
+        if (index <= 3) {
+            other = &dword_3000FD0->scripts[index];
+        } else {
+            // Pointer arithmetic, not objects[index - 4]: g++ only folds the offset for a pointer.
+            other = &(*(((FieldManager*)parentProcess)->objects + index - 4))->script;
+        }
+        other->field_A0 &= ~4;
+        script->field_A0 &= ~8;
+    }
+
+    if (object == NULL) {
+        struct struc_3000FD0* p = dword_3000FD0;
+        u16 index = p->field_548 - 1;
+
+        if (p->field_550 & (1 << index)) {
+            p->field_550 &= ~(1 << index);
+            FieldObject* fieldObject = *(((FieldManager*)parentProcess)->objects + p->field_544[index]);
+            fieldObject->script.field_A0 &= ~0x80;
+            fieldObject->previousAngle = p->field_546[index];
+            fieldObject->angle = p->field_546[index];
+            if (fieldObject->field_20C_4 || fieldObject->field_214_0 == 3
+                || fieldObject->field_214_0 == 4) {
+                fieldObject->direction = dword_3000FD0->field_546[index] >> 5;
+            }
+        }
+    }
+
+    if (script->field_A0 & ~0x403) {
+        return TRUE;
+    }
+
+    if (script->field_8 != 0) {
+        script->field_0 = script->field_8;
+        script->field_4 = script->field_C;
+        script->field_A0 = script->field_A2;
+        script->field_A4 = script->field_A5;
+        script->field_C = 0;
+        script->field_8 = 0;
+        script->field_A2 = 0;
+        script->field_A5 = 0;
+        return FALSE;
+    }
+
+    script->field_A0 &= ~1;
+    if (object == NULL) {
+        if (dword_3000FD0->field_548 == 1) {
+            FieldManager* fieldManager = (FieldManager*)parentProcess;
+            fieldManager->objects[0]->field_20C_8 |= ~dword_3000FD0->field_55A_6 & 1;
+            fieldManager->objects[1]->field_20C_8 |= ~(dword_3000FD0->field_55A_6 >> 1) & 1;
+        }
+        if (!dword_3000FD0->field_55A_1) {
+            if (dword_3000FD0->field_548 == 1) {
+                ((FieldManager*)parentProcess)->sub_8028D6C(0);
+            }
+        } else if (!dword_3000FD0->field_55A_2
+                   && dword_3000FD0->field_55A_3 == dword_3000FD0->field_548) {
+            ((FieldManager*)parentProcess)->sub_8028D6C(dword_3000FD0->field_554);
+            dword_3000FD0->field_55A_1 = dword_3000FD0->field_55A_2 = dword_3000FD0->field_554 != 0;
+            dword_3000FD0->field_55A_3 = 0;
+        }
+    }
+    return TRUE;
 }
