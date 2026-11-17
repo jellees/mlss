@@ -154,8 +154,8 @@ static void sprite_routines_copy(u8 flags) {
     byte_3000D70 = flags;
 }
 
-void sprite_play_animation(struct Sprite* sprite, int animation, int frame,
-                           SpriteCallback onAnimationComplete, int callbackArgument) {
+void sprite_set_animation(struct Sprite* sprite, int animation, int frame,
+                          SpriteCallback onAnimationComplete, int callbackArgument) {
     u8* file = sprite->field_38;
     u8* images = file - (file[0] | (file[1] << 8));
     u32 counts = file[4] | (file[5] << 8);

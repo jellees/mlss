@@ -59588,7 +59588,7 @@ _0807B0F4:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	mov r0, r8
 	adds r0, #0x25
 	ldrb r4, [r0, #0x00]
@@ -59601,7 +59601,7 @@ _0807B0F4:
 	str r1, [sp, #0x000]
 	mov r0, r8
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	mov r2, r8
 	ldrb r1, [r2, #0x1F]
 	movs r0, #0x04
@@ -60141,7 +60141,7 @@ _0807B528:
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r4, #0x0
 	adds r0, #0x25
 	ldrb r5, [r0, #0x00]
@@ -60154,7 +60154,7 @@ _0807B528:
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	ldrb r1, [r4, #0x1F]
 	movs r0, #0x04
 	negs r0, r0
@@ -61504,7 +61504,7 @@ _0807BF7A:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r7, #0x0
 	bl sub_80842D8
 	str r5, [sp, #0x000]
@@ -61512,7 +61512,7 @@ _0807BF7A:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r7, #0x0
 	bl sub_807BC90
 	ldrb r1, [r7, #0x1F]
@@ -66182,7 +66182,7 @@ _0807E770:
 	str r0, [sp, #0x000]
 	adds r0, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r4, #0x0
 	bl sub_807BC90
 _0807E78C:
@@ -66323,7 +66323,7 @@ _0807E844:
 	movs r1, #0x00
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r6, #0x0
 	bl sub_80842D8
 	str r4, [sp, #0x000]
@@ -66345,7 +66345,7 @@ _0807E8C0:
 	adds r1, r7, #0x0
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r6, #0x0
 	bl sub_807BC90
 	b _0807E9E2
@@ -66507,7 +66507,7 @@ _0807E9C0:
 	adds r0, r6, #0x0
 	adds r1, r3, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r6, #0x0
 	bl sub_807BC90
 _0807E9E2:
@@ -66825,7 +66825,7 @@ _0807EBD4:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r6, #0x0
 	bl sub_80842D8
 _0807EC6E:
@@ -66840,7 +66840,7 @@ _0807EC6E:
 	adds r0, r6, #0x0
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r6, #0x0
 	bl sub_807BC90
 	ldr r0, [sp, #0x080]
@@ -68561,7 +68561,7 @@ sub_807FB78:
 	movs r1, #0x00
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r4, #0x0
 	bl sub_80842D8
 	add sp, #0x010
@@ -70591,7 +70591,7 @@ _08080C0C:
 	str r1, [sp, #0x000]
 	mov r2, r8
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r4, #0x0
 	bl sprite_show__FP6Sprite
 	movs r0, #0x78
@@ -73023,7 +73023,7 @@ sub_808201C:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, [r5, #0x00]
 	str r6, [r0, #0x00]
 	ldr r0, _08082084 @ =0x08081189
@@ -73124,7 +73124,7 @@ _0808209A:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, [r6, #0x00]
 	str r5, [r0, #0x00]
 	ldr r0, _08082154 @ =0x0808201D
@@ -74836,7 +74836,7 @@ _08082FF6:
 	mov r1, r10
 	ldr r2, [sp, #0x004]
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	strh r4, [r6, #0x0E]
 	ldrb r1, [r6, #0x12]
 	movs r0, #0x09
@@ -75027,7 +75027,7 @@ _080833D8:
 	mov r1, r10
 	ldr r2, [sp, #0x004]
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	strh r5, [r4, #0x0E]
 	ldrb r1, [r4, #0x12]
 	movs r0, #0x09
@@ -75079,7 +75079,7 @@ _08083436:
 	mov r1, r10
 	ldr r2, [sp, #0x004]
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	strh r5, [r4, #0x0E]
 	ldrb r0, [r4, #0x12]
 	movs r2, #0x09
@@ -75139,7 +75139,7 @@ _080834B6:
 	mov r1, r10
 	ldr r2, [sp, #0x004]
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	strh r5, [r4, #0x0E]
 	ldrb r0, [r4, #0x12]
 	movs r3, #0x09
@@ -75193,7 +75193,7 @@ _08083516:
 	mov r1, r10
 	ldr r2, [sp, #0x004]
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	strh r5, [r4, #0x0E]
 	ldrb r0, [r4, #0x12]
 	movs r2, #0x09
@@ -75240,7 +75240,7 @@ _08083582:
 	mov r1, r10
 	ldr r2, [sp, #0x004]
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	strh r4, [r6, #0x0E]
 	ldrb r1, [r6, #0x12]
 	movs r0, #0x09
@@ -76799,7 +76799,7 @@ sub_8084338:
 	mov r1, r8
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	movs r0, #0x03
 	adds r2, r6, #0x0
 	ands r2, r0
@@ -120341,7 +120341,7 @@ _0809ABFC:
 	adds r0, r4, #0x0
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r5, #0x0
 	adds r0, #0xA8
 	str r4, [r0, #0x00]
@@ -141259,7 +141259,7 @@ _080A5040:
 	movs r1, #0x01
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	ldrb r1, [r4, #0x12]
 	movs r0, #0x07
 	negs r0, r0
@@ -143413,7 +143413,7 @@ _080A6150:
 	movs r1, #0x01
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	ldrb r1, [r4, #0x12]
 	movs r0, #0x07
 	negs r0, r0
@@ -260386,7 +260386,7 @@ _080DCE94:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r5, #0x0
 	bl sprite_show__FP6Sprite
 	ldr r0, [r6, #0x08]
@@ -260396,7 +260396,7 @@ _080DCE94:
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, [r6, #0x08]
 	ldrh r0, [r0, #0x00]
 	strh r0, [r5, #0x00]
@@ -260553,7 +260553,7 @@ _080DCFE8:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r5, #0x0
 	bl sprite_show__FP6Sprite
 	ldr r0, [r6, #0x08]
@@ -260563,7 +260563,7 @@ _080DCFE8:
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, [r6, #0x08]
 	ldrh r0, [r0, #0x00]
 	strh r0, [r5, #0x00]
@@ -278526,7 +278526,7 @@ _080E8824:
 	str r1, [sp, #0x000]
 	adds r2, r5, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	lsls r0, r6, #0x10
 	ldr r1, _080E8874 @ =0xFFFF0000
 	adds r0, r0, r1
@@ -278585,7 +278585,7 @@ _080E88B0:
 	movs r2, #0x01
 	negs r2, r2
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	mov r0, sp
 	ldrb r0, [r0, #0x04]
 	strb r0, [r5, #0x0C]

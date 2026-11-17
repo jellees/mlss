@@ -133,8 +133,8 @@ void FieldPlayerCharacter::method2(u16* arg1, u16* arg2, void* arg3) {
     FieldObject::method2(arg1, arg2, arg3);
     if (field_378_0) {
         field_36C = sprite_create(0, field_370, 1, -1, -1, -1, -1);
-        sprite_play_animation(field_36C, field_37B, -1, 0, 0);
-        sprite_play_animation(field_36C, field_37B, field_37C, 0, 0);
+        sprite_set_animation(field_36C, field_37B);
+        sprite_set_animation(field_36C, field_37B, field_37C);
         sprite_restore(field_36C);
         field_36C->hFlip = field_378_1;
         field_36C->field_1F_0 = field_378_2;
@@ -194,7 +194,7 @@ void FieldPlayerCharacter::method7(u8 force) {
             arg = 1;
         }
         if (sprite->field_21 != animation || sprite->hFlip != flag || force) {
-            sprite_play_animation(sprite, animation, arg, 0, 0);
+            sprite_set_animation(sprite, animation, arg);
             sprite->hFlip = flag;
         }
     } else {
@@ -398,7 +398,7 @@ void FieldPlayerCharacter::method7(u8 force) {
             }
         }
         if (sprite->field_21 != animation || sprite->hFlip != flag || force) {
-            sprite_play_animation(sprite, animation, 0, 0, 0);
+            sprite_set_animation(sprite, animation, 0);
             sprite->hFlip = flag;
         }
     }
@@ -509,7 +509,7 @@ void FieldPlayerCharacter::showHandPowerSprite(int type) {
 
     field_370 = field_54 == 0 ? SPRITE_ID(0, 89) : SPRITE_ID(0, 90);
     sprite_change(field_36C, 0, field_370, 1, -1, -1, -1, -1);
-    sprite_play_animation(field_36C, 0, -1, 0, 0);
+    sprite_set_animation(field_36C, 0);
     sprite_restore(field_36C);
     offsets = byte_83A09E4[type];
     field_353_0 = 1;
@@ -528,7 +528,7 @@ void FieldPlayerCharacter::showHandPowerSprite(int type) {
 void FieldPlayerCharacter::showBarrelBreakingSprite() { // Show barrel breaking
     field_370 = SPRITE_ID(0, 69);
     sprite_change(field_36C, 0, SPRITE_ID(0, 69), 1, -1, -1, -1, -1);
-    sprite_play_animation(field_36C, 1, -1, 0, 0);
+    sprite_set_animation(field_36C, 1);
     sprite_restore(field_36C);
     field_353_0 = 1;
     field_372 = 0;
@@ -546,7 +546,7 @@ void FieldPlayerCharacter::showBarrelBreakingSprite() { // Show barrel breaking
 void FieldPlayerCharacter::sub_80497A8() { // ! balloon
     field_370 = SPRITE_ID(0, 84);
     sprite_change(field_36C, 0, SPRITE_ID(0, 84), 1, -1, -1, -1, -1);
-    sprite_play_animation(field_36C, 0, -1, 0, 0);
+    sprite_set_animation(field_36C, 0);
     sprite_restore(field_36C);
     field_353_0 = 1;
     field_372 = 0;
@@ -564,7 +564,7 @@ void FieldPlayerCharacter::sub_80497A8() { // ! balloon
 void FieldPlayerCharacter::showExclamationBalloon() {
     field_370 = SPRITE_ID(7, 4);
     sprite_change(field_36C, 0, field_370, 1, -1, -1, -1, -1);
-    sprite_play_animation(field_36C, 0, -1, 0, 0);
+    sprite_set_animation(field_36C, 0);
     sprite_restore(field_36C);
     field_353_0 = 1;
     field_372 = 0;
@@ -582,7 +582,7 @@ void FieldPlayerCharacter::showExclamationBalloon() {
 void FieldPlayerCharacter::sub_80499B8() { // show bean star pieces
     field_370 = SPRITE_ID(7, 11);
     sprite_change(field_36C, 2, field_370, 1, -1, -1, -1, -1);
-    sprite_play_animation(field_36C, 2, -1, 0, 0);
+    sprite_set_animation(field_36C, 2);
     sprite_restore(field_36C);
     field_353_0 = 0;
     field_372 = 0;
@@ -602,7 +602,7 @@ void FieldPlayerCharacter::sub_8049AB4(int mode, int animation) {
         case 0:
             field_370 = SPRITE_ID(7, 11);
             sprite_change(field_36C, 2, field_370, 1, -1, -1, -1, -1);
-            sprite_play_animation(field_36C, animation, -1, 0, 0);
+            sprite_set_animation(field_36C, animation);
             sprite_restore(field_36C);
             field_353_0 = 0;
             field_36C->hFlip = false;
@@ -2792,7 +2792,7 @@ void FieldPlayerShotBullet::sub_804DFE8() {
     value = byte_83A05EC[direction + 32];
     animation = value & 0x7F;
     flag = value >> 7;
-    sprite_play_animation(sprite, animation, -1, 0, 0);
+    sprite_set_animation(sprite, animation);
     sprite_restore(sprite);
     if (frame != 0) {
         int i = frame;
@@ -2800,7 +2800,7 @@ void FieldPlayerShotBullet::sub_804DFE8() {
         while (i >= sprite->field_25) {
             i -= sprite->field_25;
         }
-        sprite_play_animation(sprite, animation, i, 0, 0);
+        sprite_set_animation(sprite, animation, i);
     }
     sprite->hFlip = flag;
 }
@@ -2822,14 +2822,14 @@ void FieldPlayerShotBullet::sub_804E0D8(int type, FieldObject* owner, int frame)
     value = byte_83A05EC[direction + 32];
     animation = value & 0x7F;
     flag = value >> 7;
-    sprite_play_animation(newSprite, animation, -1, 0, 0);
+    sprite_set_animation(newSprite, animation);
     sprite_restore(sprite);
     if (frame != 0) {
         this->frame = frame;
         while (frame >= sprite->field_25) {
             frame -= sprite->field_25;
         }
-        sprite_play_animation(sprite, animation, frame, 0, 0);
+        sprite_set_animation(sprite, animation, frame);
     }
     sprite->hFlip = flag;
     x = previousX = owner->x;
@@ -2870,7 +2870,7 @@ void FieldPlayerShotBullet::sub_804E33C(FieldObject** objects, int count) {
         return;
     }
     if (type == FIELD_PLAYER_SHOT_BULLET_SPIT) {
-        sprite_play_animation(sprite, sprite->field_21 + 5, 0, 0, 0);
+        sprite_set_animation(sprite, sprite->field_21 + 5, 0);
         sub_804E6E0(objects, count);
         return;
     }
@@ -2882,14 +2882,14 @@ void FieldPlayerShotBullet::sub_804E33C(FieldObject** objects, int count) {
     }
     sub_804E6E0(objects, count);
     if (sub_804EA68() || sides) {
-        sprite_play_animation(sprite, sprite->field_21 + 5, 0, 0, 0);
+        sprite_set_animation(sprite, sprite->field_21 + 5, 0);
         if (frame != 0) {
             int i = frame;
 
             while (i >= sprite->field_25) {
                 i -= sprite->field_25;
             }
-            sprite_play_animation(sprite, sprite->field_21, i, 0, 0);
+            sprite_set_animation(sprite, sprite->field_21, i);
         }
         sprite->animationEndAction = ANIMATION_END_HIDE;
     }

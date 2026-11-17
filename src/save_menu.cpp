@@ -700,7 +700,7 @@ void SaveMenu::sub_812936C() {
     sub_8021574(5, PALETTE_ID(5, 3), 0, 0, 0, this->field_60, -1);
 
     this->cursor = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
-    sprite_play_animation(this->cursor, 0, -1, 0, 0);
+    sprite_set_animation(this->cursor, 0);
     sprite_show(this->cursor);
     this->cursor->xPosition = 0x24;
     this->cursor->yPosition = this->field_AA[this->field_AD];
@@ -714,7 +714,7 @@ void SaveMenu::sub_812936C() {
     this->cursor->field_28_13 = 0;
 
     this->field_3C = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
-    sprite_play_animation(this->field_3C, 1, -1, 0, 0);
+    sprite_set_animation(this->field_3C, 1);
     sprite_show(this->field_3C);
     this->field_3C->xPosition = 0x20;
     this->field_3C->yPosition = 0xC0;
@@ -729,7 +729,7 @@ void SaveMenu::sub_812936C() {
     this->field_3C->paused = true;
 
     this->field_40 = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
-    sprite_play_animation(this->field_40, 7, -1, 0, 0);
+    sprite_set_animation(this->field_40, 7);
     sprite_show(this->field_40);
     this->field_40->xPosition = 0x20;
     this->field_40->yPosition = 0xC0;
@@ -744,7 +744,7 @@ void SaveMenu::sub_812936C() {
     this->field_40->paused = true;
 
     this->field_44 = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
-    sprite_play_animation(this->field_44, 8, -1, 0, 0);
+    sprite_set_animation(this->field_44, 8);
     sprite_show(this->field_44);
     this->field_44->xPosition = 0x20;
     this->field_44->yPosition = 0xC0;
@@ -766,7 +766,7 @@ void SaveMenu::sub_812936C() {
 
             for (i = 0; i < 4; i++) {
                 this->arrows[i] = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
-                sprite_play_animation(this->arrows[i], i + 2, -1, 0, 0);
+                sprite_set_animation(this->arrows[i], i + 2);
                 sprite_show(this->arrows[i]);
                 this->arrows[i]->xPosition = arrowX[i];
                 this->arrows[i]->yPosition = arrowY[i];
@@ -802,9 +802,9 @@ void SaveMenu::sub_812936C() {
                     sub_8021574(0, sprite_get_info(0, this->entry.items[i].id)->palette, 0, 0, 0,
                                 this->field_60, -1);
                     this->fileSprites[i] = sprite_create(0, this->entry.items[i].id, 1, -1, -1, -1, -1);
-                    sprite_play_animation(this->fileSprites[i], this->entry.items[i].field_2, -1, 0, 0);
-                    sprite_play_animation(this->fileSprites[i], this->entry.items[i].field_2,
-                                          this->entry.items[i].field_3, 0, 0);
+                    sprite_set_animation(this->fileSprites[i], this->entry.items[i].field_2);
+                    sprite_set_animation(this->fileSprites[i], this->entry.items[i].field_2,
+                                          this->entry.items[i].field_3);
                     sprite_show(this->fileSprites[i]);
                     this->fileSprites[i]->xPosition = 0xBC - i * 40;
                     this->fileSprites[i]->yPosition = 0x68;
@@ -821,7 +821,7 @@ void SaveMenu::sub_812936C() {
                 } else {
                     sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_60, -1);
                     this->fileSprites[i] = sprite_create(5, SPRITE_ID(5, 6), 0, -1, -1, -1, -1);
-                    sprite_play_animation(this->fileSprites[i], i, -1, 0, 0);
+                    sprite_set_animation(this->fileSprites[i], i);
                     sprite_show(this->fileSprites[i]);
                     this->fileSprites[i]->xPosition = 0xBC - i * 40;
                     this->fileSprites[i]->yPosition = 0x68;
@@ -849,7 +849,7 @@ void SaveMenu::sub_812936C() {
                     || (!parent->brothersTogether && !parent->field_208_6 && parent->luigiLeads != i)) {
                     sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_60, -1);
                     this->currentSprites[i] = sprite_create(5, SPRITE_ID(5, 6), 0, -1, -1, -1, -1);
-                    sprite_play_animation(this->currentSprites[i], i, -1, 0, 0);
+                    sprite_set_animation(this->currentSprites[i], i);
                     sprite_show(this->currentSprites[i]);
                     this->currentSprites[i]->xPosition = 0xBC - i * 40;
                     this->currentSprites[i]->yPosition = 0xB4;
@@ -865,9 +865,9 @@ void SaveMenu::sub_812936C() {
                     sub_8021574(0, sprite_get_info(0, dword_3000FF8[i].id)->palette, 0, 0, 0,
                                 this->field_60, -1);
                     this->currentSprites[i] = sprite_create(0, dword_3000FF8[i].id, 1, -1, -1, -1, -1);
-                    sprite_play_animation(this->currentSprites[i], dword_3000FF8[i].field_2, -1, 0, 0);
-                    sprite_play_animation(this->currentSprites[i], dword_3000FF8[i].field_2,
-                                          dword_3000FF8[i].field_3, 0, 0);
+                    sprite_set_animation(this->currentSprites[i], dword_3000FF8[i].field_2);
+                    sprite_set_animation(this->currentSprites[i], dword_3000FF8[i].field_2,
+                                          dword_3000FF8[i].field_3);
                     sprite_show(this->currentSprites[i]);
                     this->currentSprites[i]->xPosition = 0xBC - i * 40;
                     this->currentSprites[i]->yPosition = 0xB4;

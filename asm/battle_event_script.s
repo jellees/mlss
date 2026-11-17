@@ -126,7 +126,7 @@ _080F1FDC:
 	movs r2, #0x01
 	negs r2, r2
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	mov r0, sp
 	ldrb r0, [r0, #0x04]
 	strb r0, [r4, #0x0C]
@@ -7708,7 +7708,7 @@ _080F6A48:
 	str r0, [sp, #0x000]
 	adds r0, r7, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	lsls r4, r4, #0x06
 	ldrb r1, [r7, #0x11]
 	movs r0, #0x41

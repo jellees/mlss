@@ -2039,7 +2039,7 @@ sub_80FA818:
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	mov r0, r10
 	ldr r3, [r0, #0x24]
 	ldr r6, _080FA89C @ =0x000009A2

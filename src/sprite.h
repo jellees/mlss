@@ -23,7 +23,7 @@ struct Sprite {
 
     s16 xScale;
     s16 yScale;
-    
+
     s16 field_8;
     s16 field_A;
     s16 field_C;
@@ -72,7 +72,7 @@ struct Sprite {
     u8 field_1F_4 : 2;
     u8 field_1F_6 : 2;
     s8 field_20;
-    u8 field_21; // Animation index (sprite_play_animation)
+    u8 field_21; // Animation index (sprite_set_animation)
     u8 field_22;
     u8 field_23;
     u8 field_24;
@@ -93,7 +93,7 @@ struct Sprite {
     u16 field_30;
     u8 pad32[0x2];
     struct OamNode* field_34;
-    u8* field_38; // Animation file (sprite_play_animation)
+    u8* field_38; // Animation file (sprite_set_animation)
     u8* field_3C;
     u8* field_40;
     u8* field_44;
@@ -147,8 +147,8 @@ extern struct SpriteInfo* dSpriteInfo[11];
 extern OamNodesSortRoutine gOamNodesSort;
 extern OamNodesCopyRoutine gOamNodesCopy;
 
-void sprite_play_animation(struct Sprite* sprite, int animation, int frame,
-                           SpriteCallback onAnimationComplete, int callbackArgument);
+void sprite_set_animation(struct Sprite* sprite, int animation, int frame = -1,
+                           SpriteCallback onAnimationComplete = NULL, int callbackArgument = 0);
 void sub_801E3EC(u8* tileMap, u8* file);
 void sprite_update(struct Sprite* sprite);
 struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg2);

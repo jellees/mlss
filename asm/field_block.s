@@ -52,7 +52,7 @@ _08050BFC:
 	movs r1, #0x03
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	mov r0, r8
 	ldrb r1, [r0, #0x00]
 	movs r0, #0x01
@@ -166,7 +166,7 @@ _08050CCA:
 	adds r1, r7, #0x0
 	adds r2, r4, #0x0
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, [r5, #0x48]
 	cmp r0, #0x00
 	beq _08050D2C
@@ -642,7 +642,7 @@ _0805109C:
 	str r7, [sp, #0x000]
 	movs r2, #0x01
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	ldr r0, _08051124 @ =0x03000FC0
 	ldr r0, [r0, #0x00]
 	movs r3, #0xE3
@@ -795,7 +795,7 @@ _080511EC:
 	movs r1, #0x03
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 _08051200:
 	add sp, #0x004
 	pop {r4, r5}
@@ -935,7 +935,7 @@ _080512C8:
 	str r3, [sp, #0x000]
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 _08051320:
 	add sp, #0x004
 	pop {r4, r5, r6}

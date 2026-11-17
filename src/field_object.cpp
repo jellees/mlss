@@ -209,9 +209,9 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
         animation = initialDirection;
         flag = 0;
     }
-    sprite_play_animation(sprite, animation, -1, 0, 0);
+    sprite_set_animation(sprite, animation);
     if (animation2 != -1) {
-        sprite_play_animation(sprite, animation, animation2, 0, 0);
+        sprite_set_animation(sprite, animation, animation2);
     }
     if (sprite->field_48 != 0) {
         int value = sub_80198B0(sprite->field_48->src) >> 5;
@@ -279,7 +279,7 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
     if (flag == -1) {
         flag = value >> 7;
     }
-    sprite_play_animation(sprite, animation, mode == 1 ? -1 : 0, 0, 0);
+    sprite_set_animation(sprite, animation, mode == 1 ? -1 : 0);
     if (mode == 1 && sprite->field_48 != 0) {
         int size = sub_80198B0(sprite->field_48->src) >> 5;
 
@@ -391,7 +391,7 @@ void FieldObject::method7(u8 force) {
         flag = value >> 7;
     }
     if (sprite->field_21 != animation || sprite->hFlip != flag || force) {
-        sprite_play_animation(sprite, animation, 0, 0, 0);
+        sprite_set_animation(sprite, animation, 0);
         sprite->hFlip = flag;
     }
 }
@@ -3330,7 +3330,7 @@ void FieldObject::sub_8047154(int animation, int arg2) {
         animation = value & 0x7F;
         flag = value >> 7;
     }
-    sprite_play_animation(sprite, base + animation, arg2, 0, 0);
+    sprite_set_animation(sprite, base + animation, arg2);
     sprite->hFlip = flag;
 }
 
@@ -3369,7 +3369,7 @@ void FieldObject::sub_8047364(u8 type) {
     if (field_214_0 > 2) {
         angle = direction << 5;
         if (field_214_0 == 3) {
-            sprite_play_animation(sprite, sprite->field_21, 0, 0, 0);
+            sprite_set_animation(sprite, sprite->field_21, 0);
         }
     }
     field_214_6 = 1;
@@ -3527,7 +3527,7 @@ void FieldObject::sub_804790C(u8 value) {
 }
 
 void FieldObject::sub_8047928() {
-    sprite_play_animation(sprite, sprite->field_21, 0, 0, 0);
+    sprite_set_animation(sprite, sprite->field_21, 0);
 }
 
 void FieldObject::sub_804794C(u16 value) {

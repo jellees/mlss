@@ -1592,7 +1592,7 @@ sub_80ED750:
 	ldr r2, [r6, #0x04]
 	movs r3, #0x00
 	str r3, [sp, #0x000]
-	bl sprite_play_animation__FP6SpriteiiPFP6Spritei_vi
+	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	movs r0, #0x85
 	lsls r0, r0, #0x02
 	adds r2, r4, r0
