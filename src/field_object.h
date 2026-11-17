@@ -37,7 +37,8 @@ struct FieldManager;
 // fld_script_execute_next_command.
 struct ScriptContext {
     u8 pad_0[0x18];
-    u8 field_18[0x88]; // Passed to sub_80E9C4C
+    u8 field_18[0x84]; // Passed to sub_80E9C4C
+    s32 field_9C;      // Counter (sub_80EB490)
     u16 field_A0;      // Flags
     u8 pad_A2[0x9E];
     void (*field_140)(FieldManager* fieldManager, class FieldObject* object);
