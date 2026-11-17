@@ -3,6 +3,13 @@
 
 #define OAM_NODE_COUNT 130
 
+enum AnimationEndAction {
+    ANIMATION_END_LOOP,
+    ANIMATION_END_STOP,
+    ANIMATION_END_HIDE,
+    ANIMATION_END_DESTROY
+};
+
 typedef void (*SpriteCallback)(struct Sprite*, int);
 typedef struct OamNode* (*SpriteDrawRoutine)(struct OamNode*, struct Sprite*, u8**, int, u8*, s8*, int,
                                              u8*);
@@ -13,8 +20,10 @@ typedef void (*OamNodesResetRoutine)(struct OamNode* head, int count);
 struct Sprite {
     s16 xPosition;
     s16 yPosition;
+
     s16 xScale;
     s16 yScale;
+    
     s16 field_8;
     s16 field_A;
     s16 field_C;
@@ -28,9 +37,23 @@ struct Sprite {
     u32 hFlip : 1;
     u32 vFlip : 1;
     u32 field_12_0 : 1;
-    u32 field_12_1 : 2;
-    u32 field_12_3 : 1;
-    u32 field_12_4 : 1;
+
+    /**
+     * What should happen when the animation completes.
+     */
+    u32 animationEndAction : 2;
+
+    /**
+     * True when the animation completed the entire animation. Resets next frame when animation is set
+     * to looping.
+     */
+    u32 animationComplete : 1;
+
+    /**
+     * If true the animation is paused.
+     */
+    u32 paused : 1;
+
     u32 hidden : 1;
     u32 field_12_6 : 2;
     u32 field_13_0 : 2;
@@ -79,7 +102,7 @@ struct Sprite {
     void* field_50;
     void* field_54;
     u8* field_58;
-    SpriteCallback onAnimationFinished; // Called by sprite_update (see there for when)
+    SpriteCallback onAnimationComplete;
     int callbackArgument;
     struct Sprite* previous; // Previous sprite in gSpriteContext's list
     struct Sprite* next;     // Next sprite in gSpriteContext's list
@@ -125,7 +148,7 @@ extern OamNodesSortRoutine gOamNodesSort;
 extern OamNodesCopyRoutine gOamNodesCopy;
 
 void sprite_play_animation(struct Sprite* sprite, int animation, int frame,
-                           SpriteCallback onAnimationFinished, int callbackArgument);
+                           SpriteCallback onAnimationComplete, int callbackArgument);
 void sub_801E3EC(u8* tileMap, u8* file);
 void sprite_update(struct Sprite* sprite);
 struct OamNode* sprite_draw(struct Sprite* sprite, struct OamNode* arg1, u8* arg2);

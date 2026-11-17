@@ -1411,12 +1411,12 @@ void FieldManager::sub_802563C() {
         int count = field_115 + field_117;
         if (count != 0) {
             do {
-                if ((*objects)->sprite->field_21 == 1 && (*objects)->sprite->field_12_3) {
+                if ((*objects)->sprite->field_21 == 1 && (*objects)->sprite->animationComplete) {
                     (*objects)->setSpriteActive(false);
                     (*objects)->field_214_0 = 0;
                     sprite_play_animation((*objects)->sprite, 0, 0, 0, 0);
-                    (*objects)->sprite->field_12_1 = 0;
-                    (*objects)->sprite->field_12_3 = 0;
+                    (*objects)->sprite->animationEndAction = ANIMATION_END_LOOP;
+                    (*objects)->sprite->animationComplete = false;
                 }
                 count--;
                 objects++;
@@ -1694,7 +1694,7 @@ void FieldManager::sub_80262CC(int x, int y, int z, int height, int type, bool a
         y = (y - z - height) / 256;
         sprite_play_animation(entry->sprite, animation, 0, 0, 0);
         sprite_restore(entry->sprite);
-        entry->sprite->field_12_1 = 2;
+        entry->sprite->animationEndAction = ANIMATION_END_HIDE;
         entry->sprite->field_E = 0x800 - y;
         entry->sprite->field_1F_0 = 1;
         entry->field_4 = x;
@@ -2337,9 +2337,9 @@ void FieldManager::start_battle_8027AC4() {
             player->sprite->hFlip = player->field_298_1;
             player->sprite->field_1F_0 = player->field_298_2;
             player->sprite->field_1F_2 = player->field_298_4;
-            player->sprite->field_12_1 = player->field_298_6;
-            player->sprite->field_12_3 = player->field_299_0;
-            player->sprite->field_12_4 = player->field_299_1;
+            player->sprite->animationEndAction = player->field_298_6;
+            player->sprite->animationComplete = player->field_299_0;
+            player->sprite->paused = player->field_299_1;
             player->sprite->field_21 = player->field_29B;
             player->sprite->field_23 = player->field_29C;
             player->sprite->field_2A = player->field_29E;
@@ -3761,7 +3761,7 @@ void FieldManager::sub_802A740() {
                 }
                 sub_804FE68(leader, objects);
                 if (leader->state == 4 && !leader->field_2B5_0 && !leader->field_2B5_3) {
-                    if (leader->field_214_0 == 4 && leader->sprite->field_12_3
+                    if (leader->field_214_0 == 4 && leader->sprite->animationComplete
                         && --leader->field_355 == 0) {
                         leader->field_214_0 = 5;
                     }
@@ -3839,7 +3839,7 @@ void FieldManager::sub_802A740() {
                 }
                 sub_804FE68(follower, objects);
                 if (follower->state == 4 && !follower->field_2B5_0 && !follower->field_2B5_3) {
-                    if (follower->field_214_0 == 4 && follower->sprite->field_12_3
+                    if (follower->field_214_0 == 4 && follower->sprite->animationComplete
                         && --follower->field_355 == 0) {
                         follower->field_214_0 = 5;
                     }
@@ -4523,7 +4523,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 }
             }
 
-            if (player->sprite->field_12_3) {
+            if (player->sprite->animationComplete) {
                 player->state = 7;
             }
             if (player->state != 5) {
@@ -4588,7 +4588,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                     stop_sfx_80195A8(player->field_54 == 0 ? 0x158 : 0x156);
                     player->state = 11;
                     player->method7(1);
-                    player->sprite->field_12_1 = 1;
+                    player->sprite->animationEndAction = ANIMATION_END_STOP;
                     play_sfx_80195B4(player->field_54 == 0 ? 0x9C : 0x9A, -1);
                 }
             }
@@ -4596,7 +4596,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
         }
 
         case 11:
-            if (player->sprite->field_12_3) {
+            if (player->sprite->animationComplete) {
                 if (player->sub_804D734(1, objects, field_10B) || player->sub_804DBD0(1)) {
                     player->field_355 = 5;
                 } else {
@@ -4605,12 +4605,12 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 player->field_214_0 = 0;
                 player->state = 12;
                 sprite_play_animation(player->field_36C, 5, 0, 0, 0);
-                player->field_36C->field_12_1 = 1;
+                player->field_36C->animationEndAction = ANIMATION_END_STOP;
             }
             break;
 
         case 12:
-            if (player->field_36C->field_21 == 5 && player->field_36C->field_12_3) {
+            if (player->field_36C->field_21 == 5 && player->field_36C->animationComplete) {
                 sprite_play_animation(player->field_36C, 6, 0, 0, 0);
             }
             if (player->field_355 != 0 && --player->field_355 == 0) {
@@ -4620,7 +4620,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             break;
 
         case 62:
-            if (player->sprite->field_12_3) {
+            if (player->sprite->animationComplete) {
                 player->field_214_0 = 2;
                 player->direction = 5;
                 player->jumpToHeight(12, 0x75 >> field_FA_10, -1);

@@ -224,9 +224,9 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
     if (field_298_0) {
         sprite->field_1F_0 = field_298_2;
         sprite->field_1F_2 = field_298_4;
-        sprite->field_12_1 = field_298_6;
-        sprite->field_12_3 = field_299_0;
-        sprite->field_12_4 = field_299_1;
+        sprite->animationEndAction = field_298_6;
+        sprite->animationComplete = field_299_0;
+        sprite->paused = field_299_1;
         sprite->field_2A = field_29E;
         sprite->field_2C = field_2A0;
         sprite->xScale = field_2A2;
@@ -238,7 +238,7 @@ void FieldObject::method2(u16* arg1, u16* arg2, void* arg3) {
     sprite->field_20 = field_239;
     field_298_0 = 0;
     if (field_214_0 == 0 || field_214_0 == 2 || field_214_0 == 3 || field_214_0 == 5) {
-        sprite->field_12_4 = 1;
+        sprite->paused = true;
     }
     this->sprite = sprite;
     if (field_212_5 == 0) {
@@ -289,14 +289,14 @@ void FieldObject::sub_8040804(bool mode, int animation, int flag) {
     }
     sprite->hFlip = flag;
     if (field_214_0 == 0 || field_214_0 == 2 || field_214_0 == 3 || field_214_0 == 5) {
-        sprite->field_12_4 = 1;
+        sprite->paused = true;
     }
     sprite->field_20 = field_239;
     if (spriteActive) {
-        int value2 = sprite->field_12_1;
-
+        int endAction = sprite->animationEndAction;
         sprite_restore(sprite);
-        sprite->field_12_1 = value2;
+        sprite->animationEndAction = endAction;
+
         if (mode != 0 && field_20C_22) {
             sub_8047DC8(0xFF);
         }
@@ -311,9 +311,9 @@ void FieldObject::method3() {
     field_298_1 = sprite->hFlip;
     field_298_2 = sprite->field_1F_0;
     field_298_4 = sprite->field_1F_2;
-    field_298_6 = sprite->field_12_1;
-    field_299_0 = sprite->field_12_3;
-    field_299_1 = sprite->field_12_4 & 1;
+    field_298_6 = sprite->animationEndAction;
+    field_299_0 = sprite->animationComplete;
+    field_299_1 = sprite->paused & 1;
     field_29B = sprite->field_21;
     field_29C = sprite->field_23;
     field_29E = sprite->field_2A;
@@ -325,7 +325,7 @@ void FieldObject::method3() {
 
 void FieldObject::method6(int arg) {
     int changed;
-    int flag;
+    bool pauseSprite;
 
     if (field_20C_0 && spriteActive && field_214_21 == 0) {
         if (field_214_0 > 2) {
@@ -339,8 +339,10 @@ void FieldObject::method6(int arg) {
             value = table[index];
             direction = value;
         }
+
         changed = arg;
-        flag = 0;
+        pauseSprite = false;
+
         switch (field_214_0) {
             case 0:
             case 1:
@@ -349,9 +351,10 @@ void FieldObject::method6(int arg) {
                     changed = 1;
                 }
                 if (field_214_0 == 0) {
-                    flag = 1;
+                    pauseSprite = true;
                 }
                 break;
+
             case 2:
             case 3:
             case 5:
@@ -359,17 +362,18 @@ void FieldObject::method6(int arg) {
                     changed = 1;
                 }
                 if ((velocityX == 0 && velocityY == 0) || field_214_0 == 5) {
-                    flag = 1;
+                    pauseSprite = true;
                 }
                 break;
         }
-        if (changed) {
-            int value = sprite->field_12_1;
 
+        if (changed) {
+            int endAction = sprite->animationEndAction;
             method7(1);
-            sprite->field_12_1 = value;
+            sprite->animationEndAction = endAction;
         }
-        sprite->field_12_4 = flag;
+
+        sprite->paused = pauseSprite;
     }
 }
 
@@ -431,12 +435,12 @@ void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
             && (field_8 <= (s16)spriteY || field_8 >= -16 - field_283))) {
         field_214_21 = 0;
         if (spriteActive && sprite->hidden) {
-            int value;
+            int endAction;
 
             field_214_24 = 1;
-            value = sprite->field_12_1;
+            endAction = sprite->animationEndAction;
             sprite_restore(sprite);
-            sprite->field_12_1 = value;
+            sprite->animationEndAction = endAction;
             if (field_26E != 0xFF) {
                 sub_8116654(field_334, field_26E);
             }
@@ -740,12 +744,14 @@ void FieldObject::sub_80418E8(FieldObject** objects) {
 // it instead of inlining it. Its out-of-line copy is emitted after the inline members below.
 inline void FieldObject::method4() {
     if (field_222 != 0xFF) {
-        int value;
+        int endAction;
 
         spriteActive = 1;
-        value = sprite->field_12_1;
+
+        endAction = sprite->animationEndAction;
         sprite_restore(sprite);
-        sprite->field_12_1 = value;
+        sprite->animationEndAction = endAction;
+
         if (field_20C_22) {
             sub_8047DC8(0xFF);
         }
@@ -2703,10 +2709,11 @@ void FieldObject::updateFlicker() {
                 flickerTimer = flickerDurations[1];
             }
         }
+
         if (flickerTimer == -1) {
             setSpriteActive(flickerMode == FIELD_OBJECT_FLICKER_IN);
             flickerMode = FIELD_OBJECT_FLICKER_NONE;
-            sprite->field_12_1 = field_212_14;
+            sprite->animationEndAction = field_212_14;
         }
     }
 }
@@ -3446,10 +3453,10 @@ void FieldObject::setSpriteActive(bool32 enable) {
     spriteActive = enable;
 
     if (enable) {
-        int value = sprite->field_12_1;
+        int value = sprite->animationEndAction;
 
         sprite_restore(sprite);
-        sprite->field_12_1 = value;
+        sprite->animationEndAction = value;
         if (field_20C_22) {
             if (field_26E != 0xFF) {
                 sub_8116654(field_334, field_26E);
@@ -3615,7 +3622,7 @@ bool FieldObject::sub_8047B78() {
 }
 
 void FieldObject::startFlicker(FieldObjectFlickerMode mode) {
-    field_212_14 = sprite->field_12_1;
+    field_212_14 = sprite->animationEndAction;
     flickerMode = mode;
     flickerDurations = mode == FIELD_OBJECT_FLICKER_IN ? &byte_83A061C[23] : &byte_83A061C[1];
     flickerTimer = flickerDurations[0];

@@ -330,10 +330,10 @@ void LoadMenu::update() {
                                     0xBC - i * 40;
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->yPosition =
                                     0xB4;
-                                this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_12_4 =
-                                    1;
-                                this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->field_12_1 =
-                                    1;
+                                this->sprites[this->field_154[this->field_FB - 1] * 2 + i]->paused =
+                                    true;
+                                this->sprites[this->field_154[this->field_FB - 1] * 2 + i]
+                                    ->animationEndAction = ANIMATION_END_STOP;
                             } else {
                                 sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_4C, -1);
                                 this->sprites[this->field_154[this->field_FB - 1] * 2 + i] =
@@ -754,8 +754,8 @@ void LoadMenu::sub_8126C3C() {
         this->arrows[this->field_EC]->field_10_1 = 0;
         this->arrows[this->field_EC]->field_28_9 = 0;
         this->arrows[this->field_EC]->field_28_13 = 0;
-        this->arrows[this->field_EC]->field_12_4 = 1;
-        this->arrows[this->field_EC]->field_12_1 = 1;
+        this->arrows[this->field_EC]->paused = true;
+        this->arrows[this->field_EC]->animationEndAction = ANIMATION_END_STOP;
         if (++this->field_EC == 4) {
             this->field_F2 = 2;
         }
@@ -785,8 +785,8 @@ void LoadMenu::sub_8126C3C() {
                     this->sprites[index]->field_10_1 = 0;
                     this->sprites[index]->field_28_9 = 0;
                     this->sprites[index]->field_28_13 = 0;
-                    this->sprites[index]->field_12_4 = 1;
-                    this->sprites[index]->field_12_1 = 1;
+                    this->sprites[index]->paused = true;
+                    this->sprites[index]->animationEndAction = ANIMATION_END_STOP;
                 } else if ((this->field_F1 >> slot) & 1) {
                     sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_4C, -1);
                     this->sprites[index] = sprite_create(5, SPRITE_ID(5, 6), 1, -1, -1, -1, -1);

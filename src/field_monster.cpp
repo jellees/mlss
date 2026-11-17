@@ -108,13 +108,15 @@ void FieldMonster::sub_8050078() {
 void FieldMonster::defeat() {
     field_20C_0 = 0;
     field_33C_1 = 1;
-    sprite->field_12_4 = 1;
+    sprite->paused = true;
     startFlicker(FIELD_OBJECT_FLICKER_OUT);
+
     if (field_344 != NULL && field_344->spriteActive) {
         field_344->field_20C_0 = 0;
-        field_344->sprite->field_12_4 = 1;
+        field_344->sprite->paused = true;
         field_344->startFlicker(FIELD_OBJECT_FLICKER_OUT);
     }
+
     sub_80E9958((u8*)dword_3000FC0 + 0x38C, 0, field_22C_10 + 0x960, 1);
 }
 
@@ -124,6 +126,7 @@ void FieldMonster::defeat() {
 void FieldMonster::survive() {
     field_20C_0 = 0;
     field_33C_1 = 2;
+
     if (field_33E_0 != 0) {
         field_33E_0 = 0;
         height = 0;
@@ -133,7 +136,9 @@ void FieldMonster::survive() {
         field_33D_0 = field_33C_4;
         field_33C_3 = 0;
     }
+
     startFlicker(FIELD_OBJECT_FLICKER_IN);
+
     if (field_344 != NULL && field_344->spriteActive) {
         field_344->field_20C_0 = 0;
         field_344->startFlicker(FIELD_OBJECT_FLICKER_IN);

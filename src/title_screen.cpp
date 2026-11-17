@@ -154,7 +154,7 @@ void CompanyIntro::update() {
                 gGameState.field_2 = 0xFFFF;
                 BUFFER_REG_BG0CNT = BGCNT_CHARBASE(3) | BGCNT_SCREENBASE(29);
                 sprite_show(alphaDreamLogo);
-                alphaDreamLogo->field_12_4 = 1;
+                alphaDreamLogo->paused = true;
                 brightness = 16;
                 state = 4;
             }
@@ -168,8 +168,8 @@ void CompanyIntro::update() {
                 state = 6;
             } else if (brightness == 0) {
                 brightness = 120;
-                alphaDreamLogo->field_12_4 = 0;
-                alphaDreamLogo->field_12_1 = 1;
+                alphaDreamLogo->paused = false;
+                alphaDreamLogo->animationEndAction = ANIMATION_END_STOP;
                 state = 5;
             }
             break;
@@ -213,12 +213,12 @@ void CompanyIntro::update() {
                 temp = mario->hFlip;
                 temp ^= 1;
                 mario->hFlip = temp;
-                mario->field_12_1 = 1;
+                mario->animationEndAction = ANIMATION_END_STOP;
 
                 sprite_change(luigi, 2, SPRITE_ID(0, 14), 1, -1, -1, -1, -1);
                 sprite_play_animation(luigi, 0, -1, 0, 0);
                 sprite_show(luigi);
-                luigi->field_12_1 = 1;
+                luigi->animationEndAction = ANIMATION_END_STOP;
                 flags = 0;
             }
         }
@@ -379,7 +379,7 @@ void TitleScreen::preparePressStart() {
     sprites[TS_SPRITE_SUITCASE]->field_1F_0 = 0;
     sprites[TS_SPRITE_SUITCASE]->field_1F_2 = 1;
     sprites[TS_SPRITE_SUITCASE]->field_E = 2;
-    sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
+    sprites[TS_SPRITE_SUITCASE]->paused = true;
     sprite_show(sprites[TS_SPRITE_SUITCASE]);
 
     xPosSuitcase = 30720;
@@ -563,29 +563,32 @@ void TitleScreen::update() {
                                 if (yPosSuitcase > 35839) {
                                     yPosSuitcase = 35840;
                                     sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 1, 0, 0, 0);
-                                    sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    sprites[TS_SPRITE_SUITCASE]->animationEndAction =
+                                        ANIMATION_END_STOP;
                                     states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_HIT_GROUND;
                                 }
                                 break;
 
                             case TS_ITEM_SC_STATE_HIT_GROUND:
-                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                if (sprites[TS_SPRITE_SUITCASE]->animationComplete) {
                                     sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
-                                    sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    sprites[TS_SPRITE_SUITCASE]->animationEndAction =
+                                        ANIMATION_END_STOP;
                                     states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_FALL_OVER;
                                 }
                                 break;
 
                             case TS_ITEM_SC_STATE_FALL_OVER:
-                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                if (sprites[TS_SPRITE_SUITCASE]->animationComplete) {
                                     sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 3, 0, 0, 0);
-                                    sprites[TS_SPRITE_SUITCASE]->field_12_1 = 1;
+                                    sprites[TS_SPRITE_SUITCASE]->animationEndAction =
+                                        ANIMATION_END_STOP;
                                     states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_OPEN;
                                 }
                                 break;
 
                             case TS_ITEM_SC_STATE_OPEN:
-                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                if (sprites[TS_SPRITE_SUITCASE]->animationComplete) {
                                     sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
                                     BUFFER_REG_DISPCNT |= DISPCNT_BG2_ON;
                                     mlTextProgression = 2560;
@@ -649,9 +652,9 @@ void TitleScreen::update() {
                                 break;
 
                             case TS_ITEM_SC_STATE_CLOSE:
-                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                if (sprites[TS_SPRITE_SUITCASE]->animationComplete) {
                                     sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 2, 0, 0, 0);
-                                    sprites[TS_SPRITE_SUITCASE]->field_12_4 = 1;
+                                    sprites[TS_SPRITE_SUITCASE]->paused = true;
                                     sprite_hide(sprites[TS_SPRITE_LICENSE_TEXT]);
                                     states[TS_ITEM_SUITCASE] = -1;
                                     BUFFER_REG_BG0CNT = BGCNT_PRIORITY(2) | BGCNT_SCREENBASE(24);
@@ -844,7 +847,7 @@ void TitleScreen::update() {
                                 break;
 
                             case TS_ITEM_SC_STATE_BUMP_OPEN:
-                                if (sprites[TS_SPRITE_SUITCASE]->field_12_3) {
+                                if (sprites[TS_SPRITE_SUITCASE]->animationComplete) {
                                     sprite_play_animation(sprites[TS_SPRITE_SUITCASE], 4, 0, 0, 0);
                                     states[TS_ITEM_SUITCASE] = -1;
                                 }
@@ -921,7 +924,7 @@ void TitleScreen::update() {
                                 break;
 
                             case 2:
-                                if (sprites[TS_SPRITE_BEAN_POINTER]->field_12_3) {
+                                if (sprites[TS_SPRITE_BEAN_POINTER]->animationComplete) {
                                     sprite_play_animation(sprites[TS_SPRITE_BEAN_POINTER], 13, 0, 0, 0);
                                     sprite_play_animation(sprites[TS_SPRITE_SUITCASE_VISUAL], 0, 0, 0,
                                                           0);
@@ -1033,7 +1036,7 @@ void TitleScreen::update() {
 
     switch (suitcaseVisualState) {
         case TS_SV_STATE_APPEAR:
-            if (sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
+            if (sprites[TS_SPRITE_SUITCASE_VISUAL]->animationComplete) {
                 sprite_play_animation(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection + 1, 0, 0,
                                       0);
                 suitcaseVisualState = TS_SV_STATE_IDLE;
@@ -1041,7 +1044,7 @@ void TitleScreen::update() {
             break;
 
         case TS_SV_STATE_DISAPPEAR:
-            if (sprites[TS_SPRITE_SUITCASE_VISUAL]->field_12_3) {
+            if (sprites[TS_SPRITE_SUITCASE_VISUAL]->animationComplete) {
                 sprite_play_animation(sprites[TS_SPRITE_SUITCASE_VISUAL], 3 * this->selection, 0, 0, 0);
                 suitcaseVisualState = TS_SV_STATE_APPEAR;
             }

@@ -139,9 +139,9 @@ void FieldPlayerCharacter::method2(u16* arg1, u16* arg2, void* arg3) {
         field_36C->hFlip = field_378_1;
         field_36C->field_1F_0 = field_378_2;
         field_36C->field_1F_2 = field_378_4;
-        field_36C->field_12_1 = field_378_6;
-        field_36C->field_12_3 = field_379_0;
-        field_36C->field_12_4 = field_379_1;
+        field_36C->animationEndAction = field_378_6;
+        field_36C->animationComplete = field_379_0;
+        field_36C->paused = field_379_1;
         field_36C->field_2A = field_37E;
         field_36C->field_2C = field_380;
         field_36C->xScale = field_382;
@@ -158,9 +158,9 @@ void FieldPlayerCharacter::method3() {
         field_378_1 = field_36C->hFlip;
         field_378_2 = field_36C->field_1F_0;
         field_378_4 = field_36C->field_1F_2;
-        field_378_6 = field_36C->field_12_1;
-        field_379_0 = field_36C->field_12_3;
-        field_379_1 = field_36C->field_12_4;
+        field_378_6 = field_36C->animationEndAction;
+        field_379_0 = field_36C->animationComplete;
+        field_379_1 = field_36C->paused;
         field_37B = field_36C->field_21;
         field_37C = field_36C->field_23;
         field_37E = field_36C->field_2A;
@@ -450,7 +450,7 @@ void FieldPlayerCharacter::sub_8049224() {
     field_214_0 = 4;
     if (state != 4) {
         sub_8049000(field_54 == 0 ? (isMini ? 0x103C : 0x103B) : 0x1052);
-    } else if (sprite->field_12_4) {
+    } else if (sprite->paused) {
         sub_8040804(true, -1, -1);
     }
     startAirborne(defaultJumpVelocity, defaultGravity, -1);
@@ -471,12 +471,14 @@ void FieldPlayerCharacter::sub_80492DC() {
 void FieldPlayerCharacter::startHammer(bool arg) {
     field_214_0 = 4;
     sub_8049000(field_54 == 0 ? (isMini ? 0x1029 : 0x1025) : 0x103F);
-    sprite->field_12_1 = 1;
+    sprite->animationEndAction = ANIMATION_END_STOP;
+
     if (arg == 0) {
         play_sfx_80195B4(0x3C, -1);
     } else {
         play_sfx_80195B4(0x3C, -1);
     }
+
     state = 5;
     field_212_6 = 1;
     field_358_12 = 0;
@@ -520,7 +522,7 @@ void FieldPlayerCharacter::showHandPowerSprite(int type) {
     field_36C->xPosition = sprite->xPosition + field_372;
     field_36C->yPosition = sprite->yPosition + field_373;
     field_36C->field_E = sprite->field_E + field_374;
-    field_36C->field_12_1 = 0;
+    field_36C->animationEndAction = ANIMATION_END_LOOP;
 }
 
 void FieldPlayerCharacter::showBarrelBreakingSprite() { // Show barrel breaking
@@ -538,7 +540,7 @@ void FieldPlayerCharacter::showBarrelBreakingSprite() { // Show barrel breaking
     field_36C->xPosition = sprite->xPosition;
     field_36C->yPosition = sprite->yPosition;
     field_36C->field_E = sprite->field_E;
-    field_36C->field_12_1 = 2;
+    field_36C->animationEndAction = ANIMATION_END_HIDE;
 }
 
 void FieldPlayerCharacter::sub_80497A8() { // ! balloon
@@ -556,7 +558,7 @@ void FieldPlayerCharacter::sub_80497A8() { // ! balloon
     field_36C->xPosition = sprite->xPosition + field_372;
     field_36C->yPosition = sprite->yPosition + field_373;
     field_36C->field_E = sprite->field_E + field_374;
-    field_36C->field_12_1 = 0;
+    field_36C->animationEndAction = ANIMATION_END_LOOP;
 }
 
 void FieldPlayerCharacter::showExclamationBalloon() {
@@ -574,7 +576,7 @@ void FieldPlayerCharacter::showExclamationBalloon() {
     field_36C->xPosition = sprite->xPosition + field_372;
     field_36C->yPosition = sprite->yPosition + field_373;
     field_36C->field_E = sprite->field_E + field_374;
-    field_36C->field_12_1 = 0;
+    field_36C->animationEndAction = ANIMATION_END_LOOP;
 }
 
 void FieldPlayerCharacter::sub_80499B8() { // show bean star pieces
@@ -592,7 +594,7 @@ void FieldPlayerCharacter::sub_80499B8() { // show bean star pieces
     field_36C->xPosition = sprite->xPosition;
     field_36C->yPosition = sprite->yPosition;
     field_36C->field_E = sprite->field_E;
-    field_36C->field_12_1 = 2;
+    field_36C->animationEndAction = ANIMATION_END_HIDE;
 }
 
 void FieldPlayerCharacter::sub_8049AB4(int mode, int animation) {
@@ -2889,7 +2891,7 @@ void FieldPlayerShotBullet::sub_804E33C(FieldObject** objects, int count) {
             }
             sprite_play_animation(sprite, sprite->field_21, i, 0, 0);
         }
-        sprite->field_12_1 = 2;
+        sprite->animationEndAction = ANIMATION_END_HIDE;
     }
     sub_804F904();
 }

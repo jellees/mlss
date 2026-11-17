@@ -82,19 +82,22 @@ void FieldEventScript::sub_80EB248() {
 }
 
 void FieldEventScript::sub_80EB490(FieldObject* object, ScriptContext* script) {
-    if (object->sprite->field_12_1 != 1) {
-        object->sprite->field_12_1 = 1;
+    if (object->sprite->animationEndAction != ANIMATION_END_STOP) {
+        object->sprite->animationEndAction = ANIMATION_END_STOP;
     }
-    if (object->sprite->field_12_3) {
+
+    if (object->sprite->animationComplete) {
         if (--script->field_9C == 0) {
             if (script->field_A0 & 0x200) {
                 object->field_214_0 = 0;
                 script->field_A0 &= ~0x220;
                 return;
             }
+
             object->sub_80474D0();
             script->field_A0 ^= 0x20;
         }
-        object->sprite->field_12_1 = 0;
+
+        object->sprite->animationEndAction = ANIMATION_END_LOOP;
     }
 }

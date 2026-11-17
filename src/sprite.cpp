@@ -155,7 +155,7 @@ static void sprite_routines_copy(u8 flags) {
 }
 
 void sprite_play_animation(struct Sprite* sprite, int animation, int frame,
-                           SpriteCallback onAnimationFinished, int callbackArgument) {
+                           SpriteCallback onAnimationComplete, int callbackArgument) {
     u8* file = sprite->field_38;
     u8* images = file - (file[0] | (file[1] << 8));
     u32 counts = file[4] | (file[5] << 8);
@@ -170,14 +170,14 @@ void sprite_play_animation(struct Sprite* sprite, int animation, int frame,
     sprite->field_26 = (file[6] & 0x7F) + 1;
     sprite->field_24 = file[7];
     entry = file + (file[animation * 2 + 8] | (file[animation * 2 + 9] << 8));
-    sprite->field_12_4 = 0;
-    sprite->field_12_1 = 0;
-    sprite->onAnimationFinished = onAnimationFinished;
+    sprite->paused = false;
+    sprite->animationEndAction = ANIMATION_END_LOOP;
+    sprite->onAnimationComplete = onAnimationComplete;
     sprite->callbackArgument = callbackArgument;
 
     if (frame == -1) {
         sprite->field_23 = 0;
-        sprite->field_12_3 = 0;
+        sprite->animationComplete = false;
         sprite->hidden = true;
         sprite->field_20 = 0x10;
 
@@ -324,17 +324,16 @@ void sub_801E3EC(u8* tileMap, u8* file) {
     delete[] tiles;
 }
 
-static inline SpriteCallback getOnAnimationFinished(struct Sprite* sprite) {
-    return sprite->onAnimationFinished;
+static inline SpriteCallback getonAnimationComplete(struct Sprite* sprite) {
+    return sprite->onAnimationComplete;
 }
 
 void sprite_update(struct Sprite* sprite) {
-    SpriteCallback onAnimationFinished;
+    SpriteCallback onAnimationComplete;
 
     if ((sprite->field_48 == 0 || sprite->field_48->status == 0)
-        && (sprite->field_44 == 0 || sprite->field_44[0] == 1) && !sprite->field_12_4
-        && !sprite->hidden) {
-        int wrapped = sprite->field_12_3;
+        && (sprite->field_44 == 0 || sprite->field_44[0] == 1) && !sprite->paused && !sprite->hidden) {
+        int wrapped = sprite->animationComplete;
         u8* entry;
         int frameCount;
         int timer;
@@ -345,7 +344,7 @@ void sprite_update(struct Sprite* sprite) {
         int update;
         u8* data;
 
-        sprite->field_12_3 = 0;
+        sprite->animationComplete = false;
         entry = sprite->field_3C;
         frameCount = sprite->field_25;
         timer = sprite->field_2C;
@@ -360,13 +359,13 @@ void sprite_update(struct Sprite* sprite) {
                 if (++frame >= frameCount) {
                     frame = 0;
                     timer = 0;
-                    sprite->field_12_3 = wrapped ^ 1;
+                    sprite->animationComplete = wrapped ^ 1;
                 }
             } else {
                 if (--frame < 0) {
                     frame = frameCount - 1;
                     timer = 0;
-                    sprite->field_12_3 = wrapped ^ 1;
+                    sprite->animationComplete = wrapped ^ 1;
                 }
             }
             data = entry + (frame * 2 + 1);
@@ -375,15 +374,15 @@ void sprite_update(struct Sprite* sprite) {
         }
 
         update = 1;
-        if (sprite->field_12_3) {
-            if (sprite->field_12_1 == 1) {
-                sprite->field_12_4 = 1;
+        if (sprite->animationComplete) {
+            if (sprite->animationEndAction == ANIMATION_END_STOP) {
+                sprite->paused = true;
                 frame = frameCount - 1;
                 data = entry + (frame * 2 + 1);
                 image = data[0];
                 remaining = 1;
                 timer = 0;
-            } else if (sprite->field_12_1 == 2) {
+            } else if (sprite->animationEndAction == ANIMATION_END_HIDE) {
                 sprite->hidden = true;
                 update = 0;
             }
@@ -399,9 +398,10 @@ void sprite_update(struct Sprite* sprite) {
             sprite->field_22 = image;
         }
     }
-    onAnimationFinished = getOnAnimationFinished(sprite);
-    if (onAnimationFinished != 0 && (sprite->field_28_9 || (sprite->field_12_3 && !sprite->hidden))) {
-        onAnimationFinished(sprite, sprite->callbackArgument);
+    onAnimationComplete = getonAnimationComplete(sprite);
+    if (onAnimationComplete != 0
+        && (sprite->field_28_9 || (sprite->animationComplete && !sprite->hidden))) {
+        onAnimationComplete(sprite, sprite->callbackArgument);
     }
 }
 
@@ -1767,7 +1767,7 @@ void sprites_draw(void) {
 void sprite_show(struct Sprite* sprite) {
     if (sprite->hidden) {
         sprite->hidden = false;
-        sprite->field_12_1 = 0;
+        sprite->animationEndAction = ANIMATION_END_LOOP;
         if (sprite->field_54 != 0) {
             if (sub_8021574(sprite->paletteBank, sprite->paletteIndex, sprite->field_28_12, 1, 1,
                             &sprite->field_14, -1)
@@ -2053,7 +2053,7 @@ void sprite_change(struct Sprite* sprite, int bank, int id, int useTileMap, int 
     bufferSize += 3;
     bufferSize &= ~3;
 
-    sprite->field_12_1 = 0;
+    sprite->animationEndAction = ANIMATION_END_LOOP;
     sprite->paletteCount = paletteCount;
     sprite->id = id;
     sprite->animationIndex = animationIndex;
@@ -2626,7 +2626,6 @@ void sprite_hide(struct Sprite* sprite) {
     }
 }
 
-// Animates all sprites; field_12_1 says what happens at the end of an animation (2: hide, 3: destroy).
 void sprites_update(void) {
     struct Sprite* sprite = gSpriteContext.field_30;
 
@@ -2635,10 +2634,11 @@ void sprites_update(void) {
 
         if (sprite->active) {
             sprite_update(sprite);
-            if (sprite->field_12_3) {
-                if (sprite->field_12_1 == 2) {
+
+            if (sprite->animationComplete) {
+                if (sprite->animationEndAction == ANIMATION_END_HIDE) {
                     sprite_hide(sprite);
-                } else if (sprite->field_12_1 == 3) {
+                } else if (sprite->animationEndAction == ANIMATION_END_DESTROY) {
                     sprite_destroy(sprite);
                 }
             }

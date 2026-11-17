@@ -327,7 +327,7 @@ void SaveMenu::update() {
                 if (this->field_B7 != 1) {
                     break;
                 }
-                if (this->arrows[0]->field_12_3) {
+                if (this->arrows[0]->animationComplete) {
                     sub_8125220(this->field_62, &this->field_63, 0xFF);
                     this->state = 18;
                     break;
@@ -366,15 +366,15 @@ void SaveMenu::update() {
                     this->field_BC = 0;
                     break;
                 }
-                if (this->arrows[0]->field_12_4) {
+                if (this->arrows[0]->paused) {
                     int i;
 
                     gGameState.field_88C_0 = 1;
                     gGameState.field_88A_5 = 1;
                     gGameState.field_88A_3 = 1;
                     for (i = 0; i < 5; i++) {
-                        this->arrows[i]->field_12_4 = 0;
-                        this->arrows[i]->field_12_1 = 1;
+                        this->arrows[i]->paused = false;
+                        this->arrows[i]->animationEndAction = ANIMATION_END_STOP;
                     }
                 }
             } else if (this->field_A4 == 0xFF) {
@@ -726,7 +726,7 @@ void SaveMenu::sub_812936C() {
     this->field_3C->field_10_1 = 0;
     this->field_3C->field_28_9 = 0;
     this->field_3C->field_28_13 = 0;
-    this->field_3C->field_12_4 = 1;
+    this->field_3C->paused = true;
 
     this->field_40 = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sprite_play_animation(this->field_40, 7, -1, 0, 0);
@@ -741,7 +741,7 @@ void SaveMenu::sub_812936C() {
     this->field_40->field_10_1 = 0;
     this->field_40->field_28_9 = 0;
     this->field_40->field_28_13 = 0;
-    this->field_40->field_12_4 = 1;
+    this->field_40->paused = true;
 
     this->field_44 = sprite_create(5, SPRITE_ID(5, 5), 0, -1, -1, -1, -1);
     sprite_play_animation(this->field_44, 8, -1, 0, 0);
@@ -756,7 +756,7 @@ void SaveMenu::sub_812936C() {
     this->field_44->field_10_1 = 0;
     this->field_44->field_28_9 = 0;
     this->field_44->field_28_13 = 0;
-    this->field_44->field_12_4 = 1;
+    this->field_44->paused = true;
 
     {
         int i;
@@ -785,8 +785,8 @@ void SaveMenu::sub_812936C() {
                 this->arrows[i]->field_10_1 = 0;
                 this->arrows[i]->field_28_9 = 0;
                 this->arrows[i]->field_28_13 = 0;
-                this->arrows[i]->field_12_4 = 1;
-                this->arrows[i]->field_12_1 = 1;
+                this->arrows[i]->paused = true;
+                this->arrows[i]->animationEndAction = ANIMATION_END_STOP;
             }
         }
     }
@@ -816,8 +816,8 @@ void SaveMenu::sub_812936C() {
                     this->fileSprites[i]->field_10_1 = 0;
                     this->fileSprites[i]->field_28_9 = 0;
                     this->fileSprites[i]->field_28_13 = 0;
-                    this->fileSprites[i]->field_12_4 = 1;
-                    this->fileSprites[i]->field_12_1 = 1;
+                    this->fileSprites[i]->paused = true;
+                    this->fileSprites[i]->animationEndAction = ANIMATION_END_STOP;
                 } else {
                     sub_8021574(5, PALETTE_ID(5, 2), 0, 0, 0, this->field_60, -1);
                     this->fileSprites[i] = sprite_create(5, SPRITE_ID(5, 6), 0, -1, -1, -1, -1);
@@ -879,8 +879,8 @@ void SaveMenu::sub_812936C() {
                     this->currentSprites[i]->field_10_1 = 0;
                     this->currentSprites[i]->field_28_9 = 0;
                     this->currentSprites[i]->field_28_13 = 0;
-                    this->currentSprites[i]->field_12_4 = 1;
-                    this->currentSprites[i]->field_12_1 = 1;
+                    this->currentSprites[i]->paused = true;
+                    this->currentSprites[i]->animationEndAction = ANIMATION_END_STOP;
                 }
             }
         }
@@ -1092,15 +1092,15 @@ void SaveMenu::sub_812A42C() {
             if (this->field_B0) {
                 this->field_B8 = 2;
                 this->field_3C->yPosition = 0x88;
-                this->field_3C->field_12_4 = 0;
+                this->field_3C->paused = false;
             } else {
                 this->field_B7 = 1;
                 this->field_B8 = 3;
                 this->field_3C->yPosition = 0xC0;
-                this->field_3C->field_12_4 = 1;
+                this->field_3C->paused = true;
                 this->field_44->xPosition = this->field_3C->xPosition;
                 this->field_44->yPosition = 0x88;
-                this->field_44->field_12_4 = 0;
+                this->field_44->paused = false;
             }
             break;
         case 2:
@@ -1118,23 +1118,23 @@ void SaveMenu::sub_812A42C() {
             if (this->field_A4) {
                 this->field_B8 = 3;
                 this->field_3C->yPosition = 0xC0;
-                this->field_3C->field_12_4 = 1;
+                this->field_3C->paused = true;
                 this->field_44->xPosition = this->field_3C->xPosition;
                 this->field_44->yPosition = 0x88;
-                this->field_44->field_12_4 = 0;
+                this->field_44->paused = false;
             } else {
                 this->field_3C->yPosition = 0xC0;
-                this->field_3C->field_12_4 = 1;
+                this->field_3C->paused = true;
                 this->field_44->xPosition = this->field_3C->xPosition;
                 this->field_44->yPosition = 0x88;
-                this->field_44->field_12_4 = 1;
+                this->field_44->paused = true;
                 this->field_B8 = 4;
             }
             break;
         case 3:
             if (this->field_A4 == 0) {
                 this->field_B8 = 4;
-                this->field_44->field_12_4 = 1;
+                this->field_44->paused = true;
             }
             break;
         case 4:
@@ -1154,7 +1154,7 @@ void SaveMenu::sub_812A42C() {
             }
             this->field_B8 = 6;
             this->field_40->yPosition = 0x88;
-            this->field_40->field_12_4 = 0;
+            this->field_40->paused = false;
             break;
         case 6:
             if (this->field_40->field_2C)
@@ -1166,7 +1166,7 @@ void SaveMenu::sub_812A42C() {
                 } else if (this->field_40->xPosition <= this->field_B6 + 0x20) {
                     this->field_B8 = 7;
                     this->field_40->xPosition = this->field_B6 + 0x20;
-                    this->field_40->field_12_4 = 1;
+                    this->field_40->paused = true;
                 }
             } else if (this->field_B0 & 4) {
                 if (this->field_40->xPosition > 0x20) {
@@ -1175,7 +1175,7 @@ void SaveMenu::sub_812A42C() {
                 } else {
                     this->field_B8 = 7;
                     this->field_40->xPosition = 0x20;
-                    this->field_40->field_12_4 = 1;
+                    this->field_40->paused = true;
                 }
             }
             break;
