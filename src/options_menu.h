@@ -1,7 +1,7 @@
 #ifndef OPTIONS_MENU_H
 #define OPTIONS_MENU_H
 
-#include "system_screens.h"
+#include "process.h"
 
 //! These classes' inline members and vtables are not emitted in the ROM next to their code like
 //! other classes' (no out-of-line ~OptionsMenu or renderer constructors), so this header is

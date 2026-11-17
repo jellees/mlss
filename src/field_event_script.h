@@ -3,6 +3,9 @@
 
 #include "process.h"
 
+class FieldObject;
+struct ScriptContext;
+
 // Event script processes of the field. Implemented in src/field_event_script.cpp and
 // asm/field_event_script.s (0x080EB248-0x080F1EE8), whose data holds the vtables of EVTS
 // (0x08CDC2F8) and BEVS (0x08CDC308). Interface-only, so that no file emits them.
@@ -19,7 +22,7 @@ class FieldEventScript : public Process {
     FieldEventScript(u8 priority, char* label) : Process(priority, label) {
     }
     void sub_80EB248();
-    bool sub_80F1E44(class FieldObject* object, struct ScriptContext* script); // inline, in the .cpp
+    bool sub_80F1E44(FieldObject* object, ScriptContext* script); // inline, in the .cpp
 };
 
 // "EVTS": runs the scripts of the field objects. Created by FieldManager's constructor

@@ -1,6 +1,9 @@
 #include "global.h"
 #include "common.h"
 #include "field.h"
+#include "field_object.h"
+#include "field_monster.h"
+#include "field_event_script.h"
 
 // Runs the object's script (if it is active) until sub_80EB838 or a command stops it. Inline
 // (0x080F1E44 is its out-of-line copy at the end of this file).

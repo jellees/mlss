@@ -2,14 +2,15 @@
 #define FIELD_H
 
 #include "process.h"
-#include "asm_processes.h"
-#include "text080575C8.h"
-#include "field_object.h"
-#include "field_player_character.h"
-#include "field_monster.h"
-#include "field_sprite_layout.h"
-#include "field_block.h"
-#include "field_event_script.h"
+#include "field_player_character.h" // FieldStruct4 (FieldManager::field_20C)
+
+class S_FX;
+class FieldProcess803EA00;
+class PANM;
+class S_MP;
+class FieldMonster;
+class EVTS;
+class BEVS;
 
 #pragma interface
 

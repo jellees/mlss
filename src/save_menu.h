@@ -2,7 +2,8 @@
 #define SAVE_MENU_H
 
 #include "process.h"
-#include "asm_processes.h"
+
+class Tmev;
 
 #pragma interface
 
@@ -18,7 +19,7 @@ class SaveMenu : public Process {
   public:
     Process* tsdr;
     struct Process* fade;
-    struct Tmev* tmev;
+    Tmev* tmev;
     struct Sprite* cursor;
     struct Sprite* fileSprites[2];
     struct Sprite* currentSprites[2];

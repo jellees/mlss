@@ -6,6 +6,7 @@
 #include "heap.h"
 #include "game_mode.h"
 #include "load_menu.h"
+#include "asm_processes.h"
 #include "title_screen.h"
 
 LoadMenu::LoadMenu(u8 priority, char* label, u16 arg3) : Process(priority, label) {

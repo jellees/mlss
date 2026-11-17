@@ -8,7 +8,7 @@
 // first, method4 last), then the ones defined in this class (~FieldObject).
 #pragma interface
 
-#include "text080575C8.h"
+class S_MP;
 
 // FieldObject::state. The base class only sets the generic values below (sub_804034C, from the
 // physics); subclasses use higher values for their own actions (FieldPlayerCharacter: 4, 5 = hammer, 7

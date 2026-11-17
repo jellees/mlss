@@ -2,7 +2,8 @@
 #define LOAD_MENU_H
 
 #include "process.h"
-#include "asm_processes.h"
+
+class Tmev;
 
 #pragma interface
 
@@ -61,7 +62,7 @@ class LoadMenu : public Process {
     u8 field_154[4];
     Process* tld;
     struct Process* fade;
-    struct Tmev* field_160;
+    Tmev* field_160;
 
     LoadMenu(u8 priority, char* label, u16 arg3);
     ~LoadMenu();

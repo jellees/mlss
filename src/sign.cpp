@@ -6,6 +6,7 @@
 #include "heap.h"
 #include "process.h"
 #include "sign.h"
+#include "text080575C8.h"
 
 Sign::Sign(u8 priority, char* label, u16 roomId) : Process(priority, label) {
     struct SignMapEntry* entry;

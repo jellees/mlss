@@ -2,7 +2,8 @@
 #define SIGN_H
 
 #include "process.h"
-#include "text080575C8.h"
+
+class S_MP;
 
 // "SIGN": the map shown when the player reads a sign on the field (created by
 // FieldManager::startViewingSign). The screen fades to black, then into the map, which can be scrolled;
