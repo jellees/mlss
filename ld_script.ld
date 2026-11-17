@@ -57,7 +57,9 @@ SECTIONS
         asm/text0805CCE0.o(.text);
         asm/shared_script_commands.o(.text);
         asm/field_event_script.o(.text);
-        asm/text080F1EE8.o(.text);
+        asm/battle_event_script.o(.text);
+        asm/menu_event_script.o(.text);
+        asm/text080FB128.o(.text);
         src/load_menu.o(.text);
         asm/text08127BC8.o(.text);
         asm/text08127E50.o(.text);
@@ -118,7 +120,9 @@ SECTIONS
         asm/rodata081E2840.o(.rodata);
         asm/shared_script_commands.o(.rodata);
         asm/field_event_script.o(.rodata);
-        asm/rodata082001C0.o(.rodata);
+        asm/battle_event_script.o(.rodata);
+        asm/menu_event_script.o(.rodata);
+        asm/rodata082001F8.o(.rodata);
         src/load_menu.o(.rodata);
         asm/rodata08210F64.o(.rodata);
         src/save_menu.o(.rodata);
@@ -165,7 +169,9 @@ SECTIONS
         asm/vtables08CDC278.o(.gnu.linkonce.d.*);
         asm/vtables08CDC2C8.o(.gnu.linkonce.d.*);
         asm/field_event_script.o(.gnu.linkonce.d.*);
-        asm/vtables08CDC318.o(.gnu.linkonce.d.*);
+        asm/battle_event_script.o(.gnu.linkonce.d.*);
+        asm/menu_event_script.o(.gnu.linkonce.d.*);
+        asm/vtables08CDC338.o(.gnu.linkonce.d.*);
         src/load_menu.o(.gnu.linkonce.d.*);
         src/save_menu.o(.gnu.linkonce.d.*);
         asm/vtables08CDC3F8.o(.gnu.linkonce.d.*);
