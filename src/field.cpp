@@ -3255,10 +3255,12 @@ void FieldManager::sub_8029934() {
     }
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8029A0C__12FieldManagerii.s\"");
-#else
+static inline void setSpeed(FieldPlayerCharacter* player, const u16& speed) {
+    player->field_240 = speed;
+    player->field_23E = speed;
+    player->field_260 = speed;
+}
+
 void FieldManager::sub_8029A0C(int form, int arg2) {
     FieldPlayerCharacter* mario;
     FieldPlayerCharacter* luigi;
@@ -3269,6 +3271,7 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
     field_20B_7 = 0;
     field_209_5 = 0;
     leader->field_352_6 = 0;
+
     if (leader->field_54 == 0) {
         mario = leader;
         luigi = follower;
@@ -3276,6 +3279,7 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
         luigi = leader;
         mario = follower;
     }
+
     shotBulletIndex = 0;
     sub_803C610(this);
 
@@ -3291,22 +3295,15 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
                 follower->previousZ = leader->previousZ;
                 follower->previousHeight = leader->previousHeight;
             }
-            {
-                FieldStruct4* data = leader->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 0;
-                } else {
-                    data->field_0 = 0;
-                }
+            if (leader->field_368->field_0 == 1 || leader->field_368->field_0 == 2) {
+                leader->field_368->field_1 = 0;
+            } else {
+                leader->field_368->field_0 = 0;
             }
-            {
-                FieldPlayerCharacter* player = leader;
 
-                player->field_240 = field_100;
-                player->field_23E = field_100;
-                player->field_260 = field_100;
-            }
+            setSpeed(leader, field_100);
+
             leader->field_358_3 = 0;
             leader->field_350_14 = 0;
             leader->field_210_1 = 1;
@@ -3324,21 +3321,21 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
             leader->field_350_15 = 0;
             follower->field_35A_0 = 0;
             follower->field_35A_1 = 0;
+
             if (leader->field_368->field_12 != -1) {
                 leader->field_368->field_10[0] = leader->field_368->field_12;
                 leader->field_368->field_12 = -1;
             }
+
             field_208_0 = 1;
             field_20B_4 = 0;
-            {
-                FieldStruct4* data = follower->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 0;
-                } else {
-                    data->field_0 = 0;
-                }
+            if (follower->field_368->field_0 == 1 || follower->field_368->field_0 == 2) {
+                follower->field_368->field_1 = 0;
+            } else {
+                follower->field_368->field_0 = 0;
             }
+
             follower->field_358_3 = 0;
             follower->field_350_14 = 0;
             follower->field_20C_13 = 0;
@@ -3348,6 +3345,7 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
             follower->field_212_6 = 0;
             follower->field_23B = 0;
             follower->field_35A_1 = 0;
+
             if (brothersTogether) {
                 if (follower->field_368->field_12 != -1) {
                     follower->field_368->field_10[0] = follower->field_368->field_12;
@@ -3357,136 +3355,111 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
                 follower->field_368->field_14 = follower->field_368->field_12;
                 follower->field_368->field_12 = -1;
             }
+
             follower->isMini = false;
             follower->isMole = false;
             follower->isPump = false;
             follower->isBarrel = false;
             follower->field_350_15 = 0;
-            if (brothersTogether) {
-                FieldPlayerCharacter* player = follower;
 
-                player->field_240 = field_100;
-                player->field_23E = field_100;
-                player->field_260 = field_100;
+            if (brothersTogether) {
+                setSpeed(follower, field_100);
             }
             break;
 
-        case BROTHERS_FORM_PUMP_MARIO: {
-            int speed;
-
+        case BROTHERS_FORM_PUMP_MARIO:
             if (mario->field_35A_2) {
                 mario->sub_80492DC();
             }
-            sub_8021574(0, PALETTE_ID(0, 4), 0, 0, 0, buffer, 12);
-            {
-                FieldStruct4* data = mario->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 5;
-                } else {
-                    data->field_0 = 5;
-                }
+            sub_8021574(0, PALETTE_ID(0, 4), 0, 0, 0, buffer, 12);
+
+            if (mario->field_368->field_0 == 1 || mario->field_368->field_0 == 2) {
+                mario->field_368->field_1 = 5;
+            } else {
+                mario->field_368->field_0 = 5;
             }
-            speed = 0x100 >> field_FA_10;
-            mario->field_240 = speed;
-            mario->field_23E = speed;
-            mario->field_260 = speed;
+
+            setSpeed(mario, 0x100 >> field_FA_10);
+
             mario->isMini = false;
             mario->isPump = true;
             mario->sub_8049000(0x102E);
+
             if (shotBulletIndex == 0) {
                 shotBulletIndex = 3;
             }
+
             if (!brothersTogether && field_2D8_0 == 0x1F) {
                 sub_802E4C8(0);
             }
+
             if (mario->field_368->field_12 == -1) {
                 mario->field_368->field_12 = mario->field_368->field_10[0];
             }
-            mario->field_368->field_10[0] = 0;
-            {
-                FieldStruct4* data = luigi->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 5;
-                } else {
-                    data->field_0 = 5;
-                }
+            mario->field_368->field_10[0] = 0;
+
+            if (luigi->field_368->field_0 == 1 || luigi->field_368->field_0 == 2) {
+                luigi->field_368->field_1 = 5;
+            } else {
+                luigi->field_368->field_0 = 5;
             }
+
             luigi->isMole = false;
             luigi->isBarrel = false;
             luigi->field_350_15 = 0;
+
             if (brothersTogether) {
-                speed = 0x100 >> field_FA_10;
-                luigi->field_240 = speed;
-                luigi->field_23E = speed;
-                luigi->field_260 = speed;
+                setSpeed(luigi, 0x100 >> field_FA_10);
             }
             break;
-        }
 
-        case BROTHERS_FORM_MINI_MARIO: {
-            int speed;
-
+        case BROTHERS_FORM_MINI_MARIO:
             if (mario->field_35A_2) {
                 mario->sub_80492DC();
             }
-            {
-                FieldStruct4* data = mario->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 11;
-                } else {
-                    data->field_0 = 11;
-                }
+            if (mario->field_368->field_0 == 1 || mario->field_368->field_0 == 2) {
+                mario->field_368->field_1 = 11;
+            } else {
+                mario->field_368->field_0 = 11;
             }
-            speed = 0x200 >> field_FA_10;
-            mario->field_240 = speed;
-            mario->field_23E = speed;
-            mario->field_260 = speed;
+
+            setSpeed(mario, 0x200 >> field_FA_10);
+
             mario->isMini = true;
             mario->isPump = false;
             mario->sub_8049000(0x1028);
-            {
-                FieldStruct4* data = luigi->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 11;
-                } else {
-                    data->field_0 = 11;
-                }
+            if (luigi->field_368->field_0 == 1 || luigi->field_368->field_0 == 2) {
+                luigi->field_368->field_1 = 11;
+            } else {
+                luigi->field_368->field_0 = 11;
             }
+
             luigi->isMole = false;
             luigi->isBarrel = false;
             luigi->field_350_15 = 0;
+
             if (brothersTogether) {
-                speed = 0x200 >> field_FA_10;
-                luigi->field_240 = speed;
-                luigi->field_23E = speed;
-                luigi->field_260 = speed;
+                setSpeed(luigi, 0x200 >> field_FA_10);
             }
             break;
-        }
 
-        case BROTHERS_FORM_MOLE_LUIGI: {
-            int speed;
-
+        case BROTHERS_FORM_MOLE_LUIGI:
             if (luigi->field_35A_2) {
                 luigi->sub_80492DC();
             }
-            {
-                FieldStruct4* data = luigi->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 6;
-                } else {
-                    data->field_0 = 6;
-                }
+            if (luigi->field_368->field_0 == 1 || luigi->field_368->field_0 == 2) {
+                luigi->field_368->field_1 = 6;
+            } else {
+                luigi->field_368->field_0 = 6;
             }
-            speed = 0x100 >> field_FA_10;
-            luigi->field_240 = speed;
-            luigi->field_23E = speed;
-            luigi->field_260 = speed;
+
+            setSpeed(luigi, 0x100 >> field_FA_10);
+
             luigi->sub_8049000(0x1043);
             luigi->isMole = true;
             luigi->isBarrel = false;
@@ -3495,6 +3468,7 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
             luigi->field_210_2 = 0;
             luigi->field_352_6 = 1;
             luigi->field_350_15 = 0;
+
             if (brothersTogether || luigi->field_352_7) {
                 if (luigi->field_368->field_12 == -1) {
                     luigi->field_368->field_12 = luigi->field_368->field_10[0];
@@ -3503,52 +3477,44 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
                 if (luigi->field_368->field_14 != -1) {
                     luigi->field_368->field_12 = luigi->field_368->field_14;
                 }
+
                 luigi->field_368->field_14 = luigi->field_368->field_10[0];
             }
-            luigi->field_368->field_10[0] = 0;
-            {
-                FieldStruct4* data = mario->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 6;
-                } else {
-                    data->field_0 = 6;
-                }
+            luigi->field_368->field_10[0] = 0;
+
+            if (mario->field_368->field_0 == 1 || mario->field_368->field_0 == 2) {
+                mario->field_368->field_1 = 6;
+            } else {
+                mario->field_368->field_0 = 6;
             }
+
             mario->isMini = false;
             mario->isPump = false;
+
             if (brothersTogether) {
-                speed = 0x100 >> field_FA_10;
-                mario->field_240 = speed;
-                mario->field_23E = speed;
-                mario->field_260 = speed;
+                setSpeed(mario, 0x100 >> field_FA_10);
             }
             break;
-        }
 
-        case BROTHERS_FORM_BARREL_LUIGI: {
-            int speed;
-
+        case BROTHERS_FORM_BARREL_LUIGI:
             if (luigi->field_35A_2) {
                 luigi->sub_80492DC();
             }
-            {
-                FieldStruct4* data = luigi->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 9;
-                } else {
-                    data->field_0 = 9;
-                }
+            if (luigi->field_368->field_0 == 1 || luigi->field_368->field_0 == 2) {
+                luigi->field_368->field_1 = 9;
+            } else {
+                luigi->field_368->field_0 = 9;
             }
-            speed = 0x100 >> field_FA_10;
-            luigi->field_240 = speed;
-            luigi->field_23E = speed;
-            luigi->field_260 = speed;
+
+            setSpeed(luigi, 0x100 >> field_FA_10);
+
             luigi->isMole = false;
             luigi->isBarrel = true;
             luigi->field_350_15 = 1;
             luigi->sub_8049000(0x1046);
+
             if (brothersTogether || luigi->field_352_7) {
                 if (luigi->field_368->field_12 == -1) {
                     luigi->field_368->field_12 = luigi->field_368->field_10[0];
@@ -3559,42 +3525,40 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
                 }
                 luigi->field_368->field_14 = luigi->field_368->field_10[0];
             }
-            luigi->field_368->field_10[0] = 0;
-            {
-                FieldStruct4* data = mario->field_368;
 
-                if (data->field_0 == 1 || data->field_0 == 2) {
-                    data->field_1 = 9;
-                } else {
-                    data->field_0 = 9;
-                }
+            luigi->field_368->field_10[0] = 0;
+
+            if (mario->field_368->field_0 == 1 || mario->field_368->field_0 == 2) {
+                mario->field_368->field_1 = 9;
+            } else {
+                mario->field_368->field_0 = 9;
             }
+
             mario->isMini = false;
             mario->isPump = false;
+
             if (brothersTogether) {
-                speed = 0x100 >> field_FA_10;
-                mario->field_240 = speed;
-                mario->field_23E = speed;
-                mario->field_260 = speed;
+                setSpeed(mario, 0x100 >> field_FA_10);
             }
             break;
-        }
     }
 
     field_20A_3 = 0;
     leader->state = 0;
     leader->field_214_0 = 3;
+
     if (brothersTogether || follower->state > 12) {
         follower->state = 0;
         follower->field_214_0 = 3;
     }
+
     sprite_remove(leader->field_36C);
     sprite_remove(follower->field_36C);
+
     sub_802DDB4(leader, 0, 0);
     sub_802DDB4(follower, brothersTogether, 0);
     sub_802DF80(0);
 }
-#endif
 
 void FieldManager::sub_802A4E8() {
     u8 direction = follower->angle >> 5;
