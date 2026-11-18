@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_804A124__20FieldPlayerCharacterP12FieldStruct6PiT2bT4
-sub_804A124__20FieldPlayerCharacterP12FieldStruct6PiT2bT4:
+	thumb_func_start findWarp__20FieldPlayerCharacterP4WarpPiT2bT4
+findWarp__20FieldPlayerCharacterP4WarpPiT2bT4:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9

@@ -3,6 +3,7 @@
 #include "common.h"
 #include "sprite.h"
 #include "field_player_character.h"
+#include "field.h"
 #include "field_monster.h"
 
 FieldPlayerCharacter::FieldPlayerCharacter(int roomId, int index) : FieldObject(roomId, index) {
@@ -753,11 +754,11 @@ u8* FieldPlayerCharacter::sub_8049FF4(u8* data) {
 
 // https://decomp.me/scratch/jzB50
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_804A124__20FieldPlayerCharacterP12FieldStruct6PiT2bT4.s\"");
+asm_unified(".include \"asm/nonmatching/findWarp__20FieldPlayerCharacterP4WarpPiT2bT4.s\"");
 #else
-// Finds the cell rectangle in entries that this player character stands in.
-struct FieldStruct6* FieldPlayerCharacter::sub_804A124(struct FieldStruct6* entries, int* outX,
-                                                       int* outY, bool grounded, bool filtered) {
+// Finds the warp in warps whose rectangle this player character stands in.
+struct Warp* FieldPlayerCharacter::findWarp(struct Warp* warps, int* outX, int* outY, bool grounded,
+                                            bool filtered) {
     int left;
     int right;
     int top;
@@ -772,7 +773,7 @@ struct FieldStruct6* FieldPlayerCharacter::sub_804A124(struct FieldStruct6* entr
     if (grounded && height != 0) {
         return NULL;
     }
-    if (entries == NULL) {
+    if (warps == NULL) {
         return NULL;
     }
     left = x - ((field_346 / 2) << 8);
@@ -841,24 +842,25 @@ struct FieldStruct6* FieldPlayerCharacter::sub_804A124(struct FieldStruct6* entr
         directions = &byte_83A0A2E[direction];
     }
     while (TRUE) {
-        if (left >= entries->left && right <= entries->right && top >= entries->top
-            && bottom <= entries->bottom && field_26_1 == entries->layer) {
+        if (left >= warps->left && right <= warps->right && top >= warps->top && bottom <= warps->bottom
+            && field_26_1 == warps->fromLedge) {
             if (filtered) {
-                u8 type = entries->type;
+                u8 warpDirection = warps->direction;
 
-                if (directions[0] != type && directions[1] != type && directions[2] != type) {
+                if (directions[0] != warpDirection && directions[1] != warpDirection
+                    && directions[2] != warpDirection) {
                     goto next;
                 }
             }
-            *outX = x - (entries->left << 12);
-            *outY = y - (entries->top << 12);
-            return entries;
+            *outX = x - (warps->left << 12);
+            *outY = y - (warps->top << 12);
+            return warps;
         }
     next:
-        if (entries->last) {
+        if (warps->last) {
             break;
         }
-        entries++;
+        warps++;
     }
 
     return NULL;
@@ -3023,7 +3025,8 @@ void FieldPlayerShotBullet::sub_804E6E0(FieldObject** objects, int count) {
             int otherSide;
             FieldPlayerCharacter* player;
 
-            if (owner->objectIndex == other->objectIndex || !other->field_20C_0 || other->field_214_21) {
+            if (owner->objectIndex == other->objectIndex || !other->field_20C_0
+                || other->field_214_21) {
                 goto next;
             }
             otherWidth = other->field_272;

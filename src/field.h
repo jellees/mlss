@@ -14,6 +14,30 @@ class BEVS;
 
 #pragma interface
 
+// A room's warp (exit) list entry, 12 bytes (FieldManager::warps, from the table at 0x083AF418 via
+// sub_8059EF0). The list ends with the entry that has last set.
+struct Warp {
+    u8 left; // Trigger rectangle, in cells
+    u8 top;
+    u8 right;
+    u8 bottom;
+    u16 isAbsolute : 1; // Otherwise keeps the player's offset within the rectangle (sub_8027D64)
+    u16 direction : 3;  // Direction 0-7 the player walks in (FieldPlayerCharacter::findWarp filter)
+    u16 fromLedge : 1;  // Compared with FieldObject::field_26_1
+    u16 toLedge : 1;
+    u16 roomId : 9; // Destination room
+    u16 field_4_15 : 1;
+    u8 field_6;
+    u8 destX; // Destination, in cells
+    u8 destY;
+    u8 offsetX : 4; // Pixel offset within the destination cell (absolute warps)
+    u8 offsetY : 4;
+    u8 walkingAnimation : 1;
+    u8 last : 1;
+    u8 field_A_2 : 6;
+    u8 field_B;
+};
+
 struct FieldStruct1 {
     struct Sprite* sprite;
     s16 field_4;
@@ -49,24 +73,6 @@ struct FieldStruct3 {
     u8* field_8;
 };
 
-// FieldManager::field_E4: where sub_8027D64 sends the player (arguments of sub_8027E90).
-struct FieldStruct7 {
-    u8 pad_0[0x4];
-    u16 field_4_0 : 1;
-    u16 direction : 3;
-    u16 field_4_4 : 1;
-    u16 field_4_5 : 1;
-    u16 roomId : 9;
-    u16 field_4_15 : 1;
-    u8 pad_6;
-    u8 cellX;
-    u8 cellY;
-    u8 offsetX : 4;
-    u8 offsetY : 4;
-    u8 field_A_0 : 1;
-    u8 field_A_1 : 7;
-};
-
 // "FMBK" buffer (FieldManager::field_20): a copy of the field state.
 struct FieldBackup {
     u8 field_0_0 : 1;
@@ -93,9 +99,9 @@ class FieldManager : public Process {
     struct struc_3000388* field_D0;
     struct RoomHeader* field_D4; // Header of the current room
     u8* field_D8;
-    u8* field_DC; // Count, first index and offset of the 8-byte entries read by sub_8026C78
-    void* field_E0;
-    struct FieldStruct7* field_E4;
+    u8* field_DC;             // Count, first index and offset of the 8-byte entries read by sub_8026C78
+    struct Warp* warps;       // The current room's warp list
+    struct Warp* currentWarp; // The warp being taken (sub_8027D64)
     u32 field_E8;
     u32 field_EC;
     u32 field_F0;
@@ -438,7 +444,7 @@ class FieldManager : public Process {
     void sub_802E854(int arg);
     void sub_802EA70();
     void sub_802EC64(int arg);
-    u8 sub_802EDC4(FieldPlayerCharacter* player, bool arg2, bool arg3, bool arg4);
+    u8 checkWarps(FieldPlayerCharacter* player, bool arg2, bool arg3, bool arg4);
     void sub_802F498();
     void sub_803C7D8(FieldPlayerCharacter* player);
     void sub_803C834(FieldPlayerCharacter* player);

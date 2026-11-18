@@ -45,7 +45,7 @@ FieldManager::FieldManager(u8 priority, char* label, int roomId, bool arg4, bool
     field_F9_0 = 0;
     field_F9_2 = 0;
     field_F0 = 0;
-    field_E4 = 0;
+    currentWarp = 0;
     field_2B8_0 = 0;
     field_2B8_4 = 0;
     field_2B8_5 = 0;
@@ -249,7 +249,7 @@ void FieldManager::update() {
             field_126 = field_D4->objectsIndex;
             field_D8 = sub_80FB7E0(field_D4->mapScriptsIndex);
             field_DC = sub_80FB7F0(field_D4->itemBlocksIndex);
-            field_E0 = sub_8059EF0(roomId);
+            warps = sub_8059EF0(roomId);
             sub_80EFB18(evts);
             dword_3001034(0, objects, 0x80);
             make_field_objects_80267C0(field_126);
@@ -2374,8 +2374,8 @@ void FieldManager::sub_8027D64() {
     int y;
     u32 i;
 
-    if (!field_E4->field_4_0) {
-        switch ((u32)field_E4->direction) {
+    if (!currentWarp->isAbsolute) {
+        switch ((u32)currentWarp->direction) {
             case 0:
             case 4:
                 x = field_2D0;
@@ -2387,11 +2387,11 @@ void FieldManager::sub_8027D64() {
                 y = field_2D4;
                 break;
         }
-        x += field_E4->cellX << 12;
-        y += field_E4->cellY << 12;
+        x += currentWarp->destX << 12;
+        y += currentWarp->destY << 12;
     } else {
-        x = (field_E4->cellX << 12) + ((field_E4->offsetX + 8) << 8);
-        y = (field_E4->cellY << 12) + ((field_E4->offsetY * 16 + 240) * 16);
+        x = (currentWarp->destX << 12) + ((currentWarp->offsetX + 8) << 8);
+        y = (currentWarp->destY << 12) + ((currentWarp->offsetY * 16 + 240) * 16);
     }
 
     for (i = 0; i < 8; i++) {
@@ -2401,10 +2401,10 @@ void FieldManager::sub_8027D64() {
         }
     }
 
-    sub_8027E90(field_E4->roomId, field_E4->field_A_0, field_E4->direction, x, y,
-                field_E4->field_4_5 == 0 ? -1 : -2, leader->height > 0x1E00 ? 0x1E00 : leader->height,
+    sub_8027E90(currentWarp->roomId, currentWarp->walkingAnimation, currentWarp->direction, x, y,
+                currentWarp->toLedge == 0 ? -1 : -2, leader->height > 0x1E00 ? 0x1E00 : leader->height,
                 0, -3, true);
-    field_E4 = NULL;
+    currentWarp = NULL;
 }
 
 // A helper to match sub_8027E90. We need to see if this is emitted at the end of the file or whether
@@ -3911,7 +3911,7 @@ void FieldManager::sub_802A740() {
             }
         }
 
-        if (!field_209_0 && sub_802EDC4(leader, 1, !isUnderwater, 0)) {
+        if (!field_209_0 && checkWarps(leader, 1, !isUnderwater, 0)) {
             leader->velocityX = leader->velocityY = 0;
             follower->velocityX = follower->velocityY = 0;
         }
@@ -5407,19 +5407,21 @@ void FieldManager::sub_802EC64(int arg) {
     }
 }
 
-u8 FieldManager::sub_802EDC4(FieldPlayerCharacter* player, bool arg2, bool arg3, bool arg4) {
+u8 FieldManager::checkWarps(FieldPlayerCharacter* player, bool arg2, bool arg3, bool arg4) {
     if ((u8)(field_12A - 1) <= 1 && !field_F9_4 && !field_F9_5 && player->field_2B5_0 == 0) {
-        field_E4 = (struct FieldStruct7*)player->sub_804A124((struct FieldStruct6*)field_E0, &field_2D0,
-                                                             &field_2D4, arg3, arg4);
-        if (field_E4 != NULL) {
+        currentWarp = player->findWarp(warps, &field_2D0, &field_2D4, arg3, arg4);
+
+        if (currentWarp != NULL) {
             player->field_353_6 = 1;
             if (!player->field_353_7 && arg2 && field_12A == 2) {
                 leader->sub_804FC90();
                 follower->sub_804FC90();
+
                 if (brothersTogether && player->sub_8047C18(player->otherBrother)) {
                     field_2B8_5 = 1;
                     field_26E = 60;
                 }
+
                 sub_8027030(2, 16, 0, 0xFFFF, 0xFFFF);
                 leader->field_350_14 = 1;
                 follower->field_350_14 = 1;

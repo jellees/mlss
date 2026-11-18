@@ -676,7 +676,7 @@ void sub_8123340(void);
 u8 sub_81251F0(void);
 u8* sub_80FB7E0(u16);
 u8* sub_80FB7F0(u16);
-void* sub_8059EF0(u16);
+struct Warp* sub_8059EF0(u16); // The room's warp list
 void sub_80EFB18(struct EVTS*);
 void sub_80EFA14(struct EVTS*, int, int);
 void sub_80F01D4(struct EVTS*, int, int);
@@ -868,7 +868,7 @@ extern s8*
     off_83A09DC[]; // Indexed by [FieldObject::objectIndex][state] (FieldPlayerCharacter::sub_8048174)
 extern u8* off_83A086C[];       // Indexed by [!FieldPlayerCharacter::field_352_7][state]
 extern s8 byte_83A09E4[][8][3]; // FieldPlayerCharacter::field_372-374 per animation and direction
-extern u16 word_83A0A2C[];      // FieldPlayerCharacter::sub_804A124: corner masks that may match
+extern u16 word_83A0A2C[];      // FieldPlayerCharacter::findWarp: corner masks that may match
 extern u8 byte_83A0A2E[];
 extern u8 byte_83A0A38[]; // FieldPlayerCharacter::sub_804FC30, indexed by (angle / 32) * 4 + field_26_2
 extern u8 byte_83A0A58[8]; // FieldPlayerCharacter::sub_804B360 push directions per angle / 32 for a

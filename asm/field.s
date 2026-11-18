@@ -9882,7 +9882,7 @@ _08038446:
 	strb r0, [r3, #0x00]
 	adds r0, r7, #0x0
 	movs r3, #0x01
-	bl sub_802EDC4__12FieldManagerP20FieldPlayerCharacterbN22
+	bl checkWarps__12FieldManagerP20FieldPlayerCharacterbN22
 	lsls r0, r0, #0x18
 	lsrs r3, r0, #0x18
 	cmp r3, #0x00
@@ -9903,7 +9903,7 @@ _08038472:
 	strb r3, [r0, #0x00]
 	adds r0, r7, #0x0
 	movs r3, #0x01
-	bl sub_802EDC4__12FieldManagerP20FieldPlayerCharacterbN22
+	bl checkWarps__12FieldManagerP20FieldPlayerCharacterbN22
 _0803847E:
 	movs r1, #0x81
 	lsls r1, r1, #0x02

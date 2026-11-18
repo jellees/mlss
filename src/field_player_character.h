@@ -3,6 +3,8 @@
 
 #include "field_object.h"
 
+struct Warp;
+
 // "FPC" (Field Player Character): Mario and Luigi (FieldManager::objects[0] / [1], and leader /
 // follower). Implemented in src/field_player_character.cpp (0x08048064-0x0804FE68), which also emits
 // the vtable (0x08CDBE88), the inline members and the implicit destructor (0x081DD5B0). That file also
@@ -42,23 +44,6 @@ struct FieldStruct4 {
     u8 field_16_7 : 1;
     u8 field_17_0 : 7; // FieldPlayerCharacter::method5's copy of field_16_0
     u8 field_17_7 : 1; // FieldPlayerCharacter::method5's copy of field_16_7
-};
-
-// 12-byte cell rectangles (FieldPlayerCharacter::sub_804A124). The list ends with the entry that has
-// last set.
-struct FieldStruct6 {
-    u32 left : 8; // In cells
-    u32 top : 8;
-    u32 right : 8;
-    u32 bottom : 8;
-    u32 field_4_0 : 1;
-    u32 type : 3;
-    u32 layer : 1; // Compared with FieldObject::field_26_1
-    u32 field_4_5 : 27;
-    u32 field_8 : 16;
-    u32 field_A_0 : 1;
-    u32 last : 1;
-    u32 field_A_2 : 14;
 };
 
 class FieldPlayerCharacter : public FieldObject {
@@ -184,9 +169,9 @@ class FieldPlayerCharacter : public FieldObject {
     void sub_804FC90();                                           // 0x0804FC90
     void sub_804FD3C();                                           // 0x0804FD3C
     u8* sub_8049FF4(u8* data);                                    // 0x08049FF4
-    struct FieldStruct6* sub_804A124(struct FieldStruct6* entries, int* outX, int* outY, bool grounded,
-                                     bool filtered); // 0x0804A124
-    void sub_804FCD4();                              // 0x0804FCD4
+    struct Warp* findWarp(struct Warp* warps, int* outX, int* outY, bool grounded,
+                          bool filtered); // 0x0804A124
+    void sub_804FCD4();                   // 0x0804FCD4
 
     // Overridden vtable slots; the others are inherited from FieldObject. The destructor (slot 1) is
     // compiler-generated (a linkonce copy at 0x081DD5B0).
