@@ -3521,7 +3521,7 @@ void FieldObject::sub_80478AC(u8 newDirection) {
     method7(0);
 }
 
-void FieldObject::sub_804790C(u8 value) {
+void FieldObject::sub_804790C(s8 value) {
     field_239 = value;
     sprite->speed = value;
 }
@@ -3530,7 +3530,7 @@ void FieldObject::sub_8047928() {
     sprite_set_animation(sprite, sprite->field_21, 0);
 }
 
-void FieldObject::sub_804794C(u16 value) {
+void FieldObject::sub_804794C(s16 value) {
     field_23E = value;
 }
 

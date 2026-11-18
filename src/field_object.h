@@ -334,9 +334,9 @@ class FieldObject {
     void sub_8047784();
     void sub_80477A8(int a, int b);
     void sub_80478AC(u8 newDirection);
-    void sub_804790C(u8 value);
+    void sub_804790C(s8 value);
     void sub_8047928();
-    void sub_804794C(u16 value);
+    void sub_804794C(s16 value);
     void sub_8047958();
     void sub_804796C();
     void sub_8047980();

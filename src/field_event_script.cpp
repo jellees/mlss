@@ -429,7 +429,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 80:
             return sub_80ECDA4(object, script, command);
         case 81:
-            return sub_80ED17C(this, object, script, command);
+            return sub_80ED17C(object, script, command);
         case 82:
             return sub_80ED304(this, script, command);
         case 83:
@@ -947,3 +947,64 @@ s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32
     }
     return TRUE;
 }
+
+// Script command 81, chosen by command[0]: 0 calls sub_80472D0 with the field object command[2];
+// 1 calls sub_804790C or sub_804794C with a value decoded from command[2]; 2 sets the collision
+// flags selected by the mask command[2] to command[1] (like sub_80ECDA4 type 5, marking a brother);
+// 3 sets field_20C_1 and 4 sets field_270 to command[1].
+// https://decomp.me/scratch/TODO
+//! Nonmatching: in case 1, the original does each sign-extending shift pair in place (lsls r1, r1, #28;
+//! asrs r1, r1, #24), this goes through r0. decomp-permuter (~/perm/sub_80ED17C) found nothing in 15
+//! min.
+#ifndef NONMATCHING
+asm_unified(
+    ".include \"asm/nonmatching/sub_80ED17C__16FieldEventScriptP11FieldObjectP13ScriptContextPi.s\"");
+#else
+s8 FieldEventScript::sub_80ED17C(FieldObject* object, ScriptContext* script, s32* command) {
+    s32 value = command[2];
+
+    switch (*command++) {
+        case 0:
+            object->sub_80472D0(*(((FieldManager*)parentProcess)->objects + value), *command);
+            break;
+        case 1:
+            if (*command++) {
+                s32 speed = *command;
+
+                object->sub_804790C(speed & 0x40 ? speed & 0xF : (s8)(speed << 4));
+            } else {
+                s32 speed = *command;
+
+                object->sub_804794C(speed & 0x40 ? (speed & 0xF) << 4 : (s8)speed << 8);
+            }
+            break;
+        case 2:
+            if (object->field_54 <= 1) {
+                dword_3000FD0->field_55A_6 |= 1 << object->field_54;
+            }
+            if ((value >> 4) & 1) {
+                object->blocksBrothers = *command;
+            }
+            if ((value >> 3) & 1) {
+                object->collidesWithBrothers = *command;
+            }
+            if ((value >> 2) & 1) {
+                object->field_20C_7 = *command;
+            }
+            if ((value >> 1) & 1) {
+                object->collidesWithObjects = *command;
+            }
+            if (value & 1) {
+                object->blocksObjects = *command;
+            }
+            break;
+        case 3:
+            object->field_20C_1 = value;
+            break;
+        case 4:
+            object->field_270 = value;
+            break;
+    }
+    return TRUE;
+}
+#endif
