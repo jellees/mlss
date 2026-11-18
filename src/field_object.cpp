@@ -10,7 +10,7 @@ FieldObject::FieldObject(int roomId, int index) {
     field_1 = 0xFF;
     field_29 = -1;
     field_20C_0 = 1;
-    field_20C_19 = 1;
+    type = FIELD_OBJECT_TYPE_FCHR;
     spriteActive = 1;
     field_210_0 = 0;
     field_210_1 = 1;
@@ -426,7 +426,7 @@ void FieldObject::method8(s16 cameraX, s16 cameraY, FieldObject** objects) {
         field_A = 0;
     }
     // Type 7 objects are FieldBlocks (FBLK/SBLK; their constructors set it).
-    if (field_20C_19 == 7 && ((FieldBlock*)this)->field_33C_2) {
+    if (type == FIELD_OBJECT_TYPE_FBLK && ((FieldBlock*)this)->field_33C_2) {
         return;
     }
     if (field_211_0 != 0
@@ -655,7 +655,7 @@ void FieldObject::sub_80415A0() {
     }
     field_27E = field_278;
     field_280 = field_27C;
-    if (field_20C_19 == 0) {
+    if (type == FIELD_OBJECT_TYPE_FPC) {
         field_27E = field_278 - 0x800;
         field_280 = field_27C - 0x200;
     }
@@ -844,7 +844,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
     int verticalThis;
     int verticalOther;
 
-    if (!field_20C_0 || field_214_21 || !(field_20C_6 | field_20C_8)) {
+    if (!field_20C_0 || field_214_21 || !(collidesWithBrothers | collidesWithObjects)) {
         return;
     }
     left = x - field_272 / 2;
@@ -853,7 +853,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
     if (height > 0 || (height < 0 && previousHeight < 0)) {
         bottom += height;
     }
-    n = field_20C_8 ? count : 2;
+    n = collidesWithObjects ? count : 2;
     for (; n != 0; n--, others++) {
         other = *others;
         if (field_54 == other->field_54) {
@@ -871,12 +871,12 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
         if (other->field_29 == field_54) {
             continue;
         }
-        if (other->field_20C_19 == 0) {
-            pushThis = field_20C_6 & other->field_20C_9;
-            pushOther = field_20C_5 & other->field_20C_8;
+        if (other->type == FIELD_OBJECT_TYPE_FPC) {
+            pushThis = collidesWithBrothers & other->blocksObjects;
+            pushOther = blocksBrothers & other->collidesWithObjects;
         } else {
-            pushThis = field_20C_8 & other->field_20C_9;
-            pushOther = field_20C_9 & other->field_20C_8;
+            pushThis = collidesWithObjects & other->blocksObjects;
+            pushOther = blocksObjects & other->collidesWithObjects;
         }
         if (!pushThis) {
             continue;
@@ -1058,7 +1058,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
             if (field_0 == -1) {
                 field_0 = other->field_54;
             }
-            if (other->field_20C_19 == 0) {
+            if (other->type == FIELD_OBJECT_TYPE_FPC) {
                 field_24_9 = 1;
             } else {
                 field_24_10 = 1;

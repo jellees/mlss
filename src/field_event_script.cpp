@@ -66,9 +66,10 @@ void FieldEventScript::sub_80EB248() {
 
             if (current->field_20C_0
                 && (!current->field_214_21
-                    || (current->field_20C_19 == 3 && ((FieldMonster*)current)->field_344 != NULL
+                    || (current->type == FIELD_OBJECT_TYPE_FMON
+                        && ((FieldMonster*)current)->field_344 != NULL
                         && ((FieldMonster*)current)->field_344->field_20C_0))
-                && (current->field_20C_19 != 3
+                && (current->type != FIELD_OBJECT_TYPE_FMON
                     || (((FieldMonster*)current)->field_33C_0 == 1
                         && ((FieldMonster*)current)->field_33C_1 == 0))) {
                 current->script.field_140((FieldManager*)parentProcess, current);
@@ -119,13 +120,13 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
             if (!(slot->field_A0 & 1)) {
                 sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
-                if (fieldManager->objects[0]->field_20C_8) {
+                if (fieldManager->objects[0]->collidesWithObjects) {
                     dword_3000FD0->field_55A_6 &= ~1;
-                    fieldManager->objects[0]->field_20C_8 = 0;
+                    fieldManager->objects[0]->collidesWithObjects = 0;
                 }
-                if (fieldManager->objects[1]->field_20C_8) {
+                if (fieldManager->objects[1]->collidesWithObjects) {
                     dword_3000FD0->field_55A_6 &= ~2;
-                    fieldManager->objects[1]->field_20C_8 = 0;
+                    fieldManager->objects[1]->collidesWithObjects = 0;
                 }
                 if (!dword_3000FD0->field_55A_1) {
                     ((FieldManager*)parentProcess)->sub_8028D6C(0x3FF);
@@ -160,13 +161,13 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
             if (!(slot->field_A0 & 1)) {
                 sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
-                if (fieldManager->objects[0]->field_20C_8) {
+                if (fieldManager->objects[0]->collidesWithObjects) {
                     dword_3000FD0->field_55A_6 &= ~1;
-                    fieldManager->objects[0]->field_20C_8 = 0;
+                    fieldManager->objects[0]->collidesWithObjects = 0;
                 }
-                if (fieldManager->objects[1]->field_20C_8) {
+                if (fieldManager->objects[1]->collidesWithObjects) {
                     dword_3000FD0->field_55A_6 &= ~2;
-                    fieldManager->objects[1]->field_20C_8 = 0;
+                    fieldManager->objects[1]->collidesWithObjects = 0;
                 }
                 if (!dword_3000FD0->field_55A_1) {
                     ((FieldManager*)parentProcess)->sub_8028D6C(0x3FF);
@@ -251,8 +252,8 @@ bool FieldEventScript::sub_80EB838(FieldObject* object, ScriptContext* script) {
     if (object == NULL) {
         if (dword_3000FD0->field_548 == 1) {
             FieldManager* fieldManager = (FieldManager*)parentProcess;
-            fieldManager->objects[0]->field_20C_8 |= ~dword_3000FD0->field_55A_6 & 1;
-            fieldManager->objects[1]->field_20C_8 |= ~(dword_3000FD0->field_55A_6 >> 1) & 1;
+            fieldManager->objects[0]->collidesWithObjects |= ~dword_3000FD0->field_55A_6 & 1;
+            fieldManager->objects[1]->collidesWithObjects |= ~(dword_3000FD0->field_55A_6 >> 1) & 1;
         }
         if (!dword_3000FD0->field_55A_1) {
             if (dword_3000FD0->field_548 == 1) {
@@ -763,13 +764,13 @@ s8 FieldEventScript::sub_80ECB20(ScriptContext* script, s32* command) {
             if (!(slot->field_A0 & 1)) {
                 sub_80EA5C8(&field_1C, slot, *command, 0, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
-                if (fieldManager->objects[0]->field_20C_8) {
+                if (fieldManager->objects[0]->collidesWithObjects) {
                     dword_3000FD0->field_55A_6 &= ~1;
-                    fieldManager->objects[0]->field_20C_8 = 0;
+                    fieldManager->objects[0]->collidesWithObjects = 0;
                 }
-                if (fieldManager->objects[1]->field_20C_8) {
+                if (fieldManager->objects[1]->collidesWithObjects) {
                     dword_3000FD0->field_55A_6 &= ~2;
-                    fieldManager->objects[1]->field_20C_8 = 0;
+                    fieldManager->objects[1]->collidesWithObjects = 0;
                 }
                 if (!dword_3000FD0->field_55A_1) {
                     ((FieldManager*)parentProcess)->sub_8028D6C(0x3FF);

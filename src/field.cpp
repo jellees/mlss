@@ -266,8 +266,8 @@ void FieldManager::update() {
                 leader->y = saved->field_6 << 8;
                 leader->z = saved->field_8 << 8;
                 leader->height = saved->field_A << 8;
-                leader->field_20C_5 = 0;
-                leader->field_20C_6 = leader->field_20C_7 = brothersTogether ^ 1;
+                leader->blocksBrothers = 0;
+                leader->collidesWithBrothers = leader->field_20C_7 = brothersTogether ^ 1;
 
                 followerSaved = &data->field_4[luigiLeads ^ 1];
                 if (followerSaved->roomId == roomId) {
@@ -276,8 +276,8 @@ void FieldManager::update() {
                     follower->y = followerSaved->field_6 << 8;
                     follower->z = followerSaved->field_8 << 8;
                     follower->height = followerSaved->field_A << 8;
-                    follower->field_20C_5 = 0;
-                    follower->field_20C_6 = follower->field_20C_7 = brothersTogether ^ 1;
+                    follower->blocksBrothers = 0;
+                    follower->collidesWithBrothers = follower->field_20C_7 = brothersTogether ^ 1;
                     field_2D8_0 = 31;
                 } else {
                     field_2D8_0 = luigiLeads ^ 1;
@@ -444,7 +444,7 @@ void FieldManager::update() {
             if (inBattle) {
                 FieldMonster* monster;
 
-                if (objects[field_2A8_0]->field_20C_19 == 3) {
+                if (objects[field_2A8_0]->type == FIELD_OBJECT_TYPE_FMON) {
                     monster = (FieldMonster*)objects[field_2A8_0];
                     if (monster->field_33D_3) {
                         monster->field_344->field_20C_0 = 0;
@@ -626,7 +626,8 @@ void FieldManager::update() {
 
             for (i = 0; i < field_10B; i++) {
                 objects[i]->field_290 = field_304;
-                if (objects[i]->field_20C_19 == 3 && ((FieldMonster*)objects[i])->field_344 != NULL) {
+                if (objects[i]->type == FIELD_OBJECT_TYPE_FMON
+                    && ((FieldMonster*)objects[i])->field_344 != NULL) {
                     ((FieldMonster*)objects[i])->field_344->field_290 = field_304;
                 }
                 if (field_2B8_0 || field_F8_1 || field_F8_4) {
@@ -1812,7 +1813,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
     field_111 = 0;
     for (int i = 0; i < field_10B; i++) {
         switch (get_field_object_type(roomId, i)) {
-            case 0: {
+            case FIELD_OBJECT_TYPE_FPC: {
                 FieldPlayerCharacter* player = new (1, "FPC", 1) FieldPlayerCharacter(roomId, i);
 
                 if (field_FA_10) {
@@ -1824,7 +1825,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 objects[i] = player;
                 break;
             }
-            case 1: {
+            case FIELD_OBJECT_TYPE_FCHR: {
                 FieldObject* object = new (1, "FCHR", 1) FieldObject(roomId, i);
 
                 objects[i] = object;
@@ -1834,7 +1835,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_10F++;
                 break;
             }
-            case 2: {
+            case FIELD_OBJECT_TYPE_FBRD: {
                 // Seems to be various bigger objects. Like boo statues, the magic tree etc.
                 FieldObject* object = new (1, "FBRD", 1) FieldObject(roomId, i);
 
@@ -1845,7 +1846,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_111++;
                 break;
             }
-            case 3: {
+            case FIELD_OBJECT_TYPE_FMON: {
                 FieldMonster* object = new (1, "FMON", 1) FieldMonster(roomId, i);
 
                 objects[i] = object;
@@ -1858,7 +1859,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_113++;
                 break;
             }
-            case 4: {
+            case FIELD_OBJECT_TYPE_FBRL: {
                 // Field barrel, the barrel that luigi can use.
                 FieldObject* object = new (1, "FBRL", 1) FieldObject(roomId, i);
 
@@ -1869,7 +1870,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_115++;
                 break;
             }
-            case 5: {
+            case FIELD_OBJECT_TYPE_FRCK: {
                 // Field rock, the rocks that you can break in game. They are gone forever once broken.
                 FieldObject* object = new (1, "FRCK", 1) FieldObject(roomId, i);
 
@@ -1885,7 +1886,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_117++;
                 break;
             }
-            case 6: {
+            case FIELD_OBJECT_TYPE_FSPL: {
                 FieldSpriteLayout* object = new (1, "FSPL", 1) FieldSpriteLayout(roomId, i);
 
                 objects[i] = object;
@@ -1895,7 +1896,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 field_119++;
                 break;
             }
-            case 7: {
+            case FIELD_OBJECT_TYPE_FBLK: {
                 FieldBlock* object = new (1, "FBLK", 1) FieldBlock(roomId, i);
 
                 objects[i] = object;
@@ -1909,7 +1910,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 objects[i] = 0;
                 break;
         }
-        objects[i]->field_210_4 = objects[i]->field_20C_5;
+        objects[i]->field_210_4 = objects[i]->blocksBrothers;
         objects[i]->field_239 = 16 >> field_FA_10;
         objects[i]->field_54 = i;
     }
@@ -3860,7 +3861,7 @@ void FieldManager::sub_802A740() {
         } else if (!field_2B8_4) {
             u8 resetHeight;
 
-            if (follower->field_20C_5 || follower->field_20C_6) {
+            if (follower->blocksBrothers || follower->collidesWithBrothers) {
                 follower->method12(&objects[luigiLeads], 1, 0);
             }
             if (field_246_2 == 3 && field_10E != 0) {
@@ -4014,11 +4015,11 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, bool arg2) {
                                 ? player->z + player->height
                                 : player->z;
 
-        if (!brothersTogether && player->field_20C_6) {
+        if (!brothersTogether && player->collidesWithBrothers) {
             player->sub_804B028(objects[player->field_54 ^ 1]);
         }
 
-        if (player->field_20C_8 && !player->field_35A_12) {
+        if (player->collidesWithObjects && !player->field_35A_12) {
             if (player->field_33C_0 == 0x7F && field_112 != 0) {
                 others = &objects[field_112];
                 for (count = field_113; count != 0; count--, others++) {
@@ -4053,9 +4054,9 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, bool arg2) {
                         if (player->sub_804B028(*others) && !player->field_358_3) {
                             FieldObject* other = objects[(s8)(player->field_33C_0 << 1) >> 1];
 
-                            if ((other->field_20C_19 == 1 && player->field_352_0)
-                                || (other->field_20C_19 == 2 && player->field_352_1)) {
-                                if (other->field_20C_19 == 1 && other->field_20C_1 > 1
+                            if ((other->type == FIELD_OBJECT_TYPE_FCHR && player->field_352_0)
+                                || (other->type == FIELD_OBJECT_TYPE_FBRD && player->field_352_1)) {
+                                if (other->type == FIELD_OBJECT_TYPE_FCHR && other->field_20C_1 > 1
                                     && player->height == 0) {
                                     s32 x = player->x;
                                     s32 y = player->y + player->field_270;
@@ -4183,8 +4184,8 @@ u8 FieldManager::sub_802BD2C() {
                             {
                                 FieldPlayerCharacter* player = leader;
 
-                                follower->field_20C_7 = follower->field_20C_6 = 1;
-                                player->field_20C_7 = player->field_20C_6 = 1;
+                                follower->field_20C_7 = follower->collidesWithBrothers = 1;
+                                player->field_20C_7 = player->collidesWithBrothers = 1;
                             }
                         }
                     } else {
@@ -4426,7 +4427,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
             break;
         case 8: // Luigi comes up from underground.
             player->field_239 = player->sprite->speed = field_FA_11;
-            if (player->field_33E != -1 && objects[player->field_33E]->field_20C_19 == 4) {
+            if (player->field_33E != -1 && objects[player->field_33E]->type == FIELD_OBJECT_TYPE_FBRL) {
                 sub_80346FC(this, player);
             } else {
                 sub_8033B98(this, player);
@@ -4484,11 +4485,11 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                     } else if (hit) {
                         FieldObject* other = objects[(s8)(player->field_33C_0 << 1) >> 1];
 
-                        if (other->field_20C_19 == 4
-                            || (other->field_20C_19 == 5
+                        if (other->type == FIELD_OBJECT_TYPE_FBRL
+                            || (other->type == FIELD_OBJECT_TYPE_FRCK
                                 && sub_803C544(this) > (*(u32*)((u8*)other + 0x22C) & 3))) {
                             player->field_353_2 = 1;
-                            if (other->field_20C_19 == 5) {
+                            if (other->type == FIELD_OBJECT_TYPE_FRCK) {
                                 sub_801ABE8(0, 15, 0);
                                 play_sfx_80195B4(0x46, -1);
                             }
@@ -4506,11 +4507,11 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                     } else if (hit) {
                         FieldObject* other = objects[(s8)(player->field_33C_0 << 1) >> 1];
 
-                        if (other->field_20C_19 == 4
-                            || (other->field_20C_19 == 5
+                        if (other->type == FIELD_OBJECT_TYPE_FBRL
+                            || (other->type == FIELD_OBJECT_TYPE_FRCK
                                 && sub_803C544(this) > (*(u32*)((u8*)other + 0x22C) & 3))) {
                             player->field_353_2 = 1;
-                            if (other->field_20C_19 == 5) {
+                            if (other->type == FIELD_OBJECT_TYPE_FRCK) {
                                 sub_801ABE8(0, 15, 0);
                                 play_sfx_80195B4(0x46, -1);
                             }

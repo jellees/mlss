@@ -20,6 +20,19 @@ enum FieldObjectState {
     FIELD_OBJECT_STATE_FALLING,
 };
 
+// FieldObject::type: the type of the object's record in the room's object list (record byte 0x12 bits
+// 3-5, get_field_object_type), named after the heap labels make_field_objects_80267C0 gives them.
+enum FieldObjectType {
+    FIELD_OBJECT_TYPE_FPC,  // The brothers (FieldPlayerCharacter)
+    FIELD_OBJECT_TYPE_FCHR, // NPCs
+    FIELD_OBJECT_TYPE_FBRD,
+    FIELD_OBJECT_TYPE_FMON, // FieldMonster
+    FIELD_OBJECT_TYPE_FBRL, // Barrels
+    FIELD_OBJECT_TYPE_FRCK, // Breakable rocks
+    FIELD_OBJECT_TYPE_FSPL, // FieldSpriteLayout
+    FIELD_OBJECT_TYPE_FBLK, // FieldBlock
+};
+
 // FieldObject::flickerMode (startFlicker/updateFlicker): blinks the sprite on and off using the span
 // lengths in byte_83A061C.
 enum FieldObjectFlickerMode {
@@ -98,11 +111,14 @@ class FieldObject {
     u32 field_20C_0 : 1;
     u32 field_20C_1 : 3;
     u32 field_20C_4 : 1;
-    u32 field_20C_5 : 1;
-    u32 field_20C_6 : 1;
+    // Collision flags from the object's record (byte 0x10 bits 5-6, byte 0x11 bits 0-1). Every push
+    // test in method12 pairs one object's collidesWith* bit with the other object's blocks* bit.
+    u32 blocksBrothers : 1;       // The brothers bump into it
+    u32 collidesWithBrothers : 1; // Bumps into the brothers
     u32 field_20C_7 : 1;
-    u32 field_20C_8 : 1;
-    u32 field_20C_9 : 1;
+    // Bumps into objects other than the brothers (without it, method12 only checks objects 0-1)
+    u32 collidesWithObjects : 1;
+    u32 blocksObjects : 1; // Objects other than the brothers bump into it
     u32 field_20C_10 : 1;
     u32 field_20C_11 : 1;
     u32 field_20C_12 : 1;
@@ -110,7 +126,7 @@ class FieldObject {
     u32 field_20C_14 : 1;
     u32 field_20C_15 : 3;
     u32 field_20C_18 : 1;
-    u32 field_20C_19 : 3;
+    u32 type : 3; // enum FieldObjectType
     u32 field_20C_22 : 1;
     u32 field_20C_23 : 1;
     u32 field_20C_24 : 1;

@@ -906,7 +906,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
     u16 heightAbove;
     int n;
 
-    if (!field_20C_0 || field_214_21 || !(field_20C_6 | field_20C_8)) {
+    if (!field_20C_0 || field_214_21 || !(collidesWithBrothers | collidesWithObjects)) {
         return;
     }
     left = x - field_272 / 2;
@@ -920,7 +920,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
     } else {
         heightAbove = 0;
     }
-    n = field_20C_8 ? count : 2;
+    n = collidesWithObjects ? count : 2;
     for (; n != 0; n--, others++) {
         FieldObject* other = *others;
         int pass;
@@ -961,12 +961,12 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
             if (other->field_29 == field_54) {
                 goto next;
             }
-            if (other->field_20C_19 == 0) {
-                pushThis = field_20C_6 & other->field_20C_5;
-                pushOther = field_20C_5 & other->field_20C_6;
+            if (other->type == FIELD_OBJECT_TYPE_FPC) {
+                pushThis = collidesWithBrothers & other->blocksBrothers;
+                pushOther = blocksBrothers & other->collidesWithBrothers;
             } else {
-                pushThis = field_20C_8 & other->field_20C_5;
-                pushOther = field_20C_9 & other->field_20C_6;
+                pushThis = collidesWithObjects & other->blocksBrothers;
+                pushOther = blocksObjects & other->collidesWithBrothers;
             }
             if (!pushThis) {
                 goto next;
@@ -1260,7 +1260,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
                 if (field_0 == -1) {
                     field_0 = other->field_54;
                 }
-                if (other->field_20C_19 == 0) {
+                if (other->type == FIELD_OBJECT_TYPE_FPC) {
                     field_24_9 = 1;
                 } else {
                     field_24_10 = 1;
@@ -1277,7 +1277,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
                 other->field_24_9 = 1;
             }
         next:
-            if (other->field_20C_19 == 3 && ((FieldMonster*)other)->field_344 != NULL
+            if (other->type == FIELD_OBJECT_TYPE_FMON && ((FieldMonster*)other)->field_344 != NULL
                 && ((FieldMonster*)other)->field_344->field_20C_0) {
                 other = ((FieldMonster*)other)->field_344;
             } else {
@@ -1421,7 +1421,7 @@ bool FieldPlayerCharacter::sub_804B25C(FieldObject* other) {
     int edge;
     int overlap;
 
-    if (!other->field_20C_0 || other->field_214_21 || !other->field_20C_5
+    if (!other->field_20C_0 || other->field_214_21 || !other->blocksBrothers
         || (s8)field_1 == other->field_54) {
         return FALSE;
     }
@@ -2566,10 +2566,11 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
             int otherBottom;
 
             if (other->field_54 == field_54 || !other->field_20C_0 || other->field_214_21
-                || other->field_20C_19 == 6 || !(other->field_20C_5 || other->field_20C_7)) {
+                || other->type == FIELD_OBJECT_TYPE_FSPL
+                || !(other->blocksBrothers || other->field_20C_7)) {
                 goto next;
             }
-            if (other->field_20C_19 == 3) {
+            if (other->type == FIELD_OBJECT_TYPE_FMON) {
                 otherLeft = other->x - (other->field_272 >> 1);
                 if (left >= otherLeft + other->field_272 || right <= otherLeft) {
                     goto next;
@@ -2592,24 +2593,25 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
             if (low >= otherBottom + other->field_274 || high <= otherBottom) {
                 goto next;
             }
-            if (mode == 0 ? field_20C_8 & other->field_210_4 : field_20C_8 & other->field_20C_5) {
+            if (mode == 0 ? collidesWithObjects & other->field_210_4
+                          : collidesWithObjects & other->blocksBrothers) {
                 field_24_3 |= byte_83A0B78[direction];
             }
-            if (other->field_20C_6 & field_20C_9) {
+            if (other->collidesWithBrothers & blocksObjects) {
                 //! \bug Pushes the first object rather than the FieldMonster's FMCH.
                 (*objects)->field_24_3 |= byte_83A0B80[direction];
             }
-            if (field_20C_24 && (field_20C_8 & other->field_20C_7) && field_350_0 == 0) {
+            if (field_20C_24 && (collidesWithObjects & other->field_20C_7) && field_350_0 == 0) {
                 field_33C_0 = other->field_54;
                 field_33C_7 = pass;
                 field_350_0 = byte_83A0B78[direction];
                 field_342 = mode;
             }
-            if (mode == 0 ? other->field_210_4 : other->field_20C_5) {
+            if (mode == 0 ? other->field_210_4 : other->blocksBrothers) {
                 return TRUE;
             }
         next:
-            if (other->field_20C_19 == 3 && ((FieldMonster*)other)->field_344 != NULL
+            if (other->type == FIELD_OBJECT_TYPE_FMON && ((FieldMonster*)other)->field_344 != NULL
                 && ((FieldMonster*)other)->field_344->field_20C_0) {
                 other = ((FieldMonster*)other)->field_344;
             } else {
@@ -2750,7 +2752,7 @@ void FieldPlayerCharacter::sub_804DDF4(FieldObject** objects, int count) {
                     if (overlap > 0) {
                         int distance = other->z + other->height - z;
 
-                        if (other->field_20C_5 ? distance <= 0x2800 : distance <= 0) {
+                        if (other->blocksBrothers ? distance <= 0x2800 : distance <= 0) {
                             field_33E = other->field_54;
                             found = other;
                             if (other->field_20C_1 > 1) {
@@ -2762,7 +2764,7 @@ void FieldPlayerCharacter::sub_804DDF4(FieldObject** objects, int count) {
                     }
                 }
             }
-            if (other->field_20C_19 == 3 && ((FieldMonster*)other)->field_344 != NULL
+            if (other->type == FIELD_OBJECT_TYPE_FMON && ((FieldMonster*)other)->field_344 != NULL
                 && ((FieldMonster*)other)->field_344->field_20C_0) {
                 other = ((FieldMonster*)other)->field_344;
             } else {
@@ -3076,31 +3078,31 @@ void FieldPlayerShotBullet::sub_804E6E0(FieldObject** objects, int count) {
                     if (previousX < otherX) {
                         side = 2;
                         otherSide = 8;
-                        if (other->field_20C_5 && pushes) {
+                        if (other->blocksBrothers && pushes) {
                             x = otherX - ((width + other->field_272) >> 1);
                         }
                     } else {
                         side = 8;
                         otherSide = 2;
-                        if (other->field_20C_5 && pushes) {
+                        if (other->blocksBrothers && pushes) {
                             x = otherX + ((width + other->field_272) >> 1);
                         }
                     }
                 } else if (previousTop > otherY - depth / 2) {
                     side = 1;
                     otherSide = 4;
-                    if (other->field_20C_5 && pushes) {
+                    if (other->blocksBrothers && pushes) {
                         y = depth + otherY;
                     }
                 } else {
                     side = 4;
                     otherSide = 1;
-                    if (other->field_20C_5 && pushes) {
+                    if (other->blocksBrothers && pushes) {
                         y = otherY - other->field_276;
                     }
                 }
             }
-            if (other->field_20C_5 && pushes) {
+            if (other->blocksBrothers && pushes) {
                 sides |= side;
                 other->field_24_3 |= otherSide;
             }
@@ -3113,7 +3115,7 @@ void FieldPlayerShotBullet::sub_804E6E0(FieldObject** objects, int count) {
                 ((FieldPlayerCharacter*)owner)->field_342 = type;
             }
         next:
-            if (other->field_20C_19 == 3 && ((FieldMonster*)other)->field_344 != NULL
+            if (other->type == FIELD_OBJECT_TYPE_FMON && ((FieldMonster*)other)->field_344 != NULL
                 && ((FieldMonster*)other)->field_344->field_20C_0) {
                 other = ((FieldMonster*)other)->field_344;
             } else {
