@@ -7727,7 +7727,7 @@ sub_80F17F4:
 	beq _080F1824
 	ldr r1, [r4, #0x04]
 	adds r0, r2, #0x0
-	bl sub_802E854
+	bl sub_802E854__12FieldManageri
 	b _080F182C
 _080F1824:
 	ldr r1, [r4, #0x04]

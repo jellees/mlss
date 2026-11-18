@@ -1071,7 +1071,7 @@ void FieldManager::update_field_8023DD4() {
                 if (brothersTogether) {
                     if (!leader->sub_8047C18(follower)) {
                         play_sfx_80195B4(luigiLeads == 0 ? 0x1B : 9, -1);
-                        sub_802E854(this, 0);
+                        sub_802E854(0);
                     }
                 } else {
                     if (field_2D8_0 == 0x1F) {
@@ -5291,3 +5291,48 @@ void FieldManager::sub_802E754(u8 arg1, u8 arg2, u8 arg3) {
         sub_802DDB4(follower, 0, NULL);
     }
 }
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_802E854__12FieldManageri.s\"");
+#else
+static inline void resetLeader(FieldManager* manager) {
+    manager->leader->sub_804FC90();
+    manager->sub_802DDB4(manager->leader, 0, NULL);
+}
+
+void FieldManager::sub_802E854(int arg) {
+    resetLeader(this);
+    leader->field_350_14 = 1;
+    follower->field_350_14 = 1;
+    leader->field_20C_14 = follower->field_20C_14 = 1;
+
+    if (arg == 0) {
+        leader->field_214_0 = 2;
+        follower->field_214_0 = 2;
+        leader->sub_8045A94(1, 0, follower->x / 256, follower->y / 256, arg, 0x200 >> isUnderwater);
+        leader->field_2B6_6 = 1;
+        leader->field_2B6_7 = 1;
+        follower->sub_8045A94(1, 0, leader->x / 256, leader->y / 256, arg, 0x200 >> isUnderwater);
+        follower->field_2B6_6 = 1;
+        follower->field_2B6_7 = 1;
+        field_209_1 = 1;
+    } else {
+        s32 x = leader->x;
+        s32 y = leader->y;
+        s32 z = leader->z;
+
+        leader->sub_8047F60(follower->x, follower->y, follower->z, 1, 0);
+        follower->sub_8047F60(x, y, z, 1, 0);
+    }
+
+    field_F8_7 = field_F8_6;
+    if (field_F8_6 && field_FA_5 == luigiLeads) {
+        field_F8_6 = 0;
+        field_FA_5 ^= 1;
+    }
+    brothersTogether = false;
+    field_208_6 = 1;
+    field_209_0 = 1;
+}
+#endif

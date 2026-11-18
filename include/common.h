@@ -718,7 +718,6 @@ void sub_805BFF0(struct Process*);
 void sub_805BED8(struct Process*);
 void sub_803CB5C(struct FieldManager*);
 u8 sub_803E9F0(struct FieldManager*);
-void sub_802E854(struct FieldManager*, int);
 void sub_802EC64(struct FieldManager*, int);
 void sub_8051208(struct FieldObject*, u32);
 void sub_803C5A4(struct FieldManager*);
