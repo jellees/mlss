@@ -690,7 +690,7 @@ _08029F5C:
 	bne _08029F84
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_802E4C8
+	bl sub_802E4C8__12FieldManageri
 _08029F84:
 	movs r3, #0xDA
 	lsls r3, r3, #0x02

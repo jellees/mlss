@@ -508,7 +508,7 @@ void FieldManager::update() {
                 follower->x = leader->x;
                 follower->y = leader->y;
                 follower->z = leader->z;
-                sub_802E4C8(this, 1);
+                sub_802E4C8(1);
             }
 
             if ((field_2B8_0 || field_F8_1) && field_F8_6) {
@@ -2565,7 +2565,7 @@ void FieldManager::sub_8028248() {
         if (brothersTogether || field_208_6) {
             follower->direction = leader->direction;
             brothersTogether = 0;
-            sub_802E4C8(this, 1);
+            sub_802E4C8(1);
             follower->method6(1);
             field_2D8_0 = 0x1F;
         } else if (!field_208_6 && field_2D8_0 != 0x1F) {
@@ -3395,7 +3395,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
                 shotBulletIndex = 3;
             }
             if (!brothersTogether && field_2D8_0 == 0x1F) {
-                sub_802E4C8(this, 0);
+                sub_802E4C8(0);
             }
             if (mario->field_368->field_12 == -1) {
                 mario->field_368->field_12 = mario->field_368->field_10[0];
@@ -3939,7 +3939,7 @@ void FieldManager::sub_802A740() {
                     follower->field_368->field_14 = -1;
                 }
                 sub_802C4D4(1, 1);
-                sub_802E4C8(this, 0);
+                sub_802E4C8(0);
             }
         }
 
@@ -5194,5 +5194,53 @@ void FieldManager::sub_802E2F4() {
         field_20B_3 = 0;
     } else {
         other->field_358_12 = 0;
+    }
+}
+
+void FieldManager::sub_802E4C8(int arg) {
+    FieldPlayerCharacter* player;
+    FieldPlayerCharacter* other;
+    int x;
+    int y;
+    u8 angle;
+
+    if (brothersTogether) {
+        return;
+    }
+    player = follower;
+    other = leader;
+    other->blocksBrothers = 0;
+    other->field_20C_7 = 0;
+    other->collidesWithBrothers = 0;
+    player->blocksBrothers = 0;
+    player->field_20C_7 = 0;
+    player->collidesWithBrothers = 0;
+    x = other->x;
+    y = other->y;
+    angle = (other->direction ^ 4) << 5;
+    x += (s16)field_240 * word_8198504[angle] / 0x4000;
+    y -= (s16)field_240 * word_8198584[angle] / 0x4000;
+    if (field_246_2 == 0) {
+        field_208_0 = 1;
+    } else {
+        field_208_0 = 0;
+    }
+    if (!arg
+        && (x >= player->x + 0x100 || x <= player->x - 0x100 || y >= player->y + 0x100
+            || y <= player->y - 0x100)) {
+        player->sub_8045A94(1, 0, x / 256, y / 256, 0, player->field_23E);
+        player->field_2B6_7 = 1;
+        player->field_2B6_6 = 1;
+        other->field_350_14 = 1;
+        field_12A = 3;
+    } else {
+        player->x = player->previousX = x;
+        player->y = player->previousY = y;
+        player->z = player->previousZ = other->z;
+        player->height = player->previousHeight = other->height;
+        other->velocityX = 0;
+        other->velocityY = 0;
+        brothersTogether = 1;
+        sub_802DF80(0);
     }
 }

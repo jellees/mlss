@@ -662,7 +662,6 @@ void* sub_8059EF0(u16);
 void sub_80EFB18(struct EVTS*);
 void sub_80EFA14(struct EVTS*, int, int);
 void sub_80F01D4(struct EVTS*, int, int);
-void sub_802E4C8(struct FieldManager*, int);
 void sub_805952C(struct Process*, u16, u16);
 void sub_80298B0(void);
 void sub_80EF79C(struct EVTS*, void*);
