@@ -29,22 +29,24 @@ FieldPlayerCharacter::FieldPlayerCharacter(int roomId, int index) : FieldObject(
     field_36C = NULL;
 }
 
-void FieldPlayerCharacter::sub_8048174(int arg) {
+void FieldPlayerCharacter::sub_8048174(int form) {
     int value = off_83A09DC[field_54][state];
 
     if ((state >= 0 && state <= 4) || state == 13) {
-        switch (arg) {
-            case 0:
+        switch (form) {
+            case BROTHERS_FORM_NORMAL:
                 if (value == 1 && !field_212_13) {
                     value = 0;
                 }
                 break;
-            case 1:
+
+            case BROTHERS_FORM_PUMP_MARIO:
                 if (field_54 == 0) {
                     value = 23;
                 }
                 break;
-            case 2:
+
+            case BROTHERS_FORM_MINI_MARIO:
                 if (field_54 == 0) {
                     if (value == 1 && field_212_13) {
                         value = 15;
@@ -53,29 +55,35 @@ void FieldPlayerCharacter::sub_8048174(int arg) {
                     }
                 }
                 break;
-            case 3:
+
+            case BROTHERS_FORM_MOLE_LUIGI:
                 if (field_54 == 1) {
                     value = 16;
                 }
                 break;
-            case 4:
+
+            case BROTHERS_FORM_BARREL_LUIGI:
                 if (field_54 == 1) {
                     value = 18;
                 }
                 break;
+
             case 5:
                 break;
+
             case 6:
                 break;
         }
     }
-    if (field_54 == 0 && arg == 2) {
+
+    if (field_54 == 0 && form == BROTHERS_FORM_MINI_MARIO) {
         if (value == 7) {
             value = 12;
         } else if (value == 9) {
             value = 14;
         }
     }
+
     if (value == 7) {
         if (field_345 == 8 || field_343 != -1 || previousState == 6 || previousState == 7) {
             value = 8;
@@ -85,6 +93,7 @@ void FieldPlayerCharacter::sub_8048174(int arg) {
             value = 13;
         }
     }
+
     field_344 = value;
 }
 

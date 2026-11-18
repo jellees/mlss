@@ -223,7 +223,7 @@ class FieldManager : public Process {
     u16 field_244;
     u8 field_246_0 : 1;
     u8 field_246_1 : 1;
-    u8 field_246_2 : 3;
+    u8 brothersForm : 3;
     u8 field_246_5 : 3;
     u8 pad_247;
     s16 field_248;
@@ -408,7 +408,7 @@ class FieldManager : public Process {
     void sub_8029830();
     void sub_8029878();
     void sub_8029934();
-    void sub_8029A0C(int mode, int arg2);
+    void sub_8029A0C(int form, int arg2);
     void sub_802A4E8();
     void sub_802A608();
     void sub_802A740();

@@ -9,6 +9,15 @@
 // holds FieldPlayerShotBullet ("FPSB").
 #pragma interface
 
+enum BrothersForm {
+    BROTHERS_FORM_NORMAL = 0,
+    BROTHERS_FORM_PUMP_MARIO = 1,
+    BROTHERS_FORM_MINI_MARIO = 2,
+    BROTHERS_FORM_MOLE_LUIGI = 3,
+    BROTHERS_FORM_BARREL_LUIGI = 4,
+    BROTHERS_FORM_SURFBOARD_LUIGI = 7,
+};
+
 // FieldManager::field_20C[2], one per player character (FieldPlayerCharacter::field_368).
 struct FieldStruct4 {
     u8 field_0;
@@ -100,9 +109,9 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_35A_2 : 1;
     u16 field_35A_3 : 8;
     u16 isMini : 1;
-    u16 field_35A_12 : 1;
-    u16 field_35A_13 : 1;
-    u16 field_35A_14 : 1;
+    u16 isMole : 1;
+    u16 isPump : 1;
+    u16 isBarrel : 1;
     u16 field_35A_15 : 1;
     s32 field_35C;
     u8 pad_360[0x2];
@@ -138,7 +147,7 @@ class FieldPlayerCharacter : public FieldObject {
     FieldPlayerCharacter* field_388; // The other player character
 
     FieldPlayerCharacter(int roomId, int index);                  // 0x08048064
-    void sub_8048174(int arg);                                    // 0x08048174
+    void sub_8048174(int form);                                   // 0x08048174
     void sub_8049000(u16 animation);                              // 0x08049000
     void sub_80490CC(bool arg);                                   // 0x080490CC
     void sub_8049224();                                           // 0x08049224

@@ -217,7 +217,7 @@ struct SaveSlotData {
     u32 brothersTogether : 1;
     u32 field_0_6 : 3;
     u32 field_0_9 : 1;
-    u32 field_0_10 : 3;
+    u32 brothersForm : 3; // BrothersForm (FieldManager::brothersForm)
     u32 field_0_13 : 5;
     u32 field_0_18 : 1;
     u32 field_0_19 : 1;
