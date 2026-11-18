@@ -485,8 +485,8 @@ void FieldManager::update() {
 
             leader = (FieldPlayerCharacter*)objects[luigiLeads];
             follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
-            leader->field_388 = follower;
-            follower->field_388 = leader;
+            leader->otherBrother = follower;
+            follower->otherBrother = leader;
 
             if (field_2B8_0) {
                 if (leader->field_368->field_0 == 3 || leader->field_368->field_0 == 4
@@ -3938,8 +3938,8 @@ void FieldManager::sub_802B654(FieldPlayerCharacter* player) {
     int start;
 
     if (player->isMole) {
-        if (player->field_388 != NULL) {
-            player->method12((FieldObject**)&player->field_388, 1, 0);
+        if (player->otherBrother != NULL) {
+            player->method12((FieldObject**)&player->otherBrother, 1, 0);
         }
         player->method12(objects, objectCount, 1);
     } else {
@@ -4424,18 +4424,18 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
     switch (player->state) {
         case 58:
             if (--player->field_355 == 0) {
-                player->field_368->field_0 = player->field_388->field_368->field_0 = 0;
-                player->state = player->field_388->state = 0;
+                player->field_368->field_0 = player->otherBrother->field_368->field_0 = 0;
+                player->state = player->otherBrother->state = 0;
                 {
-                    FieldPlayerCharacter* other = player->field_388;
+                    FieldPlayerCharacter* other = player->otherBrother;
 
                     other->field_23E = walkSpeed;
                     other->field_260 = player->field_23E = walkSpeed;
                     player->field_260 = walkSpeed;
                 }
-                player->field_388->field_358_3 = 0;
+                player->otherBrother->field_358_3 = 0;
                 player->field_358_3 = 0;
-                player->field_388->field_350_14 = 0;
+                player->otherBrother->field_350_14 = 0;
                 player->field_350_14 = 0;
                 brothersForm = BROTHERS_FORM_NORMAL;
                 field_20B_7 = 0;
@@ -4535,7 +4535,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             }
             if (player->field_355 != 0 && --player->field_355 == 0) {
                 player->sub_804FCD4();
-                player->field_388->field_350_14 = 0;
+                player->otherBrother->field_350_14 = 0;
             }
             break;
 
@@ -4561,7 +4561,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             if (!(field_D0->field_0 & player->field_368->field_4) || player->airFrames != -1) {
                 if (player->airFrames != -1 || player->field_355 < 60) {
                     player->stopHandPower();
-                    player->field_388->field_350_14 = 0;
+                    player->otherBrother->field_350_14 = 0;
                 } else {
                     stop_sfx_80195A8(player->objectIndex == BROTHER_MARIO ? 0x158 : 0x156);
                     player->state = 11;
@@ -4593,7 +4593,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             }
             if (player->field_355 != 0 && --player->field_355 == 0) {
                 player->stopHandPower();
-                player->field_388->field_350_14 = 0;
+                player->otherBrother->field_350_14 = 0;
             }
             break;
 
@@ -4631,24 +4631,24 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             player->state = 0;
             player->field_350_14 = 0;
             player->field_260 = player->field_23E = walkSpeed;
-            if (player->field_388->field_368->field_0 == 1
-                || player->field_388->field_368->field_0 == 2) {
-                player->field_388->field_368->field_1 = 0;
+            if (player->otherBrother->field_368->field_0 == 1
+                || player->otherBrother->field_368->field_0 == 2) {
+                player->otherBrother->field_368->field_1 = 0;
             } else {
-                player->field_388->field_368->field_0 = 0;
+                player->otherBrother->field_368->field_0 = 0;
             }
-            player->field_388->field_350_14 = 0;
+            player->otherBrother->field_350_14 = 0;
             if (brothersTogether) {
-                player->field_388->state = 0;
+                player->otherBrother->state = 0;
             }
             {
-                FieldPlayerCharacter* other = player->field_388;
+                FieldPlayerCharacter* other = player->otherBrother;
 
                 other->field_23E = walkSpeed;
                 other->field_260 = walkSpeed;
             }
-            if (player->field_388->airFrames != -1) {
-                player->field_388->field_240 = walkSpeed;
+            if (player->otherBrother->airFrames != -1) {
+                player->otherBrother->field_240 = walkSpeed;
             }
             if (brothersTogether) {
                 sub_802DF80(0);
@@ -4682,11 +4682,11 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 player->field_350_14 = 0;
                 player->field_23E = 0x100 >> isUnderwater;
                 player->field_260 = player->field_23E;
-                player->field_388->state = 0;
-                player->field_388->field_350_14 = 0;
+                player->otherBrother->state = 0;
+                player->otherBrother->field_350_14 = 0;
                 field_20B_7 = 0;
                 if (brothersTogether) {
-                    player->field_388->field_260 = player->field_388->field_23E = 0x100 >> isUnderwater;
+                    player->otherBrother->field_260 = player->otherBrother->field_23E = 0x100 >> isUnderwater;
                     sub_802DF80(0);
                 }
             }
@@ -4699,8 +4699,8 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             }
             player->sub_804FB64(objects, 0, 0);
             if (brothersTogether && player->field_352_7) {
-                s32 dx = player->x - player->field_388->x;
-                s32 dy = player->y - player->field_388->y;
+                s32 dx = player->x - player->otherBrother->x;
+                s32 dy = player->y - player->otherBrother->y;
 
                 if (((int (*)(int))dword_3001038)(dx * dx + dy * dy) > 0x1000) {
                     field_20B_3 = 1;
@@ -4708,7 +4708,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             }
             if (player->airFrames == -1) {
                 player->method7(1);
-                if (player->field_388->airFrames == -1) {
+                if (player->otherBrother->airFrames == -1) {
                     sub_802D2F4(player);
                     field_20B_4 = 0;
                 }
@@ -4727,10 +4727,10 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
     player->state = 0;
     player->field_350_14 = 0;
 
-    if (player->field_388->field_368->field_0 == 1 || player->field_388->field_368->field_0 == 2) {
-        player->field_388->field_368->field_1 = 0;
+    if (player->otherBrother->field_368->field_0 == 1 || player->otherBrother->field_368->field_0 == 2) {
+        player->otherBrother->field_368->field_1 = 0;
     } else {
-        player->field_388->field_368->field_0 = 0;
+        player->otherBrother->field_368->field_0 = 0;
     }
 
     player->isBarrel = false;
@@ -4745,12 +4745,12 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
         sub_802DDB4(player, 0, 0);
     }
 
-    player->field_388->field_350_14 = 0;
+    player->otherBrother->field_350_14 = 0;
 
     if (brothersTogether) {
-        player->field_388->state = 0;
-        sub_802DDB4(player->field_388, player->field_352_7, 0);
-        player->field_388->field_260 = player->field_388->field_23E = walkSpeed;
+        player->otherBrother->state = 0;
+        sub_802DDB4(player->otherBrother, player->field_352_7, 0);
+        player->otherBrother->field_260 = player->otherBrother->field_23E = walkSpeed;
         sub_802DF80(0);
     }
 }

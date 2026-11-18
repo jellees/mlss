@@ -150,7 +150,7 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_382;
     u16 field_384;
     u8 pad_386[0x2];
-    FieldPlayerCharacter* field_388; // The other player character
+    FieldPlayerCharacter* otherBrother;
 
     FieldPlayerCharacter(int roomId, int index);                  // 0x08048064
     void sub_8048174(int form);                                   // 0x08048174
