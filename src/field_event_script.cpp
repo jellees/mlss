@@ -292,7 +292,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 8:
             return sub_80F1C0C(this, script, command);
         case 9:
-            return sub_80ECB20(this, script, command);
+            return sub_80ECB20(script, command);
         case 10:
             return sub_80ECCB0(this, script, command);
         case 11:
@@ -740,4 +740,51 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32
             break;
     }
     return !(script->field_A0 & 4);
+}
+
+// Script command 9: starts the script at command[1] in slot command[0] of dword_3000FD0 (0 = slot 0,
+// 1 = slot 3, 2 = slot 1, 3 = slot 2). Slots 0 and 3 are restarted unconditionally; slots 1 and 2 only
+// if they aren't running, like FieldEventScript::sub_80EB524 types 2 and 3.
+s8 FieldEventScript::sub_80ECB20(ScriptContext* script, s32* command) {
+    ScriptSlot* slot;
+    int type = *command++;
+
+    switch (type) {
+        case 0:
+            slot = &dword_3000FD0->scripts[0];
+            sub_80EA5C8(&field_1C, slot, *command, 0, 1, 0xFF);
+            break;
+        case 1:
+            slot = &dword_3000FD0->scripts[3];
+            sub_80EA5C8(&field_1C, slot, *command, 0, 1, 0xFF);
+            break;
+        case 2:
+            slot = &dword_3000FD0->scripts[1];
+            if (!(slot->field_A0 & 1)) {
+                sub_80EA5C8(&field_1C, slot, *command, 0, 1, 0xFF);
+                FieldManager* fieldManager = (FieldManager*)parentProcess;
+                if (fieldManager->objects[0]->field_20C_8) {
+                    dword_3000FD0->field_55A_6 &= ~1;
+                    fieldManager->objects[0]->field_20C_8 = 0;
+                }
+                if (fieldManager->objects[1]->field_20C_8) {
+                    dword_3000FD0->field_55A_6 &= ~2;
+                    fieldManager->objects[1]->field_20C_8 = 0;
+                }
+                if (!dword_3000FD0->field_55A_1) {
+                    ((FieldManager*)parentProcess)->sub_8028D6C(0x3FF);
+                }
+                break;
+            }
+            // fallthrough
+        case 3: {
+            // Its own variable (not the shared slot): the original keeps it in another register.
+            ScriptSlot* slot = &dword_3000FD0->scripts[2];
+            if (!(slot->field_A0 & 1) && dword_3000FD0->field_55A_0) {
+                sub_80EA5C8(&field_1C, slot, *command, 0, 1, 0xFF);
+            }
+            break;
+        }
+    }
+    return TRUE;
 }
