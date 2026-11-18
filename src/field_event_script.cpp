@@ -295,7 +295,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 9:
             return sub_80ECB20(script, command);
         case 10:
-            return sub_80ECCB0(this, script, command);
+            return sub_80ECCB0(script, command);
         case 11:
             return sub_80F1BA4(this, script, command);
         case 12:
@@ -785,6 +785,61 @@ s8 FieldEventScript::sub_80ECB20(ScriptContext* script, s32* command) {
                 sub_80EA5C8(&field_1C, slot, *command, 0, 1, 0xFF);
             }
             break;
+        }
+    }
+    return TRUE;
+}
+
+// Script command 10: ends the script in slot command[0] of dword_3000FD0 (0 = slot 0, 1 = slot 3,
+// 2 = slot 1, 3 = slot 2; any other value ends this script), and the scripts of the slots and objects
+// that are attached to that slot (field_A4).
+//! Possible fake match: the s16 mask local in the field-object loop (found with decomp-permuter).
+//! It puts the 0xFFF7 constant first in the loop body, so it's hoisted before the 0xFF one.
+s8 FieldEventScript::sub_80ECCB0(ScriptContext* script, s32* command) {
+    ScriptSlot* slot = script;
+    //! \bug Only set for command[0] 0-3: when this script is ended, the loops below compare the
+    //! uninitialized index.
+    u8 index;
+
+    switch (command[0]) {
+        case 0:
+            index = 0;
+            slot = &dword_3000FD0->scripts[0];
+            break;
+        case 1:
+            index = 3;
+            slot = &dword_3000FD0->scripts[3];
+            break;
+        case 2:
+            index = 1;
+            slot = &dword_3000FD0->scripts[1];
+            break;
+        case 3:
+            index = 2;
+            slot = &dword_3000FD0->scripts[2];
+            break;
+    }
+    slot->field_4 = slot->field_0;
+    slot->field_A0 = 1;
+
+    s16 count;
+    ScriptSlot* other = dword_3000FD0->scripts;
+    for (count = 4; count > 0; other++, count--) {
+        if (other->field_A4 == index && other->field_4 != 0) {
+            other->field_4 = other->field_0;
+        }
+    }
+
+    FieldManager* fieldManager = (FieldManager*)parentProcess;
+    count = fieldManager->field_10B;
+    FieldObject** objects = fieldManager->objects;
+    for (; count > 0; count--, objects++) {
+        FieldObject* object = *objects;
+        s16 mask = ~8;
+
+        if (object->script.field_A4 == index) {
+            object->script.field_A4 = 0xFF;
+            object->script.field_A0 &= mask;
         }
     }
     return TRUE;
