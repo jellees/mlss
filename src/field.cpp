@@ -3949,7 +3949,8 @@ void FieldManager::sub_802B654(FieldPlayerCharacter* player) {
         if (field_110 != 0) {
             player->method12(&objects[field_110], field_111, 0);
         }
-        if (field_112 != 0 && player->objectIndex == BROTHER_LUIGI && brothersForm == BROTHERS_FORM_BARREL_LUIGI) {
+        if (field_112 != 0 && player->objectIndex == BROTHER_LUIGI
+            && brothersForm == BROTHERS_FORM_BARREL_LUIGI) {
             start = field_112;
         } else if (field_114 != 0) {
             start = field_114;
@@ -4686,7 +4687,8 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 player->otherBrother->field_350_14 = 0;
                 field_20B_7 = 0;
                 if (brothersTogether) {
-                    player->otherBrother->field_260 = player->otherBrother->field_23E = 0x100 >> isUnderwater;
+                    player->otherBrother->field_260 = player->otherBrother->field_23E =
+                        0x100 >> isUnderwater;
                     sub_802DF80(0);
                 }
             }
@@ -4727,7 +4729,8 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
     player->state = 0;
     player->field_350_14 = 0;
 
-    if (player->otherBrother->field_368->field_0 == 1 || player->otherBrother->field_368->field_0 == 2) {
+    if (player->otherBrother->field_368->field_0 == 1
+        || player->otherBrother->field_368->field_0 == 2) {
         player->otherBrother->field_368->field_1 = 0;
     } else {
         player->otherBrother->field_368->field_0 = 0;
@@ -5222,4 +5225,45 @@ void FieldManager::sub_802E4C8(int arg) {
         brothersTogether = 1;
         sub_802DF80(0);
     }
+}
+
+// Checks the collision cell just in front of the leader (cardinal directions only): floor type 3 for
+// Mini Mario, 5 or 7 for Mole Luigi. The caller uses it to detect that the follower can't come along.
+u8 FieldManager::sub_802E688(bool32 isMole) {
+    FieldPlayerCharacter* player = leader;
+    int direction = player->angle >> 5;
+
+    if (!(direction & 1)) {
+        s32 x = player->previousX;
+        s32 y = player->previousY;
+        struct Coldef* coldef;
+
+        switch (direction) {
+            case 0:
+                y += 0x100;
+                break;
+            case 2:
+                x -= player->field_278 / 2;
+                break;
+            case 4:
+                y -= player->field_27C;
+                break;
+            case 6:
+                x -= 0x100;
+                x += player->field_278 / 2;
+                break;
+        }
+
+        coldef = get_coldef_ptr_by_xz(field_304, x / 4096, y / 4096);
+
+        if (!isMole) {
+            if (coldef->floorType == 3) {
+                return 1;
+            }
+        } else if (coldef->floorType == 5 || coldef->floorType == 7) {
+            return 1;
+        }
+    }
+
+    return 0;
 }
