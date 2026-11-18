@@ -38,52 +38,52 @@ S_MP::S_MP(u8 priority, char* label, u16 roomId, s16 scrollX, s16 scrollY, Proce
     offsetY[2] = 0;
     layerFlags[2] = 0;
 
-    if (stru_3000DD0.field_12 & 0x80) {
-        offsetX[1] = -((stru_3000DD0.field_12 & 0x70) >> 4) * 480;
+    if (stru_3000DD0.layerOffsets & 0x80) {
+        offsetX[1] = -((stru_3000DD0.layerOffsets & 0x70) >> 4) * 480;
     } else {
-        offsetX[1] = ((stru_3000DD0.field_12 & 0x70) >> 4) * 480;
+        offsetX[1] = ((stru_3000DD0.layerOffsets & 0x70) >> 4) * 480;
     }
 
-    if (stru_3000DD0.field_12 & 0x8) {
-        offsetY[1] = -(stru_3000DD0.field_12 & 7) * 320;
+    if (stru_3000DD0.layerOffsets & 0x8) {
+        offsetY[1] = -(stru_3000DD0.layerOffsets & 7) * 320;
     } else {
-        offsetY[1] = (stru_3000DD0.field_12 & 7) * 320;
+        offsetY[1] = (stru_3000DD0.layerOffsets & 7) * 320;
     }
 
     layerFlags[1] = 0;
-    if ((stru_3000DD0.field_C & 0x3000) == 0x1000) {
+    if ((stru_3000DD0.layerScroll & 0x3000) == 0x1000) {
         layerFlags[1] = 0x80;
-        layerFlags[1] |= stru_3000DD0.field_C & 7;
+        layerFlags[1] |= stru_3000DD0.layerScroll & 7;
     }
-    if (stru_3000DD0.field_C & 0x400) {
+    if (stru_3000DD0.layerScroll & 0x400) {
         layerFlags[1] |= 0x40;
     }
 
-    if (stru_3000DD0.field_12 & 0x8000) {
-        offsetX[0] = -((stru_3000DD0.field_12 & 0x7000) >> 12) * 480;
+    if (stru_3000DD0.layerOffsets & 0x8000) {
+        offsetX[0] = -((stru_3000DD0.layerOffsets & 0x7000) >> 12) * 480;
     } else {
-        offsetX[0] = ((stru_3000DD0.field_12 & 0x7000) >> 12) * 480;
+        offsetX[0] = ((stru_3000DD0.layerOffsets & 0x7000) >> 12) * 480;
     }
 
-    if (stru_3000DD0.field_12 & 0x800) {
-        offsetY[0] = -((stru_3000DD0.field_12 & 0x700) >> 8) * 320;
+    if (stru_3000DD0.layerOffsets & 0x800) {
+        offsetY[0] = -((stru_3000DD0.layerOffsets & 0x700) >> 8) * 320;
     } else {
-        offsetY[0] = ((stru_3000DD0.field_12 & 0x700) >> 8) * 320;
+        offsetY[0] = ((stru_3000DD0.layerOffsets & 0x700) >> 8) * 320;
     }
 
     layerFlags[0] = 0;
-    if ((stru_3000DD0.field_C & 0xC000) == 0x4000) {
+    if ((stru_3000DD0.layerScroll & 0xC000) == 0x4000) {
         layerFlags[0] = 0x80;
-        layerFlags[0] |= (stru_3000DD0.field_C & 0x38) >> 3;
+        layerFlags[0] |= (stru_3000DD0.layerScroll & 0x38) >> 3;
     }
-    if (stru_3000DD0.field_C & 0x800) {
+    if (stru_3000DD0.layerScroll & 0x800) {
         layerFlags[0] |= 0x40;
     }
 
     rateY[2] = 4;
     rateX[2] = 4;
 
-    switch (stru_3000DD0.field_C & 0x300) {
+    switch (stru_3000DD0.layerScroll & 0x300) {
         case 0:
             rateX[0] = 4;
             rateY[0] = 4;
@@ -106,13 +106,13 @@ S_MP::S_MP(u8 priority, char* label, u16 roomId, s16 scrollX, s16 scrollY, Proce
             break;
     }
 
-    if ((stru_3000DD0.field_C & 0x38) == 0x8) {
+    if ((stru_3000DD0.layerScroll & 0x38) == 0x8) {
         rateY[0] = 4;
-    } else if ((stru_3000DD0.field_C & 0x38) == 0x10) {
+    } else if ((stru_3000DD0.layerScroll & 0x38) == 0x10) {
         rateX[0] = 4;
     }
 
-    switch (stru_3000DD0.field_C & 0xC0) {
+    switch (stru_3000DD0.layerScroll & 0xC0) {
         case 0:
             rateX[1] = 4;
             rateY[1] = 4;
@@ -135,9 +135,9 @@ S_MP::S_MP(u8 priority, char* label, u16 roomId, s16 scrollX, s16 scrollY, Proce
             break;
     }
 
-    if ((stru_3000DD0.field_C & 7) == 1) {
+    if ((stru_3000DD0.layerScroll & 7) == 1) {
         rateY[1] = 4;
-    } else if ((stru_3000DD0.field_C & 7) == 2) {
+    } else if ((stru_3000DD0.layerScroll & 7) == 2) {
         rateX[1] = 4;
     }
 
@@ -170,22 +170,22 @@ S_MP::S_MP(u8 priority, char* label, u16 roomId, s16 scrollX, s16 scrollY, Proce
         field_6C[i] = 0;
     }
 
-    mode = stru_3000DD0.field_2 & 0x60;
+    mode = stru_3000DD0.flags & ROOM_FLAG_LAYER_ORDER_MASK;
     bg1Priority = 0;
     bg2Priority = 0;
     bg3Priority = 0;
     switch (mode) {
-        case 0:
+        case ROOM_FLAG_LAYERS_BG1_BG2_BG3:
             bg1Priority = 1;
             bg2Priority = 2;
             bg3Priority = 3;
             break;
-        case 0x20:
+        case ROOM_FLAG_LAYERS_BG1_BG3_BG2:
             bg1Priority = 1;
             bg2Priority = 3;
             bg3Priority = 2;
             break;
-        case 0x40:
+        case ROOM_FLAG_LAYERS_BG3_BG1_BG2:
             bg1Priority = 2;
             bg2Priority = 3;
             bg3Priority = 1;
@@ -222,22 +222,22 @@ void S_MP::sub_8057BE4() {
     cmpw = new (1, "CMPW", 0) u8[0x2000];
     CpuFastFill(0, cmpw, 0x2000);
 
-    mode = stru_3000DD0.field_2 & 0x60;
+    mode = stru_3000DD0.flags & ROOM_FLAG_LAYER_ORDER_MASK;
     bg1Priority = 0;
     bg2Priority = 0;
     bg3Priority = 0;
     switch (mode) {
-        case 0:
+        case ROOM_FLAG_LAYERS_BG1_BG2_BG3:
             bg1Priority = 1;
             bg2Priority = 2;
             bg3Priority = 3;
             break;
-        case 0x20:
+        case ROOM_FLAG_LAYERS_BG1_BG3_BG2:
             bg1Priority = 1;
             bg2Priority = 3;
             bg3Priority = 2;
             break;
-        case 0x40:
+        case ROOM_FLAG_LAYERS_BG3_BG1_BG2:
             bg1Priority = 2;
             bg2Priority = 3;
             bg3Priority = 1;
@@ -286,7 +286,7 @@ asm_unified(".include \"asm/nonmatching/update__4S_MP.s\"");
 void S_MP::update() {
     u8* archive = (u8*)dword_86527F4;
     u32* offsets = dword_86527F4;
-    u8 index = stru_3000DD0.field_3;
+    u8 index = stru_3000DD0.imageIndex;
 
     field_599 = 0;
 

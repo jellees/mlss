@@ -93,20 +93,38 @@ struct DecompressJob {
     u32 field_C;
 };
 
-// Map header of the current room? (used by the map file at 0x080575C8)
-struct struc_3000DD0 {
-    u8 field_0;
-    u8 field_1;
-    u8 field_2;
-    u8 field_3; // Index into byte_83AAA6C
-    u8 pad4[8];
-    u16 field_C;
-    u16 field_E;
-    u16 field_10;
-    u16 field_12;
-    u8 field_14;
-    u8 pad15;
-    u16 field_16;
+// RoomHeader::flags
+enum RoomFlags {
+    // BG1-3 drawing order, front to back (BG priority 1-3)
+    ROOM_FLAG_LAYERS_BG1_BG2_BG3 = 0x00,
+    ROOM_FLAG_LAYERS_BG1_BG3_BG2 = 0x20,
+    ROOM_FLAG_LAYERS_BG3_BG1_BG2 = 0x40,
+    ROOM_FLAG_LAYER_ORDER_MASK = 0x60,
+
+    ROOM_FLAG_UNDERWATER = 0x10,
+};
+
+// Header of each room (table at 0x083A78D4, current room copied to stru_3000DD0)
+struct RoomHeader {
+    u8 nameIndex;
+    u8 mapIconIndex; // Brothers' icon position on the suitcase map
+    u8 flags; // RoomFlags
+    u8 imageIndex; // Index into byte_83AAA6C (compressed graphics)
+    u8 tilesetIndex; // Index into 0x083AAC4C
+    u8 paletteIndex; // Index into 0x083AAD68
+    u8 field_6; // Index into 0x083AADD0 (tile properties/solidity?)
+    u8 tileAnimationIndex; // Index into 0x083B283C
+    u8 paletteAnimationIndex; // Index into 0x083B79C4
+    u8 blendingIndex; // Index into 0x083B78AC
+    u8 tileModsIndex; // Index into 0x083B7108
+    u8 field_B;
+    u16 layerScroll; // BG scroll rates and modes
+    u16 mapScriptsIndex;
+    u16 objectsIndex;
+    u16 layerOffsets; // BG start offsets
+    u8 songId;
+    u8 field_15;
+    u16 itemBlocksIndex;
 };
 
 struct struc_3000D18 {
@@ -735,7 +753,7 @@ extern struct EeprStruct1* dword_3000FFC;
 extern struct struc_3000FF4* dword_3000FF4;
 extern struct LoadMenuItem* dword_3000FF8;
 extern u8 byte_3000C80;
-extern struct struc_3000DD0 stru_3000DD0;
+extern struct RoomHeader stru_3000DD0;
 extern struct DecompressJob stru_3000DC0;
 extern struct struc_3000D40 stru_3000D40;
 extern struct FieldManager* dword_3000D7C;
@@ -781,7 +799,7 @@ extern void (*dword_3001034)(int, void*, int);
 extern int (*dword_3001038)();
 
 // ROM
-extern struct struc_3000DD0 stru_83A78D4[]; // Header of each room
+extern struct RoomHeader stru_83A78D4[]; // Header of each room
 extern u8 dword_839EF80[];
 extern u8 dword_839F024[];
 extern u8 dword_821F808[];

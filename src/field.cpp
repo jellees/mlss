@@ -170,8 +170,8 @@ FieldManager::~FieldManager() {
     gGameState.field_88A_5 = 0;
 }
 
-static inline u8 get_Field_2(FieldManager* manager) {
-    return (manager->field_D4->field_2 & 0x10) != 0;
+static inline u8 isUnderwaterRoom(FieldManager* manager) {
+    return (manager->field_D4->flags & ROOM_FLAG_UNDERWATER) != 0;
 }
 
 static inline int getDistance(FieldObject* a, FieldObject* b) {
@@ -205,7 +205,7 @@ void FieldManager::update() {
             *(vu16*)PLTT = field_128;
             BUFFER_REG_DISPCNT = 0;
             gGameState.field_884 = 0;
-            field_FA_10 = 0;
+            isUnderwater = 0;
             field_12E = 0;
             field_130 = 0;
             field_27A = 0;
@@ -245,10 +245,10 @@ void FieldManager::update() {
 
             dword_3000FD0->field_530 = dword_3000FD0->field_528;
             field_D4 = &stru_83A78D4[roomId];
-            field_FA_10 = get_Field_2(this);
-            field_126 = field_D4->field_10;
-            field_D8 = sub_80FB7E0(field_D4->field_E);
-            field_DC = sub_80FB7F0(field_D4->field_16);
+            isUnderwater = isUnderwaterRoom(this);
+            field_126 = field_D4->objectsIndex;
+            field_D8 = sub_80FB7E0(field_D4->mapScriptsIndex);
+            field_DC = sub_80FB7F0(field_D4->itemBlocksIndex);
             field_E0 = sub_8059EF0(roomId);
             sub_80EFB18(evts);
             dword_3001034(0, objects, 0x80);
@@ -311,8 +311,8 @@ void FieldManager::update() {
                 }
             }
 
-            field_100 = field_FA_10 ? 0x100 : 0x200;
-            field_FA_11 = 0x10 >> field_FA_10;
+            walkSpeed = isUnderwater ? 0x100 : 0x200;
+            field_FA_11 = 0x10 >> isUnderwater;
             sub_8026C78();
             state = 1;
             break;
@@ -595,7 +595,7 @@ void FieldManager::update() {
                     follower->z = leader->z;
                     follower->height = leader->height;
                     if ((u8)follower->sub_8045A94(1, 0, leader->x / 256, leader->y / 256,
-                                                  leader->z / 256, field_100)) {
+                                                  leader->z / 256, walkSpeed)) {
                         while (getDistance(follower, leader) > 0x1000 || sub_802DC0C(follower)) {
                             follower->sub_80461B4(objects);
                             if (!follower->sub_8047B78()) {
@@ -659,11 +659,11 @@ void FieldManager::update() {
                         sub_8019628(0);
                         break;
                     case -3:
-                        if (sub_80195F8(0) && field_D4->field_14 == sub_8019610(0)) {
+                        if (sub_80195F8(0) && field_D4->songId == sub_8019610(0)) {
                             break;
                         }
                     case -1:
-                        sub_8019308(0, field_D4->field_14, 0);
+                        sub_8019308(0, field_D4->songId, 0);
                         break;
                     default:
                         sub_8019308(0, field_2B9, -1);
@@ -1819,7 +1819,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
             case FIELD_OBJECT_TYPE_FPC: {
                 FieldPlayerCharacter* player = new (1, "FPC", 1) FieldPlayerCharacter(roomId, i);
 
-                if (field_FA_10) {
+                if (isUnderwater) {
                     player->sub_8047EFC(0x100, 0x100, 0xD2, 13);
                 } else {
                     player->sub_8047EFC(0x200, 0x200, 0x52C, 0x75);
@@ -1914,7 +1914,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 break;
         }
         objects[i]->field_210_4 = objects[i]->blocksBrothers;
-        objects[i]->field_239 = 16 >> field_FA_10;
+        objects[i]->field_239 = 16 >> isUnderwater;
         objects[i]->field_54 = i;
     }
     ((FieldPlayerCharacter*)objects[luigiLeads])->field_352_7 = 1;
@@ -3195,7 +3195,7 @@ void FieldManager::sub_8029804() {
 
 void FieldManager::sub_8029830() {
     field_208_1 = 1;
-    leader->field_23E = field_100;
+    leader->field_23E = walkSpeed;
     leader->field_350_14 = 0;
 }
 
@@ -3302,7 +3302,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
                 leader->field_368->field_0 = 0;
             }
 
-            setSpeed(leader, field_100);
+            setSpeed(leader, walkSpeed);
 
             leader->field_358_3 = 0;
             leader->field_350_14 = 0;
@@ -3363,7 +3363,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
             follower->field_350_15 = 0;
 
             if (brothersTogether) {
-                setSpeed(follower, field_100);
+                setSpeed(follower, walkSpeed);
             }
             break;
 
@@ -3380,7 +3380,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
                 mario->field_368->field_0 = 5;
             }
 
-            setSpeed(mario, 0x100 >> field_FA_10);
+            setSpeed(mario, 0x100 >> isUnderwater);
 
             mario->isMini = false;
             mario->isPump = true;
@@ -3411,7 +3411,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
             luigi->field_350_15 = 0;
 
             if (brothersTogether) {
-                setSpeed(luigi, 0x100 >> field_FA_10);
+                setSpeed(luigi, 0x100 >> isUnderwater);
             }
             break;
 
@@ -3426,7 +3426,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
                 mario->field_368->field_0 = 11;
             }
 
-            setSpeed(mario, 0x200 >> field_FA_10);
+            setSpeed(mario, 0x200 >> isUnderwater);
 
             mario->isMini = true;
             mario->isPump = false;
@@ -3443,7 +3443,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
             luigi->field_350_15 = 0;
 
             if (brothersTogether) {
-                setSpeed(luigi, 0x200 >> field_FA_10);
+                setSpeed(luigi, 0x200 >> isUnderwater);
             }
             break;
 
@@ -3458,7 +3458,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
                 luigi->field_368->field_0 = 6;
             }
 
-            setSpeed(luigi, 0x100 >> field_FA_10);
+            setSpeed(luigi, 0x100 >> isUnderwater);
 
             luigi->sub_8049000(0x1043);
             luigi->isMole = true;
@@ -3493,7 +3493,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
             mario->isPump = false;
 
             if (brothersTogether) {
-                setSpeed(mario, 0x100 >> field_FA_10);
+                setSpeed(mario, 0x100 >> isUnderwater);
             }
             break;
 
@@ -3508,7 +3508,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
                 luigi->field_368->field_0 = 9;
             }
 
-            setSpeed(luigi, 0x100 >> field_FA_10);
+            setSpeed(luigi, 0x100 >> isUnderwater);
 
             luigi->isMole = false;
             luigi->isBarrel = true;
@@ -3538,7 +3538,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
             mario->isPump = false;
 
             if (brothersTogether) {
-                setSpeed(mario, 0x100 >> field_FA_10);
+                setSpeed(mario, 0x100 >> isUnderwater);
             }
             break;
     }
@@ -3652,10 +3652,10 @@ void FieldManager::sub_802A740() {
         if (field_2B8_4) {
             sub_802F498();
             if (!leader->field_353_1) {
-                leader->sub_804FB64(objects, 0, !field_FA_10);
+                leader->sub_804FB64(objects, 0, !isUnderwater);
             }
             if (brothersTogether && !follower->field_353_1) {
-                follower->sub_804FB64(objects, 0, !field_FA_10);
+                follower->sub_804FB64(objects, 0, !isUnderwater);
             }
             if (follower->previousHeight < 0 && follower->height == 0) {
                 follower->height = leader->height;
@@ -3671,7 +3671,7 @@ void FieldManager::sub_802A740() {
         }
     }
 
-    if (field_FA_10 && !leader->field_2B5_0 && !leader->field_2B5_3 && !follower->field_2B5_0
+    if (isUnderwater && !leader->field_2B5_0 && !leader->field_2B5_3 && !follower->field_2B5_0
         && !follower->field_2B5_3) {
         if (leader->state <= 1) {
             leader->field_35C = leader->z + 0x1E00;
@@ -3722,7 +3722,7 @@ void FieldManager::sub_802A740() {
             default:
                 sub_802C068(field_D0);
                 if (leader->state == 3 || leader->state == 4) {
-                    int velocityZ = field_FA_10 ? -0x200 : 0;
+                    int velocityZ = isUnderwater ? -0x200 : 0;
                     if (velocityZ != 0 && leader->velocityZ < velocityZ) {
                         leader->velocityZ = velocityZ;
                     }
@@ -3800,7 +3800,7 @@ void FieldManager::sub_802A740() {
             default:
                 sub_802C208();
                 if (follower->state == 3 || follower->state == 4) {
-                    int velocityZ = field_FA_10 ? -0x200 : 0;
+                    int velocityZ = isUnderwater ? -0x200 : 0;
                     if (velocityZ != 0 && follower->velocityZ < velocityZ) {
                         follower->velocityZ = velocityZ;
                     }
@@ -3911,7 +3911,7 @@ void FieldManager::sub_802A740() {
             }
         }
 
-        if (!field_209_0 && sub_802EDC4(leader, 1, !field_FA_10, 0)) {
+        if (!field_209_0 && sub_802EDC4(leader, 1, !isUnderwater, 0)) {
             leader->velocityX = leader->velocityY = 0;
             follower->velocityX = follower->velocityY = 0;
         }
@@ -3922,12 +3922,12 @@ void FieldManager::sub_802A740() {
     }
 
     if (leader->state <= 4) {
-        leader->sub_80490CC(field_FA_10);
+        leader->sub_80490CC(isUnderwater);
     }
     if (follower->state <= 4) {
-        follower->sub_80490CC(field_FA_10);
+        follower->sub_80490CC(isUnderwater);
     }
-    if (field_FA_10 && brothersTogether && !leader->field_2B5_0 && !leader->field_2B5_3
+    if (isUnderwater && brothersTogether && !leader->field_2B5_0 && !leader->field_2B5_3
         && !follower->field_2B5_0 && !follower->field_2B5_3 && leader->state <= 1
         && follower->state <= 1 && (leader->previousState == 4 || follower->previousState == 4)) {
         sub_802DF80(0);
@@ -4149,7 +4149,7 @@ u8 FieldManager::sub_802BD2C() {
                         }
                         if (stuck) {
                             sub_802E754(0, 1, 1);
-                            follower->field_23E = follower->field_260 = field_100;
+                            follower->field_23E = follower->field_260 = walkSpeed;
                             follower->sprite->speed = follower->field_239 = field_FA_11;
                             follower->velocityX = follower->velocityY = 0;
                             {
@@ -4372,7 +4372,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
     switch (player->field_368->field_2) {
         case 0:
             if ((brothersForm == BROTHERS_FORM_NORMAL || brothersForm == BROTHERS_FORM_MINI_MARIO)
-                && field_FA_10) {
+                && isUnderwater) {
                 player->field_239 = player->sprite->speed = field_FA_11;
                 player->sub_8049224();
             } else {
@@ -4392,7 +4392,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
 
         case 1:
             player->field_239 = player->sprite->speed = field_FA_11;
-            player->startHammer(field_FA_10);
+            player->startHammer(isUnderwater);
             break;
 
         case 2:
@@ -4429,9 +4429,9 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 {
                     FieldPlayerCharacter* other = player->field_388;
 
-                    other->field_23E = field_100;
-                    other->field_260 = player->field_23E = field_100;
-                    player->field_260 = field_100;
+                    other->field_23E = walkSpeed;
+                    other->field_260 = player->field_23E = walkSpeed;
+                    player->field_260 = walkSpeed;
                 }
                 player->field_388->field_358_3 = 0;
                 player->field_358_3 = 0;
@@ -4601,7 +4601,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             if (player->sprite->animationComplete) {
                 player->field_214_0 = 2;
                 player->direction = 5;
-                player->jumpToHeight(12, 0x75 >> field_FA_10, -1);
+                player->jumpToHeight(12, 0x75 >> isUnderwater, -1);
                 player->sub_8049000(0x1002);
                 player->field_20C_13 = 0;
                 player->field_355 = 0;
@@ -4611,7 +4611,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
 
         case 63: {
             player->field_355++;
-            if (player->field_355 & ((2 << field_FA_10) >> field_20A_1)) {
+            if (player->field_355 & ((2 << isUnderwater) >> field_20A_1)) {
                 player->direction++;
             }
             player->updateAirborne();
@@ -4630,7 +4630,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             player->field_368->field_0 = 0;
             player->state = 0;
             player->field_350_14 = 0;
-            player->field_260 = player->field_23E = field_100;
+            player->field_260 = player->field_23E = walkSpeed;
             if (player->field_388->field_368->field_0 == 1
                 || player->field_388->field_368->field_0 == 2) {
                 player->field_388->field_368->field_1 = 0;
@@ -4644,11 +4644,11 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             {
                 FieldPlayerCharacter* other = player->field_388;
 
-                other->field_23E = field_100;
-                other->field_260 = field_100;
+                other->field_23E = walkSpeed;
+                other->field_260 = walkSpeed;
             }
             if (player->field_388->airFrames != -1) {
-                player->field_388->field_240 = field_100;
+                player->field_388->field_240 = walkSpeed;
             }
             if (brothersTogether) {
                 sub_802DF80(0);
@@ -4669,7 +4669,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
         case 70:
             if (--player->field_355 == 0) {
                 player->sub_8049000(0x1046);
-                player->jumpToHeight(16, 100, (s16)field_100);
+                player->jumpToHeight(16, 100, (s16)walkSpeed);
                 player->state = 71;
             }
             break;
@@ -4680,13 +4680,13 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             if (player->airFrames == -1) {
                 player->state = 0;
                 player->field_350_14 = 0;
-                player->field_23E = 0x100 >> field_FA_10;
+                player->field_23E = 0x100 >> isUnderwater;
                 player->field_260 = player->field_23E;
                 player->field_388->state = 0;
                 player->field_388->field_350_14 = 0;
                 field_20B_7 = 0;
                 if (brothersTogether) {
-                    player->field_388->field_260 = player->field_388->field_23E = 0x100 >> field_FA_10;
+                    player->field_388->field_260 = player->field_388->field_23E = 0x100 >> isUnderwater;
                     sub_802DF80(0);
                 }
             }
@@ -4734,7 +4734,7 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
     }
 
     player->isBarrel = false;
-    player->field_260 = player->field_23E = field_100;
+    player->field_260 = player->field_23E = walkSpeed;
     player->field_368->field_10[0] = player->field_368->field_12;
     player->field_368->field_12 = -1;
     sub_802DDB4(player, 0, 0);
@@ -4750,14 +4750,14 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
     if (brothersTogether) {
         player->field_388->state = 0;
         sub_802DDB4(player->field_388, player->field_352_7, 0);
-        player->field_388->field_260 = player->field_388->field_23E = field_100;
+        player->field_388->field_260 = player->field_388->field_23E = walkSpeed;
         sub_802DF80(0);
     }
 }
 
 void FieldManager::sub_802D46C(struct struc_3000388* arg) {
     if (!field_2B8_4 && !field_291_0 && !leader->field_2B5_3 && arg != NULL && follower->state <= 4) {
-        if ((field_FA_10 && leader->field_368->field_2 == 0 && leader->state <= 4)
+        if ((isUnderwater && leader->field_368->field_2 == 0 && leader->state <= 4)
             || leader->state <= 1) {
             if (sub_8025D24(0)) {
                 if (!leader->field_368->field_16_7) {
@@ -4773,7 +4773,7 @@ void FieldManager::sub_802D46C(struct struc_3000388* arg) {
 
 void FieldManager::sub_802D544(struct struc_3000388* arg) {
     if (!field_2B8_4 && !field_291_0 && !follower->field_2B5_3 && arg != NULL
-        && ((field_FA_10 && follower->field_368->field_2 == 0 && follower->state <= 4)
+        && ((isUnderwater && follower->field_368->field_2 == 0 && follower->state <= 4)
             || follower->state <= 1)
         && sub_8025D24(1)) {
         if (!brothersTogether) {
@@ -4790,7 +4790,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                 if ((brothersForm == BROTHERS_FORM_NORMAL || brothersForm == BROTHERS_FORM_MINI_MARIO
                      || brothersForm == BROTHERS_FORM_MOLE_LUIGI
                      || brothersForm == BROTHERS_FORM_BARREL_LUIGI)
-                    && field_FA_10) {
+                    && isUnderwater) {
                     follower->field_239 = follower->sprite->speed = field_FA_11;
                     follower->sub_8049224();
                 } else {
@@ -4814,7 +4814,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                     case 1:
                         follower->field_239 = follower->sprite->speed = field_FA_11;
                         if (brothersForm == BROTHERS_FORM_MOLE_LUIGI) {
-                            follower->startHammer(field_FA_10);
+                            follower->startHammer(isUnderwater);
                             leader->field_350_14 = 1;
                         } else {
                             sub_802D92C();
@@ -4920,7 +4920,7 @@ void FieldManager::sub_802DA10() {
             } else if (brothersForm == BROTHERS_FORM_BARREL_LUIGI) {
                 sub_803495C(this);
             } else {
-                follower->startHammer(field_FA_10);
+                follower->startHammer(isUnderwater);
             }
             break;
         case 2:

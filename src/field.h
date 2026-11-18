@@ -91,7 +91,7 @@ class FieldManager : public Process {
     u16* field_C8;
     u16* field_CC;
     struct struc_3000388* field_D0;
-    struct struc_3000DD0* field_D4; // Header of the current room
+    struct RoomHeader* field_D4; // Header of the current room
     u8* field_D8;
     u8* field_DC; // Count, first index and offset of the 8-byte entries read by sub_8026C78
     void* field_E0;
@@ -119,7 +119,7 @@ class FieldManager : public Process {
     u16 field_FA_0 : 4;
     u16 field_FA_4 : 1;
     u16 field_FA_5 : 5;
-    u16 field_FA_10 : 1;
+    u16 isUnderwater : 1;
     u16 field_FA_11 : 5;
     u16 field_FC_0 : 1;
     u16 field_FC_1 : 1;
@@ -129,7 +129,7 @@ class FieldManager : public Process {
     u16 field_FC_11 : 1;
     u16 field_FC_12 : 4;
     u16 field_FE;
-    u16 field_100;
+    u16 walkSpeed;
     u16 field_102; // Wipe center x
     u16 field_104; // Wipe center y
     u16 field_106; // Wipe radius
