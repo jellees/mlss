@@ -28,6 +28,7 @@ class FieldEventScript : public Process {
     void sub_80EC970_prepare(FieldObject* target, ScriptContext* targetScript); // inline, in the .cpp
     s8 sub_80ECB20(ScriptContext* script, s32* command);
     s8 sub_80ECCB0(ScriptContext* script, s32* command);
+    s8 sub_80ECDA4(FieldObject* object, ScriptContext* script, s32* command);
     bool sub_80EB838(FieldObject* object, ScriptContext* script);
     void sub_80EB524(FieldObject* object, u8 type, int arg);
     bool sub_80F1E44(FieldObject* object, ScriptContext* script); // inline, in the .cpp

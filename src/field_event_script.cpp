@@ -427,7 +427,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 76:
             return sub_80F1AE4(this, script, command);
         case 80:
-            return sub_80ECDA4(this, object, script, command);
+            return sub_80ECDA4(object, script, command);
         case 81:
             return sub_80ED17C(this, object, script, command);
         case 82:
@@ -841,6 +841,109 @@ s8 FieldEventScript::sub_80ECCB0(ScriptContext* script, s32* command) {
             object->script.field_A4 = 0xFF;
             object->script.field_A0 &= mask;
         }
+    }
+    return TRUE;
+}
+
+// Script command 80: sets a property of the object to command[1], chosen by command[0]. Type 4 turns
+// the collision flags off, or back to the values in the object's record; types 4 and 5 also mark a
+// brother in field_55A_6 (sub_80EB838 turns collidesWithObjects back on for unmarked brothers).
+s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32* command) {
+    switch (*command++) {
+        case 1:
+            object->sub_804776C(*command);
+            // fallthrough
+        case 0:
+            object->setSpriteActive(*command);
+            break;
+        case 2:
+            object->field_20C_11 = *command;
+            break;
+        case 3:
+            switch (*command) {
+                case 0:
+                    object->field_214_13 = 14;
+                    break;
+                case 1:
+                    object->sub_80472D0(NULL, FALSE);
+                    break;
+                case 2:
+                    object->sub_80472D0(NULL, TRUE);
+                    break;
+            }
+            break;
+        case 4: {
+            // Pointer arithmetic, not dword_83D6C58[...]: the array form loads the table address
+            // earlier.
+            u8* header = *(dword_83D6C58 + ((FieldManager*)parentProcess)->field_126);
+            u8* record = header - ((header[7] << 8) | header[6]) + object->field_54 * 0x14;
+
+            if (object->field_54 <= 1) {
+                dword_3000FD0->field_55A_6 |= 1 << object->field_54;
+                object->blocksBrothers = 0;
+                object->collidesWithBrothers = 0;
+                object->field_20C_7 = 0;
+            } else {
+                object->blocksBrothers = *command ? (record[0x10] >> 5) & 1 : 0;
+                object->collidesWithBrothers = *command ? (record[0x10] >> 6) & 1 : 0;
+                object->field_20C_7 = *command ? (record[0x10] >> 7) & 1 : 0;
+            }
+            object->collidesWithObjects = *command ? record[0x11] & 1 : 0;
+            object->blocksObjects = *command ? (record[0x11] >> 1) & 1 : 0;
+            break;
+        }
+        case 5:
+            if (object->field_54 <= 1) {
+                dword_3000FD0->field_55A_6 |= 1 << object->field_54;
+            }
+            object->collidesWithBrothers = *command;
+            object->field_20C_7 = *command;
+            object->collidesWithObjects = *command;
+            object->blocksObjects = *command;
+            break;
+        case 6:
+            object->field_20C_24 = *command;
+            break;
+        case 7:
+            object->field_20C_14 = *command;
+            break;
+        case 8:
+            object->field_20C_13 = *command;
+            break;
+        case 9:
+            object->field_20C_26 = *command;
+            break;
+        case 10:
+            object->field_20C_18 = *command;
+            break;
+        case 11:
+            object->sub_804776C(*command);
+            break;
+        case 12:
+            object->sprite->field_11_2 = *command;
+            break;
+        case 13:
+            object->field_210_0 = *command;
+            break;
+        case 14:
+            object->field_210_4 = *command;
+            break;
+        case 15:
+            object->field_20C_4 = *command;
+            break;
+        case 16:
+            object->field_210_3 = *command;
+            break;
+        case 17:
+            object->field_211_0 = *command;
+            break;
+        case 18:
+            if (*command) {
+                ((FieldMonster*)object)->field_33D_4 |= 1;
+            } else {
+                ((FieldMonster*)object)->field_33D_4 &= ~1;
+            }
+            break;
     }
     return TRUE;
 }

@@ -517,7 +517,6 @@ s8 sub_80EB048(void*, void*, s32*);
 s8 sub_80EB05C(void*, void*, struct ScriptContext*, s32*);
 s8 sub_80EB09C(void*, void*, struct ScriptContext*, s32*);
 s8 sub_80EB11C(void*, void*, struct ScriptContext*, s32*);
-s8 sub_80ECDA4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
 s8 sub_80ED17C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
 s8 sub_80ED304(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80ED4EC(struct FieldEventScript*, struct ScriptContext*, s32*);
@@ -774,6 +773,7 @@ extern struct struc_3000FD0* dword_3000FD0;
 extern void* dword_3000FC0;
 extern void* dword_3000FC8;
 extern void* dword_3000FCC;
+extern u8* dword_83D6C58[]; // Object list header per list index (see init_fobj_with_data_80FB128)
 extern u16 word_3000D3C;
 extern void* dword_3000FB8;
 extern struct GameState gGameState;
