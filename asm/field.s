@@ -152,7 +152,7 @@ _0802E790:
 	adds r0, r7, #0x0
 	movs r1, #0x00
 	movs r2, #0x00
-	bl sub_8029A0C__12FieldManagerii
+	bl changeBrotherForm__12FieldManageriUi
 _0802E79A:
 	movs r0, #0x82
 	lsls r0, r0, #0x02
@@ -14742,7 +14742,7 @@ _0803C894: .4byte 0x0000010B
 sub_803C898:
 	push {lr}
 	movs r2, #0x01
-	bl sub_8029A0C__12FieldManagerii
+	bl changeBrotherForm__12FieldManageriUi
 	pop {r0}
 	bx r0
 	thumb_func_start sub_803C8A4

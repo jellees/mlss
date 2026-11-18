@@ -408,7 +408,7 @@ class FieldManager : public Process {
     void sub_8029830();
     void sub_8029878();
     void sub_8029934();
-    void sub_8029A0C(int form, int arg2);
+    void changeBrotherForm(int form, bool32 moveStuckFollower);
     void sub_802A4E8();
     void sub_802A608();
     void sub_802A740();

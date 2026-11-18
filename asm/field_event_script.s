@@ -5674,7 +5674,7 @@ _080F07AC: .4byte 0x080F07B0
 _080F0806:
 	ldr r0, [r3, #0x14]
 	movs r2, #0x00
-	bl sub_8029A0C__12FieldManagerii
+	bl changeBrotherForm__12FieldManageriUi
 	movs r0, #0x01
 	pop {r1}
 	bx r1

@@ -494,7 +494,7 @@ void FieldManager::update() {
                     || leader->field_368->field_0 == 0x10 || leader->field_368->field_0 == 0x11
                     || brothersForm == 5 || brothersForm == 6) {
                     brothersForm = BROTHERS_FORM_NORMAL;
-                    sub_8029A0C(BROTHERS_FORM_NORMAL, 0);
+                    changeBrotherForm(BROTHERS_FORM_NORMAL, false);
                 }
             }
 
@@ -532,7 +532,7 @@ void FieldManager::update() {
 
                     case BROTHERS_FORM_PUMP_MARIO: {
                         u8 savedIndex = shotBulletIndex;
-                        sub_8029A0C(brothersForm, 0);
+                        changeBrotherForm(brothersForm, false);
                         shotBulletIndex = savedIndex;
                         break;
                     }
@@ -540,7 +540,7 @@ void FieldManager::update() {
                     case BROTHERS_FORM_MINI_MARIO:
                     case BROTHERS_FORM_MOLE_LUIGI:
                     case BROTHERS_FORM_BARREL_LUIGI:
-                        sub_8029A0C(brothersForm, 0);
+                        changeBrotherForm(brothersForm, false);
                         if (leaderStruct.field_0 == 10) {
                             leader->sub_8049000(0x1045);
                             field_209_7 = 2;
@@ -589,7 +589,7 @@ void FieldManager::update() {
                         follower->height = 0;
                     }
                 }
-                sub_8029A0C(BROTHERS_FORM_NORMAL, 0);
+                changeBrotherForm(BROTHERS_FORM_NORMAL, false);
                 leader->method7(1);
                 if (brothersTogether) {
                     follower->z = leader->z;
@@ -932,7 +932,7 @@ void FieldManager::update_field_8023DD4() {
 
         case 5:
             if (--field_26E <= 0) {
-                sub_8029A0C(BROTHERS_FORM_PUMP_MARIO, 0);
+                changeBrotherForm(BROTHERS_FORM_PUMP_MARIO, false);
                 leader->field_350_14 = 0;
                 follower->field_350_14 = 0;
                 field_12A = 2;
@@ -1992,7 +1992,7 @@ void FieldManager::sub_8026E94() {
                 sub_802EF18(this);
             } else if (brothersForm == 5) {
                 brothersForm = BROTHERS_FORM_NORMAL;
-                sub_8029A0C(BROTHERS_FORM_NORMAL, 0);
+                changeBrotherForm(BROTHERS_FORM_NORMAL, false);
             }
         }
         field_2B8_0 = 0;
@@ -2396,7 +2396,7 @@ void FieldManager::sub_8027D64() {
 
     for (i = 0; i < 8; i++) {
         if (follower->state == word_839F610[i]) {
-            sub_8029A0C(BROTHERS_FORM_NORMAL, 0);
+            changeBrotherForm(BROTHERS_FORM_NORMAL, false);
             break;
         }
     }
@@ -3261,7 +3261,7 @@ static inline void setSpeed(FieldPlayerCharacter* player, const u16& speed) {
     player->field_260 = speed;
 }
 
-void FieldManager::sub_8029A0C(int form, int arg2) {
+void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
     FieldPlayerCharacter* mario;
     FieldPlayerCharacter* luigi;
     u8 buffer[4];
@@ -3285,7 +3285,7 @@ void FieldManager::sub_8029A0C(int form, int arg2) {
 
     switch (form) {
         case BROTHERS_FORM_NORMAL:
-            if (arg2 && sub_802DC0C(follower)) {
+            if (moveStuckFollower && sub_802DC0C(follower)) {
                 follower->x = leader->x;
                 follower->y = leader->y;
                 follower->z = leader->z;
