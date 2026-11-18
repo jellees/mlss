@@ -500,7 +500,7 @@ void FieldManager::update() {
 
             if (field_F8_1) {
                 if (brothersTogether) {
-                    sub_802DF80(this, 0);
+                    sub_802DF80(0);
                 }
             } else if (field_2B8_0) {
                 sub_8028248();
@@ -697,7 +697,7 @@ void FieldManager::update() {
             }
 
             if (inBattle && brothersTogether) {
-                sub_802DF80(this, 0);
+                sub_802DF80(0);
             }
 
             sub_802F834(this);
@@ -858,7 +858,7 @@ void FieldManager::update_field_8023DD4() {
                 leader->field_350_14 = follower->field_350_14 = 0;
                 follower->field_23E = leader->field_23E = leader->field_260;
                 brothersTogether = 1;
-                sub_802DF80(this, 0);
+                sub_802DF80(0);
 
                 switch (field_246_2) {
                     case 2:
@@ -3589,7 +3589,7 @@ void FieldManager::sub_8029A0C(int mode, int arg2) {
     sprite_remove(follower->field_36C);
     sub_802DDB4(leader, 0, 0);
     sub_802DDB4(follower, brothersTogether, 0);
-    sub_802DF80(this, 0);
+    sub_802DF80(0);
 }
 #endif
 
@@ -3893,7 +3893,7 @@ void FieldManager::sub_802A740() {
                 && (leader->field_4E_2 == 3 || follower->field_4E_2 == 3)) {
                 follower->x = follower->previousX;
                 follower->y = follower->previousY;
-                sub_802DF80(this, 0);
+                sub_802DF80(0);
             }
             sub_802A4E8();
             if (resetHeight) {
@@ -3962,7 +3962,7 @@ void FieldManager::sub_802A740() {
     if (field_FA_10 && brothersTogether && !leader->field_2B5_0 && !leader->field_2B5_3
         && !follower->field_2B5_0 && !follower->field_2B5_3 && leader->state <= 1
         && follower->state <= 1 && (leader->previousState == 4 || follower->previousState == 4)) {
-        sub_802DF80(this, 0);
+        sub_802DF80(0);
     }
 }
 
@@ -4164,7 +4164,7 @@ u8 FieldManager::sub_802BD2C() {
             }
 
             if (field_20A_2) {
-                sub_802DF80(this, 0);
+                sub_802DF80(0);
                 if (leader->x == leader->previousX && leader->y == leader->previousY) {
                     if (leader->z == leader->previousZ && leader->height == 0 && follower->height == 0
                         && follower->z + 0x1000 >= leader->z) {
@@ -4199,7 +4199,7 @@ u8 FieldManager::sub_802BD2C() {
                 if (wasClamped) {
                     follower->x = follower->previousX;
                     follower->y = follower->previousY;
-                    sub_802DF80(this, 0);
+                    sub_802DF80(0);
                 }
             }
         } else {
@@ -4466,7 +4466,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 player->field_214_0 = 3;
                 player->sub_8049000(0x1001);
                 shotBullets[0]->sub_804FAF8();
-                sub_802DF80(this, 0);
+                sub_802DF80(0);
             }
             break;
 
@@ -4674,7 +4674,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 player->field_388->field_240 = field_100;
             }
             if (brothersTogether) {
-                sub_802DF80(this, 0);
+                sub_802DF80(0);
             }
             player->direction = player->angle >> 5;
             field_20B_4 = 0;
@@ -4710,7 +4710,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                 field_20B_7 = 0;
                 if (brothersTogether) {
                     player->field_388->field_260 = player->field_388->field_23E = 0x100 >> field_FA_10;
-                    sub_802DF80(this, 0);
+                    sub_802DF80(0);
                 }
             }
             break;
@@ -4774,7 +4774,7 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
             other->field_23E = field_100;
             other->field_260 = field_100;
         }
-        sub_802DF80(this, 0);
+        sub_802DF80(0);
     }
 }
 
@@ -5055,5 +5055,75 @@ void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct s
         }
     } else if (changed) {
         sub_8029878();
+    }
+}
+
+void FieldManager::sub_802DF80(int arg) {
+    FieldPlayerCharacter* player;
+    FieldPlayerCharacter* other;
+    int dx;
+    int dy;
+    int x;
+    int y;
+    int stepX;
+    int stepY;
+    int distance;
+    int progress;
+    int count;
+    int shift;
+    int i;
+
+    if (!brothersTogether) {
+        return;
+    }
+    field_240 = field_246_2 == 4 ? 0x1400 : 0x1000;
+    field_20B_2 = arg;
+    if (!arg) {
+        player = follower;
+        other = leader;
+    } else {
+        other = follower;
+        player = leader;
+    }
+    dx = other->x - player->x;
+    dy = other->y - player->y;
+    if (dx != 0 || dy != 0) {
+        u8 direction = byte_839F620[ArcTan2(-dy, dx) >> 12];
+
+        player->angle = direction << 5;
+        if (player->field_214_0 > 2) {
+            player->direction = direction;
+        }
+    }
+    player->field_358_4 = 0xFF;
+    player->field_358_12 = 0;
+    other->field_358_4 = 0;
+    other->field_358_12 = 0;
+    x = other->x;
+    y = other->y;
+    stepX = word_839F584[player->angle >> 5][0] / 4;
+    //! Possible fake match: [angle >> 5][1] shares the index * 4 with the x step.
+    stepY = word_839F584[0][(player->angle >> 5) * 2 + 1] / 4;
+    distance = ((int (*)(int))dword_3001038)(dx * dx + dy * dy);
+    progress = 0;
+    count = ((int (*)(int, int))((u8*)dword_3001038 + ((u8*)&loc_819832C - (u8*)&loc_8198220)))(
+        (s16)field_240, 0x40);
+    shift = 0;
+    if (other->field_26_2 == 3 && player->field_26_2 == 3) {
+        shift = other->field_353_4 != 0;
+    }
+    other->field_358_4 = count >> shift;
+    for (i = other->field_358_4 - 1; i >= 0; i--) {
+        ((s32(*)[2])field_23C)[i][0] = x;
+        ((s32(*)[2])field_23C)[i][1] = y;
+        if (stepX != 0 || stepY != 0) {
+            progress += 0x40;
+            if (progress > distance) {
+                stepY = 0;
+                stepX = 0;
+            }
+            x -= stepX;
+            y -= stepY;
+        }
     }
 }

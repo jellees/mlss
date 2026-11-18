@@ -1366,7 +1366,7 @@ _0802A47C:
 	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
 	adds r0, r7, #0x0
 	movs r1, #0x00
-	bl sub_802DF80
+	bl sub_802DF80__12FieldManageri
 	add sp, #0x010
 	pop {r3, r4, r5}
 	mov r8, r3
