@@ -5127,3 +5127,72 @@ void FieldManager::sub_802DF80(int arg) {
         }
     }
 }
+
+void FieldManager::sub_802E2F4() {
+    FieldPlayerCharacter* player;
+    FieldPlayerCharacter* other;
+    int x;
+    int y;
+    int stepX;
+    int stepY;
+    int dx;
+    int dy;
+    s16 speed;
+    int count;
+
+    if (!brothersTogether) {
+        return;
+    }
+    if (!field_20B_2) {
+        player = follower;
+        other = leader;
+    } else {
+        other = follower;
+        player = leader;
+    }
+    if (player->field_2B5_0) {
+        return;
+    }
+    if (field_20B_3 || other->x != other->previousX || other->y != other->previousY
+        || other->sub_8047C18(player) < 0) {
+        dx = other->x - other->previousX;
+        dy = other->y - other->previousY;
+        stepX = dx > 0 ? 0x40 : dx < 0 ? -0x40 : 0;
+        stepY = dy > 0 ? 0x40 : dy < 0 ? -0x40 : 0;
+        x = other->previousX;
+        y = other->previousY;
+        speed = other->field_23E;
+        speed >>= other->field_353_4;
+        count = speed / 64;
+        while (count != 0) {
+            x += stepX;
+            y += stepY;
+            if (stepX > 0) {
+                if (x >= other->x) {
+                    stepX = 0;
+                }
+            } else if (stepX < 0) {
+                if (x <= other->x) {
+                    stepX = 0;
+                }
+            }
+            if (stepY > 0) {
+                if (y >= other->y) {
+                    stepY = 0;
+                }
+            } else if (stepY < 0) {
+                if (y <= other->y) {
+                    stepY = 0;
+                }
+            }
+            ((s32(*)[2])field_23C)[other->field_358_4][0] = x;
+            ((s32(*)[2])field_23C)[other->field_358_4][1] = y;
+            other->field_358_4++;
+            count--;
+        }
+        other->field_358_12 = 1;
+        field_20B_3 = 0;
+    } else {
+        other->field_358_12 = 0;
+    }
+}
