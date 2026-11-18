@@ -7732,7 +7732,7 @@ sub_80F17F4:
 _080F1824:
 	ldr r1, [r4, #0x04]
 	adds r0, r2, #0x0
-	bl sub_802EC64
+	bl sub_802EC64__12FieldManageri
 _080F182C:
 	ldr r4, [r4, #0x00]
 	ldr r0, [r5, #0x14]

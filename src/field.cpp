@@ -1080,7 +1080,7 @@ void FieldManager::update_field_8023DD4() {
                         follower->field_368->field_10[0] = follower->field_368->field_14;
                         follower->field_368->field_14 = 0xFF;
                     }
-                    sub_802EC64(this, 0);
+                    sub_802EC64(0);
                     if (field_2D8_0 != 0x1F) {
                         leader->field_368->field_14 = leader->field_368->field_10[0];
                         leader->field_368->field_10[0] = 0;
@@ -5292,15 +5292,15 @@ void FieldManager::sub_802E754(u8 arg1, u8 arg2, u8 arg3) {
     }
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_802E854__12FieldManageri.s\"");
-#else
 static inline void resetLeader(FieldManager* manager) {
     manager->leader->sub_804FC90();
     manager->sub_802DDB4(manager->leader, 0, NULL);
 }
 
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_802E854__12FieldManageri.s\"");
+#else
 void FieldManager::sub_802E854(int arg) {
     resetLeader(this);
     leader->field_350_14 = 1;
@@ -5336,3 +5336,97 @@ void FieldManager::sub_802E854(int arg) {
     field_209_0 = 1;
 }
 #endif
+
+void FieldManager::sub_802EA70() {
+    u16 trailIndex;
+
+    luigiLeads ^= 1;
+    field_209_0 = 0;
+    brothersTogether = true;
+    field_208_6 = 0;
+    field_F8_6 = field_F8_7;
+    dword_3000FD0->field_528 = luigiLeads;
+    dword_3000FD0->field_530 = field_FA_5;
+    leader = (FieldPlayerCharacter*)objects[luigiLeads];
+    follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
+    leader->field_368->field_4 = 1;
+    leader->field_368->field_6 = 0x100;
+    follower->field_368->field_4 = 2;
+    follower->field_368->field_6 = 0x200;
+    trailIndex = leader->field_358_4;
+    leader->field_358_4 = follower->field_358_4;
+    follower->field_358_4 = trailIndex;
+    leader->field_352_7 = 1;
+    follower->field_352_7 = 0;
+    leader->field_2B6_6 = leader->field_2B6_7 = follower->field_2B6_6 = follower->field_2B6_7 = 0;
+    leader->field_214_0 = 3;
+    follower->field_214_0 = 3;
+    leader->previousX = leader->x;
+    leader->previousY = leader->y;
+    follower->previousX = follower->x;
+    follower->previousY = follower->y;
+    leader->field_350_14 = 0;
+    follower->field_350_14 = 0;
+    sub_802DDB4(leader, 0, NULL);
+    sub_802DDB4(follower, 1, NULL);
+    field_E8 = field_EC = 0;
+}
+
+void FieldManager::sub_802EC64(int arg) {
+    resetLeader(this);
+    leader->field_350_14 = 1;
+    follower->field_350_14 = 1;
+
+    if (field_2D8_0 == 31) {
+        if (arg == 0) {
+            FieldPlayerCharacter* player = follower;
+            s32 top;
+            int x;
+            int y;
+
+            if (player->field_238 != -1) {
+                top = objects[player->field_238]->z + objects[player->field_238]->height;
+            } else {
+                top = player->z;
+            }
+            x = follower->x / 256 - 120;
+            y = (follower->y - top) / 256;
+            sub_8028AFC(1, 0, x, y - (follower->airFrames != -1 ? field_28D : field_28F), 0xC00);
+        } else {
+            int index = field_FA_5;
+
+            sub_80284B0(index ^ 1, 0);
+        }
+        field_12A = 4;
+    } else {
+        sub_8027030(2, arg == 0 ? 16 : 1, 0, 0xFFFF, 0xFFFF);
+        leader->field_20C_11 = 0;
+        leader->field_20C_14 = 0;
+        field_F9_5 = 1;
+        field_12A = 17;
+    }
+}
+
+u8 FieldManager::sub_802EDC4(FieldPlayerCharacter* player, bool arg2, bool arg3, bool arg4) {
+    if ((u8)(field_12A - 1) <= 1 && !field_F9_4 && !field_F9_5 && player->field_2B5_0 == 0) {
+        field_E4 = (struct FieldStruct7*)player->sub_804A124((struct FieldStruct6*)field_E0, &field_2D0,
+                                                             &field_2D4, arg3, arg4);
+        if (field_E4 != NULL) {
+            player->field_353_6 = 1;
+            if (!player->field_353_7 && arg2 && field_12A == 2) {
+                leader->sub_804FC90();
+                follower->sub_804FC90();
+                if (brothersTogether && player->sub_8047C18(player->otherBrother)) {
+                    field_2B8_5 = 1;
+                    field_26E = 60;
+                }
+                sub_8027030(2, 16, 0, 0xFFFF, 0xFFFF);
+                leader->field_350_14 = 1;
+                follower->field_350_14 = 1;
+                field_12A = 7;
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
+}

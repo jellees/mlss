@@ -436,6 +436,8 @@ class FieldManager : public Process {
     u8 sub_802E688(bool32 isMole);
     void sub_802E754(u8 arg1, u8 arg2, u8 arg3);
     void sub_802E854(int arg);
+    void sub_802EA70();
+    void sub_802EC64(int arg);
     u8 sub_802EDC4(FieldPlayerCharacter* player, bool arg2, bool arg3, bool arg4);
     void sub_802F498();
     void sub_803C7D8(FieldPlayerCharacter* player);
