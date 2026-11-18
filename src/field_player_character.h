@@ -9,6 +9,12 @@
 // holds FieldPlayerShotBullet ("FPSB").
 #pragma interface
 
+// FieldObject::objectIndex of the brothers: they always occupy the first two slots
+enum Brother {
+    BROTHER_MARIO = 0,
+    BROTHER_LUIGI = 1,
+};
+
 enum BrothersForm {
     BROTHERS_FORM_NORMAL = 0,
     BROTHERS_FORM_PUMP_MARIO = 1,

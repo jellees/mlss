@@ -31,7 +31,7 @@ inline bool FieldEventScript::sub_80F1E44(FieldObject* object, ScriptContext* sc
 //! use guessed prototypes and raw offsets into dword_3000FD0/dword_3000FC0.
 void FieldEventScript::sub_80EB248() {
     FieldManager* fieldManager = (FieldManager*)parentProcess;
-    s16 count = fieldManager->field_10B;
+    s16 count = fieldManager->objectCount;
     FieldObject** objects;
     ScriptContext* script;
     s16 i;
@@ -50,7 +50,7 @@ void FieldEventScript::sub_80EB248() {
         }
     }
 
-    for (i = ((FieldManager*)parentProcess)->field_10B,
+    for (i = ((FieldManager*)parentProcess)->objectCount,
         objects = ((FieldManager*)parentProcess)->objects;
          i > 0; i--, objects++) {
         FieldObject* object = *objects;
@@ -287,7 +287,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
             return sub_80F1CF8(this, script, command);
         case 6:
             return sub_80F1C7C(this, object, script, command, dword_3000FD0->field_548,
-                               ((FieldManager*)parentProcess)->field_10B);
+                               ((FieldManager*)parentProcess)->objectCount);
         case 7:
             return sub_80F1C34(this, script, command);
         case 8:
@@ -701,7 +701,7 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32
     int flags = 1;
 
     if (object != NULL) {
-        index = object->field_54 + 4;
+        index = object->objectIndex + 4;
     }
     if (command[0] & flags) {
         script->field_A0 |= 4;
@@ -831,7 +831,7 @@ s8 FieldEventScript::sub_80ECCB0(ScriptContext* script, s32* command) {
     }
 
     FieldManager* fieldManager = (FieldManager*)parentProcess;
-    count = fieldManager->field_10B;
+    count = fieldManager->objectCount;
     FieldObject** objects = fieldManager->objects;
     for (; count > 0; count--, objects++) {
         FieldObject* object = *objects;
@@ -876,10 +876,10 @@ s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32
             // Pointer arithmetic, not dword_83D6C58[...]: the array form loads the table address
             // earlier.
             u8* header = *(dword_83D6C58 + ((FieldManager*)parentProcess)->field_126);
-            u8* record = header - ((header[7] << 8) | header[6]) + object->field_54 * 0x14;
+            u8* record = header - ((header[7] << 8) | header[6]) + object->objectIndex * 0x14;
 
-            if (object->field_54 <= 1) {
-                dword_3000FD0->field_55A_6 |= 1 << object->field_54;
+            if (object->objectIndex <= 1) {
+                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
                 object->blocksBrothers = 0;
                 object->collidesWithBrothers = 0;
                 object->field_20C_7 = 0;
@@ -893,8 +893,8 @@ s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32
             break;
         }
         case 5:
-            if (object->field_54 <= 1) {
-                dword_3000FD0->field_55A_6 |= 1 << object->field_54;
+            if (object->objectIndex <= 1) {
+                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
             }
             object->collidesWithBrothers = *command;
             object->field_20C_7 = *command;
@@ -979,8 +979,8 @@ s8 FieldEventScript::sub_80ED17C(FieldObject* object, ScriptContext* script, s32
             }
             break;
         case 2:
-            if (object->field_54 <= 1) {
-                dword_3000FD0->field_55A_6 |= 1 << object->field_54;
+            if (object->objectIndex <= 1) {
+                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
             }
             if ((value >> 4) & 1) {
                 object->blocksBrothers = *command;

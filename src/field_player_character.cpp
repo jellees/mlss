@@ -30,7 +30,7 @@ FieldPlayerCharacter::FieldPlayerCharacter(int roomId, int index) : FieldObject(
 }
 
 void FieldPlayerCharacter::sub_8048174(int form) {
-    int value = off_83A09DC[field_54][state];
+    int value = off_83A09DC[objectIndex][state];
 
     if ((state >= 0 && state <= 4) || state == 13) {
         switch (form) {
@@ -41,13 +41,13 @@ void FieldPlayerCharacter::sub_8048174(int form) {
                 break;
 
             case BROTHERS_FORM_PUMP_MARIO:
-                if (field_54 == 0) {
+                if (objectIndex == BROTHER_MARIO) {
                     value = 23;
                 }
                 break;
 
             case BROTHERS_FORM_MINI_MARIO:
-                if (field_54 == 0) {
+                if (objectIndex == BROTHER_MARIO) {
                     if (value == 1 && field_212_13) {
                         value = 15;
                     } else {
@@ -57,13 +57,13 @@ void FieldPlayerCharacter::sub_8048174(int form) {
                 break;
 
             case BROTHERS_FORM_MOLE_LUIGI:
-                if (field_54 == 1) {
+                if (objectIndex == BROTHER_LUIGI) {
                     value = 16;
                 }
                 break;
 
             case BROTHERS_FORM_BARREL_LUIGI:
-                if (field_54 == 1) {
+                if (objectIndex == BROTHER_LUIGI) {
                     value = 18;
                 }
                 break;
@@ -76,7 +76,7 @@ void FieldPlayerCharacter::sub_8048174(int form) {
         }
     }
 
-    if (field_54 == 0 && form == BROTHERS_FORM_MINI_MARIO) {
+    if (objectIndex == BROTHER_MARIO && form == BROTHERS_FORM_MINI_MARIO) {
         if (value == 7) {
             value = 12;
         } else if (value == 9) {
@@ -434,7 +434,7 @@ void FieldPlayerCharacter::sub_80490CC(bool arg) {
         if (airFrames >= 0) {
             if (arg != 0 && !field_2B5_0 && !field_2B5_3) {
                 state = 4;
-                sub_8049000(field_54 == 0 ? (isMini ? 0x103C : 0x103B) : 0x1052);
+                sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x103C : 0x103B) : 0x1052);
                 if (field_214_0 != 4) {
                     field_214_0 = 5;
                 }
@@ -449,7 +449,7 @@ void FieldPlayerCharacter::sub_80490CC(bool arg) {
             state = 0;
         }
         if (arg != 0 && !field_2B5_0 && !field_2B5_3 && previousState == 4 && state != 4) {
-            sub_8049000(field_54 == 0 ? (isMini ? 0x1028 : 0x1001) : 0x1002);
+            sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1028 : 0x1001) : 0x1002);
             field_214_0 = 3;
         }
     }
@@ -458,7 +458,7 @@ void FieldPlayerCharacter::sub_80490CC(bool arg) {
 void FieldPlayerCharacter::sub_8049224() {
     field_214_0 = 4;
     if (state != 4) {
-        sub_8049000(field_54 == 0 ? (isMini ? 0x103C : 0x103B) : 0x1052);
+        sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x103C : 0x103B) : 0x1052);
     } else if (sprite->paused) {
         sub_8040804(true, -1, -1);
     }
@@ -469,17 +469,17 @@ void FieldPlayerCharacter::sub_8049224() {
 }
 
 void FieldPlayerCharacter::sub_80492DC() {
-    if ((field_54 == 0 && field_218 == SPRITE_ID(0, 62))
-        || (field_54 == 1 && field_218 == SPRITE_ID(0, 83))) {
+    if ((objectIndex == BROTHER_MARIO && field_218 == SPRITE_ID(0, 62))
+        || (objectIndex == BROTHER_LUIGI && field_218 == SPRITE_ID(0, 83))) {
         field_214_0 = 3;
-        sub_8049000(field_54 == 0 ? (isMini ? 0x1028 : 0x1001) : 0x1002);
+        sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1028 : 0x1001) : 0x1002);
     }
     field_35A_2 = 0;
 }
 
 void FieldPlayerCharacter::startHammer(bool arg) {
     field_214_0 = 4;
-    sub_8049000(field_54 == 0 ? (isMini ? 0x1029 : 0x1025) : 0x103F);
+    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1029 : 0x1025) : 0x103F);
     sprite->animationEndAction = ANIMATION_END_STOP;
 
     if (arg == 0) {
@@ -496,9 +496,9 @@ void FieldPlayerCharacter::startHammer(bool arg) {
 
 void FieldPlayerCharacter::startHandPower() {
     field_214_0 = 4;
-    sub_8049000(field_54 == 0 ? (isMini ? 0x102A : 0x1026) : 0x1040);
+    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x102A : 0x1026) : 0x1040);
     showHandPowerSprite(field_368->field_0 == 11 ? 1 : 0);
-    play_sfx_80195B4(field_54 == 0 ? 0x157 : 0x87, -1);
+    play_sfx_80195B4(objectIndex == BROTHER_MARIO ? 0x157 : 0x87, -1);
     state = 10;
     field_355 = 0;
     field_358_12 = 0;
@@ -507,16 +507,16 @@ void FieldPlayerCharacter::startHandPower() {
 void FieldPlayerCharacter::stopHandPower() {
     field_214_0 = 3;
     sprite_remove(field_36C);
-    sub_8049000(field_54 == 0 ? (isMini ? 0x1028 : 0x1001) : 0x1002);
-    stop_sfx_80195A8(field_54 == 0 ? 0x157 : 0x87);
-    stop_sfx_80195A8(field_54 == 0 ? 0x158 : 0x156);
+    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1028 : 0x1001) : 0x1002);
+    stop_sfx_80195A8(objectIndex == BROTHER_MARIO ? 0x157 : 0x87);
+    stop_sfx_80195A8(objectIndex == BROTHER_MARIO ? 0x158 : 0x156);
     state = 0;
 }
 
 void FieldPlayerCharacter::showHandPowerSprite(int type) {
     s8(*offsets)[3];
 
-    field_370 = field_54 == 0 ? SPRITE_ID(0, 89) : SPRITE_ID(0, 90);
+    field_370 = objectIndex == BROTHER_MARIO ? SPRITE_ID(0, 89) : SPRITE_ID(0, 90);
     sprite_change(field_36C, 0, field_370, 1, -1, -1, -1, -1);
     sprite_set_animation(field_36C, 0);
     sprite_restore(field_36C);
@@ -623,7 +623,7 @@ void FieldPlayerCharacter::sub_8049AB4(int mode, int animation) {
             FieldObject::method3();
             field_356 = field_218;
             field_358_0 = direction;
-            sub_8049000(field_54 == 0 ? (isMini ? 0x103D : 0x1032) : 0x104B);
+            sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x103D : 0x1032) : 0x104B);
             break;
     }
 }
@@ -649,7 +649,7 @@ void FieldPlayerCharacter::sub_8049C38(FieldObject** objects, int count) {
     for (i = 0; i < count; i++, objects++) {
         FieldObject* other = *objects;
 
-        if (field_54 == other->field_54 || other->field_214_21 || !other->field_20C_12
+        if (objectIndex == other->objectIndex || other->field_214_21 || !other->field_20C_12
             || !other->spriteActive) {
             continue;
         }
@@ -934,7 +934,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
         FieldObject* other = *others;
         int pass;
 
-        if (field_54 == other->field_54) {
+        if (objectIndex == other->objectIndex) {
             continue;
         }
         if (flag && !other->field_210_5) {
@@ -964,10 +964,10 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
             if (!other->field_20C_0) {
                 goto next;
             }
-            if (other->field_214_21 && other->field_54 != field_29) {
+            if (other->field_214_21 && other->objectIndex != field_29) {
                 goto next;
             }
-            if (other->field_29 == field_54) {
+            if (other->field_29 == objectIndex) {
                 goto next;
             }
             if (other->type == FIELD_OBJECT_TYPE_FPC) {
@@ -1019,7 +1019,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
                 if (overlap <= 0) {
                     if (otherTopZ >= z && (field_238 == -1 || -overlap < (s16)heightAbove)) {
                         heightAbove = -overlap;
-                        field_238 = other->field_54;
+                        field_238 = other->objectIndex;
                     }
                     if (overlap < 0) {
                         goto next;
@@ -1036,7 +1036,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
             sideOther = 0;
             verticalThis = 0;
             verticalOther = 0;
-            if (field_29 == other->field_54) {
+            if (field_29 == other->objectIndex) {
                 verticalThis = 2;
                 verticalOther = 1;
             } else {
@@ -1053,11 +1053,11 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
 
             if (other->field_20C_23 && verticalThis == 2) {
                 // Landing on top of the other object.
-                if (field_29 != other->field_54) {
+                if (field_29 != other->objectIndex) {
                     height = (height + overlap) & ~0xFF;
                 }
-                field_238 = other->field_54;
-                field_1 = other->field_54;
+                field_238 = other->objectIndex;
+                field_1 = other->objectIndex;
                 heightAbove = 0;
                 if (field_2B5_3) {
                     sub_8046A10();
@@ -1066,7 +1066,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
                 }
             } else if (verticalThis == 1) {
                 // Hitting the other object from below.
-                if (field_4C_7 != 1 && other->field_29 != field_54) {
+                if (field_4C_7 != 1 && other->field_29 != objectIndex) {
                     height -= overlap;
                     if (airFrames >= 0 && velocityZ > 0) {
                         velocityZ = -velocityZ;
@@ -1267,7 +1267,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
                 field_24_3 |= sideThis;
                 field_24_7 |= verticalThis;
                 if (field_0 == -1) {
-                    field_0 = other->field_54;
+                    field_0 = other->objectIndex;
                 }
                 if (other->type == FIELD_OBJECT_TYPE_FPC) {
                     field_24_9 = 1;
@@ -1281,7 +1281,7 @@ void FieldPlayerCharacter::method12(FieldObject** others, int count, u8 flag) {
                 //! \bug Probably meant to set other->field_0, like the block above does for this
                 //! object.
                 if (field_0 == -1) {
-                    field_0 = other->field_54;
+                    field_0 = other->objectIndex;
                 }
                 other->field_24_9 = 1;
             }
@@ -1372,7 +1372,7 @@ u8 FieldPlayerCharacter::sub_804B028(FieldObject* other) {
 
     sides = 0;
     vertical = 0;
-    if (field_29 == other->field_54) {
+    if (field_29 == other->objectIndex) {
         vertical = 2;
     } else if (overlapX > 0 && overlapY > 0) {
         int previousBottom = previousZ + previousHeight;
@@ -1412,7 +1412,7 @@ u8 FieldPlayerCharacter::sub_804B028(FieldObject* other) {
             sides |= 4;
         }
     }
-    field_33C_0 = other->field_54;
+    field_33C_0 = other->objectIndex;
     field_350_0 = sides;
     field_350_4 = vertical;
     return sides | vertical << 4;
@@ -1431,7 +1431,7 @@ bool FieldPlayerCharacter::sub_804B25C(FieldObject* other) {
     int overlap;
 
     if (!other->field_20C_0 || other->field_214_21 || !other->blocksBrothers
-        || (s8)field_1 == other->field_54) {
+        || (s8)field_1 == other->objectIndex) {
         return FALSE;
     }
     width = field_272;
@@ -2328,7 +2328,7 @@ settle:
 #endif
 
 bool FieldPlayerCharacter::sub_804D0EC() {
-    if (field_54 == 0 && isMini) {
+    if (objectIndex == BROTHER_MARIO && isMini) {
         if (get_coldef_ptr_by_xz(field_290, previousX / 4096, previousY / 4096)->floorType == 3) {
             return TRUE;
         }
@@ -2574,7 +2574,7 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
             int otherLeft;
             int otherBottom;
 
-            if (other->field_54 == field_54 || !other->field_20C_0 || other->field_214_21
+            if (other->objectIndex == objectIndex || !other->field_20C_0 || other->field_214_21
                 || other->type == FIELD_OBJECT_TYPE_FSPL
                 || !(other->blocksBrothers || other->field_20C_7)) {
                 goto next;
@@ -2611,7 +2611,7 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
                 (*objects)->field_24_3 |= byte_83A0B80[direction];
             }
             if (field_20C_24 && (collidesWithObjects & other->field_20C_7) && field_350_0 == 0) {
-                field_33C_0 = other->field_54;
+                field_33C_0 = other->objectIndex;
                 field_33C_7 = pass;
                 field_350_0 = byte_83A0B78[direction];
                 field_342 = mode;
@@ -2706,13 +2706,13 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
 // the file in reverse definition order (0x0804FC90, 0x0804FCD4, 0x0804FD3C).
 inline void FieldPlayerCharacter::sub_804FD3C() {
     field_214_0 = 4;
-    sub_8049000(field_54 == 0 ? 0x103E : 0x1053);
+    sub_8049000(objectIndex == BROTHER_MARIO ? 0x103E : 0x1053);
     field_35A_2 = 1;
 }
 
 inline void FieldPlayerCharacter::sub_804FCD4() {
     field_214_0 = 3;
-    sub_8049000(field_54 == 0 ? (isMini ? 0x1028 : 0x1001) : 0x1002);
+    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1028 : 0x1001) : 0x1002);
     state = 0;
     field_212_6 = 0;
 }
@@ -2762,10 +2762,10 @@ void FieldPlayerCharacter::sub_804DDF4(FieldObject** objects, int count) {
                         int distance = other->z + other->height - z;
 
                         if (other->blocksBrothers ? distance <= 0x2800 : distance <= 0) {
-                            field_33E = other->field_54;
+                            field_33E = other->objectIndex;
                             found = other;
                             if (other->field_20C_1 > 1) {
-                                field_33C_0 = other->field_54;
+                                field_33C_0 = other->objectIndex;
                                 field_33C_7 = pass;
                             }
                             break;
@@ -3023,7 +3023,7 @@ void FieldPlayerShotBullet::sub_804E6E0(FieldObject** objects, int count) {
             int otherSide;
             FieldPlayerCharacter* player;
 
-            if (owner->field_54 == other->field_54 || !other->field_20C_0 || other->field_214_21) {
+            if (owner->objectIndex == other->objectIndex || !other->field_20C_0 || other->field_214_21) {
                 goto next;
             }
             otherWidth = other->field_272;
@@ -3118,7 +3118,7 @@ void FieldPlayerShotBullet::sub_804E6E0(FieldObject** objects, int count) {
             player = (FieldPlayerCharacter*)owner;
             if (player->field_350_0 == 0 || !player->field_350_6) {
                 player->field_350_6 = 1;
-                ((FieldPlayerCharacter*)owner)->field_33C_0 = other->field_54;
+                ((FieldPlayerCharacter*)owner)->field_33C_0 = other->objectIndex;
                 ((FieldPlayerCharacter*)owner)->field_33C_7 = n;
                 ((FieldPlayerCharacter*)owner)->field_350_0 |= side;
                 ((FieldPlayerCharacter*)owner)->field_342 = type;

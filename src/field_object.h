@@ -103,7 +103,7 @@ class FieldObject {
     u32 pad_4F : 8;
     s16 field_50;
     s16 field_52;
-    u8 field_54;
+    u8 objectIndex; // Slot in FieldManager::objects (0 = Mario, 1 = Luigi)
     u8 initialDirection; // Starting direction, used by method2
     u8 pad_56[0x2];
     struct ScriptContext script;

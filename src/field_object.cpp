@@ -856,7 +856,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
     n = collidesWithObjects ? count : 2;
     for (; n != 0; n--, others++) {
         other = *others;
-        if (field_54 == other->field_54) {
+        if (objectIndex == other->objectIndex) {
             continue;
         }
         if (flag && !other->field_210_5) {
@@ -865,10 +865,10 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
         if (!other->field_20C_0) {
             continue;
         }
-        if (other->field_214_21 && other->field_54 != field_29) {
+        if (other->field_214_21 && other->objectIndex != field_29) {
             continue;
         }
-        if (other->field_29 == field_54) {
+        if (other->field_29 == objectIndex) {
             continue;
         }
         if (other->type == FIELD_OBJECT_TYPE_FPC) {
@@ -928,7 +928,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
         sideOther = 0;
         verticalThis = 0;
         verticalOther = 0;
-        if (field_29 == other->field_54) {
+        if (field_29 == other->objectIndex) {
             verticalThis = 2;
             verticalOther = 1;
         } else {
@@ -945,11 +945,11 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
 
         if (verticalThis == 2) {
             // Landing on top of the other object.
-            if (field_29 != other->field_54) {
+            if (field_29 != other->objectIndex) {
                 height = (height + overlap) & ~0xFF;
             }
-            field_238 = other->field_54;
-            field_1 = other->field_54;
+            field_238 = other->objectIndex;
+            field_1 = other->objectIndex;
             if (field_2B5_3) {
                 sub_8046A10();
             } else if (airFrames >= 0) {
@@ -957,7 +957,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
             }
         } else if (verticalThis == 1) {
             // Hitting the other object from below.
-            if (field_4C_7 != 1 && other->field_29 != field_54) {
+            if (field_4C_7 != 1 && other->field_29 != objectIndex) {
                 height -= overlap;
                 if (airFrames >= 0 && velocityZ > 0) {
                     velocityZ = -velocityZ;
@@ -1056,7 +1056,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
             field_24_3 |= sideThis;
             field_24_7 |= verticalThis;
             if (field_0 == -1) {
-                field_0 = other->field_54;
+                field_0 = other->objectIndex;
             }
             if (other->type == FIELD_OBJECT_TYPE_FPC) {
                 field_24_9 = 1;
@@ -1069,7 +1069,7 @@ void FieldObject::method12(FieldObject** others, int count, u8 flag) {
             other->field_24_7 |= verticalOther;
             //! \bug Probably meant to set other->field_0, like the block above does for this object.
             if (field_0 == -1) {
-                field_0 = other->field_54;
+                field_0 = other->objectIndex;
             }
             other->field_24_10 = 1;
         }

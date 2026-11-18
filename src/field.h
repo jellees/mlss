@@ -135,7 +135,7 @@ class FieldManager : public Process {
     u16 field_106; // Wipe radius
     u16 field_108; // Mode passed to sub_8027168
     s8 field_10A;
-    u8 field_10B;
+    u8 objectCount; // Number of used entries in objects
     u8 field_10C;
     u8 field_10D;
     u8 field_10E;

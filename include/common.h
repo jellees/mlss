@@ -267,7 +267,7 @@ struct EeprStruct1 {
     struct SaveSlot slots[3];
 };
 
-// One entry per brother, indexed by FieldObject::field_54
+// One entry per brother, indexed by FieldObject::objectIndex
 struct struc_3000FF4 {
     u8 pad0[0xE];
     u16 field_E;
@@ -770,11 +770,11 @@ extern u8
 extern u8
     byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per FieldStruct4::field_2
 extern u16 word_839F974[]; // FieldManager::sub_802C774: 4 pairs of (frame, animation)
-extern u16 word_839F984[]; // FieldManager::sub_802DDB4: [field_54][index]
+extern u16 word_839F984[]; // FieldManager::sub_802DDB4: [objectIndex][index]
 extern u16
-    word_839F98C[]; // FieldManager::sub_802DDB4: flag per [field_54][index][FieldStruct4::field_2]
+    word_839F98C[]; // FieldManager::sub_802DDB4: flag per [objectIndex][index][FieldStruct4::field_2]
 extern u8
-    byte_839F9FC[]; // FieldManager::sub_802DDB4: sound per [field_54][index][FieldStruct4::field_2]
+    byte_839F9FC[]; // FieldManager::sub_802DDB4: sound per [objectIndex][index][FieldStruct4::field_2]
 extern void (*dword_3000D80[2])(void);
 extern u16 word_839F5CC[];
 extern u16 word_839F5E2[];
@@ -867,7 +867,7 @@ extern u8 byte_83A061C[];
 extern u8 byte_83A0636[];
 extern s8 byte_83A0656[];
 extern s8*
-    off_83A09DC[]; // Indexed by [FieldObject::field_54][state] (FieldPlayerCharacter::sub_8048174)
+    off_83A09DC[]; // Indexed by [FieldObject::objectIndex][state] (FieldPlayerCharacter::sub_8048174)
 extern u8* off_83A086C[];       // Indexed by [!FieldPlayerCharacter::field_352_7][state]
 extern s8 byte_83A09E4[][8][3]; // FieldPlayerCharacter::field_372-374 per animation and direction
 extern u16 word_83A0A2C[];      // FieldPlayerCharacter::sub_804A124: corner masks that may match

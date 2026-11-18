@@ -474,7 +474,7 @@ void FieldManager::update() {
                 }
             }
 
-            for (i = 0; i < field_10B; i++) {
+            for (i = 0; i < objectCount; i++) {
                 if (objects[i]->spriteActive) {
                     objects[i]->method4();
                 }
@@ -627,7 +627,7 @@ void FieldManager::update() {
                 field_F9_7 = 0;
             }
 
-            for (i = 0; i < field_10B; i++) {
+            for (i = 0; i < objectCount; i++) {
                 objects[i]->field_290 = field_304;
                 if (objects[i]->type == FIELD_OBJECT_TYPE_FMON
                     && ((FieldMonster*)objects[i])->field_344 != NULL) {
@@ -683,7 +683,7 @@ void FieldManager::update() {
             sub_803C788(this, leader);
             if (leader->field_368->field_17_7) {
                 sub_8018218(field_1C->field_0[4]->field_8 + 0x1100,
-                            (void*)(leader->field_54 * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
+                            (void*)(leader->objectIndex * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
             }
 
             field_20C[1].field_4 = luigiLeads == 0 ? 2 : 1;
@@ -691,7 +691,7 @@ void FieldManager::update() {
             sub_803C788(this, follower);
             if (follower->field_368->field_17_7) {
                 sub_8018218(field_1C->field_0[4]->field_8 + 0x1100,
-                            (void*)(follower->field_54 * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
+                            (void*)(follower->objectIndex * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
             }
 
             state = 15;
@@ -865,21 +865,21 @@ void FieldManager::update_field_8023DD4() {
 
                 switch (brothersForm) {
                     case BROTHERS_FORM_MINI_MARIO:
-                        if (follower->field_54 == 0) {
+                        if (follower->objectIndex == BROTHER_MARIO) {
                             field_20B_4 = 1;
                             sub_8035974(this);
                         }
                         break;
 
                     case BROTHERS_FORM_MOLE_LUIGI:
-                        if (follower->field_54 == 1) {
+                        if (follower->objectIndex == BROTHER_LUIGI) {
                             field_20B_4 = 1;
                             sub_8033B98(this, follower);
                         }
                         break;
 
                     case BROTHERS_FORM_BARREL_LUIGI:
-                        if (follower->field_54 == 1) {
+                        if (follower->objectIndex == BROTHER_LUIGI) {
                             field_20B_4 = 1;
                             sub_8034870(this, follower);
                             leader->field_350_14 = 1;
@@ -1104,7 +1104,7 @@ void FieldManager::update_field_8023DD4() {
 
     if (!field_291_0 || field_290 < 0) {
         object = objects;
-        for (int count = field_10B; count != 0; count--, object++) {
+        for (int count = objectCount; count != 0; count--, object++) {
             if (*object != NULL) {
                 (*object)->method11();
                 (*object)->updateFlicker();
@@ -1159,7 +1159,7 @@ void FieldManager::update_field_8023DD4() {
         bullet = shotBullets;
 
         for (int count = 8; count != 0; count--, bullet++) {
-            (*bullet)->sub_804E33C(objects, field_10B);
+            (*bullet)->sub_804E33C(objects, objectCount);
         }
     }
 
@@ -1186,13 +1186,13 @@ void FieldManager::update_field_8023DD4() {
         object = objects;
 
         if (!field_291_0) {
-            for (int count = field_10B; count != 0; count--, object++) {
+            for (int count = objectCount; count != 0; count--, object++) {
                 (*object)->method8(field_27E, field_280, objects);
                 (*object)->method6(0);
                 (*object)->method9();
             }
         } else {
-            for (int count = field_10B; count != 0; count--, object++) {
+            for (int count = objectCount; count != 0; count--, object++) {
                 (*object)->method8(field_27E, field_280, objects);
                 (*object)->method9();
             }
@@ -1275,10 +1275,10 @@ void FieldManager::update_field_8023DD4() {
 
         if (leader->y / 256 < follower->y / 256
             || (leader->y / 256 == follower->y / 256 && field_209_7 == 2)) {
-            leader->sub_8049C38(objects, field_10B);
-            follower->sub_8049C38(objects, field_10B);
+            leader->sub_8049C38(objects, objectCount);
+            follower->sub_8049C38(objects, objectCount);
         } else {
-            follower->sub_8049C38(objects, field_10B);
+            follower->sub_8049C38(objects, objectCount);
             FieldPlayerCharacter* player = leader;
             FieldObject** list = objects;
             int listCount;
@@ -1286,7 +1286,7 @@ void FieldManager::update_field_8023DD4() {
             if (brothersForm == BROTHERS_FORM_MOLE_LUIGI) {
                 list = &objects[1];
             }
-            listCount = field_10B;
+            listCount = objectCount;
             if (brothersForm == BROTHERS_FORM_MOLE_LUIGI) {
                 listCount--;
             }
@@ -1355,7 +1355,7 @@ void FieldManager::sub_802563C() {
                         (*objects)->method12(&this->objects[luigiLeads ^ 1], 1, 0);
                     }
                 }
-                (*objects++)->method12(&this->objects[2], field_10B - 2, 0);
+                (*objects++)->method12(&this->objects[2], objectCount - 2, 0);
                 count--;
             } while (count != 0);
         }
@@ -1371,10 +1371,10 @@ void FieldManager::sub_802563C() {
                 if (brothersForm == BROTHERS_FORM_MOLE_LUIGI) {
                     (*objects)->method12(&this->objects[0], 1, 0);
                     index = 2;
-                    arg = field_10B - 2;
+                    arg = objectCount - 2;
                 } else {
                     index = 0;
-                    arg = field_10B;
+                    arg = objectCount;
                 }
                 (*objects++)->method12(&this->objects[index], arg, 0);
                 count--;
@@ -1391,10 +1391,10 @@ void FieldManager::sub_802563C() {
                 int arg;
                 if (brothersForm == BROTHERS_FORM_BARREL_LUIGI) {
                     index = 1;
-                    arg = field_10B - 1;
+                    arg = objectCount - 1;
                 } else {
                     index = 2;
-                    arg = field_10B - 2;
+                    arg = objectCount - 2;
                 }
                 (*objects)->method12(&this->objects[index], arg, 0);
                 ((FieldMonster*)*objects++)->sub_80503CC();
@@ -1450,7 +1450,7 @@ void FieldManager::sub_8025ACC() {
     }
     if (start > 0) {
         FieldObject** objects = &this->objects[start];
-        int count = field_10B - start;
+        int count = objectCount - start;
         while (count != 0) {
             (*objects)->sub_80465D8();
             (*objects)->method13();
@@ -1647,7 +1647,7 @@ int FieldManager::sub_80261C0(FieldObject* object) {
 
         for (i = 0; i < field_1F4; entry++, i++) {
             if (entry->field_0_1 == 0 && object->height == 0 && z == entry->field_3
-                && (object->field_54 == 1 || entry->field_0_0)) {
+                && (object->objectIndex == BROTHER_LUIGI || entry->field_0_0)) {
                 int left = entry->field_1 * 16;
                 int right = left + 15;
                 int top = entry->field_2 * 16;
@@ -1789,7 +1789,7 @@ void FieldManager::sub_80265EC(u16 arg1) {
         follower->method2(field_C8, field_CC, field_314);
     }
 
-    for (i = 2; i < field_10B; i++) {
+    for (i = 2; i < objectCount; i++) {
         objects[i]->method2(field_C8, field_CC, field_314);
     }
 
@@ -1799,7 +1799,7 @@ void FieldManager::sub_80265EC(u16 arg1) {
 }
 
 void FieldManager::make_field_objects_80267C0(int roomId) {
-    get_field_object_count(roomId, &field_10B);
+    get_field_object_count(roomId, &objectCount);
     field_10E = 0;
     field_10F = 0;
     field_112 = 0;
@@ -1814,7 +1814,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
     field_119 = 0;
     field_110 = 0;
     field_111 = 0;
-    for (int i = 0; i < field_10B; i++) {
+    for (int i = 0; i < objectCount; i++) {
         switch (get_field_object_type(roomId, i)) {
             case FIELD_OBJECT_TYPE_FPC: {
                 FieldPlayerCharacter* player = new (1, "FPC", 1) FieldPlayerCharacter(roomId, i);
@@ -1854,7 +1854,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
 
                 objects[i] = object;
                 if (object->field_344 != 0) {
-                    object->field_344->field_54 = i;
+                    object->field_344->objectIndex = i;
                 }
                 if (field_112 == 0) {
                     field_112 = i;
@@ -1915,7 +1915,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
         }
         objects[i]->field_210_4 = objects[i]->blocksBrothers;
         objects[i]->field_239 = 16 >> isUnderwater;
-        objects[i]->field_54 = i;
+        objects[i]->objectIndex = i;
     }
     ((FieldPlayerCharacter*)objects[luigiLeads])->field_352_7 = 1;
     field_11C = field_10E != 0 ? field_10E : field_110 != 0 ? field_110 : field_112;
@@ -1947,13 +1947,13 @@ void FieldManager::sub_8026C78() {
                 if ((flags & 0x10) && object->field_33C_0) {
                     object->spriteActive = 0;
                 }
-                object->field_54 = field_10B;
-                objects[field_10B] = object;
+                object->objectIndex = objectCount;
+                objects[objectCount] = object;
                 if (field_11A == 0) {
-                    field_11A = field_10B;
+                    field_11A = objectCount;
                 }
                 field_11B++;
-                field_10B++;
+                objectCount++;
                 break;
             }
             case 0xA0:
@@ -2164,7 +2164,7 @@ void FieldManager::sub_80273E4() {
     evts->disable();
     bevs->disable();
     disable();
-    for (i = 0; i < field_10B; i++) {
+    for (i = 0; i < objectCount; i++) {
         objects[i]->method3();
     }
     field_F9_7 = 1;
@@ -2275,9 +2275,9 @@ void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMons
     field_10A = 0;
     field_FC_2 = 0;
     field_2A9_2 = mode;
-    field_2A8_0 = monster->field_54;
+    field_2A8_0 = monster->objectIndex;
     field_2A8_5 = player->field_33C_7;
-    field_2A9_5 = player->field_54;
+    field_2A9_5 = player->objectIndex;
     if (!monster->field_33C_7) {
         monster->field_33D_0 = monster->field_214_0;
         monster->field_33C_7 = 1;
@@ -2292,7 +2292,7 @@ void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMons
         monster->field_344->field_214_0 = 0;
     }
     field_2AA = monster->field_22C_0;
-    play_sfx_80195B4(word_839F5F8[field_2A9_2 * 2 + player->field_54], -1);
+    play_sfx_80195B4(word_839F5F8[field_2A9_2 * 2 + player->objectIndex], -1);
     field_2A9_6 = arg4;
     field_2A9_7 = arg4;
     sub_803C8A4(this, 0, 1);
@@ -2410,8 +2410,8 @@ void FieldManager::sub_8027D64() {
 // A helper to match sub_8027E90. We need to see if this is emitted at the end of the file or whether
 // this is really just a static inline like this. It cannot be part of the class definition because then
 // it would be emitted.
-static inline u8 getUnk10B(FieldManager* manager) {
-    return manager->field_10B;
+static inline u8 getObjectCount(FieldManager* manager) {
+    return manager->objectCount;
 }
 
 void FieldManager::sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height,
@@ -2431,7 +2431,7 @@ void FieldManager::sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y,
         field_2E8 = follower->height;
     }
 
-    for (i = 0; i < getUnk10B(this); i++) {
+    for (i = 0; i < getObjectCount(this); i++) {
         delete objects[i];
     }
     for (i = 0; i < 8; i++) {
@@ -3065,7 +3065,7 @@ void sub_80292A0(s16* wipeParameters) {
 void FieldManager::sub_80292EC() {
     int i;
 
-    for (i = 0; i < field_10B; i++) {
+    for (i = 0; i < objectCount; i++) {
         delete objects[i];
     }
     for (i = 0; i < 8; i++) {
@@ -3272,7 +3272,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
     field_209_5 = 0;
     leader->field_352_6 = 0;
 
-    if (leader->field_54 == 0) {
+    if (leader->objectIndex == BROTHER_MARIO) {
         mario = leader;
         luigi = follower;
     } else {
@@ -3310,7 +3310,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
             leader->field_210_2 = 1;
             leader->field_20C_13 = 0;
             leader->field_20C_14 = 1;
-            leader->sub_8049000(leader->field_54 == 0 ? 0x1001 : 0x1002);
+            leader->sub_8049000(leader->objectIndex == BROTHER_MARIO ? 0x1001 : 0x1002);
             leader->sprite->xScale = leader->sprite->yScale = 0x100;
             leader->field_212_6 = 0;
             leader->field_23B = 0;
@@ -3340,7 +3340,7 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
             follower->field_350_14 = 0;
             follower->field_20C_13 = 0;
             follower->field_20C_14 = 1;
-            follower->sub_8049000(follower->field_54 == 0 ? 0x1001 : 0x1002);
+            follower->sub_8049000(follower->objectIndex == BROTHER_MARIO ? 0x1001 : 0x1002);
             follower->sprite->xScale = follower->sprite->yScale = 0x100;
             follower->field_212_6 = 0;
             follower->field_23B = 0;
@@ -3605,7 +3605,7 @@ void FieldManager::sub_802A4E8() {
 static inline u16 get_3000FF4_Field_E(FieldPlayerCharacter* player) {
     struct struc_3000FF4* entry = dword_3000FF4;
 
-    entry += player->field_54;
+    entry += player->objectIndex;
     return entry->field_E;
 }
 
@@ -3661,7 +3661,7 @@ void FieldManager::sub_802A740() {
                 follower->height = leader->height;
             }
         }
-        for (int i = 2; i < field_10B; i++) {
+        for (int i = 2; i < objectCount; i++) {
             objects[i]->sub_80418E8(objects);
         }
         sub_802563C();
@@ -3847,7 +3847,7 @@ void FieldManager::sub_802A740() {
                 start = 0;
             }
             if (start > 0) {
-                follower->method12(&objects[start], field_10B - start, 0);
+                follower->method12(&objects[start], objectCount - start, 0);
             }
             if (follower->field_2B5_3 && follower->airFrames == -1) {
                 follower->sub_8046A10();
@@ -3941,7 +3941,7 @@ void FieldManager::sub_802B654(FieldPlayerCharacter* player) {
         if (player->field_388 != NULL) {
             player->method12((FieldObject**)&player->field_388, 1, 0);
         }
-        player->method12(objects, field_10B, 1);
+        player->method12(objects, objectCount, 1);
     } else {
         if (!field_209_0 && field_10E != 0) {
             player->method12(&objects[field_10E], field_10F, 0);
@@ -3949,7 +3949,7 @@ void FieldManager::sub_802B654(FieldPlayerCharacter* player) {
         if (field_110 != 0) {
             player->method12(&objects[field_110], field_111, 0);
         }
-        if (field_112 != 0 && player->field_54 == 1 && brothersForm == BROTHERS_FORM_BARREL_LUIGI) {
+        if (field_112 != 0 && player->objectIndex == BROTHER_LUIGI && brothersForm == BROTHERS_FORM_BARREL_LUIGI) {
             start = field_112;
         } else if (field_114 != 0) {
             start = field_114;
@@ -3961,7 +3961,7 @@ void FieldManager::sub_802B654(FieldPlayerCharacter* player) {
             start = 0;
         }
         if (start > 0) {
-            player->method12(&objects[start], field_10B - start, 0);
+            player->method12(&objects[start], objectCount - start, 0);
         }
     }
     player->sub_80465D8();
@@ -3984,7 +3984,7 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, bool arg2) {
                                 : player->z;
 
         if (!brothersTogether && player->collidesWithBrothers) {
-            player->sub_804B028(objects[player->field_54 ^ 1]);
+            player->sub_804B028(objects[player->objectIndex ^ 1]);
         }
 
         if (player->collidesWithObjects && !player->isMole) {
@@ -4336,7 +4336,7 @@ void FieldManager::sub_802C428(int index, int value) {
     }
     data->field_10[!player->field_352_7] = value;
     sub_8018218(field_1C->field_0[4]->field_8 + byte_839F954[player->field_368->field_2] * 32,
-                (void*)(0x6010DC0 + player->field_54 * 0x400),
+                (void*)(0x6010DC0 + player->objectIndex * 0x400),
                 byte_839F962[player->field_368->field_2] * 32, 0x20, 0);
 }
 
@@ -4381,7 +4381,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
                 player->field_239 = player->sprite->speed = field_FA_11;
                 player->startAirborne(player->defaultJumpVelocity, player->defaultGravity, -1);
                 player->state = FIELD_OBJECT_STATE_RISING;
-                if (player->field_54 == 0) {
+                if (player->objectIndex == BROTHER_MARIO) {
                     sound = player->isMini ? 0x2F : 0x2B;
                 } else {
                     sound = 0x2B;
@@ -4451,7 +4451,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             u8 hit = FALSE;
 
             if (!player->field_353_2) {
-                hit = player->sub_804D734(0, objects, field_10B);
+                hit = player->sub_804D734(0, objects, objectCount);
             }
             if (player->field_353_2 || hit || player->sub_804DBD0(0)) {
                 if (player->isMini) {
@@ -4550,8 +4550,8 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                     if (entry[0] == player->field_355) {
                         sprite_set_animation(player->field_36C, entry[1], 0);
                         if (player->field_355 == 59) {
-                            stop_sfx_80195A8(player->field_54 == 0 ? 0x157 : 0x87);
-                            play_sfx_80195B4(player->field_54 == 0 ? 0x158 : 0x156, -1);
+                            stop_sfx_80195A8(player->objectIndex == BROTHER_MARIO ? 0x157 : 0x87);
+                            play_sfx_80195B4(player->objectIndex == BROTHER_MARIO ? 0x158 : 0x156, -1);
                         }
                     }
                 }
@@ -4563,11 +4563,11 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
                     player->stopHandPower();
                     player->field_388->field_350_14 = 0;
                 } else {
-                    stop_sfx_80195A8(player->field_54 == 0 ? 0x158 : 0x156);
+                    stop_sfx_80195A8(player->objectIndex == BROTHER_MARIO ? 0x158 : 0x156);
                     player->state = 11;
                     player->method7(1);
                     player->sprite->animationEndAction = ANIMATION_END_STOP;
-                    play_sfx_80195B4(player->field_54 == 0 ? 0x9C : 0x9A, -1);
+                    play_sfx_80195B4(player->objectIndex == BROTHER_MARIO ? 0x9C : 0x9A, -1);
                 }
             }
             break;
@@ -4575,7 +4575,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
 
         case 11:
             if (player->sprite->animationComplete) {
-                if (player->sub_804D734(1, objects, field_10B) || player->sub_804DBD0(1)) {
+                if (player->sub_804D734(1, objects, objectCount) || player->sub_804DBD0(1)) {
                     player->field_355 = 5;
                 } else {
                     player->field_355 = 40;
@@ -4800,7 +4800,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                     follower->startAirborne(follower->defaultJumpVelocity, follower->defaultGravity,
                                             (s16)follower->field_23E);
                     follower->state = FIELD_OBJECT_STATE_RISING;
-                    if (follower->field_54 == 0) {
+                    if (follower->objectIndex == BROTHER_MARIO) {
                         sound = follower->isMini ? 0x2F : 0x2B;
                     } else {
                         sound = 0x2B;
@@ -4902,7 +4902,7 @@ void FieldManager::sub_802DA10() {
     switch (follower->field_368->field_2) {
         case 1:
             if (brothersForm == BROTHERS_FORM_NORMAL || brothersForm == BROTHERS_FORM_MINI_MARIO) {
-                if (follower->field_54 == 0) {
+                if (follower->objectIndex == BROTHER_MARIO) {
                     if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x206)) {
                         sub_80339B8(this);
                     } else {
@@ -4925,7 +4925,7 @@ void FieldManager::sub_802DA10() {
             break;
         case 2:
             if (brothersForm == BROTHERS_FORM_NORMAL) {
-                if (follower->field_54 == 0) {
+                if (follower->objectIndex == BROTHER_MARIO) {
                     if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, 0x20A)) {
                         sub_8036E14(this);
                     } else {
@@ -5008,7 +5008,7 @@ void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct s
     changed = 0;
     if (!player->field_2B5_0 && !player->field_2B5_3 && arg != NULL
         && sub_8025D24((player->field_352_7 ^ 1) + 2)
-        && sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, word_839F984[player->field_54 * 2 + index])) {
+        && sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, word_839F984[player->objectIndex * 2 + index])) {
         do {
             data->field_10[index]++;
             value = list[(s8)data->field_10[index]];
@@ -5016,17 +5016,17 @@ void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct s
                 data->field_10[index] = 0;
                 value = list[0];
             }
-            flag = word_839F98C[player->field_54 * 28 + index * 14 + value];
+            flag = word_839F98C[player->objectIndex * 28 + index * 14 + value];
         } while (flag != 0 && !sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, flag));
         changed = 1;
     }
     data->field_2 = list[(s8)data->field_10[index]];
     if (data->field_2 != previous) {
         sub_8018218(field_1C->field_0[4]->field_8 + byte_839F954[player->field_368->field_2] * 32,
-                    (void*)(0x6010DC0 + player->field_54 * 0x400),
+                    (void*)(0x6010DC0 + player->objectIndex * 0x400),
                     byte_839F962[player->field_368->field_2] * 32, 0x20, 0);
         if (changed) {
-            int sound = byte_839F9FC[player->field_54 * 28 + index * 14 + data->field_2];
+            int sound = byte_839F9FC[player->objectIndex * 28 + index * 14 + data->field_2];
 
             if (sound != 0) {
                 play_sfx_80195B4(sound, -1);
