@@ -5242,12 +5242,15 @@ u8 FieldManager::sub_802E688(bool32 isMole) {
             case 0:
                 y += 0x100;
                 break;
+
             case 2:
                 x -= player->field_278 / 2;
                 break;
+
             case 4:
                 y -= player->field_27C;
                 break;
+
             case 6:
                 x -= 0x100;
                 x += player->field_278 / 2;
@@ -5266,4 +5269,25 @@ u8 FieldManager::sub_802E688(bool32 isMole) {
     }
 
     return 0;
+}
+
+void FieldManager::sub_802E754(u8 arg1, u8 arg2, u8 arg3) {
+    if (brothersTogether) {
+        if (brothersForm == 5 || brothersForm == 6 || brothersForm == BROTHERS_FORM_SURFBOARD_LUIGI) {
+            changeBrotherForm(BROTHERS_FORM_NORMAL, false);
+        }
+
+        brothersTogether = false;
+        field_208_6 = arg1;
+        field_208_7 = arg3;
+        field_208_0 = 1;
+        field_20B_1 = arg2;
+        leader->collidesWithBrothers = leader->field_20C_7 = leader->blocksBrothers = 0;
+        follower->collidesWithBrothers = follower->field_20C_7 = follower->blocksBrothers = 0;
+        follower->sprite->speed = 16;
+        follower->field_368->field_14 = follower->field_368->field_10[0];
+        follower->field_368->field_10[0] = 0;
+
+        sub_802DDB4(follower, 0, NULL);
+    }
 }
