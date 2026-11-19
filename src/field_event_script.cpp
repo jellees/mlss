@@ -431,7 +431,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 81:
             return sub_80ED17C(object, script, command);
         case 82:
-            return sub_80ED304(this, script, command);
+            return sub_80ED304(script, command);
         case 83:
             return sub_80ED4EC(this, script, command);
         case 84:
@@ -1008,3 +1008,49 @@ s8 FieldEventScript::sub_80ED17C(FieldObject* object, ScriptContext* script, s32
     return TRUE;
 }
 #endif
+
+// Script command 82: sets a property of the object command[0] to command[2], chosen by command[1]
+// (like sub_80ECDA4).
+s8 FieldEventScript::sub_80ED304(ScriptContext* script, s32* command) {
+    FieldObject* object = *(((FieldManager*)parentProcess)->objects + *command++);
+
+    switch (*command++) {
+        case 0:
+            object->setSpriteActive(*command);
+            break;
+        case 1:
+            object->field_20C_18 = *command;
+            break;
+        case 2:
+            object->field_20C_4 = *command;
+            break;
+        case 3: {
+            // Pointer arithmetic, not dword_83D6C58[...]: the array form loads the table address
+            // earlier.
+            u8* header = *(dword_83D6C58 + ((FieldManager*)parentProcess)->field_126);
+            u8* record = header - ((header[7] << 8) | header[6]) + object->objectIndex * 0x14;
+
+            if (object->objectIndex <= 1) {
+                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
+                object->blocksBrothers = 0;
+                object->collidesWithBrothers = 0;
+                object->field_20C_7 = 0;
+            } else {
+                object->blocksBrothers = *command ? (record[0x10] >> 5) & 1 : 0;
+                object->collidesWithBrothers = *command ? (record[0x10] >> 6) & 1 : 0;
+                object->field_20C_7 = *command ? (record[0x10] >> 7) & 1 : 0;
+            }
+            object->collidesWithObjects = *command ? record[0x11] & 1 : 0;
+            object->blocksObjects = *command ? (record[0x11] >> 1) & 1 : 0;
+            break;
+        }
+        case 4:
+            if (*command) {
+                ((FieldMonster*)object)->field_33D_4 |= 1;
+            } else {
+                ((FieldMonster*)object)->field_33D_4 &= ~1;
+            }
+            break;
+    }
+    return TRUE;
+}

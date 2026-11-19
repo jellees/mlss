@@ -1989,7 +1989,7 @@ void FieldManager::sub_8026E94() {
     if (field_2B8_0) {
         if (field_2B8_4) {
             if ((gGameState.field_3C.field_3C_0 & 0xF0) == 0xF0) {
-                sub_802EF18(this);
+                sub_802EF18();
             } else if (brothersForm == 5) {
                 brothersForm = BROTHERS_FORM_NORMAL;
                 changeBrotherForm(BROTHERS_FORM_NORMAL, false);
@@ -5426,9 +5426,179 @@ u8 FieldManager::checkWarps(FieldPlayerCharacter* player, bool arg2, bool arg3, 
                 leader->field_350_14 = 1;
                 follower->field_350_14 = 1;
                 field_12A = 7;
-                return TRUE;
+
+                return true;
             }
         }
     }
-    return FALSE;
+
+    return false;
 }
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_802EF18__12FieldManager.s\"");
+#else
+// Only the stack slots of three spilled values differ.
+void FieldManager::sub_802EF18() {
+    int distance;
+    int dx;
+    int dy;
+    int dz;
+
+    if (brothersForm == BROTHERS_FORM_SURFBOARD_LUIGI && field_264 != 0) {
+        return;
+    }
+
+    dz = 0;
+    follower->field_20C_26 = leader->field_20C_26 = 0;
+    if (brothersForm == 5) {
+        int step = 0x400 >> isUnderwater;
+        int count;
+        int i;
+
+        distance = 0;
+        count = 0;
+        for (i = 0; i < 16; i++) {
+            distance += step;
+            if (++count == 4) {
+                if (step > 0) {
+                    step -= 0x100 >> isUnderwater;
+                }
+                count = 0;
+            }
+        }
+        distance /= 256;
+        field_20B_6 = 1;
+        {
+            FieldPlayerCharacter* second = follower;
+            FieldPlayerCharacter* first = leader;
+            int speed = 0x400 >> isUnderwater;
+
+            first->field_23E = speed;
+            second->field_23E = speed;
+            first->field_260 = speed;
+            second->field_260 = speed;
+        }
+    } else {
+        if (leader->isMini) {
+            distance = 32;
+        } else if (leader->isPump) {
+            distance = 16;
+        } else if (leader->isMole) {
+            distance = 16;
+        } else if (leader->isBarrel) {
+            distance = 16;
+        } else {
+            distance = byte_839FA34[brothersForm];
+        }
+        if (isUnderwater) {
+            distance /= 2;
+        }
+        if (distance > 32) {
+            distance = 32;
+        }
+    }
+
+    switch (field_2B8_1) {
+        case 0:
+            dx = 0;
+            dy = -distance;
+            if (leader->field_26_2 == 3) {
+                dz = dy;
+            }
+            break;
+        case 4:
+            dx = 0;
+            dy = distance;
+            if (leader->field_26_2 == 3) {
+                dz = dy;
+            }
+            break;
+        case 2:
+            dx = distance;
+            dy = 0;
+            if (leader->field_26_2 == 1) {
+                dz = distance;
+            } else if (leader->field_26_2 == 2) {
+                dz = -dx;
+            }
+            break;
+        case 6:
+            dx = -distance;
+            dy = 0;
+            if (leader->field_26_2 == 1) {
+                dz = dx;
+            } else if (leader->field_26_2 == 2) {
+                dz = distance;
+            }
+            break;
+    }
+
+    leader->x -= dx << 8;
+    leader->y -= dy << 8;
+    leader->z -= dz << 8;
+    if (brothersForm != BROTHERS_FORM_SURFBOARD_LUIGI) {
+        leader->sub_804B360(1, 0);
+    }
+    leader->previousX = leader->x;
+    leader->previousY = leader->y;
+    leader->previousZ = leader->z;
+    leader->previousHeight = leader->height;
+    leader->field_26_2 = leader->field_26_4 = leader->field_4E_2 = leader->field_4E_4 = 0;
+    if (brothersForm == 5) {
+        field_26E = 4;
+        follower->state = leader->state = 0x71;
+    } else {
+        leader->field_20C_14 = 0;
+        leader->sub_8045A94(2, 1, dx, dy, dz, 16);
+    }
+
+    if (brothersForm != BROTHERS_FORM_SURFBOARD_LUIGI) {
+        if (brothersTogether) {
+            follower->x -= dx << 8;
+            follower->y -= dy << 8;
+            follower->z -= dz << 8;
+            follower->sub_804B360(1, 0);
+            follower->previousX = follower->x;
+            follower->previousY = follower->y;
+            follower->previousZ = follower->z;
+            follower->previousHeight = follower->height;
+            follower->field_26_2 = follower->field_26_4 = follower->field_4E_2 = follower->field_4E_4 =
+                0;
+            if (brothersForm <= BROTHERS_FORM_BARREL_LUIGI) {
+                follower->field_20C_14 = 0;
+                follower->sub_8045A94(2, 1, dx, dy, dz, 16);
+            }
+        }
+        sub_802DF80(0);
+    }
+
+    if (brothersForm == BROTHERS_FORM_NORMAL && isUnderwater && leader->height > 0) {
+        if (leader->height < 0x100) {
+            if (leader->field_20C_0) {
+                leader->height = 0;
+            }
+            if (brothersTogether && follower->field_20C_0) {
+                follower->height = 0;
+            }
+        } else {
+            if (leader->field_20C_0) {
+                leader->sub_8049000(
+                    leader->objectIndex == BROTHER_MARIO ? (leader->isMini ? 0x103C : 0x103B) : 0x1052);
+                leader->field_214_0 = 5;
+            }
+            if (brothersTogether && follower->field_20C_0) {
+                follower->sub_8049000(follower->objectIndex == BROTHER_MARIO
+                                          ? (follower->isMini ? 0x103C : 0x103B)
+                                          : 0x1052);
+                follower->field_214_0 = 5;
+            }
+        }
+    }
+
+    if (field_2B8_5) {
+        field_20A_7 = 2;
+    }
+}
+#endif

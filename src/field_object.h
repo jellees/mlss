@@ -99,7 +99,8 @@ class FieldObject {
     u32 field_4C_9 : 7;
     u32 field_4E_0 : 2;
     u32 field_4E_2 : 2;
-    u32 field_4E_4 : 4;
+    u32 field_4E_4 : 2;
+    u32 field_4E_6 : 2;
     u32 pad_4F : 8;
     s16 field_50;
     s16 field_52;

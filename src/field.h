@@ -236,7 +236,8 @@ class FieldManager : public Process {
     s16 field_24A;
     u8 pad_24C[0x15];
     s8 field_261;
-    u8 pad_262[0x6];
+    u8 pad_262[0x2];
+    u32 field_264;
     u16 field_268;
     u8 pad_26A;
     u8 field_26B_0 : 5;
@@ -444,6 +445,7 @@ class FieldManager : public Process {
     void sub_802E854(int arg);
     void sub_802EA70();
     void sub_802EC64(int arg);
+    void sub_802EF18();
     u8 checkWarps(FieldPlayerCharacter* player, bool arg2, bool arg3, bool arg4);
     void sub_802F498();
     void sub_803C7D8(FieldPlayerCharacter* player);

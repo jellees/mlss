@@ -535,7 +535,6 @@ s8 sub_80EB048(void*, void*, s32*);
 s8 sub_80EB05C(void*, void*, struct ScriptContext*, s32*);
 s8 sub_80EB09C(void*, void*, struct ScriptContext*, s32*);
 s8 sub_80EB11C(void*, void*, struct ScriptContext*, s32*);
-s8 sub_80ED304(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80ED4EC(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80ED6A8(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80ED750(struct FieldEventScript*, struct ScriptContext*, s32*);
@@ -669,7 +668,6 @@ void sub_80E9D04(void);
 void sub_80E9D1C(void);
 void sub_801BD30(void);
 void sub_801BC40(struct struc_3000D44*, u16, u8);
-void sub_802EF18(struct FieldManager*);
 u8 sub_80E99E0(int);
 void sub_8054378(void*, u8, char*, u8);
 void sub_8123340(void);
@@ -773,6 +771,7 @@ extern u16
     word_839F98C[]; // FieldManager::sub_802DDB4: flag per [objectIndex][index][FieldStruct4::field_2]
 extern u8
     byte_839F9FC[]; // FieldManager::sub_802DDB4: sound per [objectIndex][index][FieldStruct4::field_2]
+extern s8 byte_839FA34[]; // FieldManager::sub_802EF18: distance per BrothersForm
 extern void (*dword_3000D80[2])(void);
 extern u16 word_839F5CC[];
 extern u16 word_839F5E2[];
