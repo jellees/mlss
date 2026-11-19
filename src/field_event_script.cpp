@@ -433,7 +433,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 82:
             return sub_80ED304(script, command);
         case 83:
-            return sub_80ED4EC(this, script, command);
+            return sub_80ED4EC(script, command);
         case 84:
             return sub_80F1AA4(this, object, script, command);
         case 88:
@@ -1051,6 +1051,66 @@ s8 FieldEventScript::sub_80ED304(ScriptContext* script, s32* command) {
                 ((FieldMonster*)object)->field_33D_4 &= ~1;
             }
             break;
+    }
+    return TRUE;
+}
+
+// Script command 83: like sub_80ED304, for other properties. Type 4 sets the collision flags selected
+// by the low bits of command[2] to its bit 15.
+s8 FieldEventScript::sub_80ED4EC(ScriptContext* script, s32* command) {
+    FieldObject* object;
+
+    switch (*command++) {
+        case 0:
+            if (*command & 0x40) {
+                object = *(((FieldManager*)parentProcess)->objects
+                           + ((FieldManager*)parentProcess)->luigiLeads);
+            } else {
+                object = *(((FieldManager*)parentProcess)->objects + *command);
+            }
+            if (command[1] & 0x40) {
+                object->sub_804794C((command[1] & 0xF) << 4);
+            } else {
+                object->sub_804794C((s8)command[1] << 8);
+            }
+            break;
+        case 1:
+            object = *(((FieldManager*)parentProcess)->objects + *command++);
+            object->sprite->field_11_2 = *command;
+            break;
+        case 2:
+            object = *(((FieldManager*)parentProcess)->objects + *command++);
+            object->field_20C_1 = *command;
+            break;
+        case 3:
+            object = *(((FieldManager*)parentProcess)->objects + *command++);
+            object->field_270 = *command;
+            break;
+        case 4: {
+            int value;
+
+            object = *(((FieldManager*)parentProcess)->objects + *command++);
+            value = (*command >> 15) & 1;
+            if (object->objectIndex <= 1) {
+                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
+            }
+            if ((*command >> 4) & 1) {
+                object->blocksBrothers = value;
+            }
+            if ((*command >> 3) & 1) {
+                object->collidesWithBrothers = value;
+            }
+            if ((*command >> 2) & 1) {
+                object->field_20C_7 = value;
+            }
+            if ((*command >> 1) & 1) {
+                object->collidesWithObjects = value;
+            }
+            if (*command & 1) {
+                object->blocksObjects = value;
+            }
+            break;
+        }
     }
     return TRUE;
 }
