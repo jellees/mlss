@@ -11702,7 +11702,7 @@ _080F8AE8:
 	str r0, [sp, #0x004]
 	adds r0, r4, #0x0
 	add r1, sp, #0x008
-	bl script_read_next_line
+	bl script_read_next_line__FP10ScriptSlotPiPvN22i
 	adds r0, r5, #0x0
 	adds r1, r4, #0x0
 	add r2, sp, #0x008

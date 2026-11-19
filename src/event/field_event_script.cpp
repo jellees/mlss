@@ -4,6 +4,7 @@
 #include "field/field.h"
 #include "field/field_object.h"
 #include "field/field_monster.h"
+#include "event/event.h"
 #include "event/field_event_script.h"
 
 // Runs the object's script (if it is active) until sub_80EB838 or a command stops it. Inline
@@ -712,8 +713,8 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32
         case 0:
         case 1:
             sub_80EC970_prepare(target, targetScript);
-            sub_80EA5C8(&field_1C, targetScript, script->field_0, command[2], flags, index);
-            script->field_0 = command[2];
+            sub_80EA5C8(&field_1C, targetScript, (int)script->field_0, command[2], flags, index);
+            script->field_0 = (u8*)command[2];
             break;
         case 2:
         case 3:
@@ -724,11 +725,11 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32
         case 5:
             if (!(targetScript->field_A0 & 1)) {
                 sub_80EC970_prepare(target, targetScript);
-                sub_80EA5C8(&field_1C, targetScript, script->field_0, command[2], flags, index);
+                sub_80EA5C8(&field_1C, targetScript, (int)script->field_0, command[2], flags, index);
             } else {
-                sub_80EA584(&field_1C, targetScript, script->field_0, command[2], flags, index);
+                sub_80EA584(&field_1C, targetScript, (int)script->field_0, command[2], flags, index);
             }
-            script->field_0 = command[2];
+            script->field_0 = (u8*)command[2];
             break;
         case 6:
         case 7:

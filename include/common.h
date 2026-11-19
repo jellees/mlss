@@ -278,11 +278,12 @@ struct struc_3000FF4 {
 
 // A 0xA8-byte script slot. ScriptContext (the script of a field object) extends it.
 struct ScriptSlot {
-    u32 field_0;
-    u32 field_4;
-    u32 field_8; // Saved field_0 (restored by sub_80EB838)
-    u32 field_C; // Saved field_4
-    u8 pad_10[0x8];
+    u8* field_0; // Read position in the script
+    u8* field_4;
+    u8* field_8; // Saved field_0 (restored by sub_80EB838)
+    u8* field_C; // Saved field_4
+    u8 pad_10[0x4];
+    u8* field_14; // Start of the current command
     u8 field_18[0x84]; // Passed to sub_80E9C4C
     s32 field_9C;      // Counter (sub_80EB490)
     u16 field_A0;      // Flags
@@ -291,6 +292,17 @@ struct ScriptSlot {
     u8 field_A5;       // Saved field_A4
     u8 pad_A6;
     u8 field_A7; // Opcode of the current command
+};
+
+// The buffer at dword_3000FC0 (0x574 bytes).
+struct struc_3000FC0 {
+    u8 pad_0[0x55C];
+    u8* field_55C;  // Per opcode: whether a 13-bit value precedes the arguments
+    u8* field_560;  // Per opcode: argument count
+    u8* field_564;  // Per argument: size in bits (bit 7: raw 32-bit value)
+    u8* field_568;  // Per argument: 1 = signed
+    u16* field_56C; // Per opcode: index of its first argument in field_564/field_568
+    u32 field_570;
 };
 
 struct struc_3000FD0 {
@@ -481,9 +493,9 @@ void sub_80FC198(void);
 void sub_812335C(void);
 void sub_8018A4C(u32);
 void sub_80E9C4C(void*, void*, void*, int, int, int);
+u32 sub_80E9CA8(void*, void*, void*, int, s16);
 void sub_80EA5C8(void*, void*, int, int, int, int);
 void sub_80EA584(void*, void*, int, int, int, int);
-void script_read_next_line(struct ScriptContext*, s32*, void*, void*, void*, int);
 // Command handlers of FieldEventScript::executeNextCommand
 s8 script_cmd_80F17C4(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 script_cmd_call(void*, struct ScriptContext*, s32*);
@@ -780,7 +792,9 @@ extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
 extern u8 byte_839F620[];  // Direction (0-7) per ArcTan2 result / 0x1000 (FieldManager::sub_802C208)
 extern struct EVTS* dword_3000D78;
 extern struct struc_3000FD0* dword_3000FD0;
-extern void* dword_3000FC0;
+extern struct struc_3000FC0* dword_3000FC0;
+// Reads the next arg2 bits of a script (a function copied to RAM, see sub_80E9B0C).
+extern u32 (*dword_3000FC4)(struct ScriptSlot* script, s16* bitPosition, int bitCount);
 extern void* dword_3000FC8;
 extern void* dword_3000FCC;
 extern u8* dword_83D6C58[]; // Object list header per list index (see init_fobj_with_data_80FB128)

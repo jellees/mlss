@@ -3013,7 +3013,7 @@ _080EF3A8:
 	str r1, [sp, #0x004]
 	adds r0, r4, #0x0
 	add r1, sp, #0x008
-	bl script_read_next_line
+	bl script_read_next_line__FP10ScriptSlotPiPvN22i
 	adds r0, r6, #0x0
 	movs r1, #0x00
 	adds r2, r4, #0x0
@@ -3221,7 +3221,7 @@ _080EF56A:
 	str r1, [sp, #0x004]
 	adds r0, r4, #0x0
 	add r1, sp, #0x008
-	bl script_read_next_line
+	bl script_read_next_line__FP10ScriptSlotPiPvN22i
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	adds r2, r4, #0x0
