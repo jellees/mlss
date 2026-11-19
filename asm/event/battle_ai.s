@@ -4767,7 +4767,7 @@ _080F4EAC:
 	str r0, [sp, #0x000]
 	str r4, [sp, #0x004]
 	mov r0, r9
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x040
 	pop {r3, r4}
@@ -4832,7 +4832,7 @@ _080F5012:
 	str r0, [sp, #0x000]
 	str r4, [sp, #0x004]
 	mov r0, r8
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r3}
@@ -4910,7 +4910,7 @@ _080F527C:
 	asrs r0, r0, #0x10
 	str r0, [sp, #0x004]
 	mov r0, r12
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
@@ -10827,7 +10827,7 @@ _080F847C:
 	str r0, [sp, #0x000]
 	str r6, [sp, #0x004]
 	mov r0, r8
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r3}
@@ -10864,7 +10864,7 @@ sub_80F84AC:
 	str r0, [sp, #0x004]
 	mov r0, r8
 	adds r3, r5, #0x0
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r3}
@@ -11406,7 +11406,7 @@ _080F88CC:
 	ands r0, r4
 	str r0, [sp, #0x004]
 	mov r0, r12
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
@@ -11702,7 +11702,7 @@ _080F8AE8:
 	str r0, [sp, #0x004]
 	adds r0, r4, #0x0
 	add r1, sp, #0x008
-	bl script_read_next_line__FP10ScriptSlotPiPvN22i
+	bl script_read_next_line__FP10ScriptSlotPiPvPUiN23
 	adds r0, r5, #0x0
 	adds r1, r4, #0x0
 	add r2, sp, #0x008

@@ -2571,7 +2571,7 @@ sub_80EEE08:
 	ldrb r3, [r5, #0x00]
 	movs r0, #0x00
 	movs r1, #0x00
-	bl sub_80E9958
+	bl sub_80E9958__FPUiT0UsUc
 	b _080EEEBA
 	.byte 0x00, 0x00
 _080EEE78: .4byte 0x000003FF
@@ -2790,7 +2790,7 @@ _080EF1F2:
 	str r0, [sp, #0x004]
 	adds r0, r7, #0x0
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x010
 	pop {r4, r5, r6, r7}
@@ -3013,7 +3013,7 @@ _080EF3A8:
 	str r1, [sp, #0x004]
 	adds r0, r4, #0x0
 	add r1, sp, #0x008
-	bl script_read_next_line__FP10ScriptSlotPiPvN22i
+	bl script_read_next_line__FP10ScriptSlotPiPvPUiN23
 	adds r0, r6, #0x0
 	movs r1, #0x00
 	adds r2, r4, #0x0
@@ -3221,7 +3221,7 @@ _080EF56A:
 	str r1, [sp, #0x004]
 	adds r0, r4, #0x0
 	add r1, sp, #0x008
-	bl script_read_next_line__FP10ScriptSlotPiPvN22i
+	bl script_read_next_line__FP10ScriptSlotPiPvPUiN23
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	adds r2, r4, #0x0
@@ -3703,7 +3703,7 @@ _080EF8FA:
 	str r1, [sp, #0x004]
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	b _080EF9BA
 _080EF968: .4byte 0x03000FD0
 _080EF96C: .4byte 0x0000055A
@@ -3740,7 +3740,7 @@ _080EF998:
 	str r1, [sp, #0x004]
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 _080EF9BA:
 	ldr r4, _080EFA0C @ =0x03000FD0
 	ldr r0, [r4, #0x00]
@@ -3758,7 +3758,7 @@ _080EF9BA:
 	str r1, [sp, #0x004]
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	ldr r2, [sp, #0x010]
 	ldr r0, [r2, #0x00]
 	ldr r1, [r4, #0x00]
@@ -4857,7 +4857,7 @@ _080F02D6:
 	str r6, [sp, #0x004]
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	ldr r0, [r7, #0x00]
 	ldr r1, [r4, #0x00]
 	adds r1, #0xA8
@@ -5251,7 +5251,7 @@ sub_80F05DC:
 	str r0, [sp, #0x004]
 	adds r0, r3, #0x0
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5}
@@ -5300,7 +5300,7 @@ _080F0636:
 	str r0, [sp, #0x004]
 	adds r0, r7, #0x0
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
@@ -5355,7 +5355,7 @@ _080F06BA:
 	str r7, [sp, #0x004]
 	mov r0, r9
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r3, r4}
@@ -5880,7 +5880,7 @@ sub_80F0B0C:
 	ldrb r3, [r3, #0x04]
 	movs r0, #0x00
 	movs r1, #0x00
-	bl sub_80E9958
+	bl sub_80E9958__FPUiT0UsUc
 	movs r0, #0x01
 	pop {r1}
 	bx r1
@@ -7991,7 +7991,7 @@ _080F1B6A:
 	str r0, [sp, #0x004]
 	adds r0, r6, #0x0
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6}

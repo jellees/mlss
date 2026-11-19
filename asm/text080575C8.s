@@ -6615,7 +6615,7 @@ _0805B66E:
 	lsrs r2, r2, #0x10
 	movs r1, #0x00
 	movs r3, #0x01
-	bl sub_80E9958
+	bl sub_80E9958__FPUiT0UsUc
 _0805B6A0:
 	ldr r1, _0805B6C0 @ =0x00000599
 	adds r0, r5, r1

@@ -3,480 +3,6 @@
 	.syntax unified
 	.text
 
-	thumb_func_start sub_80E9958
-sub_80E9958:
-	push {r4, r5, r6, r7, lr}
-	adds r6, r0, #0x0
-	adds r5, r1, #0x0
-	lsls r1, r2, #0x10
-	lsrs r4, r1, #0x10
-	lsls r3, r3, #0x18
-	lsrs r7, r3, #0x18
-	ldr r0, _080E997C @ =0x00001B5F
-	cmp r4, r0
-	bhi _080E9984
-	ldr r0, _080E9980 @ =0x03000FC0
-	lsrs r1, r1, #0x15
-	lsls r1, r1, #0x02
-	adds r1, #0x20
-	ldr r0, [r0, #0x00]
-	adds r5, r0, r1
-	b _080E99BE
-	.byte 0x00, 0x00
-_080E997C: .4byte 0x00001B5F
-_080E9980: .4byte 0x03000FC0
-_080E9984:
-	ldr r0, _080E99A4 @ =0x00001B7F
-	cmp r4, r0
-	bls _080E99B0
-	ldr r0, _080E99A8 @ =0x00001B8F
-	cmp r4, r0
-	bhi _080E99D6
-	cmp r5, #0x00
-	beq _080E99B0
-	ldr r1, _080E99AC @ =0xFFFFE480
-	adds r0, r4, r1
-	lsls r0, r0, #0x10
-	lsrs r4, r0, #0x10
-	lsrs r0, r0, #0x15
-	lsls r0, r0, #0x02
-	adds r5, r5, r0
-	b _080E99BE
-_080E99A4: .4byte 0x00001B7F
-_080E99A8: .4byte 0x00001B8F
-_080E99AC: .4byte 0xFFFFE480
-_080E99B0:
-	ldr r1, _080E99DC @ =0xFFFFE4A0
-	adds r0, r4, r1
-	lsls r0, r0, #0x10
-	lsrs r4, r0, #0x10
-	lsrs r0, r0, #0x15
-	lsls r0, r0, #0x02
-	adds r5, r6, r0
-_080E99BE:
-	movs r2, #0x1F
-	ands r2, r4
-	movs r3, #0x01
-	adds r0, r3, #0x0
-	lsls r0, r2
-	ldr r1, [r5, #0x00]
-	bics r1, r0
-	adds r0, r7, #0x0
-	ands r0, r3
-	lsls r0, r2
-	orrs r1, r0
-	str r1, [r5, #0x00]
-_080E99D6:
-	pop {r4, r5, r6, r7}
-	pop {r0}
-	bx r0
-_080E99DC: .4byte 0xFFFFE4A0
-	thumb_func_start sub_80E99E0
-sub_80E99E0:
-	push {lr}
-	lsls r0, r0, #0x10
-	lsrs r1, r0, #0x10
-	ldr r0, _080E99FC @ =0x00001CB7
-	cmp r1, r0
-	bhi _080E9A0C
-	ldr r2, _080E9A00 @ =0xFFFFE470
-	adds r0, r1, r2
-	lsls r0, r0, #0x10
-	lsrs r1, r0, #0x10
-	ldr r0, _080E9A04 @ =0x03000FC0
-	ldr r0, [r0, #0x00]
-	ldr r2, _080E9A08 @ =0x00000414
-	b _080E9A20
-_080E99FC: .4byte 0x00001CB7
-_080E9A00: .4byte 0xFFFFE470
-_080E9A04: .4byte 0x03000FC0
-_080E9A08: .4byte 0x00000414
-_080E9A0C:
-	ldr r0, _080E9A28 @ =0x00001CD7
-	cmp r1, r0
-	bhi _080E9A38
-	ldr r2, _080E9A2C @ =0xFFFFE348
-	adds r0, r1, r2
-	lsls r0, r0, #0x10
-	lsrs r1, r0, #0x10
-	ldr r0, _080E9A30 @ =0x03000FC0
-	ldr r0, [r0, #0x00]
-	ldr r2, _080E9A34 @ =0x0000053C
-_080E9A20:
-	adds r0, r0, r2
-	adds r0, r0, r1
-	ldrb r0, [r0, #0x00]
-	b _080E9A66
-_080E9A28: .4byte 0x00001CD7
-_080E9A2C: .4byte 0xFFFFE348
-_080E9A30: .4byte 0x03000FC0
-_080E9A34: .4byte 0x0000053C
-_080E9A38:
-	ldr r0, _080E9A58 @ =0x00001D17
-	cmp r1, r0
-	bhi _080E9A64
-	ldr r2, _080E9A5C @ =0xFFFFE328
-	adds r0, r1, r2
-	lsls r0, r0, #0x10
-	ldr r1, _080E9A60 @ =0x03000FC0
-	ldr r1, [r1, #0x00]
-	lsrs r0, r0, #0x0F
-	movs r2, #0xE5
-	lsls r2, r2, #0x02
-	adds r1, r1, r2
-	adds r1, r1, r0
-	ldrh r0, [r1, #0x00]
-	b _080E9A66
-	.byte 0x00, 0x00
-_080E9A58: .4byte 0x00001D17
-_080E9A5C: .4byte 0xFFFFE328
-_080E9A60: .4byte 0x03000FC0
-_080E9A64:
-	movs r0, #0x00
-_080E9A66:
-	pop {r1}
-	bx r1
-	.byte 0x00, 0x00
-	thumb_func_start sub_80E9A6C
-sub_80E9A6C:
-	push {lr}
-	lsls r0, r0, #0x10
-	lsrs r2, r0, #0x10
-	lsls r1, r1, #0x10
-	lsrs r1, r1, #0x10
-	adds r3, r1, #0x0
-	ldr r0, _080E9A90 @ =0x00001CB7
-	cmp r2, r0
-	bhi _080E9AA0
-	ldr r3, _080E9A94 @ =0xFFFFE470
-	adds r0, r2, r3
-	lsls r0, r0, #0x10
-	lsrs r2, r0, #0x10
-	ldr r0, _080E9A98 @ =0x03000FC0
-	ldr r0, [r0, #0x00]
-	ldr r3, _080E9A9C @ =0x00000414
-	b _080E9AB4
-	.byte 0x00, 0x00
-_080E9A90: .4byte 0x00001CB7
-_080E9A94: .4byte 0xFFFFE470
-_080E9A98: .4byte 0x03000FC0
-_080E9A9C: .4byte 0x00000414
-_080E9AA0:
-	ldr r0, _080E9ABC @ =0x00001CD7
-	cmp r2, r0
-	bhi _080E9ACC
-	ldr r3, _080E9AC0 @ =0xFFFFE348
-	adds r0, r2, r3
-	lsls r0, r0, #0x10
-	lsrs r2, r0, #0x10
-	ldr r0, _080E9AC4 @ =0x03000FC0
-	ldr r0, [r0, #0x00]
-	ldr r3, _080E9AC8 @ =0x0000053C
-_080E9AB4:
-	adds r0, r0, r3
-	adds r0, r0, r2
-	strb r1, [r0, #0x00]
-	b _080E9AE8
-_080E9ABC: .4byte 0x00001CD7
-_080E9AC0: .4byte 0xFFFFE348
-_080E9AC4: .4byte 0x03000FC0
-_080E9AC8: .4byte 0x0000053C
-_080E9ACC:
-	ldr r0, _080E9AEC @ =0x00001D17
-	cmp r2, r0
-	bhi _080E9AE8
-	ldr r1, _080E9AF0 @ =0xFFFFE328
-	adds r0, r2, r1
-	lsls r0, r0, #0x10
-	ldr r1, _080E9AF4 @ =0x03000FC0
-	ldr r1, [r1, #0x00]
-	lsrs r0, r0, #0x0F
-	movs r2, #0xE5
-	lsls r2, r2, #0x02
-	adds r1, r1, r2
-	adds r1, r1, r0
-	strh r3, [r1, #0x00]
-_080E9AE8:
-	pop {r0}
-	bx r0
-_080E9AEC: .4byte 0x00001D17
-_080E9AF0: .4byte 0xFFFFE328
-_080E9AF4: .4byte 0x03000FC0
-	thumb_func_start sub_80E9AF8
-sub_80E9AF8:
-	push {lr}
-	ldr r0, _080E9B08 @ =0x03000FC4
-	ldr r0, [r0, #0x00]
-	bl heap_free__FPv
-	pop {r0}
-	bx r0
-	.byte 0x00, 0x00
-_080E9B08: .4byte 0x03000FC4
-	thumb_func_start sub_80E9B0C
-sub_80E9B0C:
-	push {r4, r5, r6, lr}
-	ldr r6, _080E9B38 @ =0x03000FC4
-	ldr r4, _080E9B3C @ =0x08001010
-	ldr r5, _080E9B40 @ =0x08000F9C
-	subs r4, r4, r5
-	ldr r2, _080E9B44 @ =0x08200198
-	movs r0, #0x00
-	adds r1, r4, #0x0
-	bl heap_alloc__FiUiPc
-	adds r1, r0, #0x0
-	str r1, [r6, #0x00]
-	lsls r4, r4, #0x0A
-	lsrs r4, r4, #0x0B
-	adds r0, r5, #0x0
-	adds r2, r4, #0x0
-	bl CpuSet
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	.byte 0x00, 0x00
-_080E9B38: .4byte 0x03000FC4
-_080E9B3C: .4byte 0x08001010
-_080E9B40: .4byte 0x08000F9C
-_080E9B44: .4byte 0x08200198
-	.byte 0x00, 0xB5, 0x00, 0x04, 0x01, 0x0C, 0x0A, 0x48, 0x81, 0x42, 0x17, 0xD8, 0x09, 0x4A, 0x88, 0x18
-	.byte 0x00, 0x04, 0x09, 0x49, 0x09, 0x68, 0xC0, 0x0B, 0xE5, 0x22, 0x92, 0x00, 0x89, 0x18, 0x09, 0x18
-	.byte 0x08, 0x88, 0x00, 0x28, 0x02, 0xD0, 0x01, 0x38, 0x00, 0x04, 0x00, 0x0C, 0x08, 0x80, 0x06, 0xE0
-	.byte 0x17, 0x1D, 0x00, 0x00, 0x28, 0xE3, 0xFF, 0xFF, 0xC0, 0x0F, 0x00, 0x03, 0x00, 0x20, 0x02, 0xBC
-	.byte 0x08, 0x47, 0x00, 0x00
-	thumb_func_start sub_80E9B8C
-sub_80E9B8C:
-	push {lr}
-	lsls r0, r0, #0x10
-	lsrs r1, r0, #0x10
-	ldr r0, _080E9BC0 @ =0x00001D17
-	cmp r1, r0
-	bhi _080E9BD0
-	ldr r0, _080E9BC4 @ =0xFFFFE328
-	adds r1, r1, r0
-	lsls r1, r1, #0x10
-	ldr r0, _080E9BC8 @ =0x03000FC0
-	ldr r0, [r0, #0x00]
-	lsrs r1, r1, #0x0F
-	movs r2, #0xE5
-	lsls r2, r2, #0x02
-	adds r0, r0, r2
-	adds r1, r0, r1
-	ldrh r2, [r1, #0x00]
-	ldr r0, _080E9BCC @ =0x0000FFFE
-	cmp r2, r0
-	bhi _080E9BBA
-	adds r0, r2, #0x1
-	lsls r0, r0, #0x10
-	lsrs r2, r0, #0x10
-_080E9BBA:
-	strh r2, [r1, #0x00]
-	adds r0, r2, #0x0
-	b _080E9BD2
-_080E9BC0: .4byte 0x00001D17
-_080E9BC4: .4byte 0xFFFFE328
-_080E9BC8: .4byte 0x03000FC0
-_080E9BCC: .4byte 0x0000FFFE
-_080E9BD0:
-	movs r0, #0x00
-_080E9BD2:
-	pop {r1}
-	bx r1
-	.byte 0x00, 0x00
-	thumb_func_start sub_80E9BD8
-sub_80E9BD8:
-	push {r4, lr}
-	adds r4, r0, #0x0
-	lsls r2, r2, #0x10
-	asrs r2, r2, #0x10
-	cmp r2, #0x0F
-	bgt _080E9BEC
-	lsls r0, r2, #0x02
-	adds r0, r0, r1
-	str r3, [r0, #0x00]
-	b _080E9C08
-_080E9BEC:
-	cmp r2, #0x34
-	bgt _080E9BFA
-	lsls r0, r2, #0x02
-	adds r0, r0, r4
-	subs r0, #0x40
-	str r3, [r0, #0x00]
-	b _080E9C08
-_080E9BFA:
-	ldr r0, _080E9C10 @ =0x03000FC0
-	ldr r1, [r0, #0x00]
-	adds r0, r2, #0x0
-	subs r0, #0x35
-	lsls r0, r0, #0x02
-	adds r1, r1, r0
-	str r3, [r1, #0x00]
-_080E9C08:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.byte 0x00, 0x00
-_080E9C10: .4byte 0x03000FC0
-	thumb_func_start sub_80E9C14
-sub_80E9C14:
-	push {lr}
-	adds r3, r0, #0x0
-	lsls r2, r2, #0x10
-	asrs r2, r2, #0x10
-	cmp r2, #0x0F
-	bgt _080E9C26
-	lsls r0, r2, #0x02
-	adds r0, r0, r1
-	b _080E9C46
-_080E9C26:
-	cmp r2, #0x34
-	ble _080E9C40
-	ldr r0, _080E9C3C @ =0x03000FC0
-	ldr r1, [r0, #0x00]
-	adds r0, r2, #0x0
-	subs r0, #0x35
-	lsls r0, r0, #0x02
-	adds r1, r1, r0
-	ldr r0, [r1, #0x00]
-	b _080E9C48
-	.byte 0x00, 0x00
-_080E9C3C: .4byte 0x03000FC0
-_080E9C40:
-	lsls r0, r2, #0x02
-	adds r0, r0, r3
-	subs r0, #0x40
-_080E9C46:
-	ldr r0, [r0, #0x00]
-_080E9C48:
-	pop {r1}
-	bx r1
-	thumb_func_start sub_80E9C4C
-sub_80E9C4C:
-	push {r4, r5, r6, lr}
-	adds r4, r0, #0x0
-	adds r5, r2, #0x0
-	adds r6, r3, #0x0
-	ldr r0, [sp, #0x010]
-	ldr r3, [sp, #0x014]
-	lsls r0, r0, #0x10
-	asrs r2, r0, #0x10
-	cmp r2, #0x3C
-	bgt _080E9C68
-	adds r0, r4, #0x0
-	bl sub_80E9BD8
-	b _080E9C9C
-_080E9C68:
-	adds r0, r2, #0x0
-	subs r0, #0x3D
-	lsls r2, r0, #0x10
-	asrs r1, r2, #0x10
-	ldr r0, _080E9C88 @ =0x00001B8F
-	cmp r1, r0
-	bgt _080E9C8C
-	lsrs r2, r2, #0x10
-	lsls r3, r3, #0x18
-	lsrs r3, r3, #0x18
-	adds r0, r5, #0x0
-	adds r1, r6, #0x0
-	bl sub_80E9958
-	b _080E9C9C
-	.byte 0x00, 0x00
-_080E9C88: .4byte 0x00001B8F
-_080E9C8C:
-	ldr r0, _080E9CA4 @ =0x00001D17
-	cmp r1, r0
-	bgt _080E9C9C
-	lsrs r0, r2, #0x10
-	lsls r1, r3, #0x10
-	lsrs r1, r1, #0x10
-	bl sub_80E9A6C
-_080E9C9C:
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	.byte 0x00, 0x00
-_080E9CA4: .4byte 0x00001D17
-	thumb_func_start sub_80E9CA8
-sub_80E9CA8:
-	push {r4, r5, lr}
-	adds r4, r0, #0x0
-	adds r5, r2, #0x0
-	ldr r0, [sp, #0x00C]
-	lsls r0, r0, #0x10
-	asrs r2, r0, #0x10
-	cmp r2, #0x3C
-	bgt _080E9CC0
-	adds r0, r4, #0x0
-	bl sub_80E9C14
-	b _080E9CFE
-_080E9CC0:
-	adds r0, r2, #0x0
-	subs r0, #0x3D
-	lsls r2, r0, #0x10
-	asrs r1, r2, #0x10
-	ldr r0, _080E9CE0 @ =0x00001B8F
-	cmp r1, r0
-	bgt _080E9CE4
-	lsrs r2, r2, #0x10
-	adds r0, r5, #0x0
-	adds r1, r3, #0x0
-	bl sub_80E98C0__FPUiT0Us
-	lsls r0, r0, #0x18
-	lsrs r0, r0, #0x18
-	b _080E9CFE
-	.byte 0x00, 0x00
-_080E9CE0: .4byte 0x00001B8F
-_080E9CE4:
-	ldr r0, _080E9CF0 @ =0x00001D17
-	cmp r1, r0
-	ble _080E9CF4
-	movs r0, #0x00
-	b _080E9CFE
-	.byte 0x00, 0x00
-_080E9CF0: .4byte 0x00001D17
-_080E9CF4:
-	lsrs r0, r2, #0x10
-	bl sub_80E99E0
-	lsls r0, r0, #0x10
-	lsrs r0, r0, #0x10
-_080E9CFE:
-	pop {r4, r5}
-	pop {r1}
-	bx r1
-	thumb_func_start sub_80E9D04
-sub_80E9D04:
-	push {r4, lr}
-	ldr r4, _080E9D18 @ =0x03000FC0
-	ldr r0, [r4, #0x00]
-	bl heap_free__FPv
-	movs r0, #0x00
-	str r0, [r4, #0x00]
-	pop {r4}
-	pop {r0}
-	bx r0
-_080E9D18: .4byte 0x03000FC0
-	thumb_func_start sub_80E9D1C
-sub_80E9D1C:
-	push {r4, r5, lr}
-	ldr r4, _080E9D44 @ =0x03000FC0
-	movs r5, #0xAE
-	lsls r5, r5, #0x03
-	ldr r2, _080E9D48 @ =0x08200190
-	movs r0, #0x01
-	adds r1, r5, #0x0
-	bl heap_alloc__FiUiPc
-	adds r1, r0, #0x0
-	str r1, [r4, #0x00]
-	ldr r0, _080E9D4C @ =0x03001034
-	ldr r3, [r0, #0x00]
-	movs r0, #0x00
-	adds r2, r5, #0x0
-	bl _call_via_r3
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-_080E9D44: .4byte 0x03000FC0
-_080E9D48: .4byte 0x08200190
-_080E9D4C: .4byte 0x03001034
 	thumb_func_start sub_80E9D50
 sub_80E9D50:
 	push {r4, r5, r6, r7, lr}
@@ -1238,7 +764,7 @@ _080EA32A:
 	mov r0, r10
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 _080EA346:
 	movs r0, #0x01
 	add sp, #0x008
@@ -1304,7 +830,7 @@ _080EA452:
 	adds r0, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6}
@@ -1752,7 +1278,7 @@ _080EA868:
 	adds r0, r3, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5}
@@ -1908,7 +1434,7 @@ sub_80EA968:
 	adds r1, r5, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r3}
@@ -2036,7 +1562,7 @@ sub_80EAA5C:
 	str r2, [sp, #0x004]
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r1}
@@ -2074,7 +1600,7 @@ _080EAAAE:
 	adds r0, r3, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5}
@@ -2226,7 +1752,7 @@ _080EAC54:
 	adds r0, r6, #0x0
 	ldr r2, [sp, #0x018]
 	ldr r3, [sp, #0x01C]
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6}
@@ -2283,7 +1809,7 @@ _080EACBC:
 	adds r0, r7, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
@@ -2344,7 +1870,7 @@ _080EAD32:
 	adds r0, r3, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	b _080EAD6C
 	.byte 0x00, 0x00
 _080EAD48: .4byte 0x03000D44
@@ -2363,7 +1889,7 @@ _080EAD4C:
 	adds r0, r3, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 _080EAD6C:
 	movs r0, #0x01
 	add sp, #0x008
@@ -2520,7 +2046,7 @@ sub_80EAE70:
 	str r2, [sp, #0x004]
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C
+	bl sub_80E9C4C__FPUiN30sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r1}
@@ -2960,8 +2486,3 @@ script_cmd_end: @ 080EB23C
 	str r0, [r1, #0x10]
 	movs r0, #0x01
 	bx lr
-
-	.section .rodata
-	.align 2, 0
-
-	.byte 0x41, 0x43, 0x45, 0x56, 0x00, 0x00, 0x00, 0x00, 0x4D, 0x41, 0x44, 0x4F, 0x00, 0x00, 0x00, 0x00

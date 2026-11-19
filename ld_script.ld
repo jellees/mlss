@@ -13,6 +13,7 @@ SECTIONS
     ALIGN(0)
     {
         . = 0x00000D48; src/sprite.o(.bss);
+        . = 0x00000FC0; src/event/event.o(.bss);
         . = 0x00001A20; *libgcc.a:dp-bit.o(.bss);
         *libgcc.a:fp-bit.o(.bss);
         . = 0x00001A68; *libc.a:syscalls.o(.bss);
@@ -120,7 +121,7 @@ SECTIONS
         src/text080575C8.o(.rodata);
         asm/rodata081E2794.o(.rodata);
         asm/rodata081E2840.o(.rodata);
-        asm/event/event.o(.rodata);
+        src/event/event.o(.rodata);
         asm/event/field_event_script.o(.rodata);
         asm/event/battle_ai.o(.rodata);
         asm/event/menu_event_script.o(.rodata);

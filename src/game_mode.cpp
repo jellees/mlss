@@ -1,5 +1,6 @@
 #include "global.h"
 #include "common.h"
+#include "event/event.h"
 #include "heap.h"
 #include "field/field.h"
 #include "game_mode.h"
@@ -20,7 +21,7 @@ void make_fldm_801AF5C(int fromSave) {
 void sub_801AFA0(void) {
     if (stru_3000D40.field_0_0) {
         sub_80E9AF8();
-        sub_80E9D04();
+        struc_3000FC0::destroy();
         sub_801BD30();
         CpuFill32(0, &stru_3000D40, sizeof(stru_3000D40));
         stru_3000D40.field_0_0 = 0;
@@ -30,7 +31,7 @@ void sub_801AFA0(void) {
 void sub_801AFE4(int arg0) {
     if (!stru_3000D40.field_0_0) {
         sub_801BD50(1);
-        sub_80E9D1C();
+        struc_3000FC0::create();
         sub_80E9B0C();
         stru_3000D40.field_0_0 = 1;
     }

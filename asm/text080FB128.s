@@ -58369,13 +58369,13 @@ _0811BD3C:
 	bl sprite_create__Fiiiiiii
 	str r0, [r4, #0x00]
 	ldr r0, _0811BDA4 @ =0x00001BC8
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x16
 	beq _0811BD6E
 	ldr r0, _0811BDA4 @ =0x00001BC8
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x19
@@ -58411,7 +58411,7 @@ _0811BDA8:
 	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 _0811BDBA:
 	ldr r0, _0811BDE0 @ =0x00001BC8
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x16
@@ -58432,7 +58432,7 @@ _0811BDE0: .4byte 0x00001BC8
 _0811BDE4: .4byte 0x083BAE29
 _0811BDE8:
 	ldr r0, _0811BE0C @ =0x00001BC8
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x19
@@ -58581,7 +58581,7 @@ _0811BEF4:
 	bl sub_8021574__FiiiiiPvi
 	ldr r5, _0811BF9C @ =0x00001B9A
 	adds r0, r5, #0x0
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	movs r1, #0x80
 	ands r1, r0
 	lsls r1, r1, #0x10
@@ -58601,7 +58601,7 @@ _0811BF28:
 	adds r6, #0x68
 _0811BF3A:
 	ldr r0, _0811BF9C @ =0x00001B9A
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	lsls r0, r0, #0x10
 	lsrs r5, r0, #0x10
 	ldr r2, [sp, #0x010]
@@ -58630,7 +58630,7 @@ _0811BF3A:
 	cmp r3, #0x00
 	bne _0811BFA8
 	ldr r0, _0811BF9C @ =0x00001B9A
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	movs r1, #0x40
 	ands r1, r0
 	cmp r1, #0x00
@@ -58734,12 +58734,12 @@ _0811C048: .4byte 0x0000EFFF
 _0811C04C:
 	ldr r5, _0811C268 @ =0x00001BC8
 	adds r0, r5, #0x0
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	beq _0811C116
 	adds r0, r5, #0x0
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x19
@@ -58759,7 +58759,7 @@ _0811C04C:
 	movs r3, #0x00
 	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r5, #0x0
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	ldr r1, [r7, #0x54]
 	ldr r4, _0811C270 @ =0x083BADD4
 	lsls r0, r0, #0x10
@@ -58768,7 +58768,7 @@ _0811C04C:
 	ldrb r0, [r0, #0x00]
 	strh r0, [r1, #0x00]
 	adds r0, r5, #0x0
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	ldr r1, [r7, #0x54]
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x0E
@@ -58829,7 +58829,7 @@ _0811C04C:
 	strb r1, [r0, #0x00]
 _0811C116:
 	ldr r0, _0811C278 @ =0x00001B9E
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	movs r1, #0x80
 	ands r1, r0
 	cmp r1, #0x00
@@ -58857,7 +58857,7 @@ _0811C14C:
 	mov r6, r8
 	adds r6, #0x1F
 	ldr r0, _0811C278 @ =0x00001B9E
-	bl sub_80E99E0
+	bl sub_80E99E0__FUs
 	lsls r0, r0, #0x10
 	lsrs r5, r0, #0x10
 	mov r4, r10

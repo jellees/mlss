@@ -10,6 +10,7 @@ struct Process;
 struct FieldManager;
 struct FieldObject;
 struct ScriptContext;
+struct struc_3000FC0;
 struct FieldEventScript;
 struct EVTS;
 struct FieldMonster;
@@ -284,7 +285,7 @@ struct ScriptSlot {
     u8* field_C; // Saved field_4
     u8 pad_10[0x4];
     u8* field_14; // Start of the current command
-    u8 field_18[0x84]; // Passed to sub_80E9C4C
+    u32 field_18[0x21]; // Starts with the script's locals 0-0xF (sub_80E9C14)
     s32 field_9C;      // Counter (sub_80EB490)
     u16 field_A0;      // Flags
     u16 field_A2;      // Saved field_A0
@@ -292,19 +293,6 @@ struct ScriptSlot {
     u8 field_A5;       // Saved field_A4
     u8 pad_A6;
     u8 field_A7; // Opcode of the current command
-};
-
-// The buffer at dword_3000FC0 (0x574 bytes).
-struct struc_3000FC0 {
-    u8 pad_0[0x20];
-    u32 field_20[0xDB]; // Flags 0-0x1B5F
-    u32 field_38C[0x74]; // Starts with flags 0x1B60-0x1B7F (passed to sub_80E98C0)
-    u8* field_55C;  // Per opcode: whether a 13-bit value precedes the arguments
-    u8* field_560;  // Per opcode: argument count
-    u8* field_564;  // Per argument: size in bits (bit 7: raw 32-bit value)
-    u8* field_568;  // Per argument: 1 = signed
-    u16* field_56C; // Per opcode: index of its first argument in field_564/field_568
-    u32 field_570;
 };
 
 struct struc_3000FD0 {
@@ -494,8 +482,6 @@ void sub_80196E0(void);
 void sub_80FC198(void);
 void sub_812335C(void);
 void sub_8018A4C(u32);
-void sub_80E9C4C(void*, void*, void*, int, int, int);
-u32 sub_80E9CA8(void*, void*, void*, int, s16);
 void sub_80EA5C8(void*, void*, int, int, int, int);
 void sub_80EA584(void*, void*, int, int, int, int);
 // Command handlers of FieldEventScript::executeNextCommand
@@ -666,20 +652,14 @@ void sub_805C73C(struct Process*, u32);
 void sub_805CCC0(void*, u32);
 void sub_80F0184(struct EVTS*);
 void sub_80F032C(struct EVTS*);
-void sub_80E9958(void*, int, int, int);
 void get_field_object_count(u16 roomId, u8* count);
 void init_fobj_with_data_80FB128(u16 roomId, u8 index, void* object);
 u8 get_field_object_type(u16 roomId, u8 index);
 u8 sub_80FB6D4(u16 roomId, u8* arg1, void* object);
 void sub_80FB448(u8 arg0, void* owner, void* object);
 void sub_80FC1F8(void);
-void sub_80E9AF8(void);
-void sub_80E9B0C(void);
-void sub_80E9D04(void);
-void sub_80E9D1C(void);
 void sub_801BD30(void);
 void sub_801BC40(struct struc_3000D44*, u16, u8);
-u8 sub_80E99E0(int);
 void sub_8054378(void*, u8, char*, u8);
 void sub_8123340(void);
 u8 sub_81251F0(void);
@@ -793,9 +773,9 @@ extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
 extern u8 byte_839F620[];  // Direction (0-7) per ArcTan2 result / 0x1000 (FieldManager::sub_802C208)
 extern struct EVTS* dword_3000D78;
 extern struct struc_3000FD0* dword_3000FD0;
-extern struct struc_3000FC0* dword_3000FC0;
-// Reads the next arg2 bits of a script (a function copied to RAM, see sub_80E9B0C).
-extern u32 (*dword_3000FC4)(struct ScriptSlot* script, s16* bitPosition, int bitCount);
+// ARM code in ROM that is copied to IWRAM: the script bit reader sub_8000F9C ends where sub_8001010 starts.
+extern u8 sub_8000F9C[];
+extern u8 sub_8001010[];
 extern void* dword_3000FC8;
 extern void* dword_3000FCC;
 extern u8* dword_83D6C58[]; // Object list header per list index (see init_fobj_with_data_80FB128)

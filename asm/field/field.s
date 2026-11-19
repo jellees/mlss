@@ -5527,7 +5527,7 @@ _08033D50:
 	lsrs r2, r2, #0x10
 	movs r1, #0x00
 	movs r3, #0x01
-	bl sub_80E9958
+	bl sub_80E9958__FPUiT0UsUc
 	ldrb r1, [r5, #0x00]
 	movs r0, #0x01
 	ands r0, r1

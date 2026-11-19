@@ -67086,7 +67086,7 @@ _0807F064:
 _0807F06C:
 	adds r0, r0, r1
 _0807F06E:
-	bl sub_80E9B8C
+	bl sub_80E9B8C__FUs
 	lsls r0, r0, #0x10
 	lsrs r7, r0, #0x10
 _0807F076:
