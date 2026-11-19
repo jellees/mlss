@@ -10769,7 +10769,7 @@ _080F8424:
 	adds r0, r4, #0x0
 	adds r0, #0x1C
 	adds r1, r5, #0x0
-	bl sub_80EA144
+	bl sub_80EA144__FPvP10ScriptSlotPiPUi
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 _080F8432:

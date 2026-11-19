@@ -269,9 +269,19 @@ struct EeprStruct1 {
 
 // One entry per brother, indexed by FieldObject::objectIndex
 struct struc_3000FF4 {
-    u8 pad0[0xE];
-    u16 field_E;
-    u8 pad10[0x20];
+    u8 pad0[0x7];
+    u8 field_7_0 : 2;
+    u8 field_7_2 : 6; // Bits 0-2 of the 9 flags of sub_80EA064
+    u16 field_8_0 : 6; // Bits 3-5
+    u16 field_8_6 : 6; // Bits 6-8
+    u8 padA[0x4];
+    u16 field_E; // HP? (sub_80E9EE0 keeps it at 1 or more when lowering it)
+    u8 pad10[0x2];
+    u16 field_12; // Maximum of field_E
+    u16 field_14; // BP? (kept at 0 or more)
+    u8 pad16[0x2];
+    u16 field_18; // Maximum of field_14
+    u8 pad1A[0x16];
     u8 field_30;
     u8 pad31[0xB];
 };
@@ -483,6 +493,9 @@ void sub_812335C(void);
 void sub_8018A4C(u32);
 void sub_80EA5C8(void*, void*, int, int, int, int);
 void sub_80EA584(void*, void*, int, int, int, int);
+void sub_80E5BCC(void*, u8, s16, s16, u8, u8, u16, u16, u8, s32);
+u32 sub_80E9310(void*, u8**);
+void sub_8122E30(u8, u8, u8);
 // Command handlers of FieldEventScript::executeNextCommand
 s8 script_cmd_80F17C4(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 script_cmd_call(void*, struct ScriptContext*, s32*);
@@ -493,11 +506,6 @@ s8 script_cmd_show_reaction_bubble(struct FieldEventScript*, struct ScriptContex
 s8 script_cmd_start_dialogue(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 script_cmd_wait_for_user_input(void*, void*, struct ScriptContext*, s32*);
 s8 script_cmd_wait_frames(void*, struct ScriptContext*, s32*);
-s8 sub_80E9D50(void*, void*, struct ScriptContext*, s32*);
-s8 sub_80E9E10(void*, struct ScriptContext*, s32*);
-s8 sub_80E9EE0(void*, struct ScriptContext*, s32*);
-s8 sub_80EA064(void*, struct ScriptContext*, s32*);
-s8 sub_80EA144(void*, struct ScriptContext*, s32*, void*);
 s8 sub_80EA358(void*, struct ScriptContext*, s32*, void*);
 s8 sub_80EA478(void*, struct ScriptContext*, s32*);
 s8 sub_80EA854(void*, struct ScriptContext*, s32*, void*);
@@ -757,6 +765,7 @@ extern u8
     byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per FieldStruct4::field_2
 extern u16 word_839F974[]; // FieldManager::sub_802C774: 4 pairs of (frame, animation)
 extern u16 word_839F984[]; // FieldManager::sub_802DDB4: [objectIndex][index]
+extern u16 word_83BA4B4[]; // sub_80E9D50: height per index
 extern u16
     word_839F98C[]; // FieldManager::sub_802DDB4: flag per [objectIndex][index][FieldStruct4::field_2]
 extern u8

@@ -5,6 +5,7 @@
 #include "field/field_object.h"
 #include "field/field_monster.h"
 #include "event/event.h"
+#include "event/text080E9D50.h"
 #include "event/field_event_script.h"
 
 // Runs the object's script (if it is active) until sub_80EB838 or a command stops it. Inline
@@ -382,7 +383,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 51:
             return sub_80EAC78(&field_1C, script, command, (u8*)dword_3000FD0 + 0x4B0);
         case 52:
-            return sub_80EA144(&field_1C, script, command, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EA144(&field_1C, script, command, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 53:
             return sub_80EA358(&field_1C, script, command, (u8*)dword_3000FD0 + 0x4B0);
         case 54:
