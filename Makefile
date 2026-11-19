@@ -32,7 +32,7 @@ LDFLAGS			:= -L../tools/agbcc/lib -lgcc -lc --just-symbols=../symbols.txt -g --n
 # The original game was built with -funroll-loops (unrolled tile loops in e.g. options_draw_info_messages).
 CFLAGS			:= -O2 -mthumb-interwork -fno-common -Wimplicit -Wparentheses -Werror -g -funroll-loops
 CXXFLAGS		:= -O2 -mthumb-interwork -fno-common -fno-exceptions -fno-rtti -Werror -g -funroll-loops -quiet
-CPPFLAGS 		:= -I tools/agbcc/include -nostdinc -undef -iquote include -Wno-trigraphs
+CPPFLAGS 		:= -I tools/agbcc/include -nostdinc -undef -iquote include -iquote src -Wno-trigraphs
 
 # Files
 ELF = $(ROM:.gba=.elf)
@@ -52,7 +52,7 @@ C_DEPS := $(patsubst $(C_SUBDIR)/%.c,$(C_BUILDDIR)/%.d,$(C_SRCS))
 CXX_SRCS := $(wildcard $(C_SUBDIR)/*.cpp $(C_SUBDIR)/*/*.cpp $(C_SUBDIR)/*/*/*.cpp)
 CXX_OBJS := $(patsubst $(C_SUBDIR)/%.cpp,$(C_BUILDDIR)/%.o,$(CXX_SRCS))
 
-ASM_SRCS := $(wildcard $(ASM_SUBDIR)/*.s)
+ASM_SRCS := $(wildcard $(ASM_SUBDIR)/*.s $(ASM_SUBDIR)/field/*.s $(ASM_SUBDIR)/event/*.s)
 ASM_OBJS := $(patsubst $(ASM_SUBDIR)/%.s,$(ASM_BUILDDIR)/%.o,$(ASM_SRCS))
 
 OBJS     := $(C_OBJS) $(CXX_OBJS) $(ASM_OBJS)

@@ -1,7 +1,7 @@
 #ifndef FIELD_BLOCK_H
 #define FIELD_BLOCK_H
 
-#include "field_object.h"
+#include "field/field_object.h"
 
 // "FBLK" (from the room's object list) and "SBLK" (created by sub_8026C78 through the second ctor),
 // both store vtable 0x08CDC068. Implemented in src/field_block.cpp and asm/field_block.s

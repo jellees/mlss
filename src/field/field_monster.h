@@ -1,7 +1,7 @@
 #ifndef FIELD_MONSTER_H
 #define FIELD_MONSTER_H
 
-#include "field_object.h"
+#include "field/field_object.h"
 
 // "FMON" (Field Monster). Implemented in src/field_monster.cpp (0x0804FE68-0x080508A8), which also
 // emits the vtables (FieldMonster 0x08CDBF28, FieldObjectSubclass4 0x08CDBFC8) and the inline members.

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "common.h"
-#include "field_block.h"
+#include "field/field_block.h"
 
 FieldBlock::FieldBlock(int roomId, int index) : FieldObject(roomId, index) {
     field_33C_0 = 1;

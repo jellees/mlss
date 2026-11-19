@@ -1,7 +1,7 @@
 #ifndef FIELD_PLAYER_CHARACTER_H
 #define FIELD_PLAYER_CHARACTER_H
 
-#include "field_object.h"
+#include "field/field_object.h"
 
 struct Warp;
 

@@ -2,9 +2,9 @@
 #include "global.h"
 #include "common.h"
 #include "sprite.h"
-#include "field_player_character.h"
-#include "field.h"
-#include "field_monster.h"
+#include "field/field_player_character.h"
+#include "field/field.h"
+#include "field/field_monster.h"
 
 FieldPlayerCharacter::FieldPlayerCharacter(int roomId, int index) : FieldObject(roomId, index) {
     field_355 = 0;

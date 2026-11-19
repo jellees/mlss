@@ -1,7 +1,7 @@
 #include "global.h"
 #include "common.h"
 #include "heap.h"
-#include "field.h"
+#include "field/field.h"
 #include "game_mode.h"
 #include "system_screens.h"
 #include "title_screen.h"

@@ -8,7 +8,7 @@ def nonmatching_sizes():
     # files so that only includes in the active #ifdef branch count. Each include's size is
     # taken by assembling it on its own.
     paths = set()
-    for path in glob.glob("build/src/*.s"):
+    for path in glob.glob("build/src/**/*.s", recursive=True):
         with open(path, "r") as f:
             paths.update(re.findall(r'asm/nonmatching/\w+\.s', f.read()))
 

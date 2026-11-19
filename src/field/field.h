@@ -2,7 +2,7 @@
 #define FIELD_H
 
 #include "process.h"
-#include "field_player_character.h" // FieldStruct4 (FieldManager::field_20C)
+#include "field/field_player_character.h" // FieldStruct4 (FieldManager::field_20C)
 
 class S_FX;
 class FieldProcess803EA00;

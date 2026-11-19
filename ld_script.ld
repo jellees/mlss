@@ -35,15 +35,15 @@ SECTIONS
         src/game_mode.o(.text);
         asm/text0801B0B8.o(.text);
         src/sprite.o(.text);
-        src/field.o(.text);
-        asm/field.o(.text);
+        src/field/field.o(.text);
+        asm/field/field.o(.text);
         asm/text0803EA00.o(.text);
-        src/field_object.o(.text);
-        src/field_player_character.o(.text);
-        src/field_monster.o(.text);
-        src/field_block.o(.text);
-        asm/field_block.o(.text);
-        asm/field_sprite_layout.o(.text);
+        src/field/field_object.o(.text);
+        src/field/field_player_character.o(.text);
+        src/field/field_monster.o(.text);
+        src/field/field_block.o(.text);
+        asm/field/field_block.o(.text);
+        asm/field/field_sprite_layout.o(.text);
         src/sign.o(.text);
         src/system_screens.o(.text);
         src/system_screens.o(.gnu.linkonce.t.*);
@@ -55,11 +55,11 @@ SECTIONS
         src/text080575C8.o(.text);
         asm/text080575C8.o(.text);
         asm/text0805CCE0.o(.text);
-        asm/shared_script_commands.o(.text);
-        src/field_event_script.o(.text);
-        asm/field_event_script.o(.text);
-        asm/battle_event_script.o(.text);
-        asm/menu_event_script.o(.text);
+        asm/event/event.o(.text);
+        src/event/field_event_script.o(.text);
+        asm/event/field_event_script.o(.text);
+        asm/event/battle_ai.o(.text);
+        asm/event/menu_event_script.o(.text);
         asm/text080FB128.o(.text);
         src/load_menu.o(.text);
         asm/text08127BC8.o(.text);
@@ -96,8 +96,8 @@ SECTIONS
         *libc.a:strlen.o(.text);
 
         /* Out-of-line inline functions shared between files */
-        src/field_player_character.o(.gnu.linkonce.t._._20FieldPlayerCharacter);
-        src/field_monster.o(.gnu.linkonce.t._._20FieldObjectSubclass4);
+        src/field/field_player_character.o(.gnu.linkonce.t._._20FieldPlayerCharacter);
+        src/field/field_monster.o(.gnu.linkonce.t._._20FieldObjectSubclass4);
         asm/text081DD5F8.o(.gnu.linkonce.t.*);
     }
 
@@ -109,9 +109,9 @@ SECTIONS
         src/game_mode.o(.rodata);
         asm/rodata081E23B8.o(.rodata);
         src/sprite.o(.rodata);
-        src/field.o(.rodata);
-        asm/field.o(.rodata);
-        src/field_monster.o(.rodata);
+        src/field/field.o(.rodata);
+        asm/field/field.o(.rodata);
+        src/field/field_monster.o(.rodata);
         src/sign.o(.rodata);
         src/system_screens.o(.rodata);
         asm/rodata081E273C.o(.rodata);
@@ -119,10 +119,10 @@ SECTIONS
         src/text080575C8.o(.rodata);
         asm/rodata081E2794.o(.rodata);
         asm/rodata081E2840.o(.rodata);
-        asm/shared_script_commands.o(.rodata);
-        asm/field_event_script.o(.rodata);
-        asm/battle_event_script.o(.rodata);
-        asm/menu_event_script.o(.rodata);
+        asm/event/event.o(.rodata);
+        asm/event/field_event_script.o(.rodata);
+        asm/event/battle_ai.o(.rodata);
+        asm/event/menu_event_script.o(.rodata);
         asm/rodata082001F8.o(.rodata);
         src/load_menu.o(.rodata);
         asm/rodata08210F64.o(.rodata);
@@ -138,13 +138,13 @@ SECTIONS
         asm/data0821DC0C.o(.data);
         src/sprite.o(.data);
         asm/data0839EF68.o(.data);
-        asm/field.o(.data);
+        asm/field/field.o(.data);
         asm/data083A0508.o(.data);
         asm/system_screens_data.o(.data);
         asm/data083A297C.o(.data);
         asm/title_screen_data.o(.data);
         asm/data083A75D8.o(.data);
-        asm/field_event_script.o(.data);
+        asm/event/field_event_script.o(.data);
         asm/data083BA4FC.o(.data);
         asm/libgcc2_data.o(.data);
         *libc.a:mallocr.o(.data);
@@ -155,11 +155,11 @@ SECTIONS
     .vtables :
     {
         asm/vtables08CDBD68.o(.gnu.linkonce.d.*);
-        src/field.o(.gnu.linkonce.d.*);
+        src/field/field.o(.gnu.linkonce.d.*);
         asm/vtables08CDBDC8.o(.gnu.linkonce.d.*);
-        src/field_object.o(.gnu.linkonce.d.*);
-        src/field_player_character.o(.gnu.linkonce.d.*);
-        src/field_monster.o(.gnu.linkonce.d.*);
+        src/field/field_object.o(.gnu.linkonce.d.*);
+        src/field/field_player_character.o(.gnu.linkonce.d.*);
+        src/field/field_monster.o(.gnu.linkonce.d.*);
         asm/vtables08CDC068.o(.gnu.linkonce.d.*);
         src/sign.o(.gnu.linkonce.d.*);
         src/system_screens.o(.gnu.linkonce.d._vt.18MarioBrosSaveError);
@@ -169,9 +169,9 @@ SECTIONS
         src/title_screen.o(.gnu.linkonce.d.*);
         asm/vtables08CDC278.o(.gnu.linkonce.d.*);
         asm/vtables08CDC2C8.o(.gnu.linkonce.d.*);
-        asm/field_event_script.o(.gnu.linkonce.d.*);
-        asm/battle_event_script.o(.gnu.linkonce.d.*);
-        asm/menu_event_script.o(.gnu.linkonce.d.*);
+        asm/event/field_event_script.o(.gnu.linkonce.d.*);
+        asm/event/battle_ai.o(.gnu.linkonce.d.*);
+        asm/event/menu_event_script.o(.gnu.linkonce.d.*);
         asm/vtables08CDC338.o(.gnu.linkonce.d.*);
         src/load_menu.o(.gnu.linkonce.d.*);
         src/save_menu.o(.gnu.linkonce.d.*);

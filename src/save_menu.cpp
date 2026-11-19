@@ -6,7 +6,7 @@
 #include "heap.h"
 #include "save_menu.h"
 #include "asm_processes.h"
-#include "field.h"
+#include "field/field.h"
 
 inline u16* SaveMenu::sub_812A930(u16* oam) {
     if (this->field_B1) {

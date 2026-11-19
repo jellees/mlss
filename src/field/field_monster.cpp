@@ -3,7 +3,7 @@
 #include "common.h"
 #include "heap.h"
 #include "sprite.h"
-#include "field_monster.h"
+#include "field/field_monster.h"
 
 void sub_804FE68(FieldObject* object, FieldObject** objects) {
     if (object->field_20C_0) {
