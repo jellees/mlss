@@ -6458,7 +6458,7 @@ _08017E1C:
 	b _08017E1C
 	.byte 0x00, 0x00
 _08017E2C: .4byte 0x081DD7C0
-_08017E30: .4byte sub_801B034
+_08017E30: .4byte sub_801B034__8GameMode
 	thumb_func_start sub_8017E34
 sub_8017E34:
 	push {r4, r5, r6, r7, lr}

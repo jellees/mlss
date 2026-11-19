@@ -1,21 +1,22 @@
 #ifndef GAME_MODE_H
 #define GAME_MODE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma interface
 
-void sub_801AF50(void);
-void make_fldm_801AF5C(int fromSave);
-void sub_801AFA0(void);
-void sub_801AFE4(int);
-void sub_801B014(void);
-void sub_801B034(void);
-void sub_801B084(void);
-void sub_801B0AC(u16 mask);
-
-#ifdef __cplusplus
-}
-#endif
+// Placeholder class for the functions of game_mode.cpp. sub_801B034, sub_801B084 and sub_801B0AC are
+// defined inline at the top of game_mode.cpp, so their out-of-line copies come after the file's
+// other functions, but their strings ("BCLR", "COMP") are emitted before make_fldm_801AF5C's
+// "FLDM", as in the ROM.
+class GameMode {
+  public:
+    static void sub_801AF50();
+    static void make_fldm_801AF5C(int fromSave);
+    static void sub_801AFA0();
+    static void sub_801AFE4(int arg0);
+    static void sub_801B014();
+    static void sub_801B034();         // inline, in the .cpp
+    static void sub_801B084();         // inline, in the .cpp
+    static void sub_801B0AC(u16 mask); // inline, in the .cpp
+};
 
 #endif

@@ -235,7 +235,7 @@ void FieldManager::update() {
                 field_FA_5 = data->field_0_13;
                 field_208_6 = data->field_0_18;
                 field_208_7 = data->field_0_19;
-                sub_801B0AC(data->field_0_20);
+                GameMode::sub_801B0AC(data->field_0_20);
                 dword_3000FD0->field_528 = luigiLeads;
                 dword_3000FD0->field_530 = field_FA_5;
                 {
@@ -842,7 +842,7 @@ void FieldManager::update_field_8023DD4() {
                 field_FC_11 = 0;
                 gGameState.field_2 |= 0x8000;
             }
-            sub_801B084();
+            GameMode::sub_801B084();
             sub_8025E94();
             if (!leader->field_358_3 && sub_8025D24(6)) {
                 sub_803C720(this, 3);
@@ -2516,7 +2516,7 @@ void FieldManager::sub_802814C() {
             stru_3000D40.field_0_1 = 1;
             sub_80FC198();
             sub_812335C();
-            make_fldm_801AF5C(1);
+            GameMode::make_fldm_801AF5C(1);
         } else {
             new (0, "LOAD", 0) LoadMenu(8, "LOAD", 0);
         }

@@ -1446,7 +1446,7 @@ sub_80EA968:
 sub_80EA9A8:
 	push {lr}
 	ldrh r0, [r2, #0x00]
-	bl sub_801B0AC
+	bl sub_801B0AC__8GameModeUs
 	movs r0, #0x01
 	pop {r1}
 	bx r1

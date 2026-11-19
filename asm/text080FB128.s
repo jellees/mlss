@@ -68941,7 +68941,7 @@ sub_8123BA8:
 _08123BD4:
 	cmp r5, #0x00
 	bne _08123C1A
-	bl sub_801AF50
+	bl sub_801AF50__8GameMode
 	ldr r2, _08123D74 @ =0x03000D40
 	ldr r1, [r2, #0x00]
 	lsls r1, r1, #0x1C

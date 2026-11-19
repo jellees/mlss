@@ -1005,7 +1005,7 @@ void TitleScreen::update() {
             switch (this->selection) {
                 case 0:
                     multiplayer_serial_disable();
-                    sub_801AFE4(0);
+                    GameMode::sub_801AFE4(0);
                     BUFFER_REG_BLDCNT = 0;
                     new (0, "LOAD", 0) LoadMenu(8, "LOAD", 0xFFFF);
                     return;

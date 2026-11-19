@@ -441,7 +441,7 @@ void LoadMenu::update() {
             dword_3000C78 = sub_800063C;
             if (this->field_F0) {
                 delete this;
-                sub_801AFA0();
+                GameMode::sub_801AFA0();
                 new (0, "OPEN", 0) TitleScreen(8, "OPEN", 1);
             } else if ((this->field_F1 >> this->field_FA) & 1) {
                 stru_3000D40.slot = this->field_FA;
@@ -450,7 +450,7 @@ void LoadMenu::update() {
                 sub_80FC198();
                 sub_812335C();
                 sub_8018A4C(this->save->slots[stru_3000D40.slot].data.field_6EC);
-                make_fldm_801AF5C(1);
+                GameMode::make_fldm_801AF5C(1);
             } else {
                 stru_3000D40.slot = this->field_FA;
                 stru_3000D40.field_0_1 = 0;
@@ -459,7 +459,7 @@ void LoadMenu::update() {
                 delete this;
                 sub_812335C();
                 sub_8122BFC();
-                make_fldm_801AF5C(0);
+                GameMode::make_fldm_801AF5C(0);
             }
             break;
     }
