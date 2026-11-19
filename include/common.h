@@ -10,7 +10,6 @@ struct Process;
 struct FieldManager;
 struct FieldObject;
 struct ScriptContext;
-struct struc_3000FC0;
 struct FieldEventScript;
 struct EVTS;
 struct FieldMonster;

@@ -513,7 +513,7 @@ _08050F92:
 	lsrs r2, r2, #0x10
 	movs r1, #0x00
 	movs r3, #0x01
-	bl sub_80E9958__FPUiT0UsUc
+	bl sub_80E9958__11CommonEventPUiT1UsUc
 	movs r0, #0x01
 	b _08050FCA
 _08050FBC: .4byte 0xFFFE03FF
@@ -660,7 +660,7 @@ _0805109C:
 	lsrs r2, r2, #0x10
 	movs r1, #0x00
 	movs r3, #0x00
-	bl sub_80E9958__FPUiT0UsUc
+	bl sub_80E9958__11CommonEventPUiT1UsUc
 	ldrh r1, [r4, #0x00]
 	ldr r0, _08051128 @ =0xFFFFFC3F
 	ands r0, r1
@@ -914,7 +914,7 @@ _080512C8:
 	lsls r2, r2, #0x10
 	lsrs r2, r2, #0x10
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	lsrs r3, r0, #0x18
 	cmp r3, #0x00

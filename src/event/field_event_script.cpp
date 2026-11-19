@@ -16,8 +16,9 @@ inline bool FieldEventScript::sub_80F1E44(FieldObject* object, ScriptContext* sc
         return FALSE;
     }
     while (sub_80EB838(object, script) == 0) {
-        script_read_next_line(script, command, dword_3000FC0, (u32*)((u8*)dword_3000FD0 + 0x4B0),
-                              dword_3000FC0->field_38C, 0);
+        CommonEvent::script_read_next_line(script, command, CommonEvent::instance,
+                                           (u32*)((u8*)dword_3000FD0 + 0x4B0),
+                                           CommonEvent::instance->field_38C, 0);
         if (!executeNextCommand(object, script, command)) {
             break;
         }
@@ -29,7 +30,7 @@ inline bool FieldEventScript::sub_80F1E44(FieldObject* object, ScriptContext* sc
 //! Possible fake match: the repeated `((FieldManager*)parentProcess)` casts (the second loop's header
 //! needs them instead of the `fieldManager` local) and the function-scope `script` shared by both
 //! loops. Revisit once the script engine and its globals are decompiled; the script calls also still
-//! use guessed prototypes and raw offsets into dword_3000FD0/dword_3000FC0.
+//! use guessed prototypes and raw offsets into dword_3000FD0/CommonEvent::instance.
 void FieldEventScript::sub_80EB248() {
     FieldManager* fieldManager = (FieldManager*)parentProcess;
     s16 count = fieldManager->objectCount;
@@ -44,8 +45,8 @@ void FieldEventScript::sub_80EB248() {
             script = &object->script;
 
             if (!(script->field_A0 & 0x1B6)) {
-                sub_80E9C4C((u32*)((u8*)dword_3000FD0 + 0x4B0), script->field_18,
-                            dword_3000FC0->field_38C, 0, 0x33, i);
+                CommonEvent::sub_80E9C4C((u32*)((u8*)dword_3000FD0 + 0x4B0), script->field_18,
+                                         CommonEvent::instance->field_38C, 0, 0x33, i);
                 sub_80F1E44(*objects, script);
             }
         }
@@ -386,7 +387,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
             return sub_80EA358(&field_1C, script, command, (u8*)dword_3000FD0 + 0x4B0);
         case 54:
             return sub_80EAB98(&field_1C, script, command, (u8*)dword_3000FD0 + 0x4B0,
-                               dword_3000FC0->field_38C, 0);
+                               CommonEvent::instance->field_38C, 0);
         case 55:
             return sub_80EAB20(&field_1C, script, command);
         case 57:

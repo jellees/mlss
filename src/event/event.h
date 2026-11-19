@@ -3,9 +3,14 @@
 
 #pragma interface
 
-// The script state at dword_3000FC0: flags, variables, locals and the command decoding tables.
-// create() allocates only 0x570 bytes, although field.cpp copies 0x574.
-struct struc_3000FC0 {
+struct ScriptSlot;
+
+// The script state shared by the field, battle and menu scripts ("ACEV": probably "common event"):
+// flags, variables, locals and the command decoding tables. There is one instance, created by
+// create() (which allocates only 0x570 bytes, although field.cpp copies 0x574). All functions of
+// event.cpp are static members; they use the instance pointer, never a this pointer.
+class CommonEvent {
+  public:
     u32 field_0[8];      // Script locals 0x35-0x3C (sub_80E9C14)
     u32 field_20[0xDB];  // Flags 0-0x1B5F
     u32 field_38C[2];    // Flags 0x1B60-0x1B8F (passed to sub_80E98C0)
@@ -19,30 +24,29 @@ struct struc_3000FC0 {
     u16* field_56C;      // Per opcode: index of its first argument in field_564/field_568
     u32 field_570;
 
+    // Static data members are emitted in reverse declaration order: instance is at 0x03000FC0,
+    // dword_3000FC4 at 0x03000FC4.
+    // Reads the next bitCount bits of a script: an IWRAM copy of the ARM function sub_8000F9C
+    // (sub_80E9B0C).
+    static u32 (*dword_3000FC4)(ScriptSlot* script, s16* bitPosition, int bitCount);
+    static CommonEvent* instance;
+
+    static u8* script_read_next_line(ScriptSlot* script, s32* command, void* arg2, u32* shared,
+                                     u32* flags, u32* flags2);
+    static u8 sub_80E98C0(u32* arg0, u32* arg1, u16 flag);
+    static void sub_80E9958(u32* arg0, u32* arg1, u16 flag, u8 value);
+    static u16 sub_80E99E0(u16 id);
+    static void sub_80E9A6C(u16 id, u16 value);
+    static void sub_80E9AF8();
+    static void sub_80E9B0C();
+    static u16 sub_80E9B48(u16 id);
+    static u16 sub_80E9B8C(u16 id);
+    static void sub_80E9BD8(u32* shared, u32* local, s16 id, u32 value);
+    static u32 sub_80E9C14(u32* shared, u32* local, s16 id);
+    static void sub_80E9C4C(u32* shared, u32* local, u32* flags, u32* flags2, s16 id, u32 value);
+    static u32 sub_80E9CA8(u32* shared, u32* local, u32* flags, u32* flags2, s16 id);
     static void create();  // inline, in the .cpp
     static void destroy(); // inline, in the .cpp
 };
-
-struct ScriptSlot;
-
-extern struc_3000FC0* dword_3000FC0;
-// Reads the next bitCount bits of a script: an IWRAM copy of the ARM function sub_8000F9C
-// (sub_80E9B0C).
-extern u32 (*dword_3000FC4)(ScriptSlot* script, s16* bitPosition, int bitCount);
-
-u8* script_read_next_line(ScriptSlot* script, s32* command, void* arg2, u32* shared, u32* flags,
-                          u32* flags2);
-u8 sub_80E98C0(u32* arg0, u32* arg1, u16 flag);
-void sub_80E9958(u32* arg0, u32* arg1, u16 flag, u8 value);
-u16 sub_80E99E0(u16 id);
-void sub_80E9A6C(u16 id, u16 value);
-void sub_80E9AF8();
-void sub_80E9B0C();
-u16 sub_80E9B48(u16 id);
-u16 sub_80E9B8C(u16 id);
-void sub_80E9BD8(u32* shared, u32* local, s16 id, u32 value);
-u32 sub_80E9C14(u32* shared, u32* local, s16 id);
-void sub_80E9C4C(u32* shared, u32* local, u32* flags, u32* flags2, s16 id, u32 value);
-u32 sub_80E9CA8(u32* shared, u32* local, u32* flags, u32* flags2, s16 id);
 
 #endif // EVENT_H

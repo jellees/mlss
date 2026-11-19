@@ -5618,7 +5618,7 @@ _080FDD14:
 	adds r0, r0, r6
 	ldr r2, _080FDE14 @ =0x00000232
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _080FDD74
@@ -5636,7 +5636,7 @@ _080FDD74:
 	movs r2, #0x8D
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _080FDDA0
@@ -5654,7 +5654,7 @@ _080FDDA0:
 	adds r0, r0, r7
 	ldr r2, _080FDE1C @ =0x00000233
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _080FDDC4
@@ -5685,7 +5685,7 @@ _080FDDC4:
 	adds r0, r0, r7
 	ldr r2, _080FDE24 @ =0x00000203
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _080FDDFA
@@ -5718,7 +5718,7 @@ _080FDE2C:
 	ldr r2, _080FE09C @ =0x00000209
 _080FDE32:
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _080FDE4A
@@ -11396,7 +11396,7 @@ _08100FC4:
 	movs r2, #0x8C
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0810100E
@@ -11542,7 +11542,7 @@ _081010EE:
 	movs r2, #0x8C
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _08101138
@@ -52437,7 +52437,7 @@ _08117E00:
 	adds r0, r0, r1
 	ldr r2, _08117ED8 @ =0x00000225
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _08117E36
@@ -53035,7 +53035,7 @@ _0811922A:
 	adds r0, r0, r1
 	ldr r2, _081192AC @ =0x00000225
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	lsrs r2, r0, #0x18
 	cmp r2, #0x00
@@ -53117,7 +53117,7 @@ _081192D8:
 	adds r0, r0, r6
 	ldr r2, _08119354 @ =0x00000225
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	lsrs r2, r0, #0x18
 	cmp r2, #0x00
@@ -53915,7 +53915,7 @@ _081199C4:
 	adds r0, r0, r5
 	ldr r2, _08119BBC @ =0x00000225
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _081199DE
@@ -54071,7 +54071,7 @@ _08119A86:
 	adds r0, r0, r1
 	ldr r2, _08119BDC @ =0x00000226
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _08119B4A
@@ -56574,21 +56574,21 @@ _0811AEB4:
 	mov r9, r1
 	movs r1, #0x00
 	mov r2, r9
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	adds r5, r0, #0x0
 	ldr r0, [r4, #0x00]
 	adds r0, r0, r6
 	movs r2, #0x88
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	adds r4, r0, #0x0
 	mov r2, r8
 	ldr r0, [r2, #0x00]
 	adds r0, r0, r6
 	movs r1, #0x00
 	mov r2, r9
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	ldr r6, [r7, #0x30]
 	lsls r5, r5, #0x18
 	lsrs r5, r5, #0x15
@@ -56883,7 +56883,7 @@ _0811B14A:
 	movs r2, #0x88
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0811B1BC
@@ -56893,7 +56893,7 @@ _0811B14A:
 	adds r0, r0, r3
 	ldr r2, _0811B1A0 @ =0x00000222
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0811B1A4
@@ -56957,7 +56957,7 @@ _0811B1E8:
 	movs r2, #0x88
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0811B2A4
@@ -56967,7 +56967,7 @@ _0811B1E8:
 	adds r0, r0, r2
 	ldr r2, _0811B23C @ =0x00000222
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0811B244
@@ -56995,7 +56995,7 @@ _0811B244:
 	adds r0, r0, r2
 	ldr r2, _0811B280 @ =0x00000222
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #0x00
@@ -57064,7 +57064,7 @@ _0811B2C2:
 	mov r9, r4
 	movs r1, #0x00
 	mov r2, r9
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	adds r5, r0, #0x0
 	mov r1, r8
 	ldr r0, [r1, #0x00]
@@ -57072,14 +57072,14 @@ _0811B2C2:
 	movs r2, #0x88
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	adds r4, r0, #0x0
 	mov r2, r8
 	ldr r0, [r2, #0x00]
 	adds r0, r0, r6
 	movs r1, #0x00
 	mov r2, r9
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	ldr r6, [r7, #0x30]
 	lsls r5, r5, #0x18
 	lsrs r5, r5, #0x15
@@ -57772,7 +57772,7 @@ _0811B854:
 	adds r0, r0, r1
 	adds r2, #0xD7
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0811B8AC
@@ -57860,7 +57860,7 @@ _0811B8B6:
 	adds r0, r0, r1
 	ldr r2, _0811B994 @ =0x00000226
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	adds r1, r0, #0x0
 	lsls r1, r1, #0x18
 	cmp r1, #0x00
@@ -58312,7 +58312,7 @@ _0811BBC6:
 	adds r0, r0, r1
 	ldr r2, _0811BD90 @ =0x00000225
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	adds r2, r7, #0x0
 	adds r2, #0x44
@@ -58369,13 +58369,13 @@ _0811BD3C:
 	bl sprite_create__Fiiiiiii
 	str r0, [r4, #0x00]
 	ldr r0, _0811BDA4 @ =0x00001BC8
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x16
 	beq _0811BD6E
 	ldr r0, _0811BDA4 @ =0x00001BC8
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x19
@@ -58411,7 +58411,7 @@ _0811BDA8:
 	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 _0811BDBA:
 	ldr r0, _0811BDE0 @ =0x00001BC8
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x16
@@ -58432,7 +58432,7 @@ _0811BDE0: .4byte 0x00001BC8
 _0811BDE4: .4byte 0x083BAE29
 _0811BDE8:
 	ldr r0, _0811BE0C @ =0x00001BC8
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x19
@@ -58581,7 +58581,7 @@ _0811BEF4:
 	bl sub_8021574__FiiiiiPvi
 	ldr r5, _0811BF9C @ =0x00001B9A
 	adds r0, r5, #0x0
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	movs r1, #0x80
 	ands r1, r0
 	lsls r1, r1, #0x10
@@ -58601,7 +58601,7 @@ _0811BF28:
 	adds r6, #0x68
 _0811BF3A:
 	ldr r0, _0811BF9C @ =0x00001B9A
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	lsls r0, r0, #0x10
 	lsrs r5, r0, #0x10
 	ldr r2, [sp, #0x010]
@@ -58630,7 +58630,7 @@ _0811BF3A:
 	cmp r3, #0x00
 	bne _0811BFA8
 	ldr r0, _0811BF9C @ =0x00001B9A
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	movs r1, #0x40
 	ands r1, r0
 	cmp r1, #0x00
@@ -58734,12 +58734,12 @@ _0811C048: .4byte 0x0000EFFF
 _0811C04C:
 	ldr r5, _0811C268 @ =0x00001BC8
 	adds r0, r5, #0x0
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	lsls r0, r0, #0x10
 	cmp r0, #0x00
 	beq _0811C116
 	adds r0, r5, #0x0
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	cmp r0, #0x19
@@ -58759,7 +58759,7 @@ _0811C04C:
 	movs r3, #0x00
 	bl sprite_set_animation__FP6SpriteiiPFP6Spritei_vi
 	adds r0, r5, #0x0
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	ldr r1, [r7, #0x54]
 	ldr r4, _0811C270 @ =0x083BADD4
 	lsls r0, r0, #0x10
@@ -58768,7 +58768,7 @@ _0811C04C:
 	ldrb r0, [r0, #0x00]
 	strh r0, [r1, #0x00]
 	adds r0, r5, #0x0
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	ldr r1, [r7, #0x54]
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x0E
@@ -58829,7 +58829,7 @@ _0811C04C:
 	strb r1, [r0, #0x00]
 _0811C116:
 	ldr r0, _0811C278 @ =0x00001B9E
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	movs r1, #0x80
 	ands r1, r0
 	cmp r1, #0x00
@@ -58857,7 +58857,7 @@ _0811C14C:
 	mov r6, r8
 	adds r6, #0x1F
 	ldr r0, _0811C278 @ =0x00001B9E
-	bl sub_80E99E0__FUs
+	bl sub_80E99E0__11CommonEventUs
 	lsls r0, r0, #0x10
 	lsrs r5, r0, #0x10
 	mov r4, r10
@@ -59934,7 +59934,7 @@ _0811CA06:
 	adds r0, r0, r1
 	movs r1, #0x00
 	ldr r2, _0811CBFC @ =0x00000225
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0811CA26
@@ -61591,7 +61591,7 @@ _0811D71C:
 	add r0, r9
 	movs r1, #0x00
 	ldr r2, _0811D834 @ =0x00000222
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	adds r4, r0, #0x0
 	mov r2, r8
 	ldr r0, [r2, #0x00]
@@ -61600,7 +61600,7 @@ _0811D71C:
 	lsls r5, r5, #0x02
 	movs r1, #0x00
 	adds r2, r5, #0x0
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r4, r4, #0x18
 	lsrs r4, r4, #0x15
 	movs r2, #0x20
@@ -61628,7 +61628,7 @@ _0811D71C:
 	add r0, r9
 	movs r1, #0x00
 	adds r2, r5, #0x0
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0811D7C0
@@ -61639,7 +61639,7 @@ _0811D71C:
 	adds r0, r0, r2
 	movs r1, #0x00
 	ldr r2, _0811D834 @ =0x00000222
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x14
 	movs r2, #0x30
@@ -61664,7 +61664,7 @@ _0811D7C0:
 	add r0, r9
 	movs r1, #0x00
 	ldr r2, _0811D834 @ =0x00000222
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0811D7F4
@@ -62512,7 +62512,7 @@ sub_811DE10:
 	add r0, r9
 	ldr r2, _0811E254 @ =0x00000203
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0811DEFC
@@ -62523,7 +62523,7 @@ sub_811DE10:
 	movs r2, #0x81
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	adds r4, r0, #0x0
 	ldr r0, [r5, #0x00]
 	movs r2, #0xE3
@@ -62531,7 +62531,7 @@ sub_811DE10:
 	adds r0, r0, r2
 	ldr r2, _0811E258 @ =0x00000205
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	adds r0, #0x05
 	adds r4, r4, r0
 	lsls r4, r4, #0x18
@@ -62583,7 +62583,7 @@ _0811DEFC:
 	ldrb r1, [r1, #0x00]
 	adds r2, r2, r1
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _0811DF72
@@ -63045,7 +63045,7 @@ _0811E2AC:
 	adds r0, r0, r1
 	ldr r2, _0811E40C @ =0x00000222
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	adds r4, r0, #0x0
 	mov r2, r8
 	ldr r0, [r2, #0x00]
@@ -63055,7 +63055,7 @@ _0811E2AC:
 	movs r2, #0x88
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r4, r4, #0x18
 	lsrs r4, r4, #0x18
 	lsls r1, r4, #0x01
@@ -63122,7 +63122,7 @@ _0811E358:
 	adds r0, r0, r1
 	ldr r2, _0811E40C @ =0x00000222
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	lsls r1, r0, #0x01
@@ -63842,7 +63842,7 @@ _0811ED92:
 	adds r0, r0, r1
 	ldr r2, _0811EE14 @ =0x00000226
 	movs r1, #0x00
-	bl sub_80E98C0__FPUiT0Us
+	bl sub_80E98C0__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	adds r2, r5, #0x0
 	adds r2, #0x88
