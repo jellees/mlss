@@ -296,7 +296,9 @@ struct ScriptSlot {
 
 // The buffer at dword_3000FC0 (0x574 bytes).
 struct struc_3000FC0 {
-    u8 pad_0[0x55C];
+    u8 pad_0[0x20];
+    u32 field_20[0xDB]; // Flags 0-0x1B5F
+    u32 field_38C[0x74]; // Starts with flags 0x1B60-0x1B7F (passed to sub_80E98C0)
     u8* field_55C;  // Per opcode: whether a 13-bit value precedes the arguments
     u8* field_560;  // Per opcode: argument count
     u8* field_564;  // Per argument: size in bits (bit 7: raw 32-bit value)
@@ -664,7 +666,6 @@ void sub_805C73C(struct Process*, u32);
 void sub_805CCC0(void*, u32);
 void sub_80F0184(struct EVTS*);
 void sub_80F032C(struct EVTS*);
-u8 sub_80E98C0(void*, int, int);
 void sub_80E9958(void*, int, int, int);
 void get_field_object_count(u16 roomId, u8* count);
 void init_fobj_with_data_80FB128(u16 roomId, u8 index, void* object);

@@ -6516,7 +6516,7 @@ _0805B5A8:
 	adds r2, r2, r1
 	lsrs r2, r2, #0x10
 	movs r1, #0x00
-	bl sub_80E98C0
+	bl sub_80E98C0__FPUiT0Us
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #0x01

@@ -17,7 +17,7 @@ inline bool FieldEventScript::sub_80F1E44(FieldObject* object, ScriptContext* sc
     }
     while (sub_80EB838(object, script) == 0) {
         script_read_next_line(script, command, dword_3000FC0, (u8*)dword_3000FD0 + 0x4B0,
-                              (u8*)dword_3000FC0 + 0x38C, 0);
+                              dword_3000FC0->field_38C, 0);
         if (!executeNextCommand(object, script, command)) {
             break;
         }
@@ -44,7 +44,7 @@ void FieldEventScript::sub_80EB248() {
             script = &object->script;
 
             if (!(script->field_A0 & 0x1B6)) {
-                sub_80E9C4C((u8*)dword_3000FD0 + 0x4B0, script->field_18, (u8*)dword_3000FC0 + 0x38C, 0,
+                sub_80E9C4C((u8*)dword_3000FD0 + 0x4B0, script->field_18, dword_3000FC0->field_38C, 0,
                             0x33, i);
                 sub_80F1E44(*objects, script);
             }
@@ -386,7 +386,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
             return sub_80EA358(&field_1C, script, command, (u8*)dword_3000FD0 + 0x4B0);
         case 54:
             return sub_80EAB98(&field_1C, script, command, (u8*)dword_3000FD0 + 0x4B0,
-                               (u8*)dword_3000FC0 + 0x38C, 0);
+                               dword_3000FC0->field_38C, 0);
         case 55:
             return sub_80EAB20(&field_1C, script, command);
         case 57:

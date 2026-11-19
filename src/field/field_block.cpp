@@ -1,5 +1,6 @@
 #include "global.h"
 #include "common.h"
+#include "event/event.h"
 #include "field/field_block.h"
 
 FieldBlock::FieldBlock(int roomId, int index) : FieldObject(roomId, index) {
@@ -53,7 +54,7 @@ FieldBlock::FieldBlock(u8* data, u16 dataIndex, int roomId, int index) : FieldOb
     field_20C_0 = 1;
     field_20C_24 = 0;
     field_214_0 = 1;
-    if (sub_80E98C0((u8*)dword_3000FC0 + 0x38C, 0, (u16)(dataIndex + 0x1360)) == 0) {
+    if (sub_80E98C0(dword_3000FC0->field_38C, 0, (u16)(dataIndex + 0x1360)) == 0) {
         field_33C_3 = data[0] == 0x20 ? 2 : data[0] == 0x40 ? 1 : 0;
         field_33C_0 = 1;
     } else {

@@ -74,3 +74,34 @@ u8* script_read_next_line(ScriptSlot* script, s32* command, void* arg2, void* ar
     }
     return slot->field_0;
 }
+
+// Returns the value of a flag. Flags up to 0x1B5F are in dword_3000FC0, 0x1B60-0x1B7F in arg0 and
+// 0x1B80-0x1B8F in arg1 (or in arg0, after the others, if arg1 is null).
+//! Possible fake match: the result has to be stored in `flag` (a separate local doesn't match).
+u8 sub_80E98C0(u32* arg0, u32* arg1, u16 flag) {
+    if (flag < 0x1B60) {
+        u16 bit = flag & 0x1F;
+
+        flag = (dword_3000FC0->field_20[flag >> 5] >> bit) & 1;
+    } else if (flag < 0x1B80) {
+        u16 index = flag - 0x1B60;
+        u16 bit = index & 0x1F;
+
+        flag = (arg0[index >> 5] >> bit) & 1;
+    } else if (flag < 0x1B90) {
+        if (arg1 != 0) {
+            u16 index = flag - 0x1B80;
+            u16 bit = index & 0x1F;
+
+            flag = (arg1[index >> 5] >> bit) & 1;
+        } else {
+            u16 index = flag - 0x1B60;
+            u16 bit = index & 0x1F;
+
+            flag = (arg0[index >> 5] >> bit) & 1;
+        }
+    } else {
+        return 0;
+    }
+    return flag;
+}
