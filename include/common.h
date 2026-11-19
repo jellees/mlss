@@ -535,7 +535,6 @@ s8 sub_80EB048(void*, void*, s32*);
 s8 sub_80EB05C(void*, void*, struct ScriptContext*, s32*);
 s8 sub_80EB09C(void*, void*, struct ScriptContext*, s32*);
 s8 sub_80EB11C(void*, void*, struct ScriptContext*, s32*);
-s8 sub_80ED6A8(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80ED750(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80ED7D4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
 s8 sub_80ED86C(struct FieldEventScript*, struct ScriptContext*, s32*);

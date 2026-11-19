@@ -468,7 +468,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 111:
             return sub_80F17F4(this, script, command);
         case 112:
-            return sub_80ED6A8(this, script, command);
+            return sub_80ED6A8(script, command);
         case 105:
             return sub_80F1998(this, object, script, command);
         case 106:
@@ -1112,5 +1112,20 @@ s8 FieldEventScript::sub_80ED4EC(ScriptContext* script, s32* command) {
             break;
         }
     }
+    return TRUE;
+}
+
+s8 FieldEventScript::sub_80ED6A8(ScriptContext* script, s32* command) {
+    if (command[0] != 0xFF) {
+        ((FieldManager*)parentProcess)->field_FA_5 = command[0];
+        ((FieldManager*)parentProcess)->sub_8028EE8();
+    } else {
+        ((FieldManager*)parentProcess)->field_FA_5 = ((FieldManager*)parentProcess)->luigiLeads;
+        ((FieldManager*)parentProcess)->field_F8_6 = command[1];
+    }
+    if (((FieldManager*)parentProcess)->field_F8_6) {
+        ((FieldManager*)parentProcess)->sub_80284B0(((FieldManager*)parentProcess)->field_FA_5, 0);
+    }
+    dword_3000FD0->field_530 = ((FieldManager*)parentProcess)->field_FA_5;
     return TRUE;
 }
