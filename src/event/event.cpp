@@ -1,4 +1,5 @@
 #pragma implementation "event.h"
+
 #include "global.h"
 #include "common.h"
 #include "heap.h"
@@ -10,6 +11,9 @@ static u32 (*sScriptReader)(ScriptSlot* script, s16* bitPosition, int bitCount);
 
 /**
  * Reads the next command.
+ *
+ * If the command returns a result, the first argument contains the unresolved variable ID for that
+ * result.
  *
  * \param arguments The decoded arguments that are part of this opcode.
  * \param engineRegisters The registers 0x10-0x34 of the script engine (field, battle or menu).
@@ -48,20 +52,30 @@ u8* CommonEvent::readCommand(ScriptSlot* script, s32* arguments, void* unused, u
             signs = instance->argumentSigns + offset;
 
             for (i = 0; i < count; i++) {
+
+                // Check if the size of this argument is NOT a 32-bit value.
                 if (!(*sizes & ARGUMENT_ALIGNED_WORD)) {
                     s32 value = sScriptReader(slot, &bitPosition, *sizes);
 
+                    // First read the value as a literal.
                     *arguments = value;
 
                     if (variableMask & (1 << i)) {
+
+                        // Value is a variable ID and retrieves the variable.
                         *arguments = getVariable(engineRegisters, script->registers, engineFlags,
                                                  scriptFlags, value);
                     } else if (*signs == 1) {
+
+                        // Value is a signed literal. Check for the most significant bit. If true the
+                        // value signed bit gets extended to make it a proper signed 32-bit.
                         if ((value >> (*sizes - 1)) & 1) {
                             *arguments = (-1 << *sizes) | value;
                         }
                     }
                 } else {
+
+                    // Align position to the next byte.
                     if (bitPosition != 8) {
                         slot->position++;
                     }
@@ -87,6 +101,9 @@ u8* CommonEvent::readCommand(ScriptSlot* script, s32* arguments, void* unused, u
     return slot->position;
 }
 
+/**
+ * Gets flag number 0x0000-0x1B8F.
+ */
 u8 CommonEvent::getFlag(u32* engineFlags, u32* scriptFlags, u16 flag) {
     if (flag < ENGINE_FLAG_START) {
         u16 bit = flag & 0x1F;
@@ -115,6 +132,9 @@ u8 CommonEvent::getFlag(u32* engineFlags, u32* scriptFlags, u16 flag) {
     return flag;
 }
 
+/**
+ * Sets flag number 0x0000-0x1B8F.
+ */
 void CommonEvent::setFlag(u32* engineFlags, u32* scriptFlags, u16 flag, u8 value) {
     u32* word;
     u16 bit;
@@ -139,6 +159,9 @@ void CommonEvent::setFlag(u32* engineFlags, u32* scriptFlags, u16 flag, u8 value
     *word = (*word & ~(1 << bit)) | ((value & 1) << bit);
 }
 
+/**
+ * Sets global variable number 0x1B90-0x1D17.
+ */
 u16 CommonEvent::getGlobalVariable(u16 id) {
     u16 value;
 
@@ -157,6 +180,9 @@ u16 CommonEvent::getGlobalVariable(u16 id) {
     return value;
 }
 
+/**
+ * Gets global variable number 0x1B90-0x1D17.
+ */
 void CommonEvent::setGlobalVariable(u16 id, u16 value) {
     if (id < TEMPORARY_BYTE_VARIABLE_START) {
         id -= SAVED_BYTE_VARIABLE_START;
@@ -202,7 +228,7 @@ void CommonEvent::initScriptReader() {
 }
 
 /**
- * Decrements a halfword script variable.
+ * Decrements a halfword script variable for locations 0x1CD8-0x1D17.
  */
 u16 CommonEvent::decGlobalVariable(u16 id) {
     if (id < GLOBAL_VARIABLE_END) {
@@ -220,7 +246,7 @@ u16 CommonEvent::decGlobalVariable(u16 id) {
 }
 
 /**
- * Increments a halfword script variable.
+ * Increments a halfword script variable for locations 0x1CD8-0x1D17.
  */
 u16 CommonEvent::incGlobalVariable(u16 id) {
     if (id < GLOBAL_VARIABLE_END) {
@@ -237,6 +263,9 @@ u16 CommonEvent::incGlobalVariable(u16 id) {
     return 0;
 }
 
+/**
+ * Sets register value from space 0x0000-0x003C.
+ */
 void CommonEvent::setRegister(u32* engineRegisters, u32* scriptRegisters, s16 id, u32 value) {
     if (id < ENGINE_REGISTER_START) {
         scriptRegisters[id] = value;
@@ -247,6 +276,9 @@ void CommonEvent::setRegister(u32* engineRegisters, u32* scriptRegisters, s16 id
     }
 }
 
+/**
+ * Gets register value from space 0x0000-0x003C.
+ */
 u32 CommonEvent::getRegister(u32* engineRegisters, u32* scriptRegisters, s16 id) {
     if (id < ENGINE_REGISTER_START) {
         return scriptRegisters[id];
@@ -257,6 +289,13 @@ u32 CommonEvent::getRegister(u32* engineRegisters, u32* scriptRegisters, s16 id)
     }
 }
 
+/**
+ * Resolves variable ID and sets value at location.
+ *
+ * Registers:   0x0000-0x003C.
+ * Flags:       0x003D-0x1BCC.
+ * Variables:   0x1BCD-0x1D54.
+ */
 void CommonEvent::setVariable(u32* engineRegisters, u32* scriptRegisters, u32* engineFlags,
                               u32* scriptFlags, s16 id, u32 value) {
     if (id < REGISTER_COUNT) {
@@ -272,6 +311,13 @@ void CommonEvent::setVariable(u32* engineRegisters, u32* scriptRegisters, u32* e
     }
 }
 
+/**
+ * Resolves variable ID and returns value from that location.
+ *
+ * Registers:   0x0000-0x003C.
+ * Flags:       0x003D-0x1BCC.
+ * Variables:   0x1BCD-0x1D54.
+ */
 u32 CommonEvent::getVariable(u32* engineRegisters, u32* scriptRegisters, u32* engineFlags,
                              u32* scriptFlags, s16 id) {
     if (id < REGISTER_COUNT) {
