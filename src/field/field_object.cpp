@@ -2820,9 +2820,9 @@ int FieldObject::sub_8045A94(int mode, int relative, int targetX, int targetY, i
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8045F04__11FieldObjectiiiiiiiiUsUsUsUsUsii.s\"");
 #else
-int FieldObject::sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6,
-                             int arg7, int arg8, u16 arg9, u16 arg10, u16 arg11, u16 angle, u16 speed,
-                             int direction, int flags) {
+bool FieldObject::sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6,
+                              int arg7, int arg8, u16 arg9, u16 arg10, u16 arg11, u16 angle, u16 speed,
+                              int direction, int flags) {
     int dz;
 
     if (mode == 4 && angle == 0) {

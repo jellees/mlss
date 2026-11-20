@@ -33,6 +33,15 @@ class FieldEventScript : public Process {
     s8 sub_80ED304(ScriptContext* script, s32* arguments);
     s8 sub_80ED4EC(ScriptContext* script, s32* arguments);
     s8 sub_80ED6A8(ScriptContext* script, s32* arguments);
+    s8 sub_80ED750(ScriptContext* script, s32* arguments);
+    u8 sub_80ED7D4(FieldObject* object, ScriptContext* script, s32* arguments);
+    u8 sub_80ED86C(ScriptContext* script, s32* arguments);
+    s8 sub_80ED90C(ScriptContext* script, s32* arguments);
+    s8 sub_80ED9A4(FieldObject* object, ScriptContext* script, s32* arguments);
+    s8 sub_80EDAB0(ScriptContext* script, s32* arguments);
+    s8 sub_80EDBC4(FieldObject* object, ScriptContext* script, s32* arguments);
+    s8 sub_80EDD48(FieldObject* object, ScriptContext* script, s32* arguments);
+    s8 sub_80EDEB4(FieldObject* object, ScriptContext* script, s32* arguments);
     bool sub_80EB838(FieldObject* object, ScriptContext* script);
     void sub_80EB524(FieldObject* object, u8 type, int arg);
     bool sub_80F1E44(FieldObject* object, ScriptContext* script); // inline, in the .cpp

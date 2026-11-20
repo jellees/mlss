@@ -196,7 +196,9 @@ struct LoadMenuItem {
     u8 field_2;
     u8 field_3;
     u8 field_4;
-    u8 pad5[3];
+    u8 field_5_0 : 1;
+    u8 field_5_1 : 1;
+    u8 pad5[2];
 };
 
 struct LoadMenuEntry {
@@ -320,8 +322,8 @@ struct struc_3000FD0 {
     u8 field_548;
     u8 pad_549[0x7];
     u32 field_550; // Bit mask
-    u16 field_554;
-    u8 pad_556[0x4];
+    u16 field_554[2];
+    u8 pad_558[0x2];
     u16 field_55A_0 : 1;
     u16 field_55A_1 : 1;
     u16 field_55A_2 : 1;
@@ -480,6 +482,7 @@ struct Coldef* get_coldef_ptr_by_xz(void* map, s16 x, s16 z);
 struct Coldef* sub_803FBA4(void* map, int x, int y, int* floor, int* ceiling, int* top, bool arg6,
                            bool arg7);
 void sub_8116680(void*, u8);
+void sub_803FDBC(int bank, int id, int angle, u8* animation, u8* flip);
 u8 sub_8114C1C(void*, u8, u16, u8, u16, u16);
 void sub_8115048(void*, u8, u8);
 void sub_8019308(int, int, int);
@@ -556,15 +559,7 @@ s8 script_cmd_start_dialogue(struct FieldEventScript*, struct ScriptContext*, s3
 u32 sub_8199F30(void);                // Random number
 u32 sub_81DD77C(s32, u32);            // ARM veneer; random value below the first argument?
 s32 sub_8199480(s32, s32); // ArcTan2 >> 8; callers pass and get ints, though it truncates to s16/u8
-s8 sub_80ED750(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80ED7D4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80ED86C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80ED90C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80ED9A4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EDAB0(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EDBC4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EDD48(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EDEB4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
+s8 script_enable_flag_2(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
 s8 sub_80EDF90(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
 s8 sub_80EE028(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
 s8 sub_80EE140(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);

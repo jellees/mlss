@@ -264,8 +264,8 @@ bool FieldEventScript::sub_80EB838(FieldObject* object, ScriptContext* script) {
             }
         } else if (!dword_3000FD0->field_55A_2
                    && dword_3000FD0->field_55A_3 == dword_3000FD0->field_548) {
-            ((FieldManager*)parentProcess)->sub_8028D6C(dword_3000FD0->field_554);
-            dword_3000FD0->field_55A_1 = dword_3000FD0->field_55A_2 = dword_3000FD0->field_554 != 0;
+            ((FieldManager*)parentProcess)->sub_8028D6C(dword_3000FD0->field_554[0]);
+            dword_3000FD0->field_55A_1 = dword_3000FD0->field_55A_2 = dword_3000FD0->field_554[0] != 0;
             dword_3000FD0->field_55A_3 = 0;
         }
     }
@@ -318,7 +318,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 19:
             return sub_80F15DC(this, script, arguments);
         case 20:
-            return sub_80ED750(this, script, arguments);
+            return sub_80ED750(script, arguments);
         case 21:
             return sub_80EB11C(&field_1C, dword_3000FCC, script, arguments);
         case 23:
@@ -489,11 +489,11 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 116:
             return sub_80F14D4(this, script, arguments);
         case 117:
-            return sub_80ED7D4(this, object, script, arguments);
+            return sub_80ED7D4(object, script, arguments);
         case 118:
-            return sub_80ED86C(this, script, arguments);
+            return sub_80ED86C(script, arguments);
         case 119:
-            return sub_80ED90C(this, script, arguments);
+            return sub_80ED90C(script, arguments);
         case 120:
             return sub_80F14C4(this, object, script, arguments);
         case 121:
@@ -503,15 +503,15 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 123:
             return sub_80F143C(this, script, arguments);
         case 124:
-            return sub_80ED9A4(this, object, script, arguments);
+            return sub_80ED9A4(object, script, arguments);
         case 125:
-            return sub_80EDAB0(this, script, arguments);
+            return sub_80EDAB0(script, arguments);
         case 93:
             return sub_80F13A4(this, object, script, arguments);
         case 94:
-            return sub_80EDBC4(this, object, script, arguments);
+            return sub_80EDBC4(object, script, arguments);
         case 95:
-            return sub_80EDD48(this, object, script, arguments);
+            return sub_80EDD48(object, script, arguments);
         case 96:
             return sub_80F1230(this, object, script, arguments);
         case 97:
@@ -523,7 +523,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 100:
             return sub_80F10E0(this, script, arguments);
         case 101:
-            return sub_80EDEB4(this, object, script, arguments);
+            return sub_80EDEB4(object, script, arguments);
         case 102:
             return sub_80F1088(this, object, script, arguments);
         case 103:
@@ -1132,5 +1132,314 @@ s8 FieldEventScript::sub_80ED6A8(ScriptContext* script, s32* arguments) {
         ((FieldManager*)parentProcess)->sub_80284B0(((FieldManager*)parentProcess)->field_FA_5, 0);
     }
     dword_3000FD0->field_530 = ((FieldManager*)parentProcess)->field_FA_5;
+    return TRUE;
+}
+
+s8 FieldEventScript::sub_80ED750(ScriptContext* script, s32* arguments) {
+    FieldObject* object = *(((FieldManager*)parentProcess)->objects + arguments[0]);
+
+    object->sub_8047364(0);
+    sprite_set_animation(object->sprite, object->sprite->field_21, arguments[1]);
+    object->field_214_7 = 0;
+    object->field_214_9 = 0;
+    object->sprite->animationEndAction = 0;
+    object->sprite->hFlip ^= arguments[2];
+    return TRUE;
+}
+
+u8 FieldEventScript::sub_80ED7D4(FieldObject* object, ScriptContext* script, s32* arguments) {
+    object->sub_8047364(1);
+    object->sub_8047258(arguments[3]);
+    if (arguments[3]) {
+        object->field_21C = object->field_218;
+        object->field_214_8 = 1;
+    }
+    object->method18(arguments[0]);
+    object->sub_8047154(arguments[1], 0);
+    script->field_A0 |= 0x200;
+    return sub_80EA60C(&field_1C, script, object->sprite, arguments[3], arguments[2]);
+}
+
+u8 FieldEventScript::sub_80ED86C(ScriptContext* script, s32* arguments) {
+    FieldObject* object = *(((FieldManager*)parentProcess)->objects + arguments[0]);
+
+    object->sub_8047364(1);
+    object->sub_8047258(0);
+    if (arguments[4]) {
+        object->field_21C = object->field_218;
+        object->field_214_8 = 1;
+    }
+    object->method18(arguments[1]);
+    object->sub_8047154(arguments[2], 0);
+    object->script.field_A0 |= 0x200;
+    return sub_80EA60C(&field_1C, &object->script, object->sprite, arguments[4], arguments[3]);
+}
+
+s8 FieldEventScript::sub_80ED90C(ScriptContext* script, s32* arguments) {
+    LoadMenuItem* item = dword_3000FF8 + *arguments++;
+    u8* header = *(dword_83D6C58 + ((FieldManager*)parentProcess)->field_126);
+    u8 animation;
+    u8 flip;
+
+    header -= (header[3] << 8) | header[2];
+    item->id = *((u16*)header + *arguments++);
+    animation = *arguments++;
+    sub_803FDBC((item->id >> 12) - 1, item->id & 0xFFF, animation, &animation, &flip);
+    item->field_2 = animation;
+    item->field_3 = *arguments++;
+    item->field_4 = *arguments++;
+    item->field_5_0 = *arguments ^ flip;
+    item->field_5_1 = 0;
+    return TRUE;
+}
+
+s8 FieldEventScript::sub_80ED9A4(FieldObject* object, ScriptContext* script, s32* arguments) {
+    s32 index = arguments[1];
+
+    dword_3000FD0->field_554[index] = arguments[0];
+    if (arguments[0]) {
+        ((FieldManager*)parentProcess)->sub_8028D6C(arguments[0]);
+        if (index == 1) {
+            if (object) {
+                dword_3000FD0->field_55A_3 = object->objectIndex + 4;
+            } else {
+                dword_3000FD0->field_55A_3 = dword_3000FD0->field_548;
+            }
+        }
+        dword_3000FD0->field_55A_2 = index == 0;
+        dword_3000FD0->field_55A_1 = 1;
+    } else {
+        ((FieldManager*)parentProcess)->sub_8028D6C(dword_3000FD0->field_554[0]);
+        dword_3000FD0->field_55A_1 = dword_3000FD0->field_554[0] != 0;
+        dword_3000FD0->field_55A_3 = dword_3000FD0->field_554[0] != 0;
+    }
+    return TRUE;
+}
+
+// Script command: jumps to arguments[2] if a property of the object arguments[0] equals bit 0 of
+// arguments[1]; the property is chosen by arguments[1] >> 1: 0 spriteActive, 1 the object's script
+// running (field_A0 bit 0), 2 field_24_3 or field_24_7, 3 field_24_11, 4 the object is the leader's or
+// follower's field_33C_0, 5 field_20C_0.
+// https://decomp.me/scratch/TODO
+//! Nonmatching: regalloc. result (36 refs) outranks object in global-alloc, so result takes r3 and
+//! object goes to ip; the original has object in r3 and result in r4, with each case computing its
+//! value in r1 and copying it to r4. Tried result as bool/u8/s8/u16/u32, ternaries, an early
+//! initialization, `(x & 1) == (cond != 0)`, xor forms, a bool flag local and an inline helper.
+//! decomp-permuter (~/perm/sub_80EDAB0) found nothing in 15 min.
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_80EDAB0__16FieldEventScriptP13ScriptContextPi.s\"");
+#else
+s8 FieldEventScript::sub_80EDAB0(ScriptContext* script, s32* arguments) {
+    FieldObject* object = *(((FieldManager*)parentProcess)->objects + *arguments++);
+    ScriptContext* objectScript = &object->script;
+    int result;
+
+    switch (*arguments >> 1) {
+        case 0:
+            result = (*arguments & 1) == object->spriteActive;
+            break;
+        case 1:
+            if (objectScript->field_A0 & 1) {
+                result = *arguments & 1;
+            } else {
+                result = !(*arguments & 1);
+            }
+            break;
+        case 2:
+            if (object->field_24_3 | object->field_24_7) {
+                result = *arguments & 1;
+            } else {
+                result = !(*arguments & 1);
+            }
+            break;
+        case 3:
+            if (object->field_24_11) {
+                result = *arguments & 1;
+            } else {
+                result = !(*arguments & 1);
+            }
+            break;
+        case 4:
+            if ((s8)(((FieldManager*)parentProcess)->leader->field_33C_0 << 1) >> 1
+                    == object->objectIndex
+                || (s8)(((FieldManager*)parentProcess)->follower->field_33C_0 << 1) >> 1
+                       == object->objectIndex) {
+                result = *arguments & 1;
+            } else {
+                result = !(*arguments & 1);
+            }
+            break;
+        case 5:
+            result = (*arguments & 1) == object->field_20C_0;
+            break;
+    }
+    if (result) {
+        script->position = (u8*)arguments[1];
+    }
+    return TRUE;
+}
+#endif
+
+s8 FieldEventScript::sub_80EDBC4(FieldObject* object, ScriptContext* script, s32* arguments) {
+    int centerX;
+    int centerY;
+    int centerZ;
+    int moveX;
+    int moveY;
+    int moveZ;
+
+    if ((arguments[0] >> 4) & 1) {
+        arguments[2] <<= 4;
+        arguments[3] <<= 4;
+    }
+    switch (arguments[1]) {
+        case 0:
+            if (!((arguments[0] >> 1) & 1)) {
+                centerX = object->x / 256;
+            } else {
+                centerX = 0;
+            }
+            centerY = arguments[2];
+            centerZ = arguments[3];
+            moveX = 1;
+            moveY = 0;
+            moveZ = 0;
+            break;
+        case 1:
+            centerX = arguments[2];
+            if (!((arguments[0] >> 1) & 1)) {
+                centerY = object->y / 256;
+            } else {
+                centerY = 0;
+            }
+            centerZ = arguments[3];
+            moveX = 0;
+            moveY = 1;
+            moveZ = 0;
+            break;
+        case 2:
+            centerX = arguments[2];
+            centerY = arguments[3];
+            if (!((arguments[0] >> 1) & 1)) {
+                centerZ = (object->z + object->height) / 256;
+            } else {
+                centerZ = 0;
+            }
+            moveX = 0;
+            moveY = 0;
+            moveZ = 1;
+            break;
+    }
+    if (((arguments[0] >> 2) & 3) == 0) {
+        if (arguments[5] & 0x40) {
+            arguments[5] = (arguments[5] & 0xF) << 4;
+        } else {
+            arguments[5] <<= 8;
+        }
+        if (arguments[5]) {
+            object->sub_804794C(arguments[5]);
+        }
+    }
+    if (object->sub_8045F04(((arguments[0] >> 2) & 3) + 3, (arguments[0] >> 1) & 1, centerX, centerY,
+                            centerZ, moveX << 8, moveY << 8, moveZ << 8, 0x100, 0x100, 0x100,
+                            arguments[4], arguments[5], arguments[0] & 1 ? 1 : -1, -1)) {
+        script_enable_flag_2(this, object, script, NULL);
+        return FALSE;
+    }
+    return TRUE;
+}
+
+// Like sub_80EDBC4, around the object arguments[2]: the axis chosen by arguments[1] takes the center
+// from this object, the other two from arguments[2].
+s8 FieldEventScript::sub_80EDD48(FieldObject* object, ScriptContext* script, s32* arguments) {
+    FieldObject* other = *(((FieldManager*)parentProcess)->objects + arguments[2]);
+    int centerX;
+    int centerY;
+    int centerZ;
+    int moveX;
+    int moveY;
+    int moveZ;
+
+    switch (arguments[1]) {
+        case 0:
+            centerX = object->x / 256;
+            centerY = other->y / 256;
+            centerZ = (other->z + other->height) / 256;
+            moveX = 1;
+            moveY = 0;
+            moveZ = 0;
+            break;
+        case 1:
+            centerX = other->x / 256;
+            centerY = object->y / 256;
+            centerZ = (other->z + other->height) / 256;
+            moveX = 0;
+            moveY = 1;
+            moveZ = 0;
+            break;
+        case 2:
+            centerX = other->x / 256;
+            centerY = other->y / 256;
+            centerZ = (object->z + object->height) / 256;
+            moveX = 0;
+            moveY = 0;
+            moveZ = 1;
+            break;
+    }
+    if (((arguments[0] >> 1) & 3) == 0) {
+        if (arguments[4] & 0x40) {
+            arguments[4] = (arguments[4] & 0xF) << 4;
+        } else {
+            arguments[4] <<= 8;
+        }
+        if (arguments[4]) {
+            //! \bug Passes the object index arguments[2] instead of the speed arguments[4].
+            object->sub_804794C(arguments[2]);
+        }
+    }
+    if (object->sub_8045F04(((arguments[0] >> 1) & 3) + 3, 0, centerX, centerY, centerZ, moveX << 8,
+                            moveY << 8, moveZ << 8, 0x100, 0x100, 0x100, arguments[3], arguments[4],
+                            arguments[0] & 1 ? 1 : -1, arguments[2])) {
+        script_enable_flag_2(this, object, script, NULL);
+        return FALSE;
+    }
+    return TRUE;
+}
+
+// Turns the object to a direction chosen by arguments[0]: 0 the direction arguments[1], 1 its direction
+// plus arguments[1], 2 towards the object arguments[1] (-1: the leader), 3 a random direction.
+s8 FieldEventScript::sub_80EDEB4(FieldObject* object, ScriptContext* script, s32* arguments) {
+    u8 direction;
+
+    if (script->field_A0 & 2) {
+        object->sub_8046980();
+        script->field_A0 &= ~2;
+    }
+    if (script->field_A0 & 0x40) {
+        object->sub_8046A10();
+        script->field_A0 &= ~0x40;
+    }
+    switch (*arguments++) {
+        case 0:
+            direction = *arguments;
+            break;
+        case 1:
+            direction = (object->direction + *arguments) & 7;
+            break;
+        case 2: {
+            FieldObject* other;
+
+            if (*arguments == -1) {
+                *arguments = ((FieldManager*)parentProcess)->luigiLeads;
+            }
+            other = *(((FieldManager*)parentProcess)->objects + *arguments);
+            direction = sub_80EA670(&field_1C, object->x, object->y, other->x, other->y);
+            break;
+        }
+        case 3:
+            direction = sub_81DD77C(8, sub_8199F30());
+            break;
+    }
+    object->sub_80478AC(direction);
     return TRUE;
 }

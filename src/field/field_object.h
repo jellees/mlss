@@ -310,9 +310,9 @@ class FieldObject {
     struct Coldef* sub_80457E8(int cellX, int cellY, int* floor, int* ceiling, int* top);
     int sub_80458B0();
     int sub_8045A94(int mode, int relative, int targetX, int targetY, int targetZ, u16 speed);
-    int sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6, int arg7,
-                    int arg8, u16 arg9, u16 arg10, u16 arg11, u16 angle, u16 speed, int direction,
-                    int flags);
+    bool sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6, int arg7,
+                     int arg8, u16 arg9, u16 arg10, u16 arg11, u16 angle, u16 speed, int direction,
+                     int flags);
     void sub_80461B4(FieldObject** objects);
     void sub_80465D8();
     void sub_8046980();
