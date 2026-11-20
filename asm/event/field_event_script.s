@@ -133,7 +133,7 @@ _080ED812:
 	ldrb r1, [r5, #0x08]
 	str r1, [sp, #0x000]
 	adds r1, r6, #0x0
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -209,7 +209,7 @@ _080ED8B0:
 	ldrb r3, [r5, #0x10]
 	ldrb r4, [r5, #0x0C]
 	str r4, [sp, #0x000]
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -984,7 +984,7 @@ _080EDF4E:
 	ldr r3, [r4, #0x0C]
 	ldr r4, [r4, #0x10]
 	str r4, [sp, #0x000]
-	bl sub_80EA670
+	bl sub_80EA670__FPviiii
 	b _080EDF76
 _080EDF6A:
 	bl sub_8199F30
@@ -3542,7 +3542,7 @@ _080EF7FE:
 	movs r3, #0xFF
 	str r3, [sp, #0x004]
 	movs r3, #0x00
-	bl sub_80EA5C8
+	bl sub_80EA5C8__FPvP10ScriptSlotPUcT2UsUc
 	lsls r0, r4, #0x10
 	ldr r1, _080EF870 @ =0xFFFF0000
 	adds r0, r0, r1
@@ -3567,7 +3567,7 @@ _080EF82A:
 	str r2, [sp, #0x004]
 	adds r2, r7, #0x0
 	movs r3, #0x00
-	bl sub_80EA5C8
+	bl sub_80EA5C8__FPvP10ScriptSlotPUcT2UsUc
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -4050,7 +4050,7 @@ _080EFC46:
 	ldr r0, [r2, #0x00]
 	adds r0, #0x1C
 	adds r1, r5, #0x0
-	bl sub_80EA778
+	bl sub_80EA778__FPvP10ScriptSlot
 _080EFC5C:
 	mov r1, r9
 	lsls r0, r1, #0x10
@@ -4155,7 +4155,7 @@ _080EFD16:
 	ldr r0, [r4, #0x00]
 	adds r0, #0x1C
 	adds r1, r7, #0x0
-	bl sub_80EA778
+	bl sub_80EA778__FPvP10ScriptSlot
 _080EFD2C:
 	mov r1, r9
 	lsls r0, r1, #0x10
@@ -4993,7 +4993,7 @@ _080F03FE:
 	ldr r0, [r6, #0x00]
 	adds r0, #0x1C
 	adds r1, r5, #0x0
-	bl sub_80EA778
+	bl sub_80EA778__FPvP10ScriptSlot
 _080F0416:
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -5338,7 +5338,7 @@ sub_80F0678:
 	ldr r3, [r4, #0x0C]
 	ldr r4, [r4, #0x10]
 	str r4, [sp, #0x000]
-	bl sub_80EA670
+	bl sub_80EA670__FPviiii
 	lsls r0, r0, #0x18
 	lsrs r7, r0, #0x18
 _080F06BA:
@@ -6903,7 +6903,7 @@ sub_80F131C:
 	str r1, [sp, #0x000]
 	adds r1, r4, #0x0
 	add r2, sp, #0x00C
-	bl sub_80EA6D4
+	bl sub_80EA6D4__FPvPiN31
 	adds r4, #0x0C
 	ldm r4!, {r5}
 	movs r0, #0x03
@@ -7182,7 +7182,7 @@ _080F1522:
 	ldrb r3, [r5, #0x0C]
 	ldrb r4, [r5, #0x08]
 	str r4, [sp, #0x000]
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -7245,7 +7245,7 @@ _080F15A2:
 	ldrb r1, [r5, #0x04]
 	str r1, [sp, #0x000]
 	adds r1, r6, #0x0
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -7358,7 +7358,7 @@ _080F1696:
 	ldrb r3, [r5, #0x0C]
 	ldrb r4, [r5, #0x08]
 	str r4, [sp, #0x000]
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -7483,7 +7483,7 @@ _080F1792:
 	ldrb r3, [r5, #0x10]
 	ldrb r4, [r5, #0x0C]
 	str r4, [sp, #0x000]
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -7669,7 +7669,7 @@ _080F190A:
 	ldrb r1, [r5, #0x04]
 	str r1, [sp, #0x000]
 	adds r1, r7, #0x0
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -7781,7 +7781,7 @@ _080F19EC:
 	ldrb r1, [r5, #0x08]
 	str r1, [sp, #0x000]
 	adds r1, r7, #0x0
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004

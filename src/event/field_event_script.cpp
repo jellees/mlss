@@ -46,7 +46,7 @@ void FieldEventScript::sub_80EB248() {
             script = &object->script;
 
             if (!(script->field_A0 & 0x1B6)) {
-                CommonEvent::setVariable((u32*)((u8*)dword_3000FD0 + 0x4B0), script->field_18,
+                CommonEvent::setVariable((u32*)((u8*)dword_3000FD0 + 0x4B0), script->locals,
                                          CommonEvent::instance->field_38C, 0, 0x33, i);
                 sub_80F1E44(*objects, script);
             }
@@ -115,13 +115,13 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
     switch (type) {
         case 4:
             if (object != NULL && !(object->script.field_A0 & 1)) {
-                sub_80EA5C8(&field_1C, &object->script, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, &object->script, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         case 2:
             slot = &dword_3000FD0->scripts[1];
             if (!(slot->field_A0 & 1)) {
-                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)arg, NULL, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
                 if (fieldManager->objects[0]->collidesWithObjects) {
                     dword_3000FD0->field_55A_6 &= ~1;
@@ -140,29 +140,29 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
         case 3:
             slot = &dword_3000FD0->scripts[2];
             if (!(slot->field_A0 & 1) && dword_3000FD0->field_55A_0) {
-                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         case 0:
             slot = &dword_3000FD0->scripts[0];
             if (!(slot->field_A0 & 1)) {
-                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         case 1:
             slot = &dword_3000FD0->scripts[3];
             if (!(slot->field_A0 & 1)) {
-                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         default:
             if (object != NULL && !(object->script.field_A0 & 1)) {
-                sub_80EA5C8(&field_1C, &object->script, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, &object->script, (u8*)arg, NULL, 1, 0xFF);
                 break;
             }
             slot = &dword_3000FD0->scripts[1];
             if (!(slot->field_A0 & 1)) {
-                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)arg, NULL, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
                 if (fieldManager->objects[0]->collidesWithObjects) {
                     dword_3000FD0->field_55A_6 &= ~1;
@@ -179,17 +179,17 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
             }
             slot = &dword_3000FD0->scripts[2];
             if (!(slot->field_A0 & 1) && dword_3000FD0->field_55A_0) {
-                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)arg, NULL, 1, 0xFF);
                 break;
             }
             slot = &dword_3000FD0->scripts[3];
             if (!(slot->field_A0 & 1)) {
-                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)arg, NULL, 1, 0xFF);
                 break;
             }
             slot = &dword_3000FD0->scripts[0];
             if (!(slot->field_A0 & 1)) {
-                sub_80EA5C8(&field_1C, slot, arg, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
     }
@@ -349,7 +349,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 29:
             return sub_80EAE9C(&field_1C, script, arguments);
         case 30:
-            return sub_80EAE70(&field_1C, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EAE70(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 32:
             return sub_80EAE30(&field_1C, dword_3000FC8, script, arguments);
         case 33:
@@ -365,7 +365,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 42:
             return sub_80E9E10(&field_1C, script, arguments);
         case 43:
-            return sub_80EACDC(&field_1C, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EACDC(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 44:
             return sub_80F0A30(this, script, arguments);
         case 45:
@@ -381,20 +381,20 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 50:
             return sub_80EA064(&field_1C, script, arguments);
         case 51:
-            return sub_80EAC78(&field_1C, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EAC78(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 52:
             return sub_80EA144(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 53:
-            return sub_80EA358(&field_1C, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EA358(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 54:
-            return sub_80EAB98(&field_1C, script, arguments, (u8*)dword_3000FD0 + 0x4B0,
-                               CommonEvent::instance->field_38C, 0);
+            return sub_80EAB98(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0),
+                               CommonEvent::instance->field_38C, NULL);
         case 55:
             return sub_80EAB20(&field_1C, script, arguments);
         case 57:
-            return sub_80EAA84(&field_1C, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EAA84(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 58:
-            return sub_80EAA5C(&field_1C, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EAA5C(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 59:
             return sub_80EAA04(&field_1C, script, arguments);
         case 60:
@@ -406,7 +406,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 63:
             return script_cmd_conditional_jump(&field_1C, script, arguments);
         case 65:
-            return sub_80EA968(&field_1C, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EA968(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 66:
             return sub_80EA940(&field_1C, script, arguments);
         case 67:
@@ -424,7 +424,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 73:
             return sub_80EA88C(&field_1C, script, arguments);
         case 74:
-            return sub_80EA854(&field_1C, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EA854(&field_1C, script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
         case 75:
             return sub_80F1AEC(this, script, arguments);
         case 76:
@@ -717,21 +717,21 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32
         case 0:
         case 1:
             sub_80EC970_prepare(target, targetScript);
-            sub_80EA5C8(&field_1C, targetScript, (int)script->position, arguments[2], flags, index);
+            sub_80EA5C8(&field_1C, targetScript, script->position, (u8*)arguments[2], flags, index);
             script->position = (u8*)arguments[2];
             break;
         case 2:
         case 3:
             sub_80EC970_prepare(target, targetScript);
-            sub_80EA5C8(&field_1C, targetScript, arguments[2], 0, flags, index);
+            sub_80EA5C8(&field_1C, targetScript, (u8*)arguments[2], NULL, flags, index);
             break;
         case 4:
         case 5:
             if (!(targetScript->field_A0 & 1)) {
                 sub_80EC970_prepare(target, targetScript);
-                sub_80EA5C8(&field_1C, targetScript, (int)script->position, arguments[2], flags, index);
+                sub_80EA5C8(&field_1C, targetScript, script->position, (u8*)arguments[2], flags, index);
             } else {
-                sub_80EA584(&field_1C, targetScript, (int)script->position, arguments[2], flags, index);
+                sub_80EA584(&field_1C, targetScript, script->position, (u8*)arguments[2], flags, index);
             }
             script->position = (u8*)arguments[2];
             break;
@@ -739,9 +739,9 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32
         case 7:
             if (!(targetScript->field_A0 & 1)) {
                 sub_80EC970_prepare(target, targetScript);
-                sub_80EA5C8(&field_1C, targetScript, arguments[2], 0, flags, index);
+                sub_80EA5C8(&field_1C, targetScript, (u8*)arguments[2], NULL, flags, index);
             } else {
-                sub_80EA584(&field_1C, targetScript, arguments[2], 0, flags, index);
+                sub_80EA584(&field_1C, targetScript, (u8*)arguments[2], NULL, flags, index);
             }
             break;
     }
@@ -758,16 +758,16 @@ s8 FieldEventScript::sub_80ECB20(ScriptContext* script, s32* arguments) {
     switch (type) {
         case 0:
             slot = &dword_3000FD0->scripts[0];
-            sub_80EA5C8(&field_1C, slot, *arguments, 0, 1, 0xFF);
+            sub_80EA5C8(&field_1C, slot, (u8*)*arguments, NULL, 1, 0xFF);
             break;
         case 1:
             slot = &dword_3000FD0->scripts[3];
-            sub_80EA5C8(&field_1C, slot, *arguments, 0, 1, 0xFF);
+            sub_80EA5C8(&field_1C, slot, (u8*)*arguments, NULL, 1, 0xFF);
             break;
         case 2:
             slot = &dword_3000FD0->scripts[1];
             if (!(slot->field_A0 & 1)) {
-                sub_80EA5C8(&field_1C, slot, *arguments, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)*arguments, NULL, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
                 if (fieldManager->objects[0]->collidesWithObjects) {
                     dword_3000FD0->field_55A_6 &= ~1;
@@ -787,7 +787,7 @@ s8 FieldEventScript::sub_80ECB20(ScriptContext* script, s32* arguments) {
             // Its own variable (not the shared slot): the original keeps it in another register.
             ScriptSlot* slot = &dword_3000FD0->scripts[2];
             if (!(slot->field_A0 & 1) && dword_3000FD0->field_55A_0) {
-                sub_80EA5C8(&field_1C, slot, *arguments, 0, 1, 0xFF);
+                sub_80EA5C8(&field_1C, slot, (u8*)*arguments, NULL, 1, 0xFF);
             }
             break;
         }

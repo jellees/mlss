@@ -28,7 +28,7 @@ struct struc_3000388 {
     u16 field_3C_12 : 1;
     u16 field_3C_13 : 1;
     u16 field_3C_14 : 2;
-    u8 pad3[2];
+    u16 field_3E; // Flags set and cleared by sub_80EAB20
 };
 
 struct GameState {
@@ -53,7 +53,8 @@ struct GameState {
     // ...
     u8 pad1[0xA];
     struct struc_3000388 field_3C;
-    u8 pad1_2[0x4];
+    u16 field_7C; // Flags set by sub_80EAB20
+    u8 pad7E[0x2];
     struct OamData oamBuffers[2][128]; // Shadow OAM, double-buffered (field_888_3 selects)
 
     u16* oamCursor; // Where gOamNodesCopy writes next in oamBuffers
@@ -292,15 +293,17 @@ struct ScriptSlot {
     u8* field_4;
     u8* field_8; // Saved position (restored by sub_80EB838)
     u8* field_C; // Saved field_4
-    u8 pad_10[0x4];
+    u8* returnPosition; // Set by script_cmd_call, cleared when a script starts (sub_80EA530)
     u8* commandPosition; // Start of the current command
-    u32 field_18[0x21]; // Starts with the script's locals 0-0xF (getLocalVariable)
+    u32 locals[0x10];   // The script's locals 0-0xF (getLocalVariable)
+    s32 counters[0x10]; // Counter stack (field_A6 entries; sub_80EA928 pushes, sub_80EA904 pops)
+    s32 compareValue;   // Compared by sub_80EA8DC (set by sub_80EA91C)
     s32 field_9C;      // Counter (sub_80EB490)
     u16 field_A0;      // Flags
     u16 field_A2;      // Saved field_A0
     u8 field_A4;       // Index of a script slot (0-3) or field object (4+)
     u8 field_A5;       // Saved field_A4
-    u8 pad_A6;
+    u8 field_A6;       // Depth of the counter stack
     u8 currentOpcode;
 };
 
@@ -348,10 +351,57 @@ struct struc_839EC80 {
 struct struc_3000D44 {
     u8 pad_0[0x20];
     u16 field_20;
-    u8 pad_22[0x6];
+    s8 field_22; // field_22-field_24 are set by sub_801BBE4
+    s8 field_23;
+    s8 field_24;
+    s8 field_25;
+    u8 field_26;
+    u8 field_27;
     u8 field_28_0 : 1;
     u8 field_28_1 : 1;
     u8 field_28_2 : 4;
+    s8 field_29; // 1 or -1 (sub_80EAD98)
+};
+
+// An entry of struc_3000FC8 (4 of them, 16 bytes each)
+struct struc_3000FC8Entry {
+    struct Sprite* sprite;
+    u8 pad_4[0x8];
+    u8 field_C; // Id (sub_80EADEC, sub_80EAE30)
+    u8 pad_D[0x2];
+    u8 field_F; // Active
+};
+
+struct struc_3000FC8 {
+    struct struc_3000FC8Entry* entries;
+};
+
+struct struc_3000FB8 {
+    u8 pad_0[0x30];
+    u8 field_30; // Compared by sub_80EAE9C
+    u8 field_31; // Cleared by sub_80EB09C
+    u8 field_32;
+};
+
+// A 0x4C-byte entry of struc_3000FCC::field_4 (windows? see sub_80E9D50)
+struct struc_3000FCCEntry {
+    u8 pad_0[0x42];
+    u8 field_42_0 : 2;
+    u8 field_42_2 : 1; // sub_80EB05C waits until it is set
+    u8 pad_43[0x9];
+};
+
+struct struc_3000FCCData {
+    struct struc_3000FCCEntry entries[5]; // Count unknown (at least the ones before field_1B2)
+    u8 pad_17C[0x36];
+    u8 field_1B2; // Flags tested by sub_80EAEBC
+    u8 field_1B3; // Passed to sub_80E7118 by sub_80EB09C
+    u8 field_1B4; // Flags: script_cmd_wait_for_user_input waits while one is set
+};
+
+struct struc_3000FCC {
+    u32 field_0;
+    struct struc_3000FCCData* field_4;
 };
 
 struct Popup {
@@ -414,7 +464,10 @@ void sub_800063C();
 void sub_8017E34(void);
 void sub_8018218(void*, void*, size_t, int, int);
 void runtime_install_interrupt_callback(int, void (*)(void));
-void sub_80193B4(int, int, int);
+void sub_80193B4(int, u8, u8);
+void sub_8019460(int, u8, u8);
+void sub_8019508(u8, u8);
+bool sub_8019588(int);
 void stop_sfx_80195A8(int);
 void play_sfx_80195B4(int, int);
 u32 sub_80198B0(void*);
@@ -435,6 +488,8 @@ void sub_81994EC(int*, void*);
 void sub_801A6B0(void);
 void sub_801ABE8(u16, u16, int);
 void sub_801AD3C(void);
+void sub_801AD80(void);
+void sub_801ADC0(void);
 u16* sub_80FB790(u16, u8*);
 void sub_80184F4(void*);
 void sub_8019808(struct DecompressJob*);
@@ -491,57 +546,16 @@ void sub_80196E0(void);
 void sub_80FC198(void);
 void sub_812335C(void);
 void sub_8018A4C(u32);
-void sub_80EA5C8(void*, void*, int, int, int, int);
-void sub_80EA584(void*, void*, int, int, int, int);
 void sub_80E5BCC(void*, u8, s16, s16, u8, u8, u16, u16, u8, s32);
 u32 sub_80E9310(void*, u8**);
 void sub_8122E30(u8, u8, u8);
 // Command handlers of FieldEventScript::executeNextCommand
 s8 script_cmd_80F17C4(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 script_cmd_call(void*, struct ScriptContext*, s32*);
-s8 script_cmd_conditional_jump(void*, struct ScriptContext*, s32*);
-s8 script_cmd_end(void*, struct ScriptContext*);
-s8 script_cmd_return(void*, struct ScriptContext*);
 s8 script_cmd_show_reaction_bubble(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 script_cmd_start_dialogue(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 script_cmd_wait_for_user_input(void*, void*, struct ScriptContext*, s32*);
-s8 script_cmd_wait_frames(void*, struct ScriptContext*, s32*);
-s8 sub_80EA358(void*, struct ScriptContext*, s32*, void*);
-s8 sub_80EA478(void*, struct ScriptContext*, s32*);
-s8 sub_80EA854(void*, struct ScriptContext*, s32*, void*);
-s8 sub_80EA88C(void*, struct ScriptContext*, s32*);
-s8 sub_80EA8A4(void*, struct ScriptContext*, s32*);
-s8 sub_80EA8DC(void*, struct ScriptContext*, s32*);
-s8 sub_80EA904(void*, struct ScriptContext*);
-s8 sub_80EA91C(void*, struct ScriptContext*, s32*);
-s8 sub_80EA928(void*, struct ScriptContext*, s32*);
-s8 sub_80EA940(void*, struct ScriptContext*, s32*);
-s8 sub_80EA968(void*, struct ScriptContext*, s32*, void*);
-s8 sub_80EA9A8(void*, struct ScriptContext*, s32*);
-s8 sub_80EA9B8(void*, struct ScriptContext*, s32*);
-s8 sub_80EAA04(void*, struct ScriptContext*, s32*);
-s8 sub_80EAA5C(void*, struct ScriptContext*, s32*, void*);
-s8 sub_80EAA84(void*, struct ScriptContext*, s32*, void*);
-s8 sub_80EAB00(void*, struct ScriptContext*, s32*);
-s8 sub_80EAB20(void*, struct ScriptContext*, s32*);
-s8 sub_80EAC78(void*, struct ScriptContext*, s32*, void*);
-s8 sub_80EACDC(void*, struct ScriptContext*, s32*, void*);
-s8 sub_80EAD7C(void*, struct ScriptContext*, s32*);
-s8 sub_80EAD98(void*, struct ScriptContext*, s32*);
-s8 sub_80EADC4(void*, struct ScriptContext*, s32*);
-s8 sub_80EADEC(void*, void*, struct ScriptContext*, s32*);
-s8 sub_80EAE30(void*, void*, struct ScriptContext*, s32*);
-s8 sub_80EAE70(void*, struct ScriptContext*, s32*, void*);
-s8 sub_80EAE9C(void*, struct ScriptContext*, s32*);
-s8 sub_80EAEBC(void*, void*, struct ScriptContext*, s32*);
-s8 sub_80EAEE0(void*, struct ScriptContext*, s32*);
-s8 sub_80EAEF8(void*, struct ScriptContext*, s32*);
-s8 sub_80EAF4C(void*, struct ScriptContext*, s32*);
-s8 sub_80EAFB4(void*, struct ScriptContext*, s32*);
-s8 sub_80EB048(void*, void*, s32*);
-s8 sub_80EB05C(void*, void*, struct ScriptContext*, s32*);
-s8 sub_80EB09C(void*, void*, struct ScriptContext*, s32*);
-s8 sub_80EB11C(void*, void*, struct ScriptContext*, s32*);
+u32 sub_8199F30(void);                // Random number
+u32 sub_81DD77C(s32, u32);            // ARM veneer; random value below the first argument?
+s32 sub_8199480(s32, s32); // ArcTan2 >> 8; callers pass and get ints, though it truncates to s16/u8
 s8 sub_80ED750(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80ED7D4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
 s8 sub_80ED86C(struct FieldEventScript*, struct ScriptContext*, s32*);
@@ -649,7 +663,6 @@ s8 sub_80F1C0C(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80F1C34(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80F1CF8(struct FieldEventScript*, struct ScriptContext*, s32*);
 s8 sub_80F1C7C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*, u8, u8);
-s8 sub_80EAB98(void*, struct ScriptContext*, s32*, void*, void*, int);
 void sub_80E71D0(void*, u8, s16, s16, s16);
 void sub_802FAE4(struct FieldManager*, int, int);
 void sub_803C538(struct FieldManager*, int);
@@ -667,6 +680,12 @@ void sub_80FB448(u8 arg0, void* owner, void* object);
 void sub_80FC1F8(void);
 void sub_801BD30(void);
 void sub_801BC40(struct struc_3000D44*, u16, u8);
+void sub_80E9330(struct struc_3000FCC*, u16);
+void sub_80E6E68(struct struc_3000FCC*);
+void sub_80E6FB8(struct struc_3000FCC*, u16);
+void sub_80E7118(struct struc_3000FCC*, u8);
+void sub_801BBE4(struct struc_3000D44*, s8, s8, s8);
+void sub_80E8EE0(struct struc_3000FC8*, u8); // Hides entry n's sprite and clears field_F
 void sub_8054378(void*, u8, char*, u8);
 void sub_8123340(void);
 u8 sub_81251F0(void);
@@ -679,7 +698,7 @@ void sub_80F01D4(struct EVTS*, int, int);
 void sub_805952C(struct Process*, u16, u16);
 void sub_80298B0(void);
 void sub_80EF79C(struct EVTS*, void*);
-void sub_8019650(int, int, int);
+void sub_8019650(int, int, u8);
 void sub_8019628(int);
 u8 sub_80195F8(int);
 int sub_8019610(int);
@@ -784,11 +803,11 @@ extern struct struc_3000FD0* dword_3000FD0;
 // ARM code in ROM that is copied to IWRAM: the script bit reader sub_8000F9C ends where sub_8001010 starts.
 extern u8 sub_8000F9C[];
 extern u8 sub_8001010[];
-extern void* dword_3000FC8;
-extern void* dword_3000FCC;
+extern struct struc_3000FC8* dword_3000FC8;
+extern struct struc_3000FCC* dword_3000FCC;
 extern u8* dword_83D6C58[]; // Object list header per list index (see init_fobj_with_data_80FB128)
 extern u16 word_3000D3C;
-extern void* dword_3000FB8;
+extern struct struc_3000FB8* dword_3000FB8;
 extern struct GameState gGameState;
 extern void (*dword_3000C78)();
 extern void (*dword_3000C84)(void*, void*);

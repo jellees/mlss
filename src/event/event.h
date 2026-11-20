@@ -5,12 +5,12 @@
 
 // Script variable IDs: 0-0x3C are local variables (getLocalVariable), the others are
 // LOCAL_VARIABLE_COUNT + a flag (getFlag) or global variable (getGlobalVariable) number.
-#define SCRIPT_LOCAL_VARIABLE_COUNT 16 // Per script (ScriptSlot::field_18)
+#define SCRIPT_LOCAL_VARIABLE_COUNT 16 // Per script (ScriptSlot::locals)
 #define ENGINE_LOCAL_VARIABLE_COUNT 37 // Per engine (engineLocals)
-#define GLOBAL_LOCAL_VARIABLE_COUNT 8  // All engines (CommonEvent::field_0)
+#define COMMON_LOCAL_VARIABLE_COUNT 8  // All engines (CommonEvent::field_0)
 #define ENGINE_LOCAL_VARIABLE_START SCRIPT_LOCAL_VARIABLE_COUNT
-#define GLOBAL_LOCAL_VARIABLE_START (ENGINE_LOCAL_VARIABLE_START + ENGINE_LOCAL_VARIABLE_COUNT)
-#define LOCAL_VARIABLE_COUNT        (GLOBAL_LOCAL_VARIABLE_START + GLOBAL_LOCAL_VARIABLE_COUNT)
+#define COMMON_LOCAL_VARIABLE_START (ENGINE_LOCAL_VARIABLE_START + ENGINE_LOCAL_VARIABLE_COUNT)
+#define LOCAL_VARIABLE_COUNT        (COMMON_LOCAL_VARIABLE_START + COMMON_LOCAL_VARIABLE_COUNT)
 
 // Flag numbers. Only the saved flags are part of the save data.
 #define SAVED_FLAG_COUNT  7008 // CommonEvent::field_20
@@ -42,7 +42,7 @@ struct ScriptSlot;
 // this pointer.
 class CommonEvent {
   public:
-    u32 field_0[GLOBAL_LOCAL_VARIABLE_COUNT];    // Script locals 0x35-0x3C (getLocalVariable)
+    u32 field_0[COMMON_LOCAL_VARIABLE_COUNT];    // Script locals 0x35-0x3C (getLocalVariable)
     u32 field_20[SAVED_FLAG_COUNT / 32];         // Flags 0-0x1B5F
     u32 field_38C[2];                            // Flags 0x1B60-0x1B8F (passed to getFlag)
     u16 field_394[HALFWORD_VARIABLE_COUNT];      // Variables 0x1CD8-0x1D17 (getGlobalVariable)

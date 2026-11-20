@@ -54,8 +54,8 @@ u8* CommonEvent::readCommand(ScriptSlot* script, s32* arguments, void* arg2, u32
                     *arguments = value;
 
                     if (variableMask & (1 << i)) {
-                        *arguments = getVariable(engineLocals, script->field_18, engineFlags,
-                                                 scriptFlags, value);
+                        *arguments =
+                            getVariable(engineLocals, script->locals, engineFlags, scriptFlags, value);
                     } else if (*signs == 1) {
                         if ((value >> (*sizes - 1)) & 1) {
                             *arguments = (-1 << *sizes) | value;
@@ -240,20 +240,20 @@ u16 CommonEvent::incGlobalVariable(u16 id) {
 void CommonEvent::setLocalVariable(u32* engineLocals, u32* scriptLocals, s16 id, u32 value) {
     if (id < ENGINE_LOCAL_VARIABLE_START) {
         scriptLocals[id] = value;
-    } else if (id < GLOBAL_LOCAL_VARIABLE_START) {
+    } else if (id < COMMON_LOCAL_VARIABLE_START) {
         engineLocals[id - ENGINE_LOCAL_VARIABLE_START] = value;
     } else {
-        instance->field_0[id - GLOBAL_LOCAL_VARIABLE_START] = value;
+        instance->field_0[id - COMMON_LOCAL_VARIABLE_START] = value;
     }
 }
 
 u32 CommonEvent::getLocalVariable(u32* engineLocals, u32* scriptLocals, s16 id) {
     if (id < ENGINE_LOCAL_VARIABLE_START) {
         return scriptLocals[id];
-    } else if (id < GLOBAL_LOCAL_VARIABLE_START) {
+    } else if (id < COMMON_LOCAL_VARIABLE_START) {
         return engineLocals[id - ENGINE_LOCAL_VARIABLE_START];
     } else {
-        return instance->field_0[id - GLOBAL_LOCAL_VARIABLE_START];
+        return instance->field_0[id - COMMON_LOCAL_VARIABLE_START];
     }
 }
 

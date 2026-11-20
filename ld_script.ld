@@ -58,7 +58,6 @@ SECTIONS
         asm/text0805CCE0.o(.text);
         src/event/event.o(.text);
         src/event/text080E9D50.o(.text);
-        asm/event/event.o(.text);
         src/event/field_event_script.o(.text);
         asm/event/field_event_script.o(.text);
         asm/event/battle_ai.o(.text);

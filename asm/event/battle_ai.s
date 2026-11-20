@@ -941,7 +941,7 @@ _080F266A:
 	adds r0, r6, #0x0
 	adds r0, #0x1C
 	adds r1, r4, #0x0
-	bl sub_80EA778
+	bl sub_80EA778__FPvP10ScriptSlot
 _080F267E:
 	lsls r0, r7, #0x10
 	ldr r1, _080F27B0 @ =0xFFFF0000
@@ -1019,7 +1019,7 @@ _080F2704:
 	adds r0, r6, #0x0
 	adds r0, #0x1C
 	adds r1, r4, #0x0
-	bl sub_80EA778
+	bl sub_80EA778__FPvP10ScriptSlot
 _080F2718:
 	lsls r0, r7, #0x10
 	movs r1, #0x80
@@ -1079,7 +1079,7 @@ _080F277A:
 	adds r0, r6, #0x0
 	adds r0, #0x1C
 	adds r1, r4, #0x0
-	bl sub_80EA778
+	bl sub_80EA778__FPvP10ScriptSlot
 _080F278E:
 	lsls r0, r7, #0x10
 	movs r1, #0x80
@@ -3270,7 +3270,7 @@ _080F4324:
 	str r2, [sp, #0x000]
 	mov r1, r9
 	adds r2, r4, #0x0
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -3505,7 +3505,7 @@ _080F4504:
 	movs r1, #0x00
 	str r1, [sp, #0x000]
 	adds r1, r7, #0x0
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -3777,7 +3777,7 @@ _080F4714:
 	str r2, [sp, #0x000]
 	adds r1, r6, #0x0
 	adds r2, r4, #0x0
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -4017,7 +4017,7 @@ _080F4900:
 	movs r1, #0x00
 	str r1, [sp, #0x000]
 	adds r1, r5, #0x0
-	bl sub_80EA60C
+	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -11207,7 +11207,7 @@ _080F8762:
 	str r1, [sp, #0x000]
 	adds r1, r4, #0x0
 	add r2, sp, #0x004
-	bl sub_80EA6D4
+	bl sub_80EA6D4__FPvPiN31
 	ldr r2, [r4, #0x10]
 	movs r3, #0x00
 	ldr r0, [r4, #0x0C]
@@ -11353,7 +11353,7 @@ _080F8880:
 	adds r0, r3, #0x0
 	adds r0, #0x1C
 	adds r1, r4, #0x0
-	bl script_cmd_return
+	bl script_cmd_return__FPvP10ScriptSlot
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	pop {r4}
@@ -11515,7 +11515,7 @@ _080F899A:
 	str r1, [sp, #0x004]
 	adds r1, r4, #0x0
 	movs r3, #0x00
-	bl sub_80EA5C8
+	bl sub_80EA5C8__FPvP10ScriptSlotPUcT2UsUc
 	b _080F89FC
 _080F89B4:
 	cmp r6, #0x05
@@ -11542,7 +11542,7 @@ _080F89B4:
 	str r1, [sp, #0x004]
 	adds r1, r4, #0x0
 	movs r3, #0x00
-	bl sub_80EA5C8
+	bl sub_80EA5C8__FPvP10ScriptSlotPUcT2UsUc
 	adds r3, r4, #0x0
 	adds r3, #0xFD
 	movs r1, #0x0F
@@ -12116,7 +12116,7 @@ sub_80F8EB0:
 	str r0, [sp, #0x004]
 	adds r0, r3, #0x0
 	movs r3, #0x00
-	bl sub_80EA5C8
+	bl sub_80EA5C8__FPvP10ScriptSlotPUcT2UsUc
 	add sp, #0x008
 	pop {r0}
 	bx r0
