@@ -295,7 +295,7 @@ struct ScriptSlot {
     u8* field_C; // Saved field_4
     u8* returnPosition; // Set by script_cmd_call, cleared when a script starts (sub_80EA530)
     u8* commandPosition; // Start of the current command
-    u32 locals[0x10];   // The script's locals 0-0xF (getLocalVariable)
+    u32 registers[0x10]; // Script registers 0-0xF (getRegister)
     s32 counters[0x10]; // Counter stack (field_A6 entries; sub_80EA928 pushes, sub_80EA904 pops)
     s32 compareValue;   // Compared by sub_80EA8DC (set by sub_80EA91C)
     s32 field_9C;      // Counter (sub_80EB490)

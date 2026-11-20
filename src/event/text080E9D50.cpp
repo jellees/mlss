@@ -233,7 +233,7 @@ s8 sub_80EA064(void* engine, ScriptSlot* script, s32* arguments) {
 //! the order 0, 1, 2, so case 0 can't fall through into case 2 (156-165 lines off), and a copy of
 //! the bit code in category 5 would still have to skip the count code after the inner switch,
 //! which unknown categories run.
-s8 sub_80EA144(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals) {
+s8 sub_80EA144(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters) {
     s32 destination = *arguments++;
     bool result;
     s16 value;
@@ -343,7 +343,7 @@ s8 sub_80EA144(void* engine, ScriptSlot* script, s32* arguments, u32* engineLoca
             break;
     }
     if (destination >= 0) {
-        CommonEvent::setVariable(engineLocals, script->locals, 0, 0, destination, result);
+        CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, destination, result);
     }
     return TRUE;
 }
@@ -352,7 +352,7 @@ s8 sub_80EA144(void* engine, ScriptSlot* script, s32* arguments, u32* engineLoca
 // arguments[1] (bits 7-9 select the count array; 0xFF counts as 0) or, for item category 5, its bit
 // in the bit array at 0xB2.
 //! \bug An unknown item category stores an unset value.
-s8 sub_80EA358(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals) {
+s8 sub_80EA358(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters) {
     s32 destination = *arguments++;
     u32 value;
 
@@ -390,7 +390,7 @@ s8 sub_80EA358(void* engine, ScriptSlot* script, s32* arguments, u32* engineLoca
         }
     }
 
-    CommonEvent::setVariable(engineLocals, script->locals, 0, 0, destination, value);
+    CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, destination, value);
 
     return TRUE;
 }
@@ -635,13 +635,13 @@ bool script_test_condition(void* engine, u8 operation, s32 left, s32 right) {
 
 // Stores gGameState.field_8C0 in the script value arguments[0] if arguments[1] is 0.
 //! \bug Any other arguments[1] stores an unset value.
-s8 sub_80EA854(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals) {
+s8 sub_80EA854(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters) {
     u32 value;
 
     if (arguments[1] == 0) {
         value = gGameState.field_8C0;
     }
-    CommonEvent::setVariable(engineLocals, script->locals, 0, 0, arguments[0], value);
+    CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0], value);
     return TRUE;
 }
 
@@ -718,8 +718,8 @@ s8 sub_80EA940(void* engine, ScriptSlot* script, s32* arguments) {
 }
 
 // Stores a random value below arguments[1] in the script value arguments[0].
-s8 sub_80EA968(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals) {
-    CommonEvent::setVariable(engineLocals, script->locals, 0, 0, arguments[0],
+s8 sub_80EA968(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+    CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                              sub_81DD77C(arguments[1], sub_8199F30()));
     return TRUE;
 }
@@ -795,14 +795,15 @@ s8 sub_80EAA04(void* engine, ScriptSlot* script, s32* arguments) {
 }
 
 // Stores gGameState.field_2E in the script value arguments[0].
-s8 sub_80EAA5C(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals) {
-    CommonEvent::setVariable(engineLocals, script->locals, 0, 0, arguments[0], gGameState.field_2E);
+s8 sub_80EAA5C(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+    CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
+                             gGameState.field_2E);
     return TRUE;
 }
 
 // Stores gGameState.field_2A (arguments[1] = 0), inputPressed (1) or 0 in the script value
 // arguments[0].
-s8 sub_80EAA84(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals) {
+s8 sub_80EAA84(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters) {
     u16 keys = arguments[1];
 
     if (keys == 0) {
@@ -812,7 +813,7 @@ s8 sub_80EAA84(void* engine, ScriptSlot* script, s32* arguments, u32* engineLoca
     } else {
         keys = 0;
     }
-    CommonEvent::setVariable(engineLocals, script->locals, 0, 0, arguments[0], keys);
+    CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0], keys);
     return TRUE;
 }
 
@@ -861,7 +862,7 @@ s8 script_cmd_conditional_jump(void* engine, ScriptSlot* script, s32* arguments)
 // Stores arguments[2] OP arguments[3] in the script value arguments[0], with operation arguments[1]:
 // 0: arguments[2] alone, 1-5: + - * / %, 6-7: << >>, 8-10: & | ^, 11: !arguments[2],
 // 12: ~arguments[2].
-s8 sub_80EAB98(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals, u32* engineFlags,
+s8 sub_80EAB98(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters, u32* engineFlags,
                u32* scriptFlags) {
     switch (arguments[1]) {
         case 0:
@@ -916,7 +917,7 @@ s8 sub_80EAB98(void* engine, ScriptSlot* script, s32* arguments, u32* engineLoca
             break;
     }
 
-    CommonEvent::setVariable(engineLocals, script->locals, engineFlags, scriptFlags, arguments[0],
+    CommonEvent::setVariable(engineRegisters, script->registers, engineFlags, scriptFlags, arguments[0],
                              arguments[2]);
     return TRUE;
 }
@@ -924,7 +925,7 @@ s8 sub_80EAB98(void* engine, ScriptSlot* script, s32* arguments, u32* engineLoca
 // Stores field_E (arguments[2] = 0), field_12 (1), field_14 (2) or field_18 (3) of brother
 // arguments[1]'s struc_3000FF4 in the script value arguments[0].
 //! \bug Any other arguments[2] stores an unset value.
-s8 sub_80EAC78(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals) {
+s8 sub_80EAC78(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters) {
     s32 destination = *arguments++;
     struc_3000FF4* entry = &dword_3000FF4[*arguments++];
     u16 value;
@@ -946,31 +947,31 @@ s8 sub_80EAC78(void* engine, ScriptSlot* script, s32* arguments, u32* engineLoca
             value = entry->field_18;
             break;
     }
-    CommonEvent::setVariable(engineLocals, script->locals, 0, 0, destination, value);
+    CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, destination, value);
     return TRUE;
 }
 
 // Stores field_22 (arguments[1] = 0), field_23 (1), field_25 (2) or field_24 (3) of dword_3000D44
 // in the script value arguments[0].
-s8 sub_80EACDC(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals) {
+s8 sub_80EACDC(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters) {
     switch (arguments[1]) {
         case 0:
-            CommonEvent::setVariable(engineLocals, script->locals, 0, 0, arguments[0],
+            CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                                      dword_3000D44->field_22);
             break;
 
         case 1:
-            CommonEvent::setVariable(engineLocals, script->locals, 0, 0, arguments[0],
+            CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                                      dword_3000D44->field_23);
             break;
 
         case 2:
-            CommonEvent::setVariable(engineLocals, script->locals, 0, 0, arguments[0],
+            CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                                      dword_3000D44->field_25);
             break;
 
         case 3:
-            CommonEvent::setVariable(engineLocals, script->locals, 0, 0, arguments[0],
+            CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                                      dword_3000D44->field_24);
             break;
     }
@@ -1040,8 +1041,9 @@ s8 sub_80EAE30(void* engine, struc_3000FC8* entries, ScriptSlot* script, s32* ar
 }
 
 // Stores dword_3000FB8->field_30 in the script value arguments[0].
-s8 sub_80EAE70(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals) {
-    CommonEvent::setVariable(engineLocals, script->locals, 0, 0, arguments[0], dword_3000FB8->field_30);
+s8 sub_80EAE70(void* engine, ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+    CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
+                             dword_3000FB8->field_30);
     return TRUE;
 }
 

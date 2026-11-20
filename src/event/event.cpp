@@ -12,9 +12,9 @@ static u32 (*sScriptReader)(ScriptSlot* script, s16* bitPosition, int bitCount);
  * Reads the next command.
  *
  * \param arguments The decoded arguments that are part of this opcode.
- * \param engineLocals A local variable space (0x0010–0x0034) that each script interpreter use.
+ * \param engineRegisters The registers 0x10-0x34 of the script engine (field, battle or menu).
  */
-u8* CommonEvent::readCommand(ScriptSlot* script, s32* arguments, void* arg2, u32* engineLocals,
+u8* CommonEvent::readCommand(ScriptSlot* script, s32* arguments, void* unused, u32* engineRegisters,
                              u32* engineFlags, u32* scriptFlags) {
     ScriptSlot* slot = script;
     s16 bitPosition = 8;
@@ -48,24 +48,24 @@ u8* CommonEvent::readCommand(ScriptSlot* script, s32* arguments, void* arg2, u32
             signs = instance->field_568 + offset;
 
             for (i = 0; i < count; i++) {
-                if (!(*sizes & ARGUMENT_SIZE_RAW)) {
+                if (!(*sizes & ARGUMENT_ALIGNED_WORD)) {
                     s32 value = sScriptReader(slot, &bitPosition, *sizes);
 
                     *arguments = value;
 
                     if (variableMask & (1 << i)) {
-                        *arguments =
-                            getVariable(engineLocals, script->locals, engineFlags, scriptFlags, value);
+                        *arguments = getVariable(engineRegisters, script->registers, engineFlags,
+                                                 scriptFlags, value);
                     } else if (*signs == 1) {
                         if ((value >> (*sizes - 1)) & 1) {
                             *arguments = (-1 << *sizes) | value;
                         }
                     }
                 } else {
-                    // Byte-aligned 32-bit value
                     if (bitPosition != 8) {
                         slot->position++;
                     }
+
                     *arguments = *slot->position++;
                     *arguments |= *slot->position++ << 8;
                     *arguments |= *slot->position++ << 16;
@@ -237,32 +237,32 @@ u16 CommonEvent::incGlobalVariable(u16 id) {
     return 0;
 }
 
-void CommonEvent::setLocalVariable(u32* engineLocals, u32* scriptLocals, s16 id, u32 value) {
-    if (id < ENGINE_LOCAL_VARIABLE_START) {
-        scriptLocals[id] = value;
-    } else if (id < COMMON_LOCAL_VARIABLE_START) {
-        engineLocals[id - ENGINE_LOCAL_VARIABLE_START] = value;
+void CommonEvent::setRegister(u32* engineRegisters, u32* scriptRegisters, s16 id, u32 value) {
+    if (id < ENGINE_REGISTER_START) {
+        scriptRegisters[id] = value;
+    } else if (id < COMMON_REGISTER_START) {
+        engineRegisters[id - ENGINE_REGISTER_START] = value;
     } else {
-        instance->field_0[id - COMMON_LOCAL_VARIABLE_START] = value;
+        instance->registers[id - COMMON_REGISTER_START] = value;
     }
 }
 
-u32 CommonEvent::getLocalVariable(u32* engineLocals, u32* scriptLocals, s16 id) {
-    if (id < ENGINE_LOCAL_VARIABLE_START) {
-        return scriptLocals[id];
-    } else if (id < COMMON_LOCAL_VARIABLE_START) {
-        return engineLocals[id - ENGINE_LOCAL_VARIABLE_START];
+u32 CommonEvent::getRegister(u32* engineRegisters, u32* scriptRegisters, s16 id) {
+    if (id < ENGINE_REGISTER_START) {
+        return scriptRegisters[id];
+    } else if (id < COMMON_REGISTER_START) {
+        return engineRegisters[id - ENGINE_REGISTER_START];
     } else {
-        return instance->field_0[id - COMMON_LOCAL_VARIABLE_START];
+        return instance->registers[id - COMMON_REGISTER_START];
     }
 }
 
-void CommonEvent::setVariable(u32* engineLocals, u32* scriptLocals, u32* engineFlags, u32* scriptFlags,
-                              s16 id, u32 value) {
-    if (id < LOCAL_VARIABLE_COUNT) {
-        setLocalVariable(engineLocals, scriptLocals, id, value);
+void CommonEvent::setVariable(u32* engineRegisters, u32* scriptRegisters, u32* engineFlags,
+                              u32* scriptFlags, s16 id, u32 value) {
+    if (id < REGISTER_COUNT) {
+        setRegister(engineRegisters, scriptRegisters, id, value);
     } else {
-        id -= LOCAL_VARIABLE_COUNT;
+        id -= REGISTER_COUNT;
 
         if (id < FLAG_COUNT) {
             setFlag(engineFlags, scriptFlags, id, value);
@@ -272,13 +272,13 @@ void CommonEvent::setVariable(u32* engineLocals, u32* scriptLocals, u32* engineF
     }
 }
 
-u32 CommonEvent::getVariable(u32* engineLocals, u32* scriptLocals, u32* engineFlags, u32* scriptFlags,
-                             s16 id) {
-    if (id < LOCAL_VARIABLE_COUNT) {
-        return getLocalVariable(engineLocals, scriptLocals, id);
+u32 CommonEvent::getVariable(u32* engineRegisters, u32* scriptRegisters, u32* engineFlags,
+                             u32* scriptFlags, s16 id) {
+    if (id < REGISTER_COUNT) {
+        return getRegister(engineRegisters, scriptRegisters, id);
     }
 
-    id -= LOCAL_VARIABLE_COUNT;
+    id -= REGISTER_COUNT;
 
     if (id < FLAG_COUNT) {
         return getFlag(engineFlags, scriptFlags, id);

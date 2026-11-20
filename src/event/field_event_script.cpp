@@ -46,7 +46,7 @@ void FieldEventScript::sub_80EB248() {
             script = &object->script;
 
             if (!(script->field_A0 & 0x1B6)) {
-                CommonEvent::setVariable((u32*)((u8*)dword_3000FD0 + 0x4B0), script->locals,
+                CommonEvent::setVariable((u32*)((u8*)dword_3000FD0 + 0x4B0), script->registers,
                                          CommonEvent::instance->field_38C, 0, 0x33, i);
                 sub_80F1E44(*objects, script);
             }
