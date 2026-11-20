@@ -1092,7 +1092,7 @@ void FieldManager::update_field_8023DD4() {
             }
         }
 
-        if (sub_8025D24(5) && CommonEvent::getFlag(CommonEvent::instance->field_38C, 0, 0x224)) {
+        if (sub_8025D24(5) && CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x224)) {
             if (!field_20B_7) {
                 sub_8027030(2, 8, 0, 0xFFFF, 0xFFFF);
                 play_sfx_80195B4(0x54, -1);
@@ -1880,7 +1880,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
                 // Field rock, the rocks that you can break in game. They are gone forever once broken.
                 FieldObject* object = new (1, "FRCK", 1) FieldObject(roomId, i);
 
-                if (CommonEvent::getFlag(CommonEvent::instance->field_38C, 0,
+                if (CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0,
                                          object->field_22C_10 + 0x1160)
                     == 1) {
                     object->field_20C_0 = 0;
@@ -1964,8 +1964,8 @@ void FieldManager::sub_8026C78() {
             case 0xA0:
             case 0xC0:
                 field_134[field_1F4].field_0_0 = flags != 0xA0;
-                field_134[field_1F4].field_0_1 =
-                    CommonEvent::getFlag(CommonEvent::instance->field_38C, 0, (u16)(index + 0x1360));
+                field_134[field_1F4].field_0_1 = CommonEvent::getFlag(
+                    CommonEvent::instance->fieldEngineFlags, 0, (u16)(index + 0x1360));
                 field_134[field_1F4].field_1 = entry[1];
                 field_134[field_1F4].field_2 = entry[2];
                 field_134[field_1F4].field_3 =
@@ -3644,7 +3644,7 @@ void FieldManager::sub_802A740() {
     u8 field_2B8_4Copy;
     int start;
 
-    if (CommonEvent::getFlag(CommonEvent::instance->field_38C, 0, 0x2A2)) {
+    if (CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x2A2)) {
         leader->field_368->field_16_0 |= 0x7F;
         follower->field_368->field_16_0 |= 0x7F;
     } else {
@@ -4911,13 +4911,13 @@ void FieldManager::sub_802DA10() {
         case 1:
             if (brothersForm == BROTHERS_FORM_NORMAL || brothersForm == BROTHERS_FORM_MINI_MARIO) {
                 if (follower->objectIndex == BROTHER_MARIO) {
-                    if (CommonEvent::getFlag(CommonEvent::instance->field_38C, 0, 0x206)) {
+                    if (CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x206)) {
                         sub_80339B8(this);
                     } else {
                         sub_8039078(this);
                     }
                 } else {
-                    if (CommonEvent::getFlag(CommonEvent::instance->field_38C, 0, 0x207)) {
+                    if (CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x207)) {
                         sub_8035974(this);
                     } else {
                         sub_8039078(this);
@@ -4934,13 +4934,13 @@ void FieldManager::sub_802DA10() {
         case 2:
             if (brothersForm == BROTHERS_FORM_NORMAL) {
                 if (follower->objectIndex == BROTHER_MARIO) {
-                    if (CommonEvent::getFlag(CommonEvent::instance->field_38C, 0, 0x20A)) {
+                    if (CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x20A)) {
                         sub_8036E14(this);
                     } else {
                         sub_8039A00(this);
                     }
                 } else {
-                    if (CommonEvent::getFlag(CommonEvent::instance->field_38C, 0, 0x20B)) {
+                    if (CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x20B)) {
                         sub_8038140(this);
                     } else {
                         sub_8039B5C(this);
@@ -5016,7 +5016,7 @@ void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct s
     changed = 0;
     if (!player->field_2B5_0 && !player->field_2B5_3 && arg != NULL
         && sub_8025D24((player->field_352_7 ^ 1) + 2)
-        && CommonEvent::getFlag(CommonEvent::instance->field_38C, 0,
+        && CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0,
                                 word_839F984[player->objectIndex * 2 + index])) {
         do {
             data->field_10[index]++;
@@ -5026,7 +5026,7 @@ void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct s
                 value = list[0];
             }
             flag = word_839F98C[player->objectIndex * 28 + index * 14 + value];
-        } while (flag != 0 && !CommonEvent::getFlag(CommonEvent::instance->field_38C, 0, flag));
+        } while (flag != 0 && !CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, flag));
         changed = 1;
     }
     data->field_2 = list[(s8)data->field_10[index]];

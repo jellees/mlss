@@ -27,7 +27,7 @@ FieldMonster::FieldMonster(int roomId, int index) : FieldObject(roomId, index) {
     }
     field_33C_0 = 1;
     field_33C_1 = 0;
-    if (CommonEvent::getFlag(CommonEvent::instance->field_38C, 0, field_22C_10 + 0x960) == 1) {
+    if (CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, field_22C_10 + 0x960) == 1) {
         field_20C_0 = 0;
         spriteActive = 0;
         if (field_344 != NULL) {
@@ -118,7 +118,7 @@ void FieldMonster::defeat() {
         field_344->startFlicker(FIELD_OBJECT_FLICKER_OUT);
     }
 
-    CommonEvent::setFlag(CommonEvent::instance->field_38C, 0, field_22C_10 + 0x960, 1);
+    CommonEvent::setFlag(CommonEvent::instance->fieldEngineFlags, 0, field_22C_10 + 0x960, 1);
 }
 
 /**

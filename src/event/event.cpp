@@ -37,15 +37,15 @@ u8* CommonEvent::readCommand(ScriptSlot* script, s32* arguments, void* unused, u
             variableMask = sScriptReader(slot, &bitPosition, count);
         }
 
-        if (instance->field_55C[slot->currentOpcode] != 0) {
+        if (instance->hasResultVariable[slot->currentOpcode] != 0) {
             *arguments++ = sScriptReader(slot, &bitPosition, RESULT_VARIABLE_BITS);
         }
 
         if (count != 0) {
-            u16 offset = instance->field_56C[slot->currentOpcode];
+            u16 offset = instance->argumentPropertyIndex[slot->currentOpcode];
 
-            sizes = instance->field_564 + offset;
-            signs = instance->field_568 + offset;
+            sizes = instance->argumentSizes + offset;
+            signs = instance->argumentSigns + offset;
 
             for (i = 0; i < count; i++) {
                 if (!(*sizes & ARGUMENT_ALIGNED_WORD)) {
@@ -91,7 +91,7 @@ u8 CommonEvent::getFlag(u32* engineFlags, u32* scriptFlags, u16 flag) {
     if (flag < ENGINE_FLAG_START) {
         u16 bit = flag & 0x1F;
 
-        flag = (instance->field_20[flag >> 5] >> bit) & 1;
+        flag = (instance->savedFlags[flag >> 5] >> bit) & 1;
     } else if (flag < SCRIPT_FLAG_START) {
         u16 index = flag - ENGINE_FLAG_START;
         u16 bit = index & 0x1F;
@@ -120,7 +120,7 @@ void CommonEvent::setFlag(u32* engineFlags, u32* scriptFlags, u16 flag, u8 value
     u16 bit;
 
     if (flag < ENGINE_FLAG_START) {
-        word = &instance->field_20[flag >> 5];
+        word = &instance->savedFlags[flag >> 5];
     } else if (flag < SCRIPT_FLAG_START) {
         flag -= ENGINE_FLAG_START;
         word = &engineFlags[flag >> 5];
@@ -144,13 +144,13 @@ u16 CommonEvent::getGlobalVariable(u16 id) {
 
     if (id < TEMPORARY_BYTE_VARIABLE_START) {
         id -= SAVED_BYTE_VARIABLE_START;
-        value = instance->field_414[id];
+        value = instance->savedByteVariables[id];
     } else if (id < HALFWORD_VARIABLE_START) {
         id -= TEMPORARY_BYTE_VARIABLE_START;
-        value = instance->field_53C[id];
+        value = instance->temporaryByteVariables[id];
     } else if (id < GLOBAL_VARIABLE_END) {
         id -= HALFWORD_VARIABLE_START;
-        value = instance->field_394[id];
+        value = instance->halfwordVariables[id];
     } else {
         value = 0;
     }
@@ -160,13 +160,13 @@ u16 CommonEvent::getGlobalVariable(u16 id) {
 void CommonEvent::setGlobalVariable(u16 id, u16 value) {
     if (id < TEMPORARY_BYTE_VARIABLE_START) {
         id -= SAVED_BYTE_VARIABLE_START;
-        instance->field_414[id] = value;
+        instance->savedByteVariables[id] = value;
     } else if (id < HALFWORD_VARIABLE_START) {
         id -= TEMPORARY_BYTE_VARIABLE_START;
-        instance->field_53C[id] = value;
+        instance->temporaryByteVariables[id] = value;
     } else if (id < GLOBAL_VARIABLE_END) {
         id -= HALFWORD_VARIABLE_START;
-        instance->field_394[id] = value;
+        instance->halfwordVariables[id] = value;
     }
 }
 
@@ -209,11 +209,11 @@ u16 CommonEvent::decGlobalVariable(u16 id) {
         u16 value;
 
         id -= HALFWORD_VARIABLE_START;
-        value = instance->field_394[id];
+        value = instance->halfwordVariables[id];
         if (value != 0) {
             value--;
         }
-        instance->field_394[id] = value;
+        instance->halfwordVariables[id] = value;
         return value;
     }
     return 0;
@@ -227,11 +227,11 @@ u16 CommonEvent::incGlobalVariable(u16 id) {
         u16 value;
 
         id -= HALFWORD_VARIABLE_START;
-        value = instance->field_394[id];
+        value = instance->halfwordVariables[id];
         if (value < 0xFFFF) {
             value++;
         }
-        instance->field_394[id] = value;
+        instance->halfwordVariables[id] = value;
         return value;
     }
     return 0;
