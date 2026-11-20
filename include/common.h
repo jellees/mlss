@@ -288,20 +288,20 @@ struct struc_3000FF4 {
 
 // A 0xA8-byte script slot. ScriptContext (the script of a field object) extends it.
 struct ScriptSlot {
-    u8* field_0; // Read position in the script
+    u8* position; // Read position in the script
     u8* field_4;
-    u8* field_8; // Saved field_0 (restored by sub_80EB838)
+    u8* field_8; // Saved position (restored by sub_80EB838)
     u8* field_C; // Saved field_4
     u8 pad_10[0x4];
-    u8* field_14; // Start of the current command
-    u32 field_18[0x21]; // Starts with the script's locals 0-0xF (sub_80E9C14)
+    u8* commandPosition; // Start of the current command
+    u32 field_18[0x21]; // Starts with the script's locals 0-0xF (getLocalVariable)
     s32 field_9C;      // Counter (sub_80EB490)
     u16 field_A0;      // Flags
     u16 field_A2;      // Saved field_A0
     u8 field_A4;       // Index of a script slot (0-3) or field object (4+)
     u8 field_A5;       // Saved field_A4
     u8 pad_A6;
-    u8 field_A7; // Opcode of the current command
+    u8 currentOpcode;
 };
 
 struct struc_3000FD0 {

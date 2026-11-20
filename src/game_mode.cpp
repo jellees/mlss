@@ -36,7 +36,7 @@ void GameMode::make_fldm_801AF5C(int fromSave) {
 
 void GameMode::sub_801AFA0() {
     if (stru_3000D40.field_0_0) {
-        CommonEvent::sub_80E9AF8();
+        CommonEvent::removeScriptReader();
         CommonEvent::destroy();
         sub_801BD30();
         CpuFill32(0, &stru_3000D40, sizeof(stru_3000D40));
@@ -48,7 +48,7 @@ void GameMode::sub_801AFE4(int arg0) {
     if (!stru_3000D40.field_0_0) {
         sub_801BD50(1);
         CommonEvent::create();
-        CommonEvent::sub_80E9B0C();
+        CommonEvent::initScriptReader();
         stru_3000D40.field_0_0 = 1;
     }
 }

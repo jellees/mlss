@@ -5,18 +5,17 @@
 #include "event/event.h"
 
 CommonEvent* CommonEvent::instance;
-u32 (*CommonEvent::dword_3000FC4)(ScriptSlot* script, s16* bitPosition, int bitCount);
 
-// Reads the next command of the script: stores its opcode in field_A7 and decodes its arguments
-// into command, then returns the new read position. The arguments are bit-packed (bitPosition is
-// the position in the current byte, 8 = byte-aligned); the tables in instance give their count
-// and sizes per opcode. The first value read is a mask of the arguments that are variable numbers
-// to look up (sub_80E9CA8, which uses shared, flags and flags2) instead of literal values. arg2 is
-// unused (the callers pass instance).
-//! Possible fake match: the `slot` copy of `script` (the original keeps the parameter on the stack
-//! for the sub_80E9CA8 call and a copy in r5 for everything else).
-u8* CommonEvent::script_read_next_line(ScriptSlot* script, s32* command, void* arg2, u32* shared,
-                                       u32* flags, u32* flags2) {
+static u32 (*sScriptReader)(ScriptSlot* script, s16* bitPosition, int bitCount);
+
+/**
+ * Reads the next command.
+ *
+ * \param arguments The decoded arguments that are part of this opcode.
+ * \param engineLocals A local variable space (0x0010–0x0034) that each script interpreter use.
+ */
+u8* CommonEvent::readCommand(ScriptSlot* script, s32* arguments, void* arg2, u32* engineLocals,
+                             u32* engineFlags, u32* scriptFlags) {
     ScriptSlot* slot = script;
     s16 bitPosition = 8;
     u32 variableMask;
@@ -24,86 +23,91 @@ u8* CommonEvent::script_read_next_line(ScriptSlot* script, s32* command, void* a
     u8* sizes;
     u8* signs;
     s16 i;
-    u8* position = slot->field_0;
+
+    u8* position = slot->position;
 
     if (position != 0) {
-        slot->field_14 = position;
-        slot->field_A7 = *position;
-        slot->field_0 = position + 1;
+        slot->commandPosition = position;
+        slot->currentOpcode = *position;
+        slot->position = position + 1;
 
-        count = instance->field_560[slot->field_A7];
+        count = instance->argumentCount[slot->currentOpcode];
+
         if (count != 0) {
-            variableMask = dword_3000FC4(slot, &bitPosition, count);
+            variableMask = sScriptReader(slot, &bitPosition, count);
         }
-        if (instance->field_55C[slot->field_A7] != 0) {
-            *command++ = dword_3000FC4(slot, &bitPosition, 13);
+
+        if (instance->field_55C[slot->currentOpcode] != 0) {
+            *arguments++ = sScriptReader(slot, &bitPosition, RESULT_VARIABLE_BITS);
         }
+
         if (count != 0) {
-            u16 offset = instance->field_56C[slot->field_A7];
+            u16 offset = instance->field_56C[slot->currentOpcode];
 
             sizes = instance->field_564 + offset;
             signs = instance->field_568 + offset;
 
             for (i = 0; i < count; i++) {
-                if (!(*sizes & 0x80)) {
-                    s32 value = dword_3000FC4(slot, &bitPosition, *sizes);
+                if (!(*sizes & ARGUMENT_SIZE_RAW)) {
+                    s32 value = sScriptReader(slot, &bitPosition, *sizes);
 
-                    *command = value;
-                    // Variable, signed value or unsigned value
+                    *arguments = value;
+
                     if (variableMask & (1 << i)) {
-                        *command = sub_80E9CA8(shared, script->field_18, flags, flags2, value);
+                        *arguments = getVariable(engineLocals, script->field_18, engineFlags,
+                                                 scriptFlags, value);
                     } else if (*signs == 1) {
                         if ((value >> (*sizes - 1)) & 1) {
-                            *command = (-1 << *sizes) | value;
+                            *arguments = (-1 << *sizes) | value;
                         }
                     }
                 } else {
                     // Byte-aligned 32-bit value
                     if (bitPosition != 8) {
-                        slot->field_0++;
+                        slot->position++;
                     }
-                    *command = *slot->field_0++;
-                    *command |= *slot->field_0++ << 8;
-                    *command |= *slot->field_0++ << 16;
-                    *command |= *slot->field_0++ << 24;
+                    *arguments = *slot->position++;
+                    *arguments |= *slot->position++ << 8;
+                    *arguments |= *slot->position++ << 16;
+                    *arguments |= *slot->position++ << 24;
                     bitPosition = 8;
                 }
+
                 sizes++;
                 signs++;
-                command++;
+                arguments++;
             }
         }
+
         if (bitPosition != 8) {
-            slot->field_0++;
+            slot->position++;
         }
     }
-    return slot->field_0;
+
+    return slot->position;
 }
 
-// Returns the value of a flag. Flags up to 0x1B5F are in instance, 0x1B60-0x1B7F in arg0 and
-// 0x1B80-0x1B8F in arg1 (or in arg0, after the others, if arg1 is null).
-//! Possible fake match: the result has to be stored in `flag` (a separate local doesn't match).
-u8 CommonEvent::sub_80E98C0(u32* arg0, u32* arg1, u16 flag) {
-    if (flag < 0x1B60) {
+u8 CommonEvent::getFlag(u32* engineFlags, u32* scriptFlags, u16 flag) {
+    if (flag < ENGINE_FLAG_START) {
         u16 bit = flag & 0x1F;
 
         flag = (instance->field_20[flag >> 5] >> bit) & 1;
-    } else if (flag < 0x1B80) {
-        u16 index = flag - 0x1B60;
+    } else if (flag < SCRIPT_FLAG_START) {
+        u16 index = flag - ENGINE_FLAG_START;
         u16 bit = index & 0x1F;
 
-        flag = (arg0[index >> 5] >> bit) & 1;
-    } else if (flag < 0x1B90) {
-        if (arg1 != 0) {
-            u16 index = flag - 0x1B80;
+        flag = (engineFlags[index >> 5] >> bit) & 1;
+    } else if (flag < FLAG_COUNT) {
+        if (scriptFlags != 0) {
+            u16 index = flag - SCRIPT_FLAG_START;
             u16 bit = index & 0x1F;
 
-            flag = (arg1[index >> 5] >> bit) & 1;
+            flag = (scriptFlags[index >> 5] >> bit) & 1;
         } else {
-            u16 index = flag - 0x1B60;
+            u16 index = flag - ENGINE_FLAG_START;
             u16 bit = index & 0x1F;
 
-            flag = (arg0[index >> 5] >> bit) & 1;
+            flag = (engineFlags[index >> 5] >> bit) & 1;
         }
     } else {
         return 0;
@@ -111,23 +115,22 @@ u8 CommonEvent::sub_80E98C0(u32* arg0, u32* arg1, u16 flag) {
     return flag;
 }
 
-// Sets the value of a flag (see sub_80E98C0 for where the flags are).
-void CommonEvent::sub_80E9958(u32* arg0, u32* arg1, u16 flag, u8 value) {
+void CommonEvent::setFlag(u32* engineFlags, u32* scriptFlags, u16 flag, u8 value) {
     u32* word;
     u16 bit;
 
-    if (flag < 0x1B60) {
+    if (flag < ENGINE_FLAG_START) {
         word = &instance->field_20[flag >> 5];
-    } else if (flag < 0x1B80) {
-        flag -= 0x1B60;
-        word = &arg0[flag >> 5];
-    } else if (flag < 0x1B90) {
-        if (arg1 != 0) {
-            flag -= 0x1B80;
-            word = &arg1[flag >> 5];
+    } else if (flag < SCRIPT_FLAG_START) {
+        flag -= ENGINE_FLAG_START;
+        word = &engineFlags[flag >> 5];
+    } else if (flag < FLAG_COUNT) {
+        if (scriptFlags != 0) {
+            flag -= SCRIPT_FLAG_START;
+            word = &scriptFlags[flag >> 5];
         } else {
-            flag -= 0x1B60;
-            word = &arg0[flag >> 5];
+            flag -= ENGINE_FLAG_START;
+            word = &engineFlags[flag >> 5];
         }
     } else {
         return;
@@ -136,19 +139,17 @@ void CommonEvent::sub_80E9958(u32* arg0, u32* arg1, u16 flag, u8 value) {
     *word = (*word & ~(1 << bit)) | ((value & 1) << bit);
 }
 
-// Returns the value of a script variable: a byte for 0x1B90-0x1CD7, a halfword for 0x1CD8-0x1D17.
-// There is no lower bound check (sub_80E9CA8 only passes 0x1B90 and up).
-u16 CommonEvent::sub_80E99E0(u16 id) {
+u16 CommonEvent::getGlobalVariable(u16 id) {
     u16 value;
 
-    if (id < 0x1CB8) {
-        id -= 0x1B90;
+    if (id < TEMPORARY_BYTE_VARIABLE_START) {
+        id -= SAVED_BYTE_VARIABLE_START;
         value = instance->field_414[id];
-    } else if (id < 0x1CD8) {
-        id -= 0x1CB8;
+    } else if (id < HALFWORD_VARIABLE_START) {
+        id -= TEMPORARY_BYTE_VARIABLE_START;
         value = instance->field_53C[id];
-    } else if (id < 0x1D18) {
-        id -= 0x1CD8;
+    } else if (id < GLOBAL_VARIABLE_END) {
+        id -= HALFWORD_VARIABLE_START;
         value = instance->field_394[id];
     } else {
         value = 0;
@@ -156,52 +157,58 @@ u16 CommonEvent::sub_80E99E0(u16 id) {
     return value;
 }
 
-// Sets a script variable (see sub_80E99E0); the byte variables keep the low 8 bits of value.
-void CommonEvent::sub_80E9A6C(u16 id, u16 value) {
-    if (id < 0x1CB8) {
-        id -= 0x1B90;
+void CommonEvent::setGlobalVariable(u16 id, u16 value) {
+    if (id < TEMPORARY_BYTE_VARIABLE_START) {
+        id -= SAVED_BYTE_VARIABLE_START;
         instance->field_414[id] = value;
-    } else if (id < 0x1CD8) {
-        id -= 0x1CB8;
+    } else if (id < HALFWORD_VARIABLE_START) {
+        id -= TEMPORARY_BYTE_VARIABLE_START;
         instance->field_53C[id] = value;
-    } else if (id < 0x1D18) {
-        id -= 0x1CD8;
+    } else if (id < GLOBAL_VARIABLE_END) {
+        id -= HALFWORD_VARIABLE_START;
         instance->field_394[id] = value;
     }
 }
 
-// Frees the IWRAM copy of the script bit reader.
-void CommonEvent::sub_80E9AF8() {
-    heap_free((void*)dword_3000FC4);
+/**
+ * Frees IWRAM copy of the script reader.
+ */
+void CommonEvent::removeScriptReader() {
+    heap_free((void*)sScriptReader);
 }
 
-// Allocates the script state and clears it. Inline (as is destroy), so its out-of-line copy comes
-// after every other function of this file, but its "ACEV" is emitted here, before "MADO".
+/**
+ * Initializes the global script state.
+ */
 inline void CommonEvent::create() {
-    instance = (CommonEvent*)heap_alloc(1, 0x570, "ACEV");
-    dword_3001034(0, instance, 0x570);
+    instance = (CommonEvent*)heap_alloc(1, sizeof(CommonEvent), "ACEV");
+    dword_3001034(0, instance, sizeof(CommonEvent));
 }
 
-// Frees the script state.
+/**
+ * Destroys the global script state.
+ */
 inline void CommonEvent::destroy() {
     heap_free(instance);
     instance = 0;
 }
 
-// Copies the script bit reader (ARM code) to IWRAM, which is faster than ROM, and points
-// dword_3000FC4 at the copy.
-void CommonEvent::sub_80E9B0C() {
-    dword_3000FC4 = (u32 (*)(ScriptSlot*, s16*, int))heap_alloc(0, sub_8001010 - sub_8000F9C, "MADO");
-    CPU_COPY(sub_8000F9C, dword_3000FC4, (u32)(sub_8001010 - sub_8000F9C), 16);
+/**
+ * Copies a copy of the script reader to IWRAM.
+ */
+void CommonEvent::initScriptReader() {
+    sScriptReader = (u32 (*)(ScriptSlot*, s16*, int))heap_alloc(0, sub_8001010 - sub_8000F9C, "MADO");
+    CPU_COPY(sub_8000F9C, sScriptReader, (u32)(sub_8001010 - sub_8000F9C), 16);
 }
 
-// Decrements a halfword script variable (0x1CD8-0x1D17, see sub_80E99E0), stopping at 0, and
-// returns the new value. Unused.
-u16 CommonEvent::sub_80E9B48(u16 id) {
-    if (id < 0x1D18) {
+/**
+ * Decrements a halfword script variable.
+ */
+u16 CommonEvent::decGlobalVariable(u16 id) {
+    if (id < GLOBAL_VARIABLE_END) {
         u16 value;
 
-        id -= 0x1CD8;
+        id -= HALFWORD_VARIABLE_START;
         value = instance->field_394[id];
         if (value != 0) {
             value--;
@@ -212,12 +219,14 @@ u16 CommonEvent::sub_80E9B48(u16 id) {
     return 0;
 }
 
-// Increments a halfword script variable, stopping at 0xFFFF, and returns the new value.
-u16 CommonEvent::sub_80E9B8C(u16 id) {
-    if (id < 0x1D18) {
+/**
+ * Increments a halfword script variable.
+ */
+u16 CommonEvent::incGlobalVariable(u16 id) {
+    if (id < GLOBAL_VARIABLE_END) {
         u16 value;
 
-        id -= 0x1CD8;
+        id -= HALFWORD_VARIABLE_START;
         value = instance->field_394[id];
         if (value < 0xFFFF) {
             value++;
@@ -228,56 +237,54 @@ u16 CommonEvent::sub_80E9B8C(u16 id) {
     return 0;
 }
 
-// Sets a script local (see sub_80E9C14).
-void CommonEvent::sub_80E9BD8(u32* shared, u32* local, s16 id, u32 value) {
-    if (id < 0x10) {
-        local[id] = value;
-    } else if (id < 0x35) {
-        shared[id - 0x10] = value;
+void CommonEvent::setLocalVariable(u32* engineLocals, u32* scriptLocals, s16 id, u32 value) {
+    if (id < ENGINE_LOCAL_VARIABLE_START) {
+        scriptLocals[id] = value;
+    } else if (id < GLOBAL_LOCAL_VARIABLE_START) {
+        engineLocals[id - ENGINE_LOCAL_VARIABLE_START] = value;
     } else {
-        instance->field_0[id - 0x35] = value;
+        instance->field_0[id - GLOBAL_LOCAL_VARIABLE_START] = value;
     }
 }
 
-// Returns a script local: 0-0xF are the script's own (local, ScriptSlot::field_18), 0x10-0x34 are
-// in shared (dword_3000FD0 + 0x4B0 for field scripts) and 0x35-0x3C in instance. There is no
-// upper bound check (sub_80E9CA8 only passes up to 0x3C).
-u32 CommonEvent::sub_80E9C14(u32* shared, u32* local, s16 id) {
-    if (id < 0x10) {
-        return local[id];
-    } else if (id < 0x35) {
-        return shared[id - 0x10];
+u32 CommonEvent::getLocalVariable(u32* engineLocals, u32* scriptLocals, s16 id) {
+    if (id < ENGINE_LOCAL_VARIABLE_START) {
+        return scriptLocals[id];
+    } else if (id < GLOBAL_LOCAL_VARIABLE_START) {
+        return engineLocals[id - ENGINE_LOCAL_VARIABLE_START];
     } else {
-        return instance->field_0[id - 0x35];
+        return instance->field_0[id - GLOBAL_LOCAL_VARIABLE_START];
     }
 }
 
-// Sets a script value by ID: a local (0-0x3C, sub_80E9BD8), else ID - 0x3D is a flag (sub_80E9958,
-// with flags/flags2 as its extra flag words) or a variable (sub_80E9A6C). The counterpart of
-// sub_80E9CA8.
-void CommonEvent::sub_80E9C4C(u32* shared, u32* local, u32* flags, u32* flags2, s16 id, u32 value) {
-    if (id <= 0x3C) {
-        sub_80E9BD8(shared, local, id, value);
+void CommonEvent::setVariable(u32* engineLocals, u32* scriptLocals, u32* engineFlags, u32* scriptFlags,
+                              s16 id, u32 value) {
+    if (id < LOCAL_VARIABLE_COUNT) {
+        setLocalVariable(engineLocals, scriptLocals, id, value);
     } else {
-        id -= 0x3D;
-        if (id <= 0x1B8F) {
-            sub_80E9958(flags, flags2, id, value);
-        } else if (id <= 0x1D17) {
-            sub_80E9A6C(id, value);
+        id -= LOCAL_VARIABLE_COUNT;
+
+        if (id < FLAG_COUNT) {
+            setFlag(engineFlags, scriptFlags, id, value);
+        } else if (id < GLOBAL_VARIABLE_END) {
+            setGlobalVariable(id, value);
         }
     }
 }
 
-// Returns a script value by ID (see sub_80E9C4C): a local, a flag or a variable; 0 for an invalid ID.
-u32 CommonEvent::sub_80E9CA8(u32* shared, u32* local, u32* flags, u32* flags2, s16 id) {
-    if (id <= 0x3C) {
-        return sub_80E9C14(shared, local, id);
+u32 CommonEvent::getVariable(u32* engineLocals, u32* scriptLocals, u32* engineFlags, u32* scriptFlags,
+                             s16 id) {
+    if (id < LOCAL_VARIABLE_COUNT) {
+        return getLocalVariable(engineLocals, scriptLocals, id);
     }
-    id -= 0x3D;
-    if (id <= 0x1B8F) {
-        return sub_80E98C0(flags, flags2, id);
-    } else if (id <= 0x1D17) {
-        return sub_80E99E0(id);
+
+    id -= LOCAL_VARIABLE_COUNT;
+
+    if (id < FLAG_COUNT) {
+        return getFlag(engineFlags, scriptFlags, id);
+    } else if (id < GLOBAL_VARIABLE_END) {
+        return getGlobalVariable(id);
     }
+
     return 0;
 }

@@ -54,7 +54,7 @@ class FieldMonster : public FieldObject {
         delete field_344;
     }
     void sub_80507E0() { // 0x080507E0
-        CommonEvent::sub_80E9958(CommonEvent::instance->field_38C, 0, field_22C_10 + 0x960, 0);
+        CommonEvent::setFlag(CommonEvent::instance->field_38C, 0, field_22C_10 + 0x960, 0);
         if (field_33E_4) {
             field_344->field_20C_0 = 1;
             method4();

@@ -58,7 +58,7 @@ _080EA452:
 	adds r0, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6}
@@ -506,7 +506,7 @@ _080EA868:
 	adds r0, r3, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5}
@@ -662,7 +662,7 @@ sub_80EA968:
 	adds r1, r5, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r3}
@@ -790,7 +790,7 @@ sub_80EAA5C:
 	str r2, [sp, #0x004]
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r1}
@@ -828,7 +828,7 @@ _080EAAAE:
 	adds r0, r3, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5}
@@ -980,7 +980,7 @@ _080EAC54:
 	adds r0, r6, #0x0
 	ldr r2, [sp, #0x018]
 	ldr r3, [sp, #0x01C]
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6}
@@ -1037,7 +1037,7 @@ _080EACBC:
 	adds r0, r7, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
@@ -1098,7 +1098,7 @@ _080EAD32:
 	adds r0, r3, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 	b _080EAD6C
 	.byte 0x00, 0x00
 _080EAD48: .4byte 0x03000D44
@@ -1117,7 +1117,7 @@ _080EAD4C:
 	adds r0, r3, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 _080EAD6C:
 	movs r0, #0x01
 	add sp, #0x008
@@ -1274,7 +1274,7 @@ sub_80EAE70:
 	str r2, [sp, #0x004]
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_80E9C4C__11CommonEventPUiN31sUi
+	bl setVariable__11CommonEventPUiN31sUi
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r1}

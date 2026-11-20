@@ -6,10 +6,10 @@
 
 struct ScriptSlot;
 
-s8 sub_80E9D50(void* engine, void* window, ScriptSlot* script, s32* command);
-s8 sub_80E9E10(void* engine, ScriptSlot* script, s32* command);
-s8 sub_80E9EE0(void* engine, ScriptSlot* script, s32* command);
-s8 sub_80EA064(void* engine, ScriptSlot* script, s32* command);
-s8 sub_80EA144(void* engine, ScriptSlot* script, s32* command, u32* shared);
+s8 sub_80E9D50(void* engine, void* window, ScriptSlot* script, s32* arguments);
+s8 sub_80E9E10(void* engine, ScriptSlot* script, s32* arguments);
+s8 sub_80E9EE0(void* engine, ScriptSlot* script, s32* arguments);
+s8 sub_80EA064(void* engine, ScriptSlot* script, s32* arguments);
+s8 sub_80EA144(void* engine, ScriptSlot* script, s32* arguments, u32* engineLocals);
 
 #endif // TEXT080E9D50_H

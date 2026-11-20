@@ -478,7 +478,7 @@ sub_802F834:
 	adds r0, r0, r1
 	movs r1, #0x00
 	ldr r2, _0802F888 @ =0x00000205
-	bl sub_80E98C0__11CommonEventPUiT1Us
+	bl getFlag__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802F894
@@ -489,7 +489,7 @@ sub_802F834:
 	movs r1, #0x00
 	movs r2, #0x81
 	lsls r2, r2, #0x02
-	bl sub_80E98C0__11CommonEventPUiT1Us
+	bl getFlag__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0802F890
@@ -499,7 +499,7 @@ sub_802F834:
 	adds r0, r0, r1
 	movs r1, #0x00
 	ldr r2, _0802F88C @ =0x00000203
-	bl sub_80E98C0__11CommonEventPUiT1Us
+	bl getFlag__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	negs r1, r0
@@ -5527,7 +5527,7 @@ _08033D50:
 	lsrs r2, r2, #0x10
 	movs r1, #0x00
 	movs r3, #0x01
-	bl sub_80E9958__11CommonEventPUiT1UsUc
+	bl setFlag__11CommonEventPUiT1UsUc
 	ldrb r1, [r5, #0x00]
 	movs r0, #0x01
 	ands r0, r1
@@ -12553,7 +12553,7 @@ sub_803C544:
 	adds r0, r0, r5
 	ldr r2, _0803C590 @ =0x00000205
 	movs r1, #0x00
-	bl sub_80E98C0__11CommonEventPUiT1Us
+	bl getFlag__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0803C59C
@@ -12562,7 +12562,7 @@ sub_803C544:
 	movs r2, #0x81
 	lsls r2, r2, #0x02
 	movs r1, #0x00
-	bl sub_80E98C0__11CommonEventPUiT1Us
+	bl getFlag__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _0803C598
@@ -12570,7 +12570,7 @@ sub_803C544:
 	adds r0, r0, r5
 	ldr r2, _0803C594 @ =0x00000203
 	movs r1, #0x00
-	bl sub_80E98C0__11CommonEventPUiT1Us
+	bl getFlag__11CommonEventPUiT1Us
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	negs r1, r0
