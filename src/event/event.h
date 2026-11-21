@@ -26,10 +26,10 @@
 #define GLOBAL_VARIABLE_END           (HALFWORD_VARIABLE_START + HALFWORD_VARIABLE_COUNT)
 
 // Size of the result variable ID.
-#define RESULT_VARIABLE_BITS  13
+#define RESULT_VARIABLE_BITS 13
 
 // If the size has its most significant bit set, the argument is a 32-bit value (e.g. a pointer).
-#define ARGUMENT_ALIGNED_WORD 0x80 
+#define ARGUMENT_ALIGNED_WORD 0x80
 
 struct ScriptSlot;
 

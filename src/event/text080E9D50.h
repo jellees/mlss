@@ -31,7 +31,7 @@ class EventBase {
     u8 sub_80EA670(s32 x, s32 y, s32 targetX, s32 targetY);
     void sub_80EA6D4(s32* arguments, s32* x, s32* y, s32* z);
     void sub_80EA778(ScriptSlot* script);
-    bool script_test_condition(u8 operation, s32 left, s32 right);
+    u8 script_test_condition(u8 operation, s32 left, s32 right);
     s8 sub_80EA854(ScriptSlot* script, s32* arguments, u32* engineRegisters);
     s8 sub_80EA88C(ScriptSlot* script, s32* arguments);
     s8 sub_80EA8A4(ScriptSlot* script, s32* arguments);

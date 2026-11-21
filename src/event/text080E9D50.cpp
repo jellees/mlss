@@ -588,11 +588,7 @@ void EventBase::sub_80EA778(ScriptSlot* script) {
 
 // Compares left with right (operations 0-5: ==, !=, <, >, <=, >=) or tests them bitwise (8-10: left
 // | right, left & right, left ^ right; 11: !left; 12: ~left). Operations 6, 7 and above 12 are false.
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/script_test_condition__9EventBaseUcii.s\"");
-#else
-bool EventBase::script_test_condition(u8 operation, s32 left, s32 right) {
+u8 EventBase::script_test_condition(u8 operation, s32 left, s32 right) {
     switch (operation) {
         case 0:
             return left == right;
@@ -607,31 +603,19 @@ bool EventBase::script_test_condition(u8 operation, s32 left, s32 right) {
         case 5:
             return left >= right;
         case 8:
-            if (left | right) {
-                return true;
-            }
-            return false;
+            return (left | right) != 0;
         case 9:
-            if (left & right) {
-                return true;
-            }
-            return false;
+            return (left & right) != 0;
         case 10:
-            if (left ^ right) {
-                return true;
-            }
-            return false;
+            return (left ^ right) != 0;
         case 11:
             return !left;
         case 12:
-            if (~left) {
-                return true;
-            }
-            return false;
+            return ~left != 0;
     }
-    return false;
+
+    return FALSE;
 }
-#endif
 
 // Stores gGameState.field_8C0 in the script value arguments[0] if arguments[1] is 0.
 //! \bug Any other arguments[1] stores an unset value.
@@ -1259,10 +1243,8 @@ s8 EventBase::script_cmd_call(ScriptSlot* script, s32* arguments) {
 }
 
 // Returns to the saved position, or ends the script if there is none.
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/script_cmd_return__9EventBaseP10ScriptSlot.s\"");
-#else
+//! Possible fake match: the second test of position (found by the permuter) keeps it live past
+//! the if/else, which moves it from r0 to r2; jump optimization removes the test afterwards.
 s8 EventBase::script_cmd_return(ScriptSlot* script) {
     u8* position = script->returnPosition;
 
@@ -1272,9 +1254,13 @@ s8 EventBase::script_cmd_return(ScriptSlot* script) {
         script->position = position;
         script->returnPosition = NULL;
     }
+
+    if (position != NULL) {
+        return TRUE;
+    }
+
     return TRUE;
 }
-#endif
 
 // Ends the script (sets its end, field_4, to its position).
 s8 EventBase::script_cmd_end(ScriptSlot* script) {
