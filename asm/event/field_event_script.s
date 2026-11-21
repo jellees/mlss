@@ -2540,7 +2540,7 @@ _080EF7FE:
 	movs r3, #0xFF
 	str r3, [sp, #0x004]
 	movs r3, #0x00
-	bl sub_80EA5C8__9EventBaseP11EventThreadPUcT2UsUc
+	bl startScript__9EventBaseP11EventThreadPUcT2UsUc
 	lsls r0, r4, #0x10
 	ldr r1, _080EF870 @ =0xFFFF0000
 	adds r0, r0, r1
@@ -2565,7 +2565,7 @@ _080EF82A:
 	str r2, [sp, #0x004]
 	adds r2, r7, #0x0
 	movs r3, #0x00
-	bl sub_80EA5C8__9EventBaseP11EventThreadPUcT2UsUc
+	bl startScript__9EventBaseP11EventThreadPUcT2UsUc
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
 	pop {r0}

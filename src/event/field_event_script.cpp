@@ -96,7 +96,7 @@ void FieldEventScript::sub_80EB490(FieldObject* object, FieldObjectEvent* script
     }
 
     if (object->sprite->animationComplete) {
-        if (--script->field_9C == 0) {
+        if (--script->waitFrames == 0) {
             if (script->flags & 0x200) {
                 object->field_214_0 = 0;
                 script->flags &= ~0x220;
@@ -120,13 +120,13 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
     switch (type) {
         case 4:
             if (object != NULL && !(object->script.flags & 1)) {
-                sub_80EA5C8(&object->script, (u8*)arg, NULL, 1, 0xFF);
+                startScript(&object->script, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         case 2:
             slot = &MapEventInfo::instance->scripts[1];
             if (!(slot->flags & 1)) {
-                sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
+                startScript(slot, (u8*)arg, NULL, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
                 if (fieldManager->objects[0]->collidesWithObjects) {
                     MapEventInfo::instance->field_55A_6 &= ~1;
@@ -145,29 +145,29 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
         case 3:
             slot = &MapEventInfo::instance->scripts[2];
             if (!(slot->flags & 1) && MapEventInfo::instance->field_55A_0) {
-                sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
+                startScript(slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         case 0:
             slot = &MapEventInfo::instance->scripts[0];
             if (!(slot->flags & 1)) {
-                sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
+                startScript(slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         case 1:
             slot = &MapEventInfo::instance->scripts[3];
             if (!(slot->flags & 1)) {
-                sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
+                startScript(slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         default:
             if (object != NULL && !(object->script.flags & 1)) {
-                sub_80EA5C8(&object->script, (u8*)arg, NULL, 1, 0xFF);
+                startScript(&object->script, (u8*)arg, NULL, 1, 0xFF);
                 break;
             }
             slot = &MapEventInfo::instance->scripts[1];
             if (!(slot->flags & 1)) {
-                sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
+                startScript(slot, (u8*)arg, NULL, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
                 if (fieldManager->objects[0]->collidesWithObjects) {
                     MapEventInfo::instance->field_55A_6 &= ~1;
@@ -184,24 +184,24 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
             }
             slot = &MapEventInfo::instance->scripts[2];
             if (!(slot->flags & 1) && MapEventInfo::instance->field_55A_0) {
-                sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
+                startScript(slot, (u8*)arg, NULL, 1, 0xFF);
                 break;
             }
             slot = &MapEventInfo::instance->scripts[3];
             if (!(slot->flags & 1)) {
-                sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
+                startScript(slot, (u8*)arg, NULL, 1, 0xFF);
                 break;
             }
             slot = &MapEventInfo::instance->scripts[0];
             if (!(slot->flags & 1)) {
-                sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
+                startScript(slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
     }
 }
 
 // Checked before each command of a script (sub_80F1E44 stops when it returns true). Returns false
-// while the script hasn't reached endPosition, or after restoring the saved script (savedPosition).
+// while the script hasn't reached endPosition, or after starting the next script (nextPosition).
 // With flag 8 set it clears flag 4 of the parent script (parentIndex: a slot of MapEventInfo
 // for 0-3, field object index + 4 otherwise).
 bool FieldEventScript::sub_80EB838(FieldObject* object, FieldObjectEvent* script) {
@@ -244,15 +244,15 @@ bool FieldEventScript::sub_80EB838(FieldObject* object, FieldObjectEvent* script
         return true;
     }
 
-    if (script->savedPosition != 0) {
-        script->position = script->savedPosition;
-        script->endPosition = script->savedEndPosition;
-        script->flags = script->savedFlags;
-        script->parentIndex = script->savedParentIndex;
-        script->savedEndPosition = 0;
-        script->savedPosition = 0;
-        script->savedFlags = 0;
-        script->savedParentIndex = 0;
+    if (script->nextPosition != 0) {
+        script->position = script->nextPosition;
+        script->endPosition = script->nextEndPosition;
+        script->flags = script->nextFlags;
+        script->parentIndex = script->nextParentIndex;
+        script->nextEndPosition = 0;
+        script->nextPosition = 0;
+        script->nextFlags = 0;
+        script->nextParentIndex = 0;
         return false;
     }
 
@@ -349,7 +349,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 36:
             return sub_80EAF4C(script, arguments);
         case 37:
-            return sub_80EAEF8(script, arguments);
+            return commandSoundEffect(script, arguments);
         case 38:
             return sub_80EAEE0(script, arguments);
         case 28:
@@ -395,8 +395,8 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 53:
             return sub_80EA358(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 54:
-            return sub_80EAB98(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0),
-                               CommonEvent::instance->fieldEngineFlags, NULL);
+            return commandCalculate(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0),
+                                    CommonEvent::instance->fieldEngineFlags, NULL);
         case 55:
             return sub_80EAB20(script, arguments);
         case 57:
@@ -420,13 +420,13 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 67:
             return sub_80EA928(script, arguments);
         case 70:
-            return sub_80EA91C(script, arguments);
+            return commandSetCompareValue(script, arguments);
         case 68:
             return sub_80EA904(script);
         case 69:
             return sub_80EA478(script, arguments);
         case 71:
-            return sub_80EA8DC(script, arguments);
+            return commandCompareJump(script, arguments);
         case 72:
             return sub_80EA8A4(script, arguments);
         case 73:
@@ -706,8 +706,8 @@ inline void FieldEventScript::sub_80EC970_prepare(FieldObject* target, FieldObje
 
 // Script command 4: starts the script at arguments[2] on the object arguments[1]. arguments[0] bit 0
 // makes this script wait for it (flag 4); modes 2-3 and 6-7 don't pass this script's position, and
-// modes 4-7 use sub_80EA584 instead if the target's script is already running. Returns false while
-// waiting.
+// modes 4-7 use replaceNextScript instead if the target's script is already running. Returns false
+// while waiting.
 s8 FieldEventScript::sub_80EC970(FieldObject* object, FieldObjectEvent* script, s32* arguments,
                                  u8 index) {
     FieldObject* target = *(((FieldManager*)parentProcess)->objects + arguments[1]);
@@ -726,21 +726,21 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, FieldObjectEvent* script, 
         case 0:
         case 1:
             sub_80EC970_prepare(target, targetScript);
-            sub_80EA5C8(targetScript, script->position, (u8*)arguments[2], flags, index);
+            startScript(targetScript, script->position, (u8*)arguments[2], flags, index);
             script->position = (u8*)arguments[2];
             break;
         case 2:
         case 3:
             sub_80EC970_prepare(target, targetScript);
-            sub_80EA5C8(targetScript, (u8*)arguments[2], NULL, flags, index);
+            startScript(targetScript, (u8*)arguments[2], NULL, flags, index);
             break;
         case 4:
         case 5:
             if (!(targetScript->flags & 1)) {
                 sub_80EC970_prepare(target, targetScript);
-                sub_80EA5C8(targetScript, script->position, (u8*)arguments[2], flags, index);
+                startScript(targetScript, script->position, (u8*)arguments[2], flags, index);
             } else {
-                sub_80EA584(targetScript, script->position, (u8*)arguments[2], flags, index);
+                replaceNextScript(targetScript, script->position, (u8*)arguments[2], flags, index);
             }
             script->position = (u8*)arguments[2];
             break;
@@ -748,9 +748,9 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, FieldObjectEvent* script, 
         case 7:
             if (!(targetScript->flags & 1)) {
                 sub_80EC970_prepare(target, targetScript);
-                sub_80EA5C8(targetScript, (u8*)arguments[2], NULL, flags, index);
+                startScript(targetScript, (u8*)arguments[2], NULL, flags, index);
             } else {
-                sub_80EA584(targetScript, (u8*)arguments[2], NULL, flags, index);
+                replaceNextScript(targetScript, (u8*)arguments[2], NULL, flags, index);
             }
             break;
     }
@@ -767,16 +767,16 @@ s8 FieldEventScript::sub_80ECB20(FieldObjectEvent* script, s32* arguments) {
     switch (type) {
         case 0:
             slot = &MapEventInfo::instance->scripts[0];
-            sub_80EA5C8(slot, (u8*)*arguments, NULL, 1, 0xFF);
+            startScript(slot, (u8*)*arguments, NULL, 1, 0xFF);
             break;
         case 1:
             slot = &MapEventInfo::instance->scripts[3];
-            sub_80EA5C8(slot, (u8*)*arguments, NULL, 1, 0xFF);
+            startScript(slot, (u8*)*arguments, NULL, 1, 0xFF);
             break;
         case 2:
             slot = &MapEventInfo::instance->scripts[1];
             if (!(slot->flags & 1)) {
-                sub_80EA5C8(slot, (u8*)*arguments, NULL, 1, 0xFF);
+                startScript(slot, (u8*)*arguments, NULL, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
                 if (fieldManager->objects[0]->collidesWithObjects) {
                     MapEventInfo::instance->field_55A_6 &= ~1;
@@ -796,7 +796,7 @@ s8 FieldEventScript::sub_80ECB20(FieldObjectEvent* script, s32* arguments) {
             // Its own variable (not the shared slot): the original keeps it in another register.
             EventThread* slot = &MapEventInfo::instance->scripts[2];
             if (!(slot->flags & 1) && MapEventInfo::instance->field_55A_0) {
-                sub_80EA5C8(slot, (u8*)*arguments, NULL, 1, 0xFF);
+                startScript(slot, (u8*)*arguments, NULL, 1, 0xFF);
             }
             break;
         }

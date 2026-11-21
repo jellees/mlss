@@ -2547,7 +2547,7 @@ sub_80FAC30:
 	movs r3, #0xFF
 	str r3, [sp, #0x004]
 	movs r3, #0x00
-	bl sub_80EA5C8__9EventBaseP11EventThreadPUcT2UsUc
+	bl startScript__9EventBaseP11EventThreadPUcT2UsUc
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r1}
@@ -2991,7 +2991,7 @@ sub_80FAF8C:
 	movs r3, #0xFF
 	str r3, [sp, #0x004]
 	movs r3, #0x00
-	bl sub_80EA5C8__9EventBaseP11EventThreadPUcT2UsUc
+	bl startScript__9EventBaseP11EventThreadPUcT2UsUc
 	ldr r0, [r4, #0x24]
 	ldr r1, _080FAFB8 @ =0x000009A1
 	adds r0, r0, r1

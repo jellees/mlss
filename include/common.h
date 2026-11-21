@@ -110,16 +110,16 @@ enum RoomFlags {
 // Header of each room (table at 0x083A78D4, current room copied to stru_3000DD0)
 struct RoomHeader {
     u8 nameIndex;
-    u8 mapIconIndex; // Brothers' icon position on the suitcase map
-    u8 flags; // RoomFlags
-    u8 imageIndex; // Index into byte_83AAA6C (compressed graphics)
-    u8 tilesetIndex; // Index into 0x083AAC4C
-    u8 paletteIndex; // Index into 0x083AAD68
-    u8 field_6; // Index into 0x083AADD0 (tile properties/solidity?)
-    u8 tileAnimationIndex; // Index into 0x083B283C
+    u8 mapIconIndex;          // Brothers' icon position on the suitcase map
+    u8 flags;                 // RoomFlags
+    u8 imageIndex;            // Index into byte_83AAA6C (compressed graphics)
+    u8 tilesetIndex;          // Index into 0x083AAC4C
+    u8 paletteIndex;          // Index into 0x083AAD68
+    u8 field_6;               // Index into 0x083AADD0 (tile properties/solidity?)
+    u8 tileAnimationIndex;    // Index into 0x083B283C
     u8 paletteAnimationIndex; // Index into 0x083B79C4
-    u8 blendingIndex; // Index into 0x083B78AC
-    u8 tileModsIndex; // Index into 0x083B7108
+    u8 blendingIndex;         // Index into 0x083B78AC
+    u8 tileModsIndex;         // Index into 0x083B7108
     u8 field_B;
     u16 layerScroll; // BG scroll rates and modes
     u16 mapScriptsIndex;
@@ -276,7 +276,7 @@ struct EeprStruct1 {
 struct struc_3000FF4 {
     u8 pad0[0x7];
     u8 field_7_0 : 2;
-    u8 field_7_2 : 6; // Bits 0-2 of the 9 flags of sub_80EA064
+    u8 field_7_2 : 6;  // Bits 0-2 of the 9 flags of sub_80EA064
     u16 field_8_0 : 6; // Bits 3-5
     u16 field_8_6 : 6; // Bits 6-8
     u8 padA[0x4];
@@ -292,23 +292,25 @@ struct struc_3000FF4 {
 };
 
 // A running script (0xA8 bytes): position, end, return position, registers, counter stack, flags and
-// parent. MapEventInfo has four (its slots); FieldObjectEvent (the script of a field object) extends it.
+// parent. MapEventInfo has four (its slots); FieldObjectEvent (the script of a field object) extends
+// it.
 struct EventThread {
-    u8* position; // Read position in the script
-    u8* endPosition; // The script ends when position reaches it (NULL: until commandEnd/commandReturn set it)
-    u8* savedPosition; // Saved script, restored by sub_80EB838 when this one ends
-    u8* savedEndPosition;
-    u8* returnPosition; // Set by commandCall, cleared when a script starts (sub_80EA530)
+    u8* position;     // Read position in the script
+    u8* endPosition;  // The script ends when position reaches it (NULL: until commandEnd/commandReturn
+                      // set it)
+    u8* nextPosition; // Script to run when this one ends (started by sub_80EB838)
+    u8* nextEndPosition;
+    u8* returnPosition;  // Set by commandCall, cleared when a script starts (setCurrentScript)
     u8* commandPosition; // Start of the current command
     u32 registers[0x10]; // Script registers 0-0xF (getRegister)
-    s32 counters[0x10]; // Counter stack (field_A6 entries; sub_80EA928 pushes, sub_80EA904 pops)
-    s32 compareValue;   // Compared by sub_80EA8DC (set by sub_80EA91C)
-    s32 field_9C;      // Counter (sub_80EB490)
-    u16 flags; // 1: running, 4: waiting for a child script, 8: the parent waits for this one
-    u16 savedFlags;
+    s32 counters[0x10];  // Counter stack (field_A6 entries; sub_80EA928 pushes, sub_80EA904 pops)
+    s32 compareValue;    // Compared by commandCompareJump (set by commandSetCompareValue)
+    s32 waitFrames;      // Counter (sub_80EB490)
+    u16 flags;           // 1: running, 4: waiting for a child script, 8: the parent waits for this one
+    u16 nextFlags;
     u8 parentIndex; // The script that started this one: slot 0-3 or field object index + 4; 0xFF: none
-    u8 savedParentIndex;
-    u8 field_A6;       // Depth of the counter stack
+    u8 nextParentIndex;
+    u8 field_A6; // Depth of the counter stack
     u8 currentOpcode;
 };
 
@@ -503,8 +505,8 @@ void sub_8122E30(u8, u8, u8);
 s8 script_cmd_80F17C4(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
 s8 script_cmd_show_reaction_bubble(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
 s8 script_cmd_start_dialogue(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
-u32 sub_8199F30(void);                // Random number
-u32 sub_81DD77C(s32, u32);            // ARM veneer; random value below the first argument?
+u32 sub_8199F30(void);     // Random number
+u32 sub_81DD77C(s32, u32); // ARM veneer; random value below the first argument?
 s32 sub_8199480(s32, s32); // ArcTan2 >> 8; callers pass and get ints, though it truncates to s16/u8
 s8 script_enable_flag_2(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
 s8 sub_80EDF90(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
@@ -741,7 +743,8 @@ extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
 extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
 extern u8 byte_839F620[];  // Direction (0-7) per ArcTan2 result / 0x1000 (FieldManager::sub_802C208)
 extern struct EVTS* dword_3000D78;
-// ARM code in ROM that is copied to IWRAM: the script bit reader sub_8000F9C ends where sub_8001010 starts.
+// ARM code in ROM that is copied to IWRAM: the script bit reader sub_8000F9C ends where sub_8001010
+// starts.
 extern u8 sub_8000F9C[];
 extern u8 sub_8001010[];
 extern u8* dword_83D6C58[]; // Object list header per list index (see init_fobj_with_data_80FB128)

@@ -11515,7 +11515,7 @@ _080F899A:
 	str r1, [sp, #0x004]
 	adds r1, r4, #0x0
 	movs r3, #0x00
-	bl sub_80EA5C8__9EventBaseP11EventThreadPUcT2UsUc
+	bl startScript__9EventBaseP11EventThreadPUcT2UsUc
 	b _080F89FC
 _080F89B4:
 	cmp r6, #0x05
@@ -11542,7 +11542,7 @@ _080F89B4:
 	str r1, [sp, #0x004]
 	adds r1, r4, #0x0
 	movs r3, #0x00
-	bl sub_80EA5C8__9EventBaseP11EventThreadPUcT2UsUc
+	bl startScript__9EventBaseP11EventThreadPUcT2UsUc
 	adds r3, r4, #0x0
 	adds r3, #0xFD
 	movs r1, #0x0F
@@ -12116,7 +12116,7 @@ sub_80F8EB0:
 	str r0, [sp, #0x004]
 	adds r0, r3, #0x0
 	movs r3, #0x00
-	bl sub_80EA5C8__9EventBaseP11EventThreadPUcT2UsUc
+	bl startScript__9EventBaseP11EventThreadPUcT2UsUc
 	add sp, #0x008
 	pop {r0}
 	bx r0
