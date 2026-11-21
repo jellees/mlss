@@ -1283,18 +1283,18 @@ int FieldObject::method13() {
                                     switch (cell->secondaryShape) {
                                         case 8:
                                             rowFront -= 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                         case 9: // Dead store: only the rows' front edge is used here.
                                             rowBack += 0x800;
                                             break;
                                         case 10:
                                             colLeft += 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                         case 11:
                                             colRight -= 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                     }
                                     if (flag
@@ -1468,15 +1468,15 @@ int FieldObject::method13() {
                                     switch (cell->secondaryShape) {
                                         case 9:
                                             rowBack += 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                         case 10:
                                             colLeft += 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                         case 11:
                                             colRight -= 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                     }
                                     if (flag
@@ -1650,11 +1650,11 @@ int FieldObject::method13() {
                                     switch (cell->secondaryShape) {
                                         case 8:
                                             rowFront -= 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                         case 9:
                                             rowBack += 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                         case 10: // Dead store: only the column's right edge is used
                                                  // here.
@@ -1662,7 +1662,7 @@ int FieldObject::method13() {
                                             break;
                                         case 11:
                                             colRight -= 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                     }
                                     if (flag
@@ -1835,15 +1835,15 @@ int FieldObject::method13() {
                                     switch (cell->secondaryShape) {
                                         case 8:
                                             rowFront -= 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                         case 9:
                                             rowBack += 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                         case 10:
                                             colLeft += 0x800;
-                                            flag = TRUE;
+                                            flag = true;
                                             break;
                                     }
                                     if (flag
@@ -2410,12 +2410,12 @@ void FieldObject::method15(u8 force) {
         if (topCell->tileFlags & field_26_4) {
             tolerance = (s16)field_23E;
         }
-        useTop = FALSE;
+        useTop = false;
         if (bestTop > 0) {
             if (bestFloor >= bestTop) {
                 useTop = bestFloor > result;
             } else if (bestTop <= result + tolerance) {
-                useTop = TRUE;
+                useTop = true;
             }
         }
 

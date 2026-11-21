@@ -14,7 +14,7 @@ inline bool FieldEventScript::sub_80F1E44(FieldObject* object, ScriptContext* sc
     s32 arguments[13];
 
     if (!(script->field_A0 & 1)) {
-        return FALSE;
+        return false;
     }
     while (sub_80EB838(object, script) == 0) {
         CommonEvent::readCommand(script, arguments, CommonEvent::instance,
@@ -24,7 +24,7 @@ inline bool FieldEventScript::sub_80F1E44(FieldObject* object, ScriptContext* sc
             break;
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Runs the script of every field object.
@@ -195,13 +195,13 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
     }
 }
 
-// Checked before each command of a script (sub_80F1E44 stops when it returns TRUE). Returns FALSE
+// Checked before each command of a script (sub_80F1E44 stops when it returns true). Returns false
 // while the script hasn't reached field_4, or after restoring the saved script in field_8. With
 // flag 8 set it clears flag 4 of the script context selected by field_A4 (a slot of dword_3000FD0
 // for 0-3, field object index + 4 otherwise).
 bool FieldEventScript::sub_80EB838(FieldObject* object, ScriptContext* script) {
     if (script->position != script->field_4) {
-        return FALSE;
+        return false;
     }
 
     if (script->field_A0 & 8) {
@@ -236,7 +236,7 @@ bool FieldEventScript::sub_80EB838(FieldObject* object, ScriptContext* script) {
     }
 
     if (script->field_A0 & ~0x403) {
-        return TRUE;
+        return true;
     }
 
     if (script->field_8 != 0) {
@@ -248,7 +248,7 @@ bool FieldEventScript::sub_80EB838(FieldObject* object, ScriptContext* script) {
         script->field_8 = 0;
         script->field_A2 = 0;
         script->field_A5 = 0;
-        return FALSE;
+        return false;
     }
 
     script->field_A0 &= ~1;
@@ -269,11 +269,11 @@ bool FieldEventScript::sub_80EB838(FieldObject* object, ScriptContext* script) {
             dword_3000FD0->field_55A_3 = 0;
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Executes the command that readCommand read (the opcode is script->currentOpcode, its arguments
-// are in arguments). Returns the result of the command handler; commands without one return TRUE.
+// are in arguments). Returns the result of the command handler; commands without one return true.
 s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* script, s32* arguments) {
     switch (script->currentOpcode) {
         case 0:
@@ -451,7 +451,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 92:
             ((FieldManager*)parentProcess)
                 ->sub_802973C(((FieldManager*)parentProcess)->objects[arguments[0]], arguments[1],
-                              arguments[2] != 0, arguments[3], FALSE);
+                              arguments[2] != 0, arguments[3], false);
             break;
         case 85:
             object->sub_80477A8(arguments[0], arguments[1]);
@@ -646,7 +646,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 176:
             BUFFER_REG_BLDALPHA = (arguments[1] << 8) | arguments[0];
             // return instead of break: decides which of cases 162 and 176 keeps the shared tail.
-            return TRUE;
+            return true;
         case 177: {
             int value = (arguments[1] << 8) | arguments[0];
 
@@ -679,7 +679,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
             return sub_80F04F8(this, object, script, arguments);
     }
 
-    return TRUE;
+    return true;
 }
 
 // Called by sub_80EC970 before it starts a new script on target: calls a FieldObject method for each
@@ -698,7 +698,7 @@ inline void FieldEventScript::sub_80EC970_prepare(FieldObject* target, ScriptCon
 
 // Script command 4: starts the script at arguments[2] on the object arguments[1]. arguments[0] bit 0
 // makes this script wait for it (flag 4); modes 2-3 and 6-7 don't pass this script's position, and
-// modes 4-7 use sub_80EA584 instead if the target's script is already running. Returns FALSE while
+// modes 4-7 use sub_80EA584 instead if the target's script is already running. Returns false while
 // waiting.
 s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32* arguments, u8 index) {
     FieldObject* target = *(((FieldManager*)parentProcess)->objects + arguments[1]);
@@ -792,7 +792,7 @@ s8 FieldEventScript::sub_80ECB20(ScriptContext* script, s32* arguments) {
             break;
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Script command 10: ends the script in slot arguments[0] of dword_3000FD0 (0 = slot 0, 1 = slot 3,
@@ -847,7 +847,7 @@ s8 FieldEventScript::sub_80ECCB0(ScriptContext* script, s32* arguments) {
             object->script.field_A0 &= mask;
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Script command 80: sets a property of the object to arguments[1], chosen by arguments[0]. Type 4
@@ -870,10 +870,10 @@ s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32
                     object->field_214_13 = 14;
                     break;
                 case 1:
-                    object->sub_80472D0(NULL, FALSE);
+                    object->sub_80472D0(NULL, false);
                     break;
                 case 2:
-                    object->sub_80472D0(NULL, TRUE);
+                    object->sub_80472D0(NULL, true);
                     break;
             }
             break;
@@ -950,7 +950,7 @@ s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32
             }
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Script command 81, chosen by arguments[0]: 0 calls sub_80472D0 with the field object arguments[2];
@@ -1010,7 +1010,7 @@ s8 FieldEventScript::sub_80ED17C(FieldObject* object, ScriptContext* script, s32
             object->field_270 = value;
             break;
     }
-    return TRUE;
+    return true;
 }
 #endif
 
@@ -1057,7 +1057,7 @@ s8 FieldEventScript::sub_80ED304(ScriptContext* script, s32* arguments) {
             }
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Script command 83: like sub_80ED304, for other properties. Type 4 sets the collision flags selected
@@ -1117,7 +1117,7 @@ s8 FieldEventScript::sub_80ED4EC(ScriptContext* script, s32* arguments) {
             break;
         }
     }
-    return TRUE;
+    return true;
 }
 
 s8 FieldEventScript::sub_80ED6A8(ScriptContext* script, s32* arguments) {
@@ -1132,7 +1132,7 @@ s8 FieldEventScript::sub_80ED6A8(ScriptContext* script, s32* arguments) {
         ((FieldManager*)parentProcess)->sub_80284B0(((FieldManager*)parentProcess)->field_FA_5, 0);
     }
     dword_3000FD0->field_530 = ((FieldManager*)parentProcess)->field_FA_5;
-    return TRUE;
+    return true;
 }
 
 s8 FieldEventScript::sub_80ED750(ScriptContext* script, s32* arguments) {
@@ -1144,7 +1144,7 @@ s8 FieldEventScript::sub_80ED750(ScriptContext* script, s32* arguments) {
     object->field_214_9 = 0;
     object->sprite->animationEndAction = 0;
     object->sprite->hFlip ^= arguments[2];
-    return TRUE;
+    return true;
 }
 
 u8 FieldEventScript::sub_80ED7D4(FieldObject* object, ScriptContext* script, s32* arguments) {
@@ -1190,7 +1190,7 @@ s8 FieldEventScript::sub_80ED90C(ScriptContext* script, s32* arguments) {
     item->field_4 = *arguments++;
     item->field_5_0 = *arguments ^ flip;
     item->field_5_1 = 0;
-    return TRUE;
+    return true;
 }
 
 s8 FieldEventScript::sub_80ED9A4(FieldObject* object, ScriptContext* script, s32* arguments) {
@@ -1213,7 +1213,7 @@ s8 FieldEventScript::sub_80ED9A4(FieldObject* object, ScriptContext* script, s32
         dword_3000FD0->field_55A_1 = dword_3000FD0->field_554[0] != 0;
         dword_3000FD0->field_55A_3 = dword_3000FD0->field_554[0] != 0;
     }
-    return TRUE;
+    return true;
 }
 
 // Script command: jumps to arguments[2] if a property of the object arguments[0] equals bit 0 of
@@ -1276,7 +1276,7 @@ s8 FieldEventScript::sub_80EDAB0(ScriptContext* script, s32* arguments) {
     if (result) {
         script->position = (u8*)arguments[1];
     }
-    return TRUE;
+    return true;
 }
 #endif
 
@@ -1344,9 +1344,9 @@ s8 FieldEventScript::sub_80EDBC4(FieldObject* object, ScriptContext* script, s32
                             centerZ, moveX << 8, moveY << 8, moveZ << 8, 0x100, 0x100, 0x100,
                             arguments[4], arguments[5], arguments[0] & 1 ? 1 : -1, -1)) {
         script_enable_flag_2(this, object, script, NULL);
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 // Like sub_80EDBC4, around the object arguments[2]: the axis chosen by arguments[1] takes the center
@@ -1401,9 +1401,9 @@ s8 FieldEventScript::sub_80EDD48(FieldObject* object, ScriptContext* script, s32
                             moveY << 8, moveZ << 8, 0x100, 0x100, 0x100, arguments[3], arguments[4],
                             arguments[0] & 1 ? 1 : -1, arguments[2])) {
         script_enable_flag_2(this, object, script, NULL);
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 // Turns the object to a direction chosen by arguments[0]: 0 the direction arguments[1], 1 its direction
@@ -1441,5 +1441,5 @@ s8 FieldEventScript::sub_80EDEB4(FieldObject* object, ScriptContext* script, s32
             break;
     }
     object->sub_80478AC(direction);
-    return TRUE;
+    return true;
 }

@@ -384,7 +384,7 @@ void TitleScreen::preparePressStart() {
 
     xPosSuitcase = 30720;
     yPosSuitcase = 35840;
-    skipSuitcaseAnim = FALSE;
+    skipSuitcaseAnim = false;
 
     BUFFER_REG_BG2HOFS = 0;
     BUFFER_REG_BG2VOFS = 0;
@@ -766,7 +766,7 @@ void TitleScreen::update() {
                                 if ((u16)nTextProgression == 17) {
                                     sprite_set_animation(sprites[TS_SPRITE_SUITCASE], 5, 0);
                                     states[TS_ITEM_SUITCASE] = TS_ITEM_SC_STATE_CLOSE;
-                                    skipSuitcaseAnim = FALSE;
+                                    skipSuitcaseAnim = false;
                                     states[TS_ITEM_LICENSE_TEXT] = -1;
                                 }
                                 break;
@@ -781,7 +781,7 @@ void TitleScreen::update() {
             if (!isSkippingSuitcaseAnim) {
                 if (skipSuitcaseAnim
                     && gGameState.field_2A & (A_BUTTON | B_BUTTON | SELECT_BUTTON | START_BUTTON)) {
-                    isSkippingSuitcaseAnim = TRUE;
+                    isSkippingSuitcaseAnim = true;
                     brightness = 16;
                 }
             } else {

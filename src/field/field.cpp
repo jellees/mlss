@@ -4038,12 +4038,12 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, bool arg2) {
                                     s32 otherX = other->x;
                                     s32 otherY = other->y + other->field_270;
                                     s32 halfWidth = (player->field_272 + other->field_272) >> 1;
-                                    bool hit = FALSE;
+                                    bool hit = false;
 
                                     if (x - halfWidth < otherX && x + halfWidth > otherX
                                         && y - player->field_276 < otherY
                                         && y + other->field_276 > otherY) {
-                                        hit = TRUE;
+                                        hit = true;
                                     } else {
                                         u32 mask;
 
@@ -4056,14 +4056,14 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, bool arg2) {
                                                             > otherX - (other->field_272 >> 1)
                                                         && x - (player->field_272 >> 1)
                                                                < otherX + (other->field_272 >> 1)) {
-                                                        hit = TRUE;
+                                                        hit = true;
                                                     }
                                                     break;
                                                 case 2:
                                                 case 8:
                                                     if (y > otherY - other->field_276
                                                         && y - player->field_276 < otherY) {
-                                                        hit = TRUE;
+                                                        hit = true;
                                                     }
                                                     break;
                                             }
@@ -4146,12 +4146,12 @@ u8 FieldManager::sub_802BD2C() {
                         bool stuck;
 
                         field_26C++;
-                        stuck = FALSE;
+                        stuck = false;
                         if ((brothersForm == BROTHERS_FORM_MINI_MARIO
                              || brothersForm == BROTHERS_FORM_MOLE_LUIGI)
                             && (s8)field_26C == 10
                             && sub_802E688(brothersForm != BROTHERS_FORM_MINI_MARIO)) {
-                            stuck = TRUE;
+                            stuck = true;
                         }
                         if (stuck) {
                             sub_802E754(0, 1, 1);
@@ -4454,7 +4454,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             break;
 
         case 5: {
-            u8 hit = FALSE;
+            u8 hit = false;
 
             if (!player->field_353_2) {
                 hit = player->sub_804D734(0, objects, objectCount);

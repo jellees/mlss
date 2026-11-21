@@ -841,7 +841,7 @@ struct Warp* FieldPlayerCharacter::findWarp(struct Warp* warps, int* outX, int* 
     if (filtered) {
         directions = &byte_83A0A2E[direction];
     }
-    while (TRUE) {
+    while (true) {
         if (left >= warps->left && right <= warps->right && top >= warps->top && bottom <= warps->bottom
             && field_26_1 == warps->fromLedge) {
             if (filtered) {
@@ -1434,7 +1434,7 @@ bool FieldPlayerCharacter::sub_804B25C(FieldObject* other) {
 
     if (!other->field_20C_0 || other->field_214_21 || !other->blocksBrothers
         || (s8)field_1 == other->objectIndex) {
-        return FALSE;
+        return false;
     }
     width = field_272;
     depth = field_276;
@@ -1449,7 +1449,7 @@ bool FieldPlayerCharacter::sub_804B25C(FieldObject* other) {
         overlap = field_284 + width - edge;
     }
     if (overlap <= 0) {
-        return FALSE;
+        return false;
     }
     edge = other->y + other->field_270;
     if (edge > field_288) {
@@ -1458,7 +1458,7 @@ bool FieldPlayerCharacter::sub_804B25C(FieldObject* other) {
         overlap = edge - (field_288 - depth);
     }
     if (overlap <= 0) {
-        return FALSE;
+        return false;
     }
     edge = other->z;
     if (other->height > 0 || (other->height < 0 && other->previousHeight < 0)) {
@@ -1470,9 +1470,9 @@ bool FieldPlayerCharacter::sub_804B25C(FieldObject* other) {
         overlap = field_28C + boxHeight - edge;
     }
     if (overlap <= 0) {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 // https://decomp.me/scratch/TODO
@@ -1559,7 +1559,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         currentTop = current + field_27A;
 
         // Probe 0: the center.
-        probe = sub_803FBA4(field_290, x, y, &floor, &ceiling, &top, TRUE, field_20C_11);
+        probe = sub_803FBA4(field_290, x, y, &floor, &ceiling, &top, true, field_20C_11);
         floorLimit = floor;
         if (probe->primaryShape > 3) {
             floorLimit += 0x1000;
@@ -1587,7 +1587,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         // Probe 1: the left edge.
         probeX = x - field_27E / 2;
         probeY = y;
-        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, TRUE, field_20C_11);
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, true, field_20C_11);
         if (probe->primaryShape == 5) {
             floor -= field_27E / 2;
         }
@@ -1615,7 +1615,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                     topLimit = bestTop + 0x1000;
                 }
             }
-            sub_803FBA4(field_290, x - (field_278 >> 1), y, &floor, &ceiling, &top, FALSE,
+            sub_803FBA4(field_290, x - (field_278 >> 1), y, &floor, &ceiling, &top, false,
                         field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
@@ -1625,7 +1625,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         // Probe 2: the right edge.
         probeX = x - edgeOffset + field_27E / 2;
         probeY = y;
-        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, TRUE, field_20C_11);
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, true, field_20C_11);
         if (probe->primaryShape == 4) {
             floor += 0x100 - field_27E / 2;
         }
@@ -1653,7 +1653,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                     topLimit = bestTop + 0x1000;
                 }
             }
-            sub_803FBA4(field_290, x - edgeOffset + (field_278 >> 1), y, &floor, &ceiling, &top, FALSE,
+            sub_803FBA4(field_290, x - edgeOffset + (field_278 >> 1), y, &floor, &ceiling, &top, false,
                         field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
@@ -1666,7 +1666,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         flagsLeft = 0;
         probeX = x - field_27E / 2;
         probeY = (y + edgeOffset) - field_280;
-        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, TRUE, field_20C_11);
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, true, field_20C_11);
         if (probe->tileFlags
             && !(probe->primaryShape == 3 && probe->floorType == 8 && probe->secondaryShape == 3)) {
             flagsLeft = probe->tileFlags;
@@ -1707,7 +1707,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                 topProbe = 3;
             }
             sub_803FBA4(field_290, x - (field_278 >> 1), y + edgeOffset - field_27C, &floor, &ceiling,
-                        &top, FALSE, field_20C_11);
+                        &top, false, field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
             }
@@ -1716,7 +1716,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         flagsRight = 0;
         probeX = x - edgeOffset + field_27E / 2;
         probeY = (y + edgeOffset) - field_280;
-        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, TRUE, field_20C_11);
+        probe = sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &top, true, field_20C_11);
         if (probe->tileFlags
             && !(probe->primaryShape == 3 && probe->floorType == 8 && probe->secondaryShape == 3)) {
             flagsRight = probe->tileFlags;
@@ -1768,7 +1768,7 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
                 topProbe = 4;
             }
             sub_803FBA4(field_290, x - edgeOffset + (field_278 >> 1), y + edgeOffset - field_27C,
-                        &floor, &ceiling, &top, FALSE, field_20C_11);
+                        &floor, &ceiling, &top, false, field_20C_11);
             if (ceiling >= 0 && lowestCeiling > ceiling) {
                 lowestCeiling = ceiling;
             }
@@ -1805,12 +1805,12 @@ void FieldPlayerCharacter::sub_804B360(u8 force, u8 arg2) {
         if (topCell->tileFlags & field_26_4) {
             tolerance = (s16)field_23E;
         }
-        useTop = FALSE;
+        useTop = false;
         if (bestTop > 0) {
             if (bestFloor >= bestTop) {
                 useTop = bestFloor > result;
             } else if (bestTop <= result + tolerance) {
-                useTop = TRUE;
+                useTop = true;
             }
         }
 
@@ -2079,7 +2079,7 @@ settle:
         diagonal = 0;
         slopes = 0;
         corners = 0;
-        cells[0] = sub_803FBA4(field_290, left, front, &cornerFloor, &cornerCeiling, &cornerTop, TRUE,
+        cells[0] = sub_803FBA4(field_290, left, front, &cornerFloor, &cornerCeiling, &cornerTop, true,
                                field_20C_11);
         if (field_26_2 == 0 && !(cells[0]->tileFlags & field_26_4)) {
             if (cells[0]->primaryShape > 3) {
@@ -2121,7 +2121,7 @@ settle:
         }
         if (diagonal == 0) {
             cells[1] = sub_803FBA4(field_290, right, front, &cornerFloor, &cornerCeiling, &cornerTop,
-                                   TRUE, field_20C_11);
+                                   true, field_20C_11);
             if (field_26_2 == 0 && !(cells[1]->tileFlags & field_26_4)) {
                 if (cells[1]->primaryShape > 3) {
                     cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
@@ -2162,7 +2162,7 @@ settle:
             }
             if (diagonal == 0) {
                 cells[2] = sub_803FBA4(field_290, left, back, &cornerFloor, &cornerCeiling, &cornerTop,
-                                       TRUE, field_20C_11);
+                                       true, field_20C_11);
                 if (field_26_2 == 0 && !(cells[2]->tileFlags & field_26_4)) {
                     if (cells[2]->primaryShape > 3) {
                         cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
@@ -2203,7 +2203,7 @@ settle:
                 }
                 if (diagonal == 0) {
                     cells[3] = sub_803FBA4(field_290, right, back, &cornerFloor, &cornerCeiling,
-                                           &cornerTop, TRUE, field_20C_11);
+                                           &cornerTop, true, field_20C_11);
                     if (field_26_2 == 0 && !(cells[3]->tileFlags & field_26_4)) {
                         if (cells[3]->primaryShape > 3) {
                             cornerFloor = (cornerFloor + 0x1000) & ~0xFFF;
@@ -2332,14 +2332,14 @@ settle:
 bool FieldPlayerCharacter::sub_804D0EC() {
     if (objectIndex == BROTHER_MARIO && isMini) {
         if (get_coldef_ptr_by_xz(field_290, previousX / 4096, previousY / 4096)->floorType == 3) {
-            return TRUE;
+            return true;
         }
         if (get_coldef_ptr_by_xz(field_290, previousX / 4096, (previousY - field_27C) / 4096)->floorType
             == 3) {
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 // Returns whether any corner of this player character's box is inside a wall.
@@ -2358,23 +2358,23 @@ bool FieldPlayerCharacter::sub_804D18C() {
         low = 0;
     }
     high = field_27A + low;
-    sub_803FBA4(field_290, left, top, &floor, &ceiling, &objectTop, TRUE, TRUE);
+    sub_803FBA4(field_290, left, top, &floor, &ceiling, &objectTop, true, true);
     if (low < floor || (low < objectTop && high >= ceiling)) {
-        return TRUE;
+        return true;
     }
-    sub_803FBA4(field_290, right, top, &floor, &ceiling, &objectTop, TRUE, TRUE);
+    sub_803FBA4(field_290, right, top, &floor, &ceiling, &objectTop, true, true);
     if (low < floor || (low < objectTop && high >= ceiling)) {
-        return TRUE;
+        return true;
     }
-    sub_803FBA4(field_290, left, bottom, &floor, &ceiling, &objectTop, TRUE, TRUE);
+    sub_803FBA4(field_290, left, bottom, &floor, &ceiling, &objectTop, true, true);
     if (low < floor || (low < objectTop && high >= ceiling)) {
-        return TRUE;
+        return true;
     }
-    sub_803FBA4(field_290, right, bottom, &floor, &ceiling, &objectTop, TRUE, TRUE);
+    sub_803FBA4(field_290, right, bottom, &floor, &ceiling, &objectTop, true, true);
     if (low < floor || (low < objectTop && high >= ceiling)) {
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 // https://decomp.me/scratch/lbDtE
@@ -2439,12 +2439,12 @@ int FieldPlayerCharacter::sub_804D2CC() {
         probeY2 = probeY;
         probeY -= field_27C;
         probeY2 = ((probeY2 + 0xFF) & ~0xFF) - 0x100;
-        sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &objectTop, true, field_20C_11);
         if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
             || (field_20C_13 && bottom > floor && bottom != objectTop)) {
             blocked |= 1;
         }
-        sub_803FBA4(field_290, probeX, probeY2, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        sub_803FBA4(field_290, probeX, probeY2, &floor, &ceiling, &objectTop, true, field_20C_11);
         if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
             || (field_20C_13 && bottom > floor && bottom != objectTop)) {
             blocked |= 8;
@@ -2473,22 +2473,22 @@ int FieldPlayerCharacter::sub_804D2CC() {
         left = x - (field_278 >> 1);
         right = left + field_278 + 0xFF;
         right &= ~0xFF;
-        sub_803FBA4(field_290, left, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        sub_803FBA4(field_290, left, probeY, &floor, &ceiling, &objectTop, true, field_20C_11);
         if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
             || (field_20C_13 && bottom > floor && bottom != objectTop)) {
             blocked |= 1;
         }
-        sub_803FBA4(field_290, x - 0x100, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        sub_803FBA4(field_290, x - 0x100, probeY, &floor, &ceiling, &objectTop, true, field_20C_11);
         if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
             || (field_20C_13 && bottom > floor && bottom != objectTop)) {
             blocked |= 2;
         }
-        sub_803FBA4(field_290, x, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        sub_803FBA4(field_290, x, probeY, &floor, &ceiling, &objectTop, true, field_20C_11);
         if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
             || (field_20C_13 && bottom > floor && bottom != objectTop)) {
             blocked |= 4;
         }
-        sub_803FBA4(field_290, right, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+        sub_803FBA4(field_290, right, probeY, &floor, &ceiling, &objectTop, true, field_20C_11);
         if (bottom < floor || (ceiling >= 0 && top > ceiling && bottom < objectTop)
             || (field_20C_13 && bottom > floor && bottom != objectTop)) {
             blocked |= 8;
@@ -2525,7 +2525,7 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
 
     if (mode != 1 && !(isMini && sprite->frame > 2 && sprite->frame <= 4)
         && !(sprite->frame == 3 || sprite->frame == 4)) {
-        return FALSE;
+        return false;
     }
     if (mode == 0) {
         if (isMini) {
@@ -2619,7 +2619,7 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
                 field_342 = mode;
             }
             if (mode == 0 ? other->field_210_4 : other->blocksBrothers) {
-                return TRUE;
+                return true;
             }
         next:
             if (other->type == FIELD_OBJECT_TYPE_FMON && ((FieldMonster*)other)->field_344 != NULL
@@ -2630,7 +2630,7 @@ bool FieldPlayerCharacter::sub_804D734(int mode, FieldObject** objects, int coun
             }
         }
     }
-    return FALSE;
+    return false;
 }
 #endif
 bool FieldPlayerCharacter::sub_804DBD0(int mode) {
@@ -2644,7 +2644,7 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
 
     if (mode != 1 && !(isMini && sprite->frame > 2 && sprite->frame <= 4)
         && !(sprite->frame == 3 || sprite->frame == 4)) {
-        return FALSE;
+        return false;
     }
     offsets = word_83A0B88[mode][direction];
     if (mode == 0) {
@@ -2684,11 +2684,11 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
         int probeX = x + offsets[byte_83A0C48[i * 2]];
         int probeY = y + offsets[byte_83A0C48[i * 2 + 1]];
         struct Coldef* coldef =
-            sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &objectTop, TRUE, field_20C_11);
+            sub_803FBA4(field_290, probeX, probeY, &floor, &ceiling, &objectTop, true, field_20C_11);
 
         if (low <= floor) {
             if (mode != 0 || coldef->floorType != 8 || !(coldef->tileFlags & 1)) {
-                return TRUE;
+                return true;
             }
         } else if (ceiling >= 0 && low <= objectTop && high > ceiling) {
             if ((coldef->solid & field_20C_11)
@@ -2698,10 +2698,10 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
             if (mode == 0 && coldef->floorType == 8 && (coldef->tileFlags & 2)) {
                 continue;
             }
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 // These are inline: sub_804DDF4 inlines sub_804FC90, and g++ emits the out-of-line copies at the end of
@@ -2938,7 +2938,7 @@ void FieldPlayerShotBullet::sub_804E450() {
         }
         cellY = y / 4096;
         last = (y - height) / 4096 - 1;
-        while (TRUE) {
+        while (true) {
             cellY--;
             coldef = get_coldef_ptr_by_xz(map, cellX, cellY);
             if ((int)priority > (int)coldef->primaryPriority) {
@@ -3262,17 +3262,17 @@ u8 FieldPlayerShotBullet::sub_804EA68() {
                                 switch (coldef->secondaryShape) {
                                     case 8:
                                         cellBottom -= 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                     case 9:
                                         break;
                                     case 10:
                                         cellLeft += 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                     case 11:
                                         cellRight -= 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                 }
                                 if (!solid) {
@@ -3357,15 +3357,15 @@ u8 FieldPlayerShotBullet::sub_804EA68() {
                                         break;
                                     case 9:
                                         cellTop += 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                     case 10:
                                         cellLeft += 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                     case 11:
                                         cellRight -= 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                 }
                                 if (!solid) {
@@ -3452,17 +3452,17 @@ u8 FieldPlayerShotBullet::sub_804EA68() {
                                 switch (coldef->secondaryShape) {
                                     case 8:
                                         cellBottom -= 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                     case 9:
                                         cellTop += 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                     case 10:
                                         break;
                                     case 11:
                                         cellRight -= 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                 }
                                 if (!solid) {
@@ -3545,15 +3545,15 @@ u8 FieldPlayerShotBullet::sub_804EA68() {
                                 switch (coldef->secondaryShape) {
                                     case 8:
                                         cellBottom -= 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                     case 9:
                                         cellTop += 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                     case 10:
                                         cellLeft += 0x800;
-                                        solid = TRUE;
+                                        solid = true;
                                         break;
                                 }
                                 if (!solid) {
@@ -3696,7 +3696,7 @@ void FieldPlayerShotBullet::sub_804F904() {
     lowestCeiling = 0xFFFFFF;
     bestTop = 0;
     bottom = z + height;
-    probe = sub_803FBA4(map, x, y, &floor, &ceiling, &top, TRUE, TRUE);
+    probe = sub_803FBA4(map, x, y, &floor, &ceiling, &top, true, true);
     floorLimit = floor;
     if (probe->primaryShape > 3) {
         floorLimit += 0x1000;
@@ -3710,8 +3710,8 @@ void FieldPlayerShotBullet::sub_804F904() {
         bestTop = top;
     }
     offset = 0x100;
-    sub_803FBA4(map, x - offset + (boxWidth >> 1), y + offset - boxDepth, &floor, &ceiling, &top, FALSE,
-                TRUE);
+    sub_803FBA4(map, x - offset + (boxWidth >> 1), y + offset - boxDepth, &floor, &ceiling, &top, false,
+                true);
     if (ceiling >= 0 && lowestCeiling > ceiling) {
         lowestCeiling = ceiling;
     }
@@ -3719,14 +3719,14 @@ void FieldPlayerShotBullet::sub_804F904() {
         lowestCeiling = 0;
     }
     result = bottom;
-    above = FALSE;
+    above = false;
     if (bestTop > 0) {
         if (bestFloor >= bestTop) {
             if (bestFloor > result) {
-                above = TRUE;
+                above = true;
             }
         } else if (bestTop <= result) {
-            above = TRUE;
+            above = true;
         }
     }
     if (above) {

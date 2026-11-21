@@ -57,7 +57,7 @@ Process::Process(u8 priority, char* label) {
     state = 0;
     this->priority = priority;
     flag = PROCESS_ENABLED;
-    wait = TRUE;
+    wait = true;
     executeMax = 1;
     executeCounter = 0;
     frames = 0;
@@ -72,7 +72,7 @@ void Process::executeAll() {
 
     if (gGameState.startProcessLink != 0) {
         do {
-            stopExecuting = TRUE;
+            stopExecuting = true;
 
             exeProcess = gGameState.startProcessLink;
             while (exeProcess != NULL) {
@@ -90,7 +90,7 @@ void Process::executeAll() {
 
                         if (gGameState.currentProcess != NULL) {
                             exeProcess->frames++;
-                            exeProcess->wait = TRUE;
+                            exeProcess->wait = true;
                         }
                     } else {
                         exeProcess->update();
@@ -99,9 +99,9 @@ void Process::executeAll() {
                             exeProcess->frames++;
 
                             if (++exeProcess->executeCounter >= exeProcess->executeMax) {
-                                exeProcess->wait = TRUE;
+                                exeProcess->wait = true;
                             } else {
-                                stopExecuting = FALSE;
+                                stopExecuting = false;
                             }
                         }
                     }
@@ -109,12 +109,12 @@ void Process::executeAll() {
 
                 exeProcess = gGameState.nextProcess;
             }
-        } while (stopExecuting == FALSE);
+        } while (stopExecuting == false);
     }
 
     process = gGameState.startProcessLink;
     while (process != NULL) {
-        process->wait = FALSE;
+        process->wait = false;
 
         if (!(process->executeMax & 8)) {
             process->executeCounter = 0;
@@ -129,13 +129,13 @@ bool32 Process::exists(Process* process) {
 
     while (curProcess != NULL) {
         if (curProcess == process) {
-            return TRUE;
+            return true;
         }
 
         curProcess = curProcess->nextProcess;
     }
 
-    return FALSE;
+    return false;
 }
 
 void Process::enableAll() {
@@ -143,7 +143,7 @@ void Process::enableAll() {
 
     while (process != NULL) {
         process->flag = PROCESS_ENABLED;
-        process->wait = TRUE;
+        process->wait = true;
         process = process->nextProcess;
     }
 }
@@ -154,7 +154,7 @@ void Process::disableAll() {
     while (process != NULL) {
         if (process->priority != 0 && process->priority != 255) {
             process->flag = PROCESS_DISABLED;
-            process->wait = TRUE;
+            process->wait = true;
         }
         process = process->nextProcess;
     }
@@ -162,12 +162,12 @@ void Process::disableAll() {
 
 void Process::enable() {
     flag = PROCESS_ENABLED;
-    wait = TRUE;
+    wait = true;
 }
 
 void Process::disable() {
     flag = PROCESS_DISABLED;
-    wait = TRUE;
+    wait = true;
 }
 
 Process::~Process() {

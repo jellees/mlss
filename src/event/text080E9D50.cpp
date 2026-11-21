@@ -31,7 +31,7 @@ s8 EventBase::sub_80E9D50(void* window, ScriptSlot* script, s32* arguments) {
         y = 0x94 - height * 8;
     }
     sub_80E5BCC(window, arguments[0], x, y, width, height, 0, flags, arguments[4], arguments[5]);
-    return TRUE;
+    return true;
 }
 
 // Changes the two flags of the process at dword_3000D44 (arguments[0]): 0 clears bit 0 and 3 sets
@@ -64,7 +64,7 @@ s8 EventBase::sub_80E9E10(ScriptSlot* script, s32* arguments) {
             }
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Raises (arguments[2] = 0) or lowers (1) field_E (arguments[1] = 0) or field_14 (1) of a brother's
@@ -182,7 +182,7 @@ s8 EventBase::sub_80E9EE0(ScriptSlot* script, s32* arguments) {
                 break;
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Sets (arguments[1] = 0) or clears one of the 9 flags (arguments[2]; 9-17 for the second brother) in
@@ -217,7 +217,7 @@ s8 EventBase::sub_80EA064(ScriptSlot* script, s32* arguments) {
             }
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Changes the inventory in the dword_3000FF4 block and stores whether it worked in the script
@@ -280,10 +280,10 @@ s8 EventBase::sub_80EA144(ScriptSlot* script, s32* arguments, u32* engineRegiste
                     value -= *arguments;
                     if (value < 0) {
                         *pointer = 0;
-                        result = FALSE;
+                        result = false;
                     } else {
                         *pointer = value;
-                        result = TRUE;
+                        result = true;
                     }
                     break;
             }
@@ -297,9 +297,9 @@ s8 EventBase::sub_80EA144(ScriptSlot* script, s32* arguments, u32* engineRegiste
                     value = *(u16*)((u8*)dword_3000FF4 + 0x88) + *arguments;
                     if (value > 9999) {
                         value = 9999;
-                        result = FALSE;
+                        result = false;
                     } else {
-                        result = TRUE;
+                        result = true;
                     }
                     break;
 
@@ -307,9 +307,9 @@ s8 EventBase::sub_80EA144(ScriptSlot* script, s32* arguments, u32* engineRegiste
                     value = *(u16*)((u8*)dword_3000FF4 + 0x88) - *arguments;
                     if (value < 0) {
                         value = 0;
-                        result = FALSE;
+                        result = false;
                     } else {
-                        result = TRUE;
+                        result = true;
                     }
                     break;
             }
@@ -325,18 +325,18 @@ s8 EventBase::sub_80EA144(ScriptSlot* script, s32* arguments, u32* engineRegiste
                 case 0:
                     if (!(*pointer & value)) {
                         *pointer |= value;
-                        result = TRUE;
+                        result = true;
                     } else {
-                        result = FALSE;
+                        result = false;
                     }
                     break;
 
                 case 1:
                     if (*pointer & value) {
                         *pointer &= ~value;
-                        result = TRUE;
+                        result = true;
                     } else {
-                        result = FALSE;
+                        result = false;
                     }
                     break;
             }
@@ -345,7 +345,7 @@ s8 EventBase::sub_80EA144(ScriptSlot* script, s32* arguments, u32* engineRegiste
     if (destination >= 0) {
         CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, destination, result);
     }
-    return TRUE;
+    return true;
 }
 
 // Stores in the script value arguments[0] the coins (arguments[1] = 0xFF), the count of item
@@ -392,7 +392,7 @@ s8 EventBase::sub_80EA358(ScriptSlot* script, s32* arguments, u32* engineRegiste
 
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, destination, value);
 
-    return TRUE;
+    return true;
 }
 
 // Steps the counter on top of the script's counter stack: arguments[0] (without bits 3-4) 3 or 4
@@ -415,12 +415,12 @@ s8 EventBase::sub_80EA478(ScriptSlot* script, s32* arguments) {
         if ((arguments[0] & 0x18) == 0x10) {
             (*depth)--;
             *counter = 0;
-            return TRUE;
+            return true;
         }
     } else if ((arguments[0] & 0x18) == 0x18) {
         (*depth)--;
         *counter = 0;
-        return TRUE;
+        return true;
     }
 
     if (mode == 1) {
@@ -429,7 +429,7 @@ s8 EventBase::sub_80EA478(ScriptSlot* script, s32* arguments) {
         (*counter)--;
     }
 
-    return TRUE;
+    return true;
 }
 
 // Saves a return position (field_8), end (field_C), flags (field_A2) and index (field_A5) in the
@@ -499,14 +499,14 @@ u8 EventBase::sub_80EA670(s32 x, s32 y, s32 targetX, s32 targetY) {
 
     x = targetX - x;
     y = targetY - y;
-    negativeX = FALSE;
-    negativeY = FALSE;
+    negativeX = false;
+    negativeY = false;
     if (x < 0) {
-        negativeX = TRUE;
+        negativeX = true;
         x = -x;
     }
     if (y < 0) {
-        negativeY = TRUE;
+        negativeY = true;
         y = -y;
     }
     while ((x | y) & 0xFFFF8000) {
@@ -614,7 +614,7 @@ u8 EventBase::script_test_condition(u8 operation, s32 left, s32 right) {
             return ~left != 0;
     }
 
-    return FALSE;
+    return false;
 }
 
 // Stores gGameState.field_8C0 in the script value arguments[0] if arguments[1] is 0.
@@ -626,7 +626,7 @@ s8 EventBase::sub_80EA854(ScriptSlot* script, s32* arguments, u32* engineRegiste
         value = gGameState.field_8C0;
     }
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0], value);
-    return TRUE;
+    return true;
 }
 
 // Calls sub_801ABE8(arguments[1], arguments[2], arguments[3]) if arguments[0] is 0.
@@ -634,7 +634,7 @@ s8 EventBase::sub_80EA88C(ScriptSlot* script, s32* arguments) {
     if (*arguments++ == 0) {
         sub_801ABE8(arguments[0], arguments[1], arguments[2]);
     }
-    return TRUE;
+    return true;
 }
 
 // Resets the game (arguments[0] = 0) or calls sub_801ADC0, sub_801AD80 or sub_801AD3C (1-3).
@@ -656,7 +656,7 @@ s8 EventBase::sub_80EA8A4(ScriptSlot* script, s32* arguments) {
             sub_801AD3C();
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Jumps to arguments[2] if script_test_condition(arguments[0], arguments[1], compareValue) holds.
@@ -664,7 +664,7 @@ s8 EventBase::sub_80EA8DC(ScriptSlot* script, s32* arguments) {
     if (script_test_condition(arguments[0], arguments[1], script->compareValue)) {
         script->position = (u8*)arguments[2];
     }
-    return TRUE;
+    return true;
 }
 
 // Pops the counter stack.
@@ -673,13 +673,13 @@ s8 EventBase::sub_80EA904(ScriptSlot* script) {
 
     (*depth)--;
     *(script->counters + *depth) = 0;
-    return TRUE;
+    return true;
 }
 
 // Sets the value sub_80EA8DC compares (compareValue).
 s8 EventBase::sub_80EA91C(ScriptSlot* script, s32* arguments) {
     script->compareValue = arguments[0];
-    return TRUE;
+    return true;
 }
 
 // Pushes arguments[0] on the counter stack.
@@ -688,7 +688,7 @@ s8 EventBase::sub_80EA928(ScriptSlot* script, s32* arguments) {
 
     *(script->counters + *depth) = arguments[0];
     (*depth)++;
-    return TRUE;
+    return true;
 }
 
 // Jumps to one of the arguments[0] positions after it, chosen at random (0 = don't jump).
@@ -698,20 +698,20 @@ s8 EventBase::sub_80EA940(ScriptSlot* script, s32* arguments) {
     if (position != NULL) {
         script->position = position;
     }
-    return TRUE;
+    return true;
 }
 
 // Stores a random value below arguments[1] in the script value arguments[0].
 s8 EventBase::sub_80EA968(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                              sub_81DD77C(arguments[1], sub_8199F30()));
-    return TRUE;
+    return true;
 }
 
 // Calls GameMode::sub_801B0AC(arguments[0]).
 s8 EventBase::sub_80EA9A8(ScriptSlot* script, s32* arguments) {
     GameMode::sub_801B0AC(arguments[0]);
-    return TRUE;
+    return true;
 }
 
 // Jumps to arguments[3] depending on the keys in gGameState.field_2E masked with arguments[2]:
@@ -742,7 +742,7 @@ s8 EventBase::sub_80EA9B8(ScriptSlot* script, s32* arguments) {
             script->position = (u8*)arguments[3];
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Like sub_80EA9B8, but with gGameState.inputPressed, or field_2A if arguments[0] >> 1 is 0.
@@ -775,14 +775,14 @@ s8 EventBase::sub_80EAA04(ScriptSlot* script, s32* arguments) {
             script->position = (u8*)arguments[3];
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Stores gGameState.field_2E in the script value arguments[0].
 s8 EventBase::sub_80EAA5C(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                              gGameState.field_2E);
-    return TRUE;
+    return true;
 }
 
 // Stores gGameState.field_2A (arguments[1] = 0), inputPressed (1) or 0 in the script value
@@ -798,7 +798,7 @@ s8 EventBase::sub_80EAA84(ScriptSlot* script, s32* arguments, u32* engineRegiste
         keys = 0;
     }
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0], keys);
-    return TRUE;
+    return true;
 }
 
 // Sets the key mask (gGameState.field_3C.field_3C_0) to the keys not in arguments[0] and applies it
@@ -806,13 +806,13 @@ s8 EventBase::sub_80EAA84(ScriptSlot* script, s32* arguments, u32* engineRegiste
 s8 EventBase::sub_80EAACC(ScriptSlot* script, s32* arguments) {
     gGameState.field_3C.field_3C_0 = ~arguments[0] & 0x3FF;
     sub_8018818();
-    return TRUE;
+    return true;
 }
 
 // Sets gGameState.field_3C.field_3C_10 to arguments[0].
 s8 EventBase::sub_80EAB00(ScriptSlot* script, s32* arguments) {
     gGameState.field_3C.field_3C_10 = arguments[0];
-    return TRUE;
+    return true;
 }
 
 // Sets the flags arguments[1] in gGameState.field_7C (arguments[0] = 0), or sets (1) or clears (2)
@@ -831,7 +831,7 @@ s8 EventBase::sub_80EAB20(ScriptSlot* script, s32* arguments) {
             gGameState.field_3C.field_3E &= ~arguments[0];
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Jumps to arguments[4] if script_test_condition(arguments[0], arguments[1], arguments[2]) equals
@@ -840,7 +840,7 @@ s8 EventBase::script_cmd_conditional_jump(ScriptSlot* script, s32* arguments) {
     if (script_test_condition(arguments[0], arguments[1], arguments[2]) == arguments[3]) {
         script->position = (u8*)arguments[4];
     }
-    return TRUE;
+    return true;
 }
 
 // Stores arguments[2] OP arguments[3] in the script value arguments[0], with operation arguments[1]:
@@ -903,7 +903,7 @@ s8 EventBase::sub_80EAB98(ScriptSlot* script, s32* arguments, u32* engineRegiste
 
     CommonEvent::setVariable(engineRegisters, script->registers, engineFlags, scriptFlags, arguments[0],
                              arguments[2]);
-    return TRUE;
+    return true;
 }
 
 // Stores field_E (arguments[2] = 0), field_12 (1), field_14 (2) or field_18 (3) of brother
@@ -932,7 +932,7 @@ s8 EventBase::sub_80EAC78(ScriptSlot* script, s32* arguments, u32* engineRegiste
             break;
     }
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, destination, value);
-    return TRUE;
+    return true;
 }
 
 // Stores field_22 (arguments[1] = 0), field_23 (1), field_25 (2) or field_24 (3) of dword_3000D44
@@ -959,14 +959,14 @@ s8 EventBase::sub_80EACDC(ScriptSlot* script, s32* arguments, u32* engineRegiste
                                      dword_3000D44->field_24);
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Sets field_26 and field_27 of dword_3000D44 to arguments[0] and arguments[1].
 s8 EventBase::sub_80EAD7C(ScriptSlot* script, s32* arguments) {
     dword_3000D44->field_26 = *arguments++;
     dword_3000D44->field_27 = *arguments;
-    return TRUE;
+    return true;
 }
 
 // Sets field_29 of dword_3000D44 to 1 if arguments[0] is 0, otherwise to -1.
@@ -976,21 +976,21 @@ s8 EventBase::sub_80EAD98(ScriptSlot* script, s32* arguments) {
     } else {
         dword_3000D44->field_29 = -1;
     }
-    return TRUE;
+    return true;
 }
 
 // Calls sub_801BBE4 on dword_3000D44 with arguments[0-2].
 s8 EventBase::sub_80EADC4(ScriptSlot* script, s32* arguments) {
     sub_801BBE4(dword_3000D44, arguments[0], arguments[1], arguments[2]);
-    return TRUE;
+    return true;
 }
 
 // Uncalled.
 s8 EventBase::sub_80EADE8() {
-    return TRUE;
+    return true;
 }
 
-// Waits (repeats the command, returning FALSE) while an active entry has the id arguments[0]
+// Waits (repeats the command, returning false) while an active entry has the id arguments[0]
 // (0x3F: any id).
 s8 EventBase::sub_80EADEC(struc_3000FC8* entries, ScriptSlot* script, s32* arguments) {
     s16 i;
@@ -999,15 +999,15 @@ s8 EventBase::sub_80EADEC(struc_3000FC8* entries, ScriptSlot* script, s32* argum
     for (i = 0, entry = entries->entries; i <= 3; i++, entry++) {
         if (entry->field_F && (entry->field_C == arguments[0] || arguments[0] == 0x3F)) {
             script->position = script->commandPosition;
-            return FALSE;
+            return false;
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Uncalled.
 s8 EventBase::sub_80EAE2C() {
-    return TRUE;
+    return true;
 }
 
 // Hides the first active entry with the id arguments[0] (sub_80E8EE0).
@@ -1021,14 +1021,14 @@ s8 EventBase::sub_80EAE30(struc_3000FC8* entries, ScriptSlot* script, s32* argum
             break;
         }
     }
-    return TRUE;
+    return true;
 }
 
 // Stores dword_3000FB8->field_30 in the script value arguments[0].
 s8 EventBase::sub_80EAE70(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                              dword_3000FB8->field_30);
-    return TRUE;
+    return true;
 }
 
 // Jumps to arguments[1] if dword_3000FB8->field_30 is arguments[0].
@@ -1036,7 +1036,7 @@ s8 EventBase::sub_80EAE9C(ScriptSlot* script, s32* arguments) {
     if (dword_3000FB8->field_30 == arguments[0]) {
         script->position = (u8*)arguments[1];
     }
-    return TRUE;
+    return true;
 }
 
 // Jumps to arguments[1] if bit arguments[0] of windows->field_4->field_1B2 is set.
@@ -1044,7 +1044,7 @@ s8 EventBase::sub_80EAEBC(struc_3000FCC* windows, ScriptSlot* script, s32* argum
     if ((windows->field_4->field_1B2 >> *arguments++) & 1) {
         script->position = (u8*)*arguments;
     }
-    return TRUE;
+    return true;
 }
 
 // Calls sub_8019508(arguments[2], arguments[1]) if arguments[0] is 0.
@@ -1052,7 +1052,7 @@ s8 EventBase::sub_80EAEE0(ScriptSlot* script, s32* arguments) {
     if (*arguments++ == 0) {
         sub_8019508(arguments[1], arguments[0]);
     }
-    return TRUE;
+    return true;
 }
 
 // Sound effects: plays arguments[1] (arguments[0] = 0), stops it (1; all if arguments[1] is 0) or
@@ -1074,11 +1074,11 @@ s8 EventBase::sub_80EAEF8(ScriptSlot* script, s32* arguments) {
         case 2:
             if (sub_8019588(arguments[0])) {
                 script->position = script->commandPosition;
-                return FALSE;
+                return false;
             }
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Music: arguments[0] 0 calls sub_8019308(arguments[1], arguments[2], arguments[3]), 1
@@ -1108,7 +1108,7 @@ s8 EventBase::sub_80EAF4C(ScriptSlot* script, s32* arguments) {
             sub_8019460(arguments[0], arguments[2], arguments[1]);
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Music: arguments[0] 0-1 call sub_8019308(arguments[1], arguments[2], -1 or 0xFF), 2-3
@@ -1142,19 +1142,19 @@ s8 EventBase::sub_80EAFB4(ScriptSlot* script, s32* arguments) {
                 case 2:
                     if (sub_80195F8(arguments[0])) {
                         script->position = script->commandPosition;
-                        return FALSE;
+                        return false;
                     }
                     break;
             }
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Sets dword_3000FB8->field_32 to arguments[0].
 s8 EventBase::sub_80EB048(struc_3000FCC* windows, s32* arguments) {
     dword_3000FB8->field_32 = arguments[0];
-    return TRUE;
+    return true;
 }
 
 // Calls sub_80E9330(windows, arguments[1]) (arguments[0] = 0) or waits until field_42_2 of window
@@ -1168,11 +1168,11 @@ s8 EventBase::sub_80EB05C(struc_3000FCC* windows, ScriptSlot* script, s32* argum
         case 1:
             if (!windows->field_4->entries[arguments[0]].field_42_2) {
                 script->position = script->commandPosition;
-                return FALSE;
+                return false;
             }
             break;
     }
-    return TRUE;
+    return true;
 }
 
 // Selects window arguments[0] (0-4; sub_80E6FB8 and sub_80E7118 with its bit), or for higher values
@@ -1186,17 +1186,17 @@ s8 EventBase::sub_80EB09C(struc_3000FCC* windows, ScriptSlot* script, s32* argum
         sub_80E7118(windows, windows->field_4->field_1B3);
     }
     dword_3000FB8->field_31 = 0;
-    return TRUE;
+    return true;
 }
 
-// Waits (repeats the command, returning FALSE) while bit arguments[0] of field_1B4 is set.
+// Waits (repeats the command, returning false) while bit arguments[0] of field_1B4 is set.
 s8 EventBase::script_cmd_wait_for_user_input(struc_3000FCC* windows, ScriptSlot* script,
                                              s32* arguments) {
     if ((windows->field_4->field_1B4 >> arguments[0]) & 1) {
         script->position = script->commandPosition;
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 // Opens a window (sub_80E5BCC) like sub_80E9D50, at (arguments[1], arguments[2]). arguments[3] has
@@ -1212,7 +1212,7 @@ s8 EventBase::sub_80EB11C(struc_3000FCC* windows, ScriptSlot* script, s32* argum
 
     sub_80E5BCC(windows, arguments[0], arguments[1], arguments[2], width, height, arguments[4], packed,
                 arguments[6], arguments[7]);
-    return TRUE;
+    return true;
 }
 
 // Uncalled. Opens a window (sub_80E5BCC) with the width and height in arguments[3] (high and low
@@ -1220,17 +1220,17 @@ s8 EventBase::sub_80EB11C(struc_3000FCC* windows, ScriptSlot* script, s32* argum
 s8 EventBase::sub_80EB1A4(struc_3000FCC* windows, ScriptSlot* script, s32* arguments) {
     sub_80E5BCC(windows, arguments[0], arguments[1], arguments[2], arguments[3] >> 8, arguments[3],
                 arguments[4], arguments[5], arguments[6], arguments[7]);
-    return TRUE;
+    return true;
 }
 
 // Waits arguments[0] frames (field_9C, flag 0x10; counted down by sub_80EA778).
 s8 EventBase::script_cmd_wait_frames(ScriptSlot* script, s32* arguments) {
     script->field_9C = arguments[0];
     if (script->field_9C == 0) {
-        return TRUE;
+        return true;
     }
     script->field_A0 |= 0x10;
-    return FALSE;
+    return false;
 }
 
 // Jumps to arguments[1], saving the current position to return to if arguments[0] is 1.
@@ -1239,7 +1239,7 @@ s8 EventBase::script_cmd_call(ScriptSlot* script, s32* arguments) {
         script->returnPosition = script->position;
     }
     script->position = (u8*)arguments[1];
-    return TRUE;
+    return true;
 }
 
 // Returns to the saved position, or ends the script if there is none.
@@ -1256,15 +1256,15 @@ s8 EventBase::script_cmd_return(ScriptSlot* script) {
     }
 
     if (position != NULL) {
-        return TRUE;
+        return true;
     }
 
-    return TRUE;
+    return true;
 }
 
 // Ends the script (sets its end, field_4, to its position).
 s8 EventBase::script_cmd_end(ScriptSlot* script) {
     script->field_4 = script->position;
     script->returnPosition = NULL;
-    return TRUE;
+    return true;
 }
