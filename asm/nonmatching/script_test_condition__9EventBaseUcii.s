@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start script_test_condition__FPvUcii
-script_test_condition__FPvUcii:
+	thumb_func_start script_test_condition__9EventBaseUcii
+script_test_condition__9EventBaseUcii:
 	push {lr}
 	lsls r1, r1, #24
 	lsrs r0, r1, #24

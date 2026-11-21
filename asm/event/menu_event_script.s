@@ -351,7 +351,7 @@ _080F9414:
 	adds r0, r6, #0x0
 	adds r0, #0x1C
 	adds r1, r4, #0x0
-	bl sub_80EA778__FPvP10ScriptSlot
+	bl sub_80EA778__9EventBaseP10ScriptSlot
 _080F942C:
 	lsls r0, r7, #0x10
 	ldr r1, _080F94A4 @ =0xFFFF0000
@@ -398,7 +398,7 @@ _080F9474:
 	adds r0, r6, #0x0
 	adds r0, #0x1C
 	adds r1, r4, #0x0
-	bl sub_80EA778__FPvP10ScriptSlot
+	bl sub_80EA778__9EventBaseP10ScriptSlot
 _080F9488:
 	lsls r0, r7, #0x10
 	movs r1, #0x80
@@ -1129,7 +1129,7 @@ sub_80FA104:
 	str r0, [sp, #0x000]
 	adds r0, r5, #0x0
 	adds r1, r6, #0x0
-	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -1918,7 +1918,7 @@ sub_80FA734:
 	str r1, [sp, #0x000]
 	adds r1, r5, #0x0
 	add r2, sp, #0x00C
-	bl sub_80EA6D4__FPvPiN31
+	bl sub_80EA6D4__9EventBasePiN31
 	adds r5, #0x0C
 	ldr r0, [r6, #0x14]
 	ldr r2, [r5, #0x00]
@@ -1978,7 +1978,7 @@ sub_80FA7C4:
 	movs r3, #0x01
 	strb r3, [r2, #0x00]
 	adds r0, #0x1C
-	bl script_cmd_return__FPvP10ScriptSlot
+	bl script_cmd_return__9EventBaseP10ScriptSlot
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	pop {r1}
@@ -2219,7 +2219,7 @@ sub_80FA960:
 	str r0, [sp, #0x000]
 	adds r0, r5, #0x0
 	adds r1, r6, #0x0
-	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -2387,7 +2387,7 @@ sub_80FAAA0:
 	str r0, [sp, #0x000]
 	adds r0, r5, #0x0
 	mov r1, r8
-	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -2521,7 +2521,7 @@ sub_80FAB9C:
 	str r0, [sp, #0x000]
 	adds r0, r5, #0x0
 	mov r1, r8
-	bl sub_80EA60C__FPvP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -2547,7 +2547,7 @@ sub_80FAC30:
 	movs r3, #0xFF
 	str r3, [sp, #0x004]
 	movs r3, #0x00
-	bl sub_80EA5C8__FPvP10ScriptSlotPUcT2UsUc
+	bl sub_80EA5C8__9EventBaseP10ScriptSlotPUcT2UsUc
 	movs r0, #0x01
 	add sp, #0x008
 	pop {r1}
@@ -2991,7 +2991,7 @@ sub_80FAF8C:
 	movs r3, #0xFF
 	str r3, [sp, #0x004]
 	movs r3, #0x00
-	bl sub_80EA5C8__FPvP10ScriptSlotPUcT2UsUc
+	bl sub_80EA5C8__9EventBaseP10ScriptSlotPUcT2UsUc
 	ldr r0, [r4, #0x24]
 	ldr r1, _080FAFB8 @ =0x000009A1
 	adds r0, r0, r1

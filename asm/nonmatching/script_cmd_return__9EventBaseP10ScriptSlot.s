@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start script_cmd_return__FPvP10ScriptSlot
-script_cmd_return__FPvP10ScriptSlot:
+	thumb_func_start script_cmd_return__9EventBaseP10ScriptSlot
+script_cmd_return__9EventBaseP10ScriptSlot:
 	push {lr}
 	ldr r2, [r1, #0x10]
 	cmp r2, #0x00

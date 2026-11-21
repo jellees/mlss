@@ -2,6 +2,7 @@
 #define FIELD_EVENT_SCRIPT_H
 
 #include "process.h"
+#include "event/text080E9D50.h"
 
 class FieldObject;
 struct ScriptContext;
@@ -14,11 +15,10 @@ struct ScriptContext;
 // Common base of EVTS and BEVS, which derive from it virtually: their offset 0 is the pointer to
 // this subobject (at +4), and their constructors take g++'s hidden __in_chrg argument. It doesn't
 // override anything, so g++ reuses Process's vtable for it (the constructors store _vt.7Process
-// after constructing it).
-class FieldEventScript : public Process {
+// after constructing it). EventBase is an empty second base at +0x1C (sizeof 1 without
+// -fnew-abi), so the command handlers get this + 0x1C.
+class FieldEventScript : public Process, public EventBase {
   public:
-    u32 field_1C;
-
     FieldEventScript(u8 priority, char* label) : Process(priority, label) {
     }
     void sub_80EB248();
