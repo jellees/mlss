@@ -7,7 +7,7 @@
 
 CommonEvent* CommonEvent::instance;
 
-static u32 (*sScriptReader)(ScriptSlot* script, s16* bitPosition, int bitCount);
+static u32 (*sScriptReader)(EventThread* script, s16* bitPosition, int bitCount);
 
 /**
  * Reads the next command.
@@ -18,9 +18,9 @@ static u32 (*sScriptReader)(ScriptSlot* script, s16* bitPosition, int bitCount);
  * \param arguments The decoded arguments that are part of this opcode.
  * \param engineRegisters The registers 0x10-0x34 of the script engine (field, battle or menu).
  */
-u8* CommonEvent::readCommand(ScriptSlot* script, s32* arguments, void* unused, u32* engineRegisters,
+u8* CommonEvent::readCommand(EventThread* script, s32* arguments, void* unused, u32* engineRegisters,
                              u32* engineFlags, u32* scriptFlags) {
-    ScriptSlot* slot = script;
+    EventThread* slot = script;
     s16 bitPosition = 8;
     u32 variableMask;
     int count;
@@ -223,7 +223,7 @@ inline void CommonEvent::destroy() {
  * Copies a copy of the script reader to IWRAM.
  */
 void CommonEvent::initScriptReader() {
-    sScriptReader = (u32 (*)(ScriptSlot*, s16*, int))heap_alloc(0, sub_8001010 - sub_8000F9C, "MADO");
+    sScriptReader = (u32 (*)(EventThread*, s16*, int))heap_alloc(0, sub_8001010 - sub_8000F9C, "MADO");
     CPU_COPY(sub_8000F9C, sScriptReader, (u32)(sub_8001010 - sub_8000F9C), 16);
 }
 

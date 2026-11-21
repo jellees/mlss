@@ -48,7 +48,7 @@ struct FieldManager;
 // Script state of an object (FieldObject::script). The field event script code
 // (src/field_event_script.cpp) runs a script per object (sub_80EB248) with readCommand /
 // FieldEventScript::executeNextCommand.
-struct ScriptContext : ScriptSlot {
+struct FieldObjectEvent : EventThread {
     u8 pad_A8[0x98];
     void (*field_140)(FieldManager* fieldManager, class FieldObject* object);
     u8 pad_144[0x50];
@@ -107,7 +107,7 @@ class FieldObject {
     u8 objectIndex;      // Slot in FieldManager::objects (0 = Mario, 1 = Luigi)
     u8 initialDirection; // Starting direction, used by method2
     u8 pad_56[0x2];
-    struct ScriptContext script;
+    struct FieldObjectEvent script;
     u8 field_1EC[0x20];
     u32 field_20C_0 : 1;
     u32 field_20C_1 : 3;

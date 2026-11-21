@@ -9,11 +9,13 @@ extern "C" {
 struct Process;
 struct FieldManager;
 struct FieldObject;
-struct ScriptContext;
+struct FieldObjectEvent;
 struct FieldEventScript;
 struct EVTS;
 struct FieldMonster;
 struct SignMapEntry;
+struct struc_3000FC8;
+struct struc_3000FCC;
 
 struct struc_3000388 {
     u16 field_0;
@@ -289,46 +291,25 @@ struct struc_3000FF4 {
     u8 pad31[0xB];
 };
 
-// A 0xA8-byte script slot. ScriptContext (the script of a field object) extends it.
-struct ScriptSlot {
+// A running script (0xA8 bytes): position, end, return position, registers, counter stack, flags and
+// parent. MapEventInfo has four (its slots); FieldObjectEvent (the script of a field object) extends it.
+struct EventThread {
     u8* position; // Read position in the script
-    u8* field_4;
-    u8* field_8; // Saved position (restored by sub_80EB838)
-    u8* field_C; // Saved field_4
-    u8* returnPosition; // Set by script_cmd_call, cleared when a script starts (sub_80EA530)
+    u8* endPosition; // The script ends when position reaches it (NULL: until commandEnd/commandReturn set it)
+    u8* savedPosition; // Saved script, restored by sub_80EB838 when this one ends
+    u8* savedEndPosition;
+    u8* returnPosition; // Set by commandCall, cleared when a script starts (sub_80EA530)
     u8* commandPosition; // Start of the current command
     u32 registers[0x10]; // Script registers 0-0xF (getRegister)
     s32 counters[0x10]; // Counter stack (field_A6 entries; sub_80EA928 pushes, sub_80EA904 pops)
     s32 compareValue;   // Compared by sub_80EA8DC (set by sub_80EA91C)
     s32 field_9C;      // Counter (sub_80EB490)
-    u16 field_A0;      // Flags
-    u16 field_A2;      // Saved field_A0
-    u8 field_A4;       // Index of a script slot (0-3) or field object (4+)
-    u8 field_A5;       // Saved field_A4
+    u16 flags; // 1: running, 4: waiting for a child script, 8: the parent waits for this one
+    u16 savedFlags;
+    u8 parentIndex; // The script that started this one: slot 0-3 or field object index + 4; 0xFF: none
+    u8 savedParentIndex;
     u8 field_A6;       // Depth of the counter stack
     u8 currentOpcode;
-};
-
-struct struc_3000FD0 {
-    struct ScriptSlot scripts[4];
-    u8 pad_2A0[0x288];
-    u32 field_528;
-    u8 field_52C;
-    u8 pad_52D[0x3];
-    u32 field_530;
-    u8 pad_534[0x10];
-    u8 field_544[2]; // Object indices, one per entry of field_550
-    u8 field_546[2]; // Angles
-    u8 field_548;
-    u8 pad_549[0x7];
-    u32 field_550; // Bit mask
-    u16 field_554[2];
-    u8 pad_558[0x2];
-    u16 field_55A_0 : 1;
-    u16 field_55A_1 : 1;
-    u16 field_55A_2 : 1;
-    u16 field_55A_3 : 3;
-    u16 field_55A_6 : 2;
 };
 
 struct struc_3000D40 {
@@ -365,45 +346,11 @@ struct struc_3000D44 {
     s8 field_29; // 1 or -1 (sub_80EAD98)
 };
 
-// An entry of struc_3000FC8 (4 of them, 16 bytes each)
-struct struc_3000FC8Entry {
-    struct Sprite* sprite;
-    u8 pad_4[0x8];
-    u8 field_C; // Id (sub_80EADEC, sub_80EAE30)
-    u8 pad_D[0x2];
-    u8 field_F; // Active
-};
-
-struct struc_3000FC8 {
-    struct struc_3000FC8Entry* entries;
-};
-
 struct struc_3000FB8 {
     u8 pad_0[0x30];
     u8 field_30; // Compared by sub_80EAE9C
     u8 field_31; // Cleared by sub_80EB09C
     u8 field_32;
-};
-
-// A 0x4C-byte entry of struc_3000FCC::field_4 (windows? see sub_80E9D50)
-struct struc_3000FCCEntry {
-    u8 pad_0[0x42];
-    u8 field_42_0 : 2;
-    u8 field_42_2 : 1; // sub_80EB05C waits until it is set
-    u8 pad_43[0x9];
-};
-
-struct struc_3000FCCData {
-    struct struc_3000FCCEntry entries[5]; // Count unknown (at least the ones before field_1B2)
-    u8 pad_17C[0x36];
-    u8 field_1B2; // Flags tested by sub_80EAEBC
-    u8 field_1B3; // Passed to sub_80E7118 by sub_80EB09C
-    u8 field_1B4; // Flags: script_cmd_wait_for_user_input waits while one is set
-};
-
-struct struc_3000FCC {
-    u32 field_0;
-    struct struc_3000FCCData* field_4;
 };
 
 struct Popup {
@@ -553,111 +500,111 @@ void sub_80E5BCC(void*, u8, s16, s16, u8, u8, u16, u16, u8, s32);
 u32 sub_80E9310(void*, u8**);
 void sub_8122E30(u8, u8, u8);
 // Command handlers of FieldEventScript::executeNextCommand
-s8 script_cmd_80F17C4(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 script_cmd_show_reaction_bubble(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 script_cmd_start_dialogue(struct FieldEventScript*, struct ScriptContext*, s32*);
+s8 script_cmd_80F17C4(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 script_cmd_show_reaction_bubble(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 script_cmd_start_dialogue(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
 u32 sub_8199F30(void);                // Random number
 u32 sub_81DD77C(s32, u32);            // ARM veneer; random value below the first argument?
 s32 sub_8199480(s32, s32); // ArcTan2 >> 8; callers pass and get ints, though it truncates to s16/u8
-s8 script_enable_flag_2(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EDF90(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EE028(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EE140(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EE1A4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EE26C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EE440(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EE4CC(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EE594(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EE624(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80EE73C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EEC18(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EECD0(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EEE08(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EEECC(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EEF54(struct FieldEventScript*, struct ScriptContext*, s32*, void*);
-s8 sub_80EF0B0(struct FieldEventScript*, struct ScriptContext*, s32*, void*);
-s8 sub_80EF220(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EF27C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80EF2EC(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F04F8(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F0540(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F056C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F05DC(struct FieldEventScript*, struct ScriptContext*, s32*, void*);
-s8 sub_80F0618(struct FieldEventScript*, struct ScriptContext*, s32*, void*);
-s8 sub_80F0678(struct FieldEventScript*, struct ScriptContext*, s32*, void*);
-s8 sub_80F06EC(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0704(struct FieldEventScript*, struct ScriptContext*);
-s8 sub_80F0724(struct FieldEventScript*, struct ScriptContext*);
-s8 sub_80F0744(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0780(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0794(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0814(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F087C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F08A0(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F08C0(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0914(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0938(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F095C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0984(struct FieldEventScript*, struct ScriptContext*);
-s8 sub_80F09A8(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F09E8(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0A30(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0AE0(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0B0C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0B4C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0B80(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0BA4(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0BC0(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0BD8(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0BF0(struct FieldEventScript*, struct ScriptContext*, s32*);
+s8 script_enable_flag_2(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80EDF90(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80EE028(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80EE140(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80EE1A4(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80EE26C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80EE440(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80EE4CC(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80EE594(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80EE624(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80EE73C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80EEC18(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80EECD0(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80EEE08(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80EEECC(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80EEF54(struct FieldEventScript*, struct FieldObjectEvent*, s32*, void*);
+s8 sub_80EF0B0(struct FieldEventScript*, struct FieldObjectEvent*, s32*, void*);
+s8 sub_80EF220(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80EF27C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80EF2EC(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F04F8(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0540(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F056C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F05DC(struct FieldEventScript*, struct FieldObjectEvent*, s32*, void*);
+s8 sub_80F0618(struct FieldEventScript*, struct FieldObjectEvent*, s32*, void*);
+s8 sub_80F0678(struct FieldEventScript*, struct FieldObjectEvent*, s32*, void*);
+s8 sub_80F06EC(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0704(struct FieldEventScript*, struct FieldObjectEvent*);
+s8 sub_80F0724(struct FieldEventScript*, struct FieldObjectEvent*);
+s8 sub_80F0744(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0780(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0794(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0814(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F087C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F08A0(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F08C0(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0914(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0938(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F095C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0984(struct FieldEventScript*, struct FieldObjectEvent*);
+s8 sub_80F09A8(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F09E8(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0A30(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0AE0(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0B0C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0B4C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0B80(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0BA4(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0BC0(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0BD8(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0BF0(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
 s8 sub_80F0C08(struct FieldEventScript*, struct FieldObject*);
-s8 sub_80F0CC4(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0D38(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0DA0(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0E18(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0E80(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F0EEC(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F0F60(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F0FA0(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1054(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1088(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F10E0(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F110C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F112C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1170(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F11D0(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1230(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F12C8(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F131C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F13A4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F143C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1478(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1490(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F14C4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F14D4(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F155C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F15DC(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1648(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F16C0(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1738(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F17DC(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F17F4(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1858(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F18C4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1934(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1998(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1A1C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1A3C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1A7C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1AA4(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*);
-s8 sub_80F1AE4(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1AEC(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1B14(struct FieldEventScript*, struct ScriptContext*, s32*, void*);
-s8 sub_80F1BA4(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1C0C(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1C34(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1CF8(struct FieldEventScript*, struct ScriptContext*, s32*);
-s8 sub_80F1C7C(struct FieldEventScript*, struct FieldObject*, struct ScriptContext*, s32*, u8, u8);
+s8 sub_80F0CC4(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0D38(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0DA0(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0E18(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0E80(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0EEC(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0F60(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F0FA0(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1054(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1088(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F10E0(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F110C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F112C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1170(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F11D0(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1230(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F12C8(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F131C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F13A4(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F143C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1478(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1490(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F14C4(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F14D4(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F155C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F15DC(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1648(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F16C0(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1738(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F17DC(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F17F4(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1858(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F18C4(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1934(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1998(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1A1C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1A3C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1A7C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1AA4(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1AE4(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1AEC(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1B14(struct FieldEventScript*, struct FieldObjectEvent*, s32*, void*);
+s8 sub_80F1BA4(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1C0C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1C34(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1CF8(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
+s8 sub_80F1C7C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*, u8, u8);
 void sub_80E71D0(void*, u8, s16, s16, s16);
 void sub_802FAE4(struct FieldManager*, int, int);
 void sub_803C538(struct FieldManager*, int);
@@ -794,12 +741,9 @@ extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
 extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
 extern u8 byte_839F620[];  // Direction (0-7) per ArcTan2 result / 0x1000 (FieldManager::sub_802C208)
 extern struct EVTS* dword_3000D78;
-extern struct struc_3000FD0* dword_3000FD0;
 // ARM code in ROM that is copied to IWRAM: the script bit reader sub_8000F9C ends where sub_8001010 starts.
 extern u8 sub_8000F9C[];
 extern u8 sub_8001010[];
-extern struct struc_3000FC8* dword_3000FC8;
-extern struct struc_3000FCC* dword_3000FCC;
 extern u8* dword_83D6C58[]; // Object list header per list index (see init_fobj_with_data_80FB128)
 extern u16 word_3000D3C;
 extern struct struc_3000FB8* dword_3000FB8;

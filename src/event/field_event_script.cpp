@@ -8,17 +8,22 @@
 #include "event/text080E9D50.h"
 #include "event/field_event_script.h"
 
+struc_3000FC8* struc_3000FC8::instance;
+struc_3000FCC* struc_3000FCC::instance;
+MapEventInfo* MapEventInfo::instance;
+BEVS* BEVS::instance;
+
 // Runs the object's script (if it is active) until sub_80EB838 or a command stops it. Inline
 // (0x080F1E44 is its out-of-line copy at the end of this file).
-inline bool FieldEventScript::sub_80F1E44(FieldObject* object, ScriptContext* script) {
+inline bool FieldEventScript::sub_80F1E44(FieldObject* object, FieldObjectEvent* script) {
     s32 arguments[13];
 
-    if (!(script->field_A0 & 1)) {
+    if (!(script->flags & 1)) {
         return false;
     }
     while (sub_80EB838(object, script) == 0) {
         CommonEvent::readCommand(script, arguments, CommonEvent::instance,
-                                 (u32*)((u8*)dword_3000FD0 + 0x4B0),
+                                 (u32*)((u8*)MapEventInfo::instance + 0x4B0),
                                  CommonEvent::instance->fieldEngineFlags, 0);
         if (!executeNextCommand(object, script, arguments)) {
             break;
@@ -31,12 +36,12 @@ inline bool FieldEventScript::sub_80F1E44(FieldObject* object, ScriptContext* sc
 //! Possible fake match: the repeated `((FieldManager*)parentProcess)` casts (the second loop's header
 //! needs them instead of the `fieldManager` local) and the function-scope `script` shared by both
 //! loops. Revisit once the script engine and its globals are decompiled; the script calls also still
-//! use guessed prototypes and raw offsets into dword_3000FD0/CommonEvent::instance.
+//! use guessed prototypes and raw offsets into MapEventInfo/CommonEvent::instance.
 void FieldEventScript::sub_80EB248() {
     FieldManager* fieldManager = (FieldManager*)parentProcess;
     s16 count = fieldManager->objectCount;
     FieldObject** objects;
-    ScriptContext* script;
+    FieldObjectEvent* script;
     s16 i;
 
     for (i = 0, objects = fieldManager->objects; i < count; i++, objects++) {
@@ -45,8 +50,8 @@ void FieldEventScript::sub_80EB248() {
         if (!object->field_214_21) {
             script = &object->script;
 
-            if (!(script->field_A0 & 0x1B6)) {
-                CommonEvent::setVariable((u32*)((u8*)dword_3000FD0 + 0x4B0), script->registers,
+            if (!(script->flags & 0x1B6)) {
+                CommonEvent::setVariable((u32*)((u8*)MapEventInfo::instance + 0x4B0), script->registers,
                                          CommonEvent::instance->fieldEngineFlags, 0, 0x33, i);
                 sub_80F1E44(*objects, script);
             }
@@ -60,11 +65,11 @@ void FieldEventScript::sub_80EB248() {
         script = &object->script;
 
         object->sub_8046D18();
-        if ((object->script.field_A0 & 0x42) && !(object->script.field_A0 & 0x84)) {
+        if ((object->script.flags & 0x42) && !(object->script.flags & 0x84)) {
             if (!(*objects)->field_214_21) {
                 (*objects)->sub_80461B4(((FieldManager*)parentProcess)->objects);
             }
-        } else if ((script->field_A0 & 0x484) == 0x400) {
+        } else if ((script->flags & 0x484) == 0x400) {
             FieldObject* current = *objects;
 
             if (current->field_20C_0
@@ -77,7 +82,7 @@ void FieldEventScript::sub_80EB248() {
                         && ((FieldMonster*)current)->field_33C_1 == 0))) {
                 current->script.field_140((FieldManager*)parentProcess, current);
             }
-        } else if (script->field_A0 & 0x100) {
+        } else if (script->flags & 0x100) {
             if (!(*objects)->field_214_21) {
                 ((FieldManager*)parentProcess)->sub_8028C40();
             }
@@ -85,110 +90,110 @@ void FieldEventScript::sub_80EB248() {
     }
 }
 
-void FieldEventScript::sub_80EB490(FieldObject* object, ScriptContext* script) {
+void FieldEventScript::sub_80EB490(FieldObject* object, FieldObjectEvent* script) {
     if (object->sprite->animationEndAction != ANIMATION_END_STOP) {
         object->sprite->animationEndAction = ANIMATION_END_STOP;
     }
 
     if (object->sprite->animationComplete) {
         if (--script->field_9C == 0) {
-            if (script->field_A0 & 0x200) {
+            if (script->flags & 0x200) {
                 object->field_214_0 = 0;
-                script->field_A0 &= ~0x220;
+                script->flags &= ~0x220;
                 return;
             }
 
             object->sub_80474D0();
-            script->field_A0 ^= 0x20;
+            script->flags ^= 0x20;
         }
 
         object->sprite->animationEndAction = ANIMATION_END_LOOP;
     }
 }
 
-// Starts the script arg in the object's script context (type 4) or in one of the four script slots of
-// dword_3000FD0 (types 0-3), but only if that context isn't running (field_A0 bit 0). Any other
+// Starts the script arg in the object's script (type 4) or in one of the four script slots of
+// MapEventInfo (types 0-3), but only if that thread isn't running (flags bit 0). Any other
 // type picks the first free one in the order object, slot 1, slot 2, slot 3, slot 0.
 void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
-    ScriptSlot* slot;
+    EventThread* slot;
 
     switch (type) {
         case 4:
-            if (object != NULL && !(object->script.field_A0 & 1)) {
+            if (object != NULL && !(object->script.flags & 1)) {
                 sub_80EA5C8(&object->script, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         case 2:
-            slot = &dword_3000FD0->scripts[1];
-            if (!(slot->field_A0 & 1)) {
+            slot = &MapEventInfo::instance->scripts[1];
+            if (!(slot->flags & 1)) {
                 sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
                 if (fieldManager->objects[0]->collidesWithObjects) {
-                    dword_3000FD0->field_55A_6 &= ~1;
+                    MapEventInfo::instance->field_55A_6 &= ~1;
                     fieldManager->objects[0]->collidesWithObjects = 0;
                 }
                 if (fieldManager->objects[1]->collidesWithObjects) {
-                    dword_3000FD0->field_55A_6 &= ~2;
+                    MapEventInfo::instance->field_55A_6 &= ~2;
                     fieldManager->objects[1]->collidesWithObjects = 0;
                 }
-                if (!dword_3000FD0->field_55A_1) {
+                if (!MapEventInfo::instance->field_55A_1) {
                     ((FieldManager*)parentProcess)->sub_8028D6C(0x3FF);
                 }
                 break;
             }
             // fallthrough
         case 3:
-            slot = &dword_3000FD0->scripts[2];
-            if (!(slot->field_A0 & 1) && dword_3000FD0->field_55A_0) {
+            slot = &MapEventInfo::instance->scripts[2];
+            if (!(slot->flags & 1) && MapEventInfo::instance->field_55A_0) {
                 sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         case 0:
-            slot = &dword_3000FD0->scripts[0];
-            if (!(slot->field_A0 & 1)) {
+            slot = &MapEventInfo::instance->scripts[0];
+            if (!(slot->flags & 1)) {
                 sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         case 1:
-            slot = &dword_3000FD0->scripts[3];
-            if (!(slot->field_A0 & 1)) {
+            slot = &MapEventInfo::instance->scripts[3];
+            if (!(slot->flags & 1)) {
                 sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
         default:
-            if (object != NULL && !(object->script.field_A0 & 1)) {
+            if (object != NULL && !(object->script.flags & 1)) {
                 sub_80EA5C8(&object->script, (u8*)arg, NULL, 1, 0xFF);
                 break;
             }
-            slot = &dword_3000FD0->scripts[1];
-            if (!(slot->field_A0 & 1)) {
+            slot = &MapEventInfo::instance->scripts[1];
+            if (!(slot->flags & 1)) {
                 sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
                 if (fieldManager->objects[0]->collidesWithObjects) {
-                    dword_3000FD0->field_55A_6 &= ~1;
+                    MapEventInfo::instance->field_55A_6 &= ~1;
                     fieldManager->objects[0]->collidesWithObjects = 0;
                 }
                 if (fieldManager->objects[1]->collidesWithObjects) {
-                    dword_3000FD0->field_55A_6 &= ~2;
+                    MapEventInfo::instance->field_55A_6 &= ~2;
                     fieldManager->objects[1]->collidesWithObjects = 0;
                 }
-                if (!dword_3000FD0->field_55A_1) {
+                if (!MapEventInfo::instance->field_55A_1) {
                     ((FieldManager*)parentProcess)->sub_8028D6C(0x3FF);
                 }
                 break;
             }
-            slot = &dword_3000FD0->scripts[2];
-            if (!(slot->field_A0 & 1) && dword_3000FD0->field_55A_0) {
+            slot = &MapEventInfo::instance->scripts[2];
+            if (!(slot->flags & 1) && MapEventInfo::instance->field_55A_0) {
                 sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
                 break;
             }
-            slot = &dword_3000FD0->scripts[3];
-            if (!(slot->field_A0 & 1)) {
+            slot = &MapEventInfo::instance->scripts[3];
+            if (!(slot->flags & 1)) {
                 sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
                 break;
             }
-            slot = &dword_3000FD0->scripts[0];
-            if (!(slot->field_A0 & 1)) {
+            slot = &MapEventInfo::instance->scripts[0];
+            if (!(slot->flags & 1)) {
                 sub_80EA5C8(slot, (u8*)arg, NULL, 1, 0xFF);
             }
             break;
@@ -196,77 +201,79 @@ void FieldEventScript::sub_80EB524(FieldObject* object, u8 type, int arg) {
 }
 
 // Checked before each command of a script (sub_80F1E44 stops when it returns true). Returns false
-// while the script hasn't reached field_4, or after restoring the saved script in field_8. With
-// flag 8 set it clears flag 4 of the script context selected by field_A4 (a slot of dword_3000FD0
+// while the script hasn't reached endPosition, or after restoring the saved script (savedPosition).
+// With flag 8 set it clears flag 4 of the parent script (parentIndex: a slot of MapEventInfo
 // for 0-3, field object index + 4 otherwise).
-bool FieldEventScript::sub_80EB838(FieldObject* object, ScriptContext* script) {
-    if (script->position != script->field_4) {
+bool FieldEventScript::sub_80EB838(FieldObject* object, FieldObjectEvent* script) {
+    if (script->position != script->endPosition) {
         return false;
     }
 
-    if (script->field_A0 & 8) {
-        u8 index = script->field_A4;
-        ScriptSlot* other;
+    if (script->flags & 8) {
+        u8 index = script->parentIndex;
+        EventThread* other;
 
         if (index <= 3) {
-            other = &dword_3000FD0->scripts[index];
+            other = &MapEventInfo::instance->scripts[index];
         } else {
             // Pointer arithmetic, not objects[index - 4]: g++ only folds the offset for a pointer.
             other = &(*(((FieldManager*)parentProcess)->objects + index - 4))->script;
         }
-        other->field_A0 &= ~4;
-        script->field_A0 &= ~8;
+        other->flags &= ~4;
+        script->flags &= ~8;
     }
 
     if (object == NULL) {
-        struct struc_3000FD0* p = dword_3000FD0;
+        struct MapEventInfo* p = MapEventInfo::instance;
         u16 index = p->field_548 - 1;
 
         if (p->field_550 & (1 << index)) {
             p->field_550 &= ~(1 << index);
             FieldObject* fieldObject = *(((FieldManager*)parentProcess)->objects + p->field_544[index]);
-            fieldObject->script.field_A0 &= ~0x80;
+            fieldObject->script.flags &= ~0x80;
             fieldObject->previousAngle = p->field_546[index];
             fieldObject->angle = p->field_546[index];
             if (fieldObject->field_20C_4 || fieldObject->field_214_0 == 3
                 || fieldObject->field_214_0 == 4) {
-                fieldObject->direction = dword_3000FD0->field_546[index] >> 5;
+                fieldObject->direction = MapEventInfo::instance->field_546[index] >> 5;
             }
         }
     }
 
-    if (script->field_A0 & ~0x403) {
+    if (script->flags & ~0x403) {
         return true;
     }
 
-    if (script->field_8 != 0) {
-        script->position = script->field_8;
-        script->field_4 = script->field_C;
-        script->field_A0 = script->field_A2;
-        script->field_A4 = script->field_A5;
-        script->field_C = 0;
-        script->field_8 = 0;
-        script->field_A2 = 0;
-        script->field_A5 = 0;
+    if (script->savedPosition != 0) {
+        script->position = script->savedPosition;
+        script->endPosition = script->savedEndPosition;
+        script->flags = script->savedFlags;
+        script->parentIndex = script->savedParentIndex;
+        script->savedEndPosition = 0;
+        script->savedPosition = 0;
+        script->savedFlags = 0;
+        script->savedParentIndex = 0;
         return false;
     }
 
-    script->field_A0 &= ~1;
+    script->flags &= ~1;
     if (object == NULL) {
-        if (dword_3000FD0->field_548 == 1) {
+        if (MapEventInfo::instance->field_548 == 1) {
             FieldManager* fieldManager = (FieldManager*)parentProcess;
-            fieldManager->objects[0]->collidesWithObjects |= ~dword_3000FD0->field_55A_6 & 1;
-            fieldManager->objects[1]->collidesWithObjects |= ~(dword_3000FD0->field_55A_6 >> 1) & 1;
+            fieldManager->objects[0]->collidesWithObjects |= ~MapEventInfo::instance->field_55A_6 & 1;
+            fieldManager->objects[1]->collidesWithObjects |=
+                ~(MapEventInfo::instance->field_55A_6 >> 1) & 1;
         }
-        if (!dword_3000FD0->field_55A_1) {
-            if (dword_3000FD0->field_548 == 1) {
+        if (!MapEventInfo::instance->field_55A_1) {
+            if (MapEventInfo::instance->field_548 == 1) {
                 ((FieldManager*)parentProcess)->sub_8028D6C(0);
             }
-        } else if (!dword_3000FD0->field_55A_2
-                   && dword_3000FD0->field_55A_3 == dword_3000FD0->field_548) {
-            ((FieldManager*)parentProcess)->sub_8028D6C(dword_3000FD0->field_554[0]);
-            dword_3000FD0->field_55A_1 = dword_3000FD0->field_55A_2 = dword_3000FD0->field_554[0] != 0;
-            dword_3000FD0->field_55A_3 = 0;
+        } else if (!MapEventInfo::instance->field_55A_2
+                   && MapEventInfo::instance->field_55A_3 == MapEventInfo::instance->field_548) {
+            ((FieldManager*)parentProcess)->sub_8028D6C(MapEventInfo::instance->field_554[0]);
+            MapEventInfo::instance->field_55A_1 = MapEventInfo::instance->field_55A_2 =
+                MapEventInfo::instance->field_554[0] != 0;
+            MapEventInfo::instance->field_55A_3 = 0;
         }
     }
     return true;
@@ -274,22 +281,22 @@ bool FieldEventScript::sub_80EB838(FieldObject* object, ScriptContext* script) {
 
 // Executes the command that readCommand read (the opcode is script->currentOpcode, its arguments
 // are in arguments). Returns the result of the command handler; commands without one return true.
-s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
     switch (script->currentOpcode) {
         case 0:
-            return script_cmd_end(script);
+            return commandEnd(script);
         case 1:
-            return script_cmd_return(script);
+            return commandReturn(script);
         case 2:
-            return script_cmd_call(script, arguments);
+            return commandCall(script, arguments);
         case 3:
-            return script_cmd_wait_frames(script, arguments);
+            return commandWaitFrames(script, arguments);
         case 4:
-            return sub_80EC970(object, script, arguments, dword_3000FD0->field_548);
+            return sub_80EC970(object, script, arguments, MapEventInfo::instance->field_548);
         case 5:
             return sub_80F1CF8(this, script, arguments);
         case 6:
-            return sub_80F1C7C(this, object, script, arguments, dword_3000FD0->field_548,
+            return sub_80F1C7C(this, object, script, arguments, MapEventInfo::instance->field_548,
                                ((FieldManager*)parentProcess)->objectCount);
         case 7:
             return sub_80F1C34(this, script, arguments);
@@ -302,7 +309,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 11:
             return sub_80F1BA4(this, script, arguments);
         case 12:
-            return sub_80F1B14(this, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80F1B14(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
         case 13:
             return sub_80F131C(this, object, script, arguments);
         case 14:
@@ -320,21 +327,22 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 20:
             return sub_80ED750(script, arguments);
         case 21:
-            return sub_80EB11C(dword_3000FCC, script, arguments);
+            return sub_80EB11C(struc_3000FCC::instance, script, arguments);
         case 23:
             return script_cmd_start_dialogue(this, script, arguments);
         case 22:
-            return sub_80E9D50(dword_3000FCC, script, arguments);
+            return sub_80E9D50(struc_3000FCC::instance, script, arguments);
         case 24:
-            return script_cmd_wait_for_user_input(dword_3000FCC, script, arguments);
+            return commandWaitForUserInput(struc_3000FCC::instance, script, arguments);
         case 25:
-            return sub_80EB09C(dword_3000FCC, script, arguments);
+            return sub_80EB09C(struc_3000FCC::instance, script, arguments);
         case 26:
-            return sub_80EB05C(dword_3000FCC, script, arguments);
+            return sub_80EB05C(struc_3000FCC::instance, script, arguments);
         case 31:
-            return sub_80EB048(dword_3000FCC, arguments);
+            return sub_80EB048(struc_3000FCC::instance, arguments);
         case 27:
-            sub_80E71D0(dword_3000FCC, arguments[0], arguments[1], arguments[2], arguments[3]);
+            sub_80E71D0(struc_3000FCC::instance, arguments[0], arguments[1], arguments[2],
+                        arguments[3]);
             break;
         case 35:
             return sub_80EAFB4(script, arguments);
@@ -345,17 +353,17 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 38:
             return sub_80EAEE0(script, arguments);
         case 28:
-            return sub_80EAEBC(dword_3000FCC, script, arguments);
+            return sub_80EAEBC(struc_3000FCC::instance, script, arguments);
         case 29:
             return sub_80EAE9C(script, arguments);
         case 30:
-            return sub_80EAE70(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
+            return sub_80EAE70(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 32:
-            return sub_80EAE30(dword_3000FC8, script, arguments);
+            return sub_80EAE30(struc_3000FC8::instance, script, arguments);
         case 33:
             return script_cmd_show_reaction_bubble(this, script, arguments);
         case 34:
-            return sub_80EADEC(dword_3000FC8, script, arguments);
+            return sub_80EADEC(struc_3000FC8::instance, script, arguments);
         case 39:
             return sub_80EADC4(script, arguments);
         case 40:
@@ -365,7 +373,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 42:
             return sub_80E9E10(script, arguments);
         case 43:
-            return sub_80EACDC(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
+            return sub_80EACDC(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 44:
             return sub_80F0A30(this, script, arguments);
         case 45:
@@ -381,20 +389,20 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 50:
             return sub_80EA064(script, arguments);
         case 51:
-            return sub_80EAC78(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
+            return sub_80EAC78(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 52:
-            return sub_80EA144(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
+            return sub_80EA144(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 53:
-            return sub_80EA358(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
+            return sub_80EA358(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 54:
-            return sub_80EAB98(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0),
+            return sub_80EAB98(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0),
                                CommonEvent::instance->fieldEngineFlags, NULL);
         case 55:
             return sub_80EAB20(script, arguments);
         case 57:
-            return sub_80EAA84(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
+            return sub_80EAA84(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 58:
-            return sub_80EAA5C(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
+            return sub_80EAA5C(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 59:
             return sub_80EAA04(script, arguments);
         case 60:
@@ -404,9 +412,9 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 61:
             return sub_80EA9A8(script, arguments);
         case 63:
-            return script_cmd_conditional_jump(script, arguments);
+            return commandConditionalJump(script, arguments);
         case 65:
-            return sub_80EA968(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
+            return sub_80EA968(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 66:
             return sub_80EA940(script, arguments);
         case 67:
@@ -424,7 +432,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 73:
             return sub_80EA88C(script, arguments);
         case 74:
-            return sub_80EA854(script, arguments, (u32*)((u8*)dword_3000FD0 + 0x4B0));
+            return sub_80EA854(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
         case 75:
             return sub_80F1AEC(this, script, arguments);
         case 76:
@@ -585,8 +593,8 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
         case 152:
             ((FieldManager*)parentProcess)
                 ->sub_8027A04(arguments[0],
-                              arguments[1] == 0x3F ? dword_3000FD0->field_52C : arguments[1], 0,
-                              arguments[2], arguments[3], arguments[4], arguments[5] & 1,
+                              arguments[1] == 0x3F ? MapEventInfo::instance->field_52C : arguments[1],
+                              0, arguments[2], arguments[3], arguments[4], arguments[5] & 1,
                               (arguments[5] >> 1) & 1, (arguments[5] >> 2) & 1, arguments[6]);
             return 0;
         case 153:
@@ -656,15 +664,15 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
             BUFFER_REG_BLDCNT = value;
         } break;
         case 178:
-            return sub_80EEF54(this, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EEF54(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
         case 179:
-            return sub_80EF0B0(this, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80EF0B0(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
         case 180:
-            return sub_80F0678(this, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80F0678(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
         case 181:
-            return sub_80F0618(this, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80F0618(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
         case 182:
-            return sub_80F05DC(this, script, arguments, (u8*)dword_3000FD0 + 0x4B0);
+            return sub_80F05DC(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
         case 183:
             return sub_80F056C(this, script, arguments);
         case 184:
@@ -684,14 +692,14 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, ScriptContext* scri
 
 // Called by sub_80EC970 before it starts a new script on target: calls a FieldObject method for each
 // of flags 2, 0x40 and 0x20 of the target's script.
-inline void FieldEventScript::sub_80EC970_prepare(FieldObject* target, ScriptContext* targetScript) {
-    if (targetScript->field_A0 & 2) {
+inline void FieldEventScript::sub_80EC970_prepare(FieldObject* target, FieldObjectEvent* targetScript) {
+    if (targetScript->flags & 2) {
         target->sub_8046980();
     }
-    if (targetScript->field_A0 & 0x40) {
+    if (targetScript->flags & 0x40) {
         target->sub_8046A10();
     }
-    if (targetScript->field_A0 & 0x20) {
+    if (targetScript->flags & 0x20) {
         target->sub_80473DC();
     }
 }
@@ -700,16 +708,17 @@ inline void FieldEventScript::sub_80EC970_prepare(FieldObject* target, ScriptCon
 // makes this script wait for it (flag 4); modes 2-3 and 6-7 don't pass this script's position, and
 // modes 4-7 use sub_80EA584 instead if the target's script is already running. Returns false while
 // waiting.
-s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32* arguments, u8 index) {
+s8 FieldEventScript::sub_80EC970(FieldObject* object, FieldObjectEvent* script, s32* arguments,
+                                 u8 index) {
     FieldObject* target = *(((FieldManager*)parentProcess)->objects + arguments[1]);
-    ScriptContext* targetScript = &target->script;
+    FieldObjectEvent* targetScript = &target->script;
     int flags = 1;
 
     if (object != NULL) {
         index = object->objectIndex + 4;
     }
     if (arguments[0] & flags) {
-        script->field_A0 |= 4;
+        script->flags |= 4;
         flags = 9;
     }
 
@@ -727,7 +736,7 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32
             break;
         case 4:
         case 5:
-            if (!(targetScript->field_A0 & 1)) {
+            if (!(targetScript->flags & 1)) {
                 sub_80EC970_prepare(target, targetScript);
                 sub_80EA5C8(targetScript, script->position, (u8*)arguments[2], flags, index);
             } else {
@@ -737,7 +746,7 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32
             break;
         case 6:
         case 7:
-            if (!(targetScript->field_A0 & 1)) {
+            if (!(targetScript->flags & 1)) {
                 sub_80EC970_prepare(target, targetScript);
                 sub_80EA5C8(targetScript, (u8*)arguments[2], NULL, flags, index);
             } else {
@@ -745,39 +754,39 @@ s8 FieldEventScript::sub_80EC970(FieldObject* object, ScriptContext* script, s32
             }
             break;
     }
-    return !(script->field_A0 & 4);
+    return !(script->flags & 4);
 }
 
-// Script command 9: starts the script at arguments[1] in slot arguments[0] of dword_3000FD0 (0 = slot
+// Script command 9: starts the script at arguments[1] in slot arguments[0] of MapEventInfo (0 = slot
 // 0, 1 = slot 3, 2 = slot 1, 3 = slot 2). Slots 0 and 3 are restarted unconditionally; slots 1 and 2
 // only if they aren't running, like FieldEventScript::sub_80EB524 types 2 and 3.
-s8 FieldEventScript::sub_80ECB20(ScriptContext* script, s32* arguments) {
-    ScriptSlot* slot;
+s8 FieldEventScript::sub_80ECB20(FieldObjectEvent* script, s32* arguments) {
+    EventThread* slot;
     int type = *arguments++;
 
     switch (type) {
         case 0:
-            slot = &dword_3000FD0->scripts[0];
+            slot = &MapEventInfo::instance->scripts[0];
             sub_80EA5C8(slot, (u8*)*arguments, NULL, 1, 0xFF);
             break;
         case 1:
-            slot = &dword_3000FD0->scripts[3];
+            slot = &MapEventInfo::instance->scripts[3];
             sub_80EA5C8(slot, (u8*)*arguments, NULL, 1, 0xFF);
             break;
         case 2:
-            slot = &dword_3000FD0->scripts[1];
-            if (!(slot->field_A0 & 1)) {
+            slot = &MapEventInfo::instance->scripts[1];
+            if (!(slot->flags & 1)) {
                 sub_80EA5C8(slot, (u8*)*arguments, NULL, 1, 0xFF);
                 FieldManager* fieldManager = (FieldManager*)parentProcess;
                 if (fieldManager->objects[0]->collidesWithObjects) {
-                    dword_3000FD0->field_55A_6 &= ~1;
+                    MapEventInfo::instance->field_55A_6 &= ~1;
                     fieldManager->objects[0]->collidesWithObjects = 0;
                 }
                 if (fieldManager->objects[1]->collidesWithObjects) {
-                    dword_3000FD0->field_55A_6 &= ~2;
+                    MapEventInfo::instance->field_55A_6 &= ~2;
                     fieldManager->objects[1]->collidesWithObjects = 0;
                 }
-                if (!dword_3000FD0->field_55A_1) {
+                if (!MapEventInfo::instance->field_55A_1) {
                     ((FieldManager*)parentProcess)->sub_8028D6C(0x3FF);
                 }
                 break;
@@ -785,8 +794,8 @@ s8 FieldEventScript::sub_80ECB20(ScriptContext* script, s32* arguments) {
             // fallthrough
         case 3: {
             // Its own variable (not the shared slot): the original keeps it in another register.
-            ScriptSlot* slot = &dword_3000FD0->scripts[2];
-            if (!(slot->field_A0 & 1) && dword_3000FD0->field_55A_0) {
+            EventThread* slot = &MapEventInfo::instance->scripts[2];
+            if (!(slot->flags & 1) && MapEventInfo::instance->field_55A_0) {
                 sub_80EA5C8(slot, (u8*)*arguments, NULL, 1, 0xFF);
             }
             break;
@@ -795,13 +804,13 @@ s8 FieldEventScript::sub_80ECB20(ScriptContext* script, s32* arguments) {
     return true;
 }
 
-// Script command 10: ends the script in slot arguments[0] of dword_3000FD0 (0 = slot 0, 1 = slot 3,
+// Script command 10: ends the script in slot arguments[0] of MapEventInfo (0 = slot 0, 1 = slot 3,
 // 2 = slot 1, 3 = slot 2; any other value ends this script), and the scripts of the slots and objects
-// that are attached to that slot (field_A4).
+// that are attached to that slot (parentIndex).
 //! Possible fake match: the s16 mask local in the field-object loop (found with decomp-permuter).
 //! It puts the 0xFFF7 constant first in the loop body, so it's hoisted before the 0xFF one.
-s8 FieldEventScript::sub_80ECCB0(ScriptContext* script, s32* arguments) {
-    ScriptSlot* slot = script;
+s8 FieldEventScript::sub_80ECCB0(FieldObjectEvent* script, s32* arguments) {
+    EventThread* slot = script;
     //! \bug Only set for arguments[0] 0-3: when this script is ended, the loops below compare the
     //! uninitialized index.
     u8 index;
@@ -809,29 +818,29 @@ s8 FieldEventScript::sub_80ECCB0(ScriptContext* script, s32* arguments) {
     switch (arguments[0]) {
         case 0:
             index = 0;
-            slot = &dword_3000FD0->scripts[0];
+            slot = &MapEventInfo::instance->scripts[0];
             break;
         case 1:
             index = 3;
-            slot = &dword_3000FD0->scripts[3];
+            slot = &MapEventInfo::instance->scripts[3];
             break;
         case 2:
             index = 1;
-            slot = &dword_3000FD0->scripts[1];
+            slot = &MapEventInfo::instance->scripts[1];
             break;
         case 3:
             index = 2;
-            slot = &dword_3000FD0->scripts[2];
+            slot = &MapEventInfo::instance->scripts[2];
             break;
     }
-    slot->field_4 = slot->position;
-    slot->field_A0 = 1;
+    slot->endPosition = slot->position;
+    slot->flags = 1;
 
     s16 count;
-    ScriptSlot* other = dword_3000FD0->scripts;
+    EventThread* other = MapEventInfo::instance->scripts;
     for (count = 4; count > 0; other++, count--) {
-        if (other->field_A4 == index && other->field_4 != 0) {
-            other->field_4 = other->position;
+        if (other->parentIndex == index && other->endPosition != 0) {
+            other->endPosition = other->position;
         }
     }
 
@@ -842,9 +851,9 @@ s8 FieldEventScript::sub_80ECCB0(ScriptContext* script, s32* arguments) {
         FieldObject* object = *objects;
         s16 mask = ~8;
 
-        if (object->script.field_A4 == index) {
-            object->script.field_A4 = 0xFF;
-            object->script.field_A0 &= mask;
+        if (object->script.parentIndex == index) {
+            object->script.parentIndex = 0xFF;
+            object->script.flags &= mask;
         }
     }
     return true;
@@ -853,7 +862,7 @@ s8 FieldEventScript::sub_80ECCB0(ScriptContext* script, s32* arguments) {
 // Script command 80: sets a property of the object to arguments[1], chosen by arguments[0]. Type 4
 // turns the collision flags off, or back to the values in the object's record; types 4 and 5 also mark
 // a brother in field_55A_6 (sub_80EB838 turns collidesWithObjects back on for unmarked brothers).
-s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80ECDA4(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
     switch (*arguments++) {
         case 1:
             object->sub_804776C(*arguments);
@@ -884,7 +893,7 @@ s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32
             u8* record = header - ((header[7] << 8) | header[6]) + object->objectIndex * 0x14;
 
             if (object->objectIndex <= 1) {
-                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
+                MapEventInfo::instance->field_55A_6 |= 1 << object->objectIndex;
                 object->blocksBrothers = 0;
                 object->collidesWithBrothers = 0;
                 object->field_20C_7 = 0;
@@ -899,7 +908,7 @@ s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32
         }
         case 5:
             if (object->objectIndex <= 1) {
-                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
+                MapEventInfo::instance->field_55A_6 |= 1 << object->objectIndex;
             }
             object->collidesWithBrothers = *arguments;
             object->field_20C_7 = *arguments;
@@ -962,10 +971,10 @@ s8 FieldEventScript::sub_80ECDA4(FieldObject* object, ScriptContext* script, s32
 //! asrs r1, r1, #24), this goes through r0. decomp-permuter (~/perm/sub_80ED17C) found nothing in 15
 //! min.
 #ifndef NONMATCHING
-asm_unified(
-    ".include \"asm/nonmatching/sub_80ED17C__16FieldEventScriptP11FieldObjectP13ScriptContextPi.s\"");
+asm_unified(".include "
+            "\"asm/nonmatching/sub_80ED17C__16FieldEventScriptP11FieldObjectP16FieldObjectEventPi.s\"");
 #else
-s8 FieldEventScript::sub_80ED17C(FieldObject* object, ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80ED17C(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
     s32 value = arguments[2];
 
     switch (*arguments++) {
@@ -985,7 +994,7 @@ s8 FieldEventScript::sub_80ED17C(FieldObject* object, ScriptContext* script, s32
             break;
         case 2:
             if (object->objectIndex <= 1) {
-                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
+                MapEventInfo::instance->field_55A_6 |= 1 << object->objectIndex;
             }
             if ((value >> 4) & 1) {
                 object->blocksBrothers = *arguments;
@@ -1016,7 +1025,7 @@ s8 FieldEventScript::sub_80ED17C(FieldObject* object, ScriptContext* script, s32
 
 // Script command 82: sets a property of the object arguments[0] to arguments[2], chosen by arguments[1]
 // (like sub_80ECDA4).
-s8 FieldEventScript::sub_80ED304(ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80ED304(FieldObjectEvent* script, s32* arguments) {
     FieldObject* object = *(((FieldManager*)parentProcess)->objects + *arguments++);
 
     switch (*arguments++) {
@@ -1036,7 +1045,7 @@ s8 FieldEventScript::sub_80ED304(ScriptContext* script, s32* arguments) {
             u8* record = header - ((header[7] << 8) | header[6]) + object->objectIndex * 0x14;
 
             if (object->objectIndex <= 1) {
-                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
+                MapEventInfo::instance->field_55A_6 |= 1 << object->objectIndex;
                 object->blocksBrothers = 0;
                 object->collidesWithBrothers = 0;
                 object->field_20C_7 = 0;
@@ -1062,7 +1071,7 @@ s8 FieldEventScript::sub_80ED304(ScriptContext* script, s32* arguments) {
 
 // Script command 83: like sub_80ED304, for other properties. Type 4 sets the collision flags selected
 // by the low bits of arguments[2] to its bit 15.
-s8 FieldEventScript::sub_80ED4EC(ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80ED4EC(FieldObjectEvent* script, s32* arguments) {
     FieldObject* object;
 
     switch (*arguments++) {
@@ -1097,7 +1106,7 @@ s8 FieldEventScript::sub_80ED4EC(ScriptContext* script, s32* arguments) {
             object = *(((FieldManager*)parentProcess)->objects + *arguments++);
             value = (*arguments >> 15) & 1;
             if (object->objectIndex <= 1) {
-                dword_3000FD0->field_55A_6 |= 1 << object->objectIndex;
+                MapEventInfo::instance->field_55A_6 |= 1 << object->objectIndex;
             }
             if ((*arguments >> 4) & 1) {
                 object->blocksBrothers = value;
@@ -1120,7 +1129,7 @@ s8 FieldEventScript::sub_80ED4EC(ScriptContext* script, s32* arguments) {
     return true;
 }
 
-s8 FieldEventScript::sub_80ED6A8(ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80ED6A8(FieldObjectEvent* script, s32* arguments) {
     if (arguments[0] != 0xFF) {
         ((FieldManager*)parentProcess)->field_FA_5 = arguments[0];
         ((FieldManager*)parentProcess)->sub_8028EE8();
@@ -1131,11 +1140,11 @@ s8 FieldEventScript::sub_80ED6A8(ScriptContext* script, s32* arguments) {
     if (((FieldManager*)parentProcess)->field_F8_6) {
         ((FieldManager*)parentProcess)->sub_80284B0(((FieldManager*)parentProcess)->field_FA_5, 0);
     }
-    dword_3000FD0->field_530 = ((FieldManager*)parentProcess)->field_FA_5;
+    MapEventInfo::instance->field_530 = ((FieldManager*)parentProcess)->field_FA_5;
     return true;
 }
 
-s8 FieldEventScript::sub_80ED750(ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80ED750(FieldObjectEvent* script, s32* arguments) {
     FieldObject* object = *(((FieldManager*)parentProcess)->objects + arguments[0]);
 
     object->sub_8047364(0);
@@ -1147,7 +1156,7 @@ s8 FieldEventScript::sub_80ED750(ScriptContext* script, s32* arguments) {
     return true;
 }
 
-u8 FieldEventScript::sub_80ED7D4(FieldObject* object, ScriptContext* script, s32* arguments) {
+u8 FieldEventScript::sub_80ED7D4(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
     object->sub_8047364(1);
     object->sub_8047258(arguments[3]);
     if (arguments[3]) {
@@ -1156,11 +1165,11 @@ u8 FieldEventScript::sub_80ED7D4(FieldObject* object, ScriptContext* script, s32
     }
     object->method18(arguments[0]);
     object->sub_8047154(arguments[1], 0);
-    script->field_A0 |= 0x200;
+    script->flags |= 0x200;
     return sub_80EA60C(script, object->sprite, arguments[3], arguments[2]);
 }
 
-u8 FieldEventScript::sub_80ED86C(ScriptContext* script, s32* arguments) {
+u8 FieldEventScript::sub_80ED86C(FieldObjectEvent* script, s32* arguments) {
     FieldObject* object = *(((FieldManager*)parentProcess)->objects + arguments[0]);
 
     object->sub_8047364(1);
@@ -1171,11 +1180,11 @@ u8 FieldEventScript::sub_80ED86C(ScriptContext* script, s32* arguments) {
     }
     object->method18(arguments[1]);
     object->sub_8047154(arguments[2], 0);
-    object->script.field_A0 |= 0x200;
+    object->script.flags |= 0x200;
     return sub_80EA60C(&object->script, object->sprite, arguments[4], arguments[3]);
 }
 
-s8 FieldEventScript::sub_80ED90C(ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80ED90C(FieldObjectEvent* script, s32* arguments) {
     LoadMenuItem* item = dword_3000FF8 + *arguments++;
     u8* header = *(dword_83D6C58 + ((FieldManager*)parentProcess)->field_126);
     u8 animation;
@@ -1193,32 +1202,32 @@ s8 FieldEventScript::sub_80ED90C(ScriptContext* script, s32* arguments) {
     return true;
 }
 
-s8 FieldEventScript::sub_80ED9A4(FieldObject* object, ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80ED9A4(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
     s32 index = arguments[1];
 
-    dword_3000FD0->field_554[index] = arguments[0];
+    MapEventInfo::instance->field_554[index] = arguments[0];
     if (arguments[0]) {
         ((FieldManager*)parentProcess)->sub_8028D6C(arguments[0]);
         if (index == 1) {
             if (object) {
-                dword_3000FD0->field_55A_3 = object->objectIndex + 4;
+                MapEventInfo::instance->field_55A_3 = object->objectIndex + 4;
             } else {
-                dword_3000FD0->field_55A_3 = dword_3000FD0->field_548;
+                MapEventInfo::instance->field_55A_3 = MapEventInfo::instance->field_548;
             }
         }
-        dword_3000FD0->field_55A_2 = index == 0;
-        dword_3000FD0->field_55A_1 = 1;
+        MapEventInfo::instance->field_55A_2 = index == 0;
+        MapEventInfo::instance->field_55A_1 = 1;
     } else {
-        ((FieldManager*)parentProcess)->sub_8028D6C(dword_3000FD0->field_554[0]);
-        dword_3000FD0->field_55A_1 = dword_3000FD0->field_554[0] != 0;
-        dword_3000FD0->field_55A_3 = dword_3000FD0->field_554[0] != 0;
+        ((FieldManager*)parentProcess)->sub_8028D6C(MapEventInfo::instance->field_554[0]);
+        MapEventInfo::instance->field_55A_1 = MapEventInfo::instance->field_554[0] != 0;
+        MapEventInfo::instance->field_55A_3 = MapEventInfo::instance->field_554[0] != 0;
     }
     return true;
 }
 
 // Script command: jumps to arguments[2] if a property of the object arguments[0] equals bit 0 of
 // arguments[1]; the property is chosen by arguments[1] >> 1: 0 spriteActive, 1 the object's script
-// running (field_A0 bit 0), 2 field_24_3 or field_24_7, 3 field_24_11, 4 the object is the leader's or
+// running (flags bit 0), 2 field_24_3 or field_24_7, 3 field_24_11, 4 the object is the leader's or
 // follower's field_33C_0, 5 field_20C_0.
 // https://decomp.me/scratch/TODO
 //! Nonmatching: regalloc. result (36 refs) outranks object in global-alloc, so result takes r3 and
@@ -1227,11 +1236,11 @@ s8 FieldEventScript::sub_80ED9A4(FieldObject* object, ScriptContext* script, s32
 //! initialization, `(x & 1) == (cond != 0)`, xor forms, a bool flag local and an inline helper.
 //! decomp-permuter (~/perm/sub_80EDAB0) found nothing in 15 min.
 #ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_80EDAB0__16FieldEventScriptP13ScriptContextPi.s\"");
+asm_unified(".include \"asm/nonmatching/sub_80EDAB0__16FieldEventScriptP16FieldObjectEventPi.s\"");
 #else
-s8 FieldEventScript::sub_80EDAB0(ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80EDAB0(FieldObjectEvent* script, s32* arguments) {
     FieldObject* object = *(((FieldManager*)parentProcess)->objects + *arguments++);
-    ScriptContext* objectScript = &object->script;
+    FieldObjectEvent* objectScript = &object->script;
     int result;
 
     switch (*arguments >> 1) {
@@ -1239,7 +1248,7 @@ s8 FieldEventScript::sub_80EDAB0(ScriptContext* script, s32* arguments) {
             result = (*arguments & 1) == object->spriteActive;
             break;
         case 1:
-            if (objectScript->field_A0 & 1) {
+            if (objectScript->flags & 1) {
                 result = *arguments & 1;
             } else {
                 result = !(*arguments & 1);
@@ -1280,7 +1289,7 @@ s8 FieldEventScript::sub_80EDAB0(ScriptContext* script, s32* arguments) {
 }
 #endif
 
-s8 FieldEventScript::sub_80EDBC4(FieldObject* object, ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80EDBC4(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
     int centerX;
     int centerY;
     int centerZ;
@@ -1351,7 +1360,7 @@ s8 FieldEventScript::sub_80EDBC4(FieldObject* object, ScriptContext* script, s32
 
 // Like sub_80EDBC4, around the object arguments[2]: the axis chosen by arguments[1] takes the center
 // from this object, the other two from arguments[2].
-s8 FieldEventScript::sub_80EDD48(FieldObject* object, ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80EDD48(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
     FieldObject* other = *(((FieldManager*)parentProcess)->objects + arguments[2]);
     int centerX;
     int centerY;
@@ -1408,16 +1417,16 @@ s8 FieldEventScript::sub_80EDD48(FieldObject* object, ScriptContext* script, s32
 
 // Turns the object to a direction chosen by arguments[0]: 0 the direction arguments[1], 1 its direction
 // plus arguments[1], 2 towards the object arguments[1] (-1: the leader), 3 a random direction.
-s8 FieldEventScript::sub_80EDEB4(FieldObject* object, ScriptContext* script, s32* arguments) {
+s8 FieldEventScript::sub_80EDEB4(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
     u8 direction;
 
-    if (script->field_A0 & 2) {
+    if (script->flags & 2) {
         object->sub_8046980();
-        script->field_A0 &= ~2;
+        script->flags &= ~2;
     }
-    if (script->field_A0 & 0x40) {
+    if (script->flags & 0x40) {
         object->sub_8046A10();
-        script->field_A0 &= ~0x40;
+        script->flags &= ~0x40;
     }
     switch (*arguments++) {
         case 0:

@@ -139,8 +139,8 @@ FieldManager::FieldManager(u8 priority, char* label, int roomId, bool arg4, bool
     field_318 = 0;
     sub_8029934();
     gGameState.field_88A_5 = 1;
-    dword_3000FD0->field_528 = 0;
-    dword_3000FD0->field_530 = 0;
+    MapEventInfo::instance->field_528 = 0;
+    MapEventInfo::instance->field_530 = 0;
 }
 
 FieldManager::~FieldManager() {
@@ -236,15 +236,15 @@ void FieldManager::update() {
                 field_208_6 = data->field_0_18;
                 field_208_7 = data->field_0_19;
                 GameMode::sub_801B0AC(data->field_0_20);
-                dword_3000FD0->field_528 = luigiLeads;
-                dword_3000FD0->field_530 = field_FA_5;
+                MapEventInfo::instance->field_528 = luigiLeads;
+                MapEventInfo::instance->field_530 = field_FA_5;
                 {
                     struct SaveSlotPlayer* saved = &data->field_4[luigiLeads];
                     roomId = saved->roomId;
                 }
             }
 
-            dword_3000FD0->field_530 = dword_3000FD0->field_528;
+            MapEventInfo::instance->field_530 = MapEventInfo::instance->field_528;
             field_D4 = &stru_83A78D4[roomId];
             isUnderwater = isUnderwaterRoom(this);
             field_126 = field_D4->objectsIndex;
@@ -909,8 +909,8 @@ void FieldManager::update_field_8023DD4() {
                 }
 
                 luigiLeads ^= 1;
-                dword_3000FD0->field_528 = luigiLeads;
-                dword_3000FD0->field_530 = field_FA_5;
+                MapEventInfo::instance->field_528 = luigiLeads;
+                MapEventInfo::instance->field_530 = field_FA_5;
                 leader = (FieldPlayerCharacter*)objects[luigiLeads];
                 follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
                 leader->field_352_7 = 1;
@@ -1016,7 +1016,7 @@ void FieldManager::update_field_8023DD4() {
                     sub_802DDB4(leader, 0, 0);
                     sub_802DDB4(follower, 0, 0);
                     luigiLeads ^= 1;
-                    dword_3000FD0->field_528 = luigiLeads;
+                    MapEventInfo::instance->field_528 = luigiLeads;
                     follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
                     int oldRoomId = followerRoomId;
                     u8 oldDirection = field_2D8_5;
@@ -5351,8 +5351,8 @@ void FieldManager::sub_802EA70() {
     brothersTogether = true;
     field_208_6 = 0;
     field_F8_6 = field_F8_7;
-    dword_3000FD0->field_528 = luigiLeads;
-    dword_3000FD0->field_530 = field_FA_5;
+    MapEventInfo::instance->field_528 = luigiLeads;
+    MapEventInfo::instance->field_530 = field_FA_5;
     leader = (FieldPlayerCharacter*)objects[luigiLeads];
     follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
     leader->field_368->field_4 = 1;

@@ -5,11 +5,12 @@
 #include "game_mode.h"
 #include "event/event.h"
 #include "event/text080E9D50.h"
+#include "event/field_event_script.h"
 
 // Opens a window (sub_80E5BCC) for arguments[5] (texts per language). arguments[1] is the y position,
 // arguments[2] the height index (low byte, word_83BA4B4) and width (next byte, 0 = the text's own
 // width). The window is centred horizontally and kept on screen.
-s8 EventBase::sub_80E9D50(void* window, ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80E9D50(void* window, EventThread* script, s32* arguments) {
     s32 y = arguments[1];
     u16 flags = ((arguments[3] << 8) & 0x800) | (arguments[3] & 3);
     u16 height = word_83BA4B4[(u8)arguments[2]];
@@ -37,7 +38,7 @@ s8 EventBase::sub_80E9D50(void* window, ScriptSlot* script, s32* arguments) {
 // Changes the two flags of the process at dword_3000D44 (arguments[0]): 0 clears bit 0 and 3 sets
 // bit 1, each disabling the process if neither bit is set afterwards; 1 sets bit 0 (and calls
 // sub_801BC40) and 2 clears bit 1, each enabling the process.
-s8 EventBase::sub_80E9E10(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80E9E10(EventThread* script, s32* arguments) {
     switch (*arguments) {
         case 0:
             dword_3000D44->field_28_0 = 0;
@@ -70,7 +71,7 @@ s8 EventBase::sub_80E9E10(ScriptSlot* script, s32* arguments) {
 // Raises (arguments[2] = 0) or lowers (1) field_E (arguments[1] = 0) or field_14 (1) of a brother's
 // struc_3000FF4 (arguments[0] = 0 or 1, or both if bit 1 is set) by arguments[3], up to its maximum
 // and down to 1 for field_E or 0 for field_14.
-s8 EventBase::sub_80E9EE0(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80E9EE0(EventThread* script, s32* arguments) {
     s16 i;
     struc_3000FF4* entry;
     s16 value;
@@ -188,7 +189,7 @@ s8 EventBase::sub_80E9EE0(ScriptSlot* script, s32* arguments) {
 // Sets (arguments[1] = 0) or clears one of the 9 flags (arguments[2]; 9-17 for the second brother) in
 // a brother's struc_3000FF4. Does nothing unless arguments[0] is 0. Only the first group matches as
 // a ternary (both branches share one store); the other two only match as if/else.
-s8 EventBase::sub_80EA064(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EA064(EventThread* script, s32* arguments) {
     if (*arguments++ == 0) {
         struc_3000FF4* entry = dword_3000FF4;
         u16 clear = *arguments++;
@@ -233,7 +234,7 @@ s8 EventBase::sub_80EA064(ScriptSlot* script, s32* arguments) {
 //! the order 0, 1, 2, so case 0 can't fall through into case 2 (156-165 lines off), and a copy of
 //! the bit code in category 5 would still have to skip the count code after the inner switch,
 //! which unknown categories run.
-s8 EventBase::sub_80EA144(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+s8 EventBase::sub_80EA144(EventThread* script, s32* arguments, u32* engineRegisters) {
     s32 destination = *arguments++;
     bool result;
     s16 value;
@@ -352,7 +353,7 @@ s8 EventBase::sub_80EA144(ScriptSlot* script, s32* arguments, u32* engineRegiste
 // arguments[1] (bits 7-9 select the count array; 0xFF counts as 0) or, for item category 5, its bit
 // in the bit array at 0xB2.
 //! \bug An unknown item category stores an unset value.
-s8 EventBase::sub_80EA358(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+s8 EventBase::sub_80EA358(EventThread* script, s32* arguments, u32* engineRegisters) {
     s32 destination = *arguments++;
     u32 value;
 
@@ -396,10 +397,10 @@ s8 EventBase::sub_80EA358(ScriptSlot* script, s32* arguments, u32* engineRegiste
 }
 
 // Steps the counter on top of the script's counter stack: arguments[0] (without bits 3-4) 3 or 4
-// increments or decrements it before the test, 1 or 2 after it. If script_test_condition
+// increments or decrements it before the test, 1 or 2 after it. If testCondition
 // (arguments[1], arguments[2], counter) holds, the script jumps to arguments[3]. Bits 3-4 of
 // arguments[0] pop the counter: 2 when the condition holds, 3 when it doesn't.
-s8 EventBase::sub_80EA478(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EA478(EventThread* script, s32* arguments) {
     u8* depth = &script->field_A6;
     s32* counter = script->counters + *depth - 1;
     u8 mode = arguments[0] & ~0x18;
@@ -410,7 +411,7 @@ s8 EventBase::sub_80EA478(ScriptSlot* script, s32* arguments) {
         (*counter)--;
     }
 
-    if (script_test_condition(arguments[1], arguments[2], *counter)) {
+    if (testCondition(arguments[1], arguments[2], *counter)) {
         script->position = (u8*)arguments[3];
         if ((arguments[0] & 0x18) == 0x10) {
             (*depth)--;
@@ -432,58 +433,58 @@ s8 EventBase::sub_80EA478(ScriptSlot* script, s32* arguments) {
     return true;
 }
 
-// Saves a return position (field_8), end (field_C), flags (field_A2) and index (field_A5) in the
-// script.
-void EventBase::sub_80EA514(ScriptSlot* script, u8* position, u8* end, u16 flags, u8 index) {
-    script->field_8 = position;
-    script->field_C = end;
-    script->field_A2 = flags;
-    script->field_A5 = index;
+// Saves a script (position, end, flags, index) in savedPosition etc., to run when the current one
+// ends (sub_80EB838).
+void EventBase::sub_80EA514(EventThread* script, u8* position, u8* end, u16 flags, u8 index) {
+    script->savedPosition = position;
+    script->savedEndPosition = end;
+    script->savedFlags = flags;
+    script->savedParentIndex = index;
 }
 
-// Sets the script's position, end (field_4), flags (field_A0) and index (field_A4), and clears
+// Sets the script's position, endPosition, flags and parentIndex, and clears
 // its return position.
-void EventBase::sub_80EA530(ScriptSlot* script, u8* position, u8* end, u16 flags, u8 index) {
+void EventBase::sub_80EA530(EventThread* script, u8* position, u8* end, u16 flags, u8 index) {
     script->position = position;
-    script->field_4 = end;
+    script->endPosition = end;
     script->returnPosition = NULL;
-    script->field_A0 = flags;
-    script->field_A4 = index;
+    script->flags = flags;
+    script->parentIndex = index;
 }
 
 // Clears the saved state of sub_80EA514. With flag 8 set it first clears flag 4 of the waiting
 // script.
 //! \bug Its callers pass the new script position as the waiting script.
-void EventBase::sub_80EA550(ScriptSlot* script, ScriptSlot* waiting) {
-    if (script->field_A0 & 8) {
-        waiting->field_A0 &= ~4;
+void EventBase::sub_80EA550(EventThread* script, EventThread* waiting) {
+    if (script->flags & 8) {
+        waiting->flags &= ~4;
     }
-    script->field_C = NULL;
-    script->field_8 = NULL;
-    script->field_A5 = 0;
-    script->field_A2 = 0;
+    script->savedEndPosition = NULL;
+    script->savedPosition = NULL;
+    script->savedParentIndex = 0;
+    script->savedFlags = 0;
 }
 
 // Saves a return state in a running script (sub_80EA514).
-void EventBase::sub_80EA584(ScriptSlot* script, u8* position, u8* end, u16 flags, u8 index) {
-    sub_80EA550(script, (ScriptSlot*)position);
+void EventBase::sub_80EA584(EventThread* script, u8* position, u8* end, u16 flags, u8 index) {
+    sub_80EA550(script, (EventThread*)position);
     sub_80EA514(script, position, end, flags, index);
 }
 
 // Starts a script (sub_80EA530).
-void EventBase::sub_80EA5C8(ScriptSlot* script, u8* position, u8* end, u16 flags, u8 index) {
-    sub_80EA550(script, (ScriptSlot*)position);
+void EventBase::sub_80EA5C8(EventThread* script, u8* position, u8* end, u16 flags, u8 index) {
+    sub_80EA550(script, (EventThread*)position);
     sub_80EA530(script, position, end, flags, index);
 }
 
 // Flips the sprite horizontally if flip is set. With frames set the script waits that many frames
 // (field_9C, flag 0x20) and the animation stops at its end, otherwise it loops. Returns whether frames
 // is 0.
-u8 EventBase::sub_80EA60C(ScriptSlot* script, Sprite* sprite, u8 frames, u8 flip) {
+u8 EventBase::sub_80EA60C(EventThread* script, Sprite* sprite, u8 frames, u8 flip) {
     sprite->hFlip ^= flip;
     if (frames) {
         script->field_9C = frames;
-        script->field_A0 |= 0x20;
+        script->flags |= 0x20;
         sprite->animationEndAction = ANIMATION_END_STOP;
     } else {
         sprite->animationEndAction = ANIMATION_END_LOOP;
@@ -580,15 +581,15 @@ void EventBase::sub_80EA6D4(s32* arguments, s32* x, s32* y, s32* z) {
 }
 
 // Counts down the script's wait (field_9C) and clears flag 0x10 when it ends.
-void EventBase::sub_80EA778(ScriptSlot* script) {
+void EventBase::sub_80EA778(EventThread* script) {
     if (--script->field_9C == 0) {
-        script->field_A0 &= ~0x10;
+        script->flags &= ~0x10;
     }
 }
 
 // Compares left with right (operations 0-5: ==, !=, <, >, <=, >=) or tests them bitwise (8-10: left
 // | right, left & right, left ^ right; 11: !left; 12: ~left). Operations 6, 7 and above 12 are false.
-u8 EventBase::script_test_condition(u8 operation, s32 left, s32 right) {
+u8 EventBase::testCondition(u8 operation, s32 left, s32 right) {
     switch (operation) {
         case 0:
             return left == right;
@@ -619,7 +620,7 @@ u8 EventBase::script_test_condition(u8 operation, s32 left, s32 right) {
 
 // Stores gGameState.field_8C0 in the script value arguments[0] if arguments[1] is 0.
 //! \bug Any other arguments[1] stores an unset value.
-s8 EventBase::sub_80EA854(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+s8 EventBase::sub_80EA854(EventThread* script, s32* arguments, u32* engineRegisters) {
     u32 value;
 
     if (arguments[1] == 0) {
@@ -630,7 +631,7 @@ s8 EventBase::sub_80EA854(ScriptSlot* script, s32* arguments, u32* engineRegiste
 }
 
 // Calls sub_801ABE8(arguments[1], arguments[2], arguments[3]) if arguments[0] is 0.
-s8 EventBase::sub_80EA88C(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EA88C(EventThread* script, s32* arguments) {
     if (*arguments++ == 0) {
         sub_801ABE8(arguments[0], arguments[1], arguments[2]);
     }
@@ -638,7 +639,7 @@ s8 EventBase::sub_80EA88C(ScriptSlot* script, s32* arguments) {
 }
 
 // Resets the game (arguments[0] = 0) or calls sub_801ADC0, sub_801AD80 or sub_801AD3C (1-3).
-s8 EventBase::sub_80EA8A4(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EA8A4(EventThread* script, s32* arguments) {
     switch (arguments[0]) {
         case 0:
             reset_game_80189C4();
@@ -659,16 +660,16 @@ s8 EventBase::sub_80EA8A4(ScriptSlot* script, s32* arguments) {
     return true;
 }
 
-// Jumps to arguments[2] if script_test_condition(arguments[0], arguments[1], compareValue) holds.
-s8 EventBase::sub_80EA8DC(ScriptSlot* script, s32* arguments) {
-    if (script_test_condition(arguments[0], arguments[1], script->compareValue)) {
+// Jumps to arguments[2] if testCondition(arguments[0], arguments[1], compareValue) holds.
+s8 EventBase::sub_80EA8DC(EventThread* script, s32* arguments) {
+    if (testCondition(arguments[0], arguments[1], script->compareValue)) {
         script->position = (u8*)arguments[2];
     }
     return true;
 }
 
 // Pops the counter stack.
-s8 EventBase::sub_80EA904(ScriptSlot* script) {
+s8 EventBase::sub_80EA904(EventThread* script) {
     u8* depth = &script->field_A6;
 
     (*depth)--;
@@ -677,13 +678,13 @@ s8 EventBase::sub_80EA904(ScriptSlot* script) {
 }
 
 // Sets the value sub_80EA8DC compares (compareValue).
-s8 EventBase::sub_80EA91C(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EA91C(EventThread* script, s32* arguments) {
     script->compareValue = arguments[0];
     return true;
 }
 
 // Pushes arguments[0] on the counter stack.
-s8 EventBase::sub_80EA928(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EA928(EventThread* script, s32* arguments) {
     u8* depth = &script->field_A6;
 
     *(script->counters + *depth) = arguments[0];
@@ -692,7 +693,7 @@ s8 EventBase::sub_80EA928(ScriptSlot* script, s32* arguments) {
 }
 
 // Jumps to one of the arguments[0] positions after it, chosen at random (0 = don't jump).
-s8 EventBase::sub_80EA940(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EA940(EventThread* script, s32* arguments) {
     u8* position = (u8*)arguments[sub_81DD77C(arguments[0], sub_8199F30()) + 1];
 
     if (position != NULL) {
@@ -702,23 +703,23 @@ s8 EventBase::sub_80EA940(ScriptSlot* script, s32* arguments) {
 }
 
 // Stores a random value below arguments[1] in the script value arguments[0].
-s8 EventBase::sub_80EA968(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+s8 EventBase::sub_80EA968(EventThread* script, s32* arguments, u32* engineRegisters) {
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                              sub_81DD77C(arguments[1], sub_8199F30()));
     return true;
 }
 
 // Calls GameMode::sub_801B0AC(arguments[0]).
-s8 EventBase::sub_80EA9A8(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EA9A8(EventThread* script, s32* arguments) {
     GameMode::sub_801B0AC(arguments[0]);
     return true;
 }
 
 // Jumps to arguments[3] depending on the keys in gGameState.field_2E masked with arguments[2]:
 // arguments[1] 0 checks for none of them, 1 for all of them (switched on as operation 11 or 12 of
-// script_test_condition, !left and ~left). With bit 0 of arguments[0] set the jump
+// testCondition, !left and ~left). With bit 0 of arguments[0] set the jump
 // is taken when the check fails, otherwise when it holds.
-s8 EventBase::sub_80EA9B8(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EA9B8(EventThread* script, s32* arguments) {
     u16 keys = gGameState.field_2E;
     u32 expected = arguments[2];
     u32 mask = expected;
@@ -746,7 +747,7 @@ s8 EventBase::sub_80EA9B8(ScriptSlot* script, s32* arguments) {
 }
 
 // Like sub_80EA9B8, but with gGameState.inputPressed, or field_2A if arguments[0] >> 1 is 0.
-s8 EventBase::sub_80EAA04(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAA04(EventThread* script, s32* arguments) {
     u16 keys = gGameState.inputPressed;
     u32 expected;
     u32 mask;
@@ -779,7 +780,7 @@ s8 EventBase::sub_80EAA04(ScriptSlot* script, s32* arguments) {
 }
 
 // Stores gGameState.field_2E in the script value arguments[0].
-s8 EventBase::sub_80EAA5C(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+s8 EventBase::sub_80EAA5C(EventThread* script, s32* arguments, u32* engineRegisters) {
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                              gGameState.field_2E);
     return true;
@@ -787,7 +788,7 @@ s8 EventBase::sub_80EAA5C(ScriptSlot* script, s32* arguments, u32* engineRegiste
 
 // Stores gGameState.field_2A (arguments[1] = 0), inputPressed (1) or 0 in the script value
 // arguments[0].
-s8 EventBase::sub_80EAA84(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+s8 EventBase::sub_80EAA84(EventThread* script, s32* arguments, u32* engineRegisters) {
     u16 keys = arguments[1];
 
     if (keys == 0) {
@@ -803,21 +804,21 @@ s8 EventBase::sub_80EAA84(ScriptSlot* script, s32* arguments, u32* engineRegiste
 
 // Sets the key mask (gGameState.field_3C.field_3C_0) to the keys not in arguments[0] and applies it
 // (sub_8018818).
-s8 EventBase::sub_80EAACC(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAACC(EventThread* script, s32* arguments) {
     gGameState.field_3C.field_3C_0 = ~arguments[0] & 0x3FF;
     sub_8018818();
     return true;
 }
 
 // Sets gGameState.field_3C.field_3C_10 to arguments[0].
-s8 EventBase::sub_80EAB00(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAB00(EventThread* script, s32* arguments) {
     gGameState.field_3C.field_3C_10 = arguments[0];
     return true;
 }
 
 // Sets the flags arguments[1] in gGameState.field_7C (arguments[0] = 0), or sets (1) or clears (2)
 // them in gGameState.field_3C.field_3E.
-s8 EventBase::sub_80EAB20(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAB20(EventThread* script, s32* arguments) {
     switch (*arguments++) {
         case 0:
             gGameState.field_7C |= arguments[0];
@@ -834,10 +835,10 @@ s8 EventBase::sub_80EAB20(ScriptSlot* script, s32* arguments) {
     return true;
 }
 
-// Jumps to arguments[4] if script_test_condition(arguments[0], arguments[1], arguments[2]) equals
+// Jumps to arguments[4] if testCondition(arguments[0], arguments[1], arguments[2]) equals
 // arguments[3].
-s8 EventBase::script_cmd_conditional_jump(ScriptSlot* script, s32* arguments) {
-    if (script_test_condition(arguments[0], arguments[1], arguments[2]) == arguments[3]) {
+s8 EventBase::commandConditionalJump(EventThread* script, s32* arguments) {
+    if (testCondition(arguments[0], arguments[1], arguments[2]) == arguments[3]) {
         script->position = (u8*)arguments[4];
     }
     return true;
@@ -846,7 +847,7 @@ s8 EventBase::script_cmd_conditional_jump(ScriptSlot* script, s32* arguments) {
 // Stores arguments[2] OP arguments[3] in the script value arguments[0], with operation arguments[1]:
 // 0: arguments[2] alone, 1-5: + - * / %, 6-7: << >>, 8-10: & | ^, 11: !arguments[2],
 // 12: ~arguments[2].
-s8 EventBase::sub_80EAB98(ScriptSlot* script, s32* arguments, u32* engineRegisters, u32* engineFlags,
+s8 EventBase::sub_80EAB98(EventThread* script, s32* arguments, u32* engineRegisters, u32* engineFlags,
                           u32* scriptFlags) {
     switch (arguments[1]) {
         case 0:
@@ -909,7 +910,7 @@ s8 EventBase::sub_80EAB98(ScriptSlot* script, s32* arguments, u32* engineRegiste
 // Stores field_E (arguments[2] = 0), field_12 (1), field_14 (2) or field_18 (3) of brother
 // arguments[1]'s struc_3000FF4 in the script value arguments[0].
 //! \bug Any other arguments[2] stores an unset value.
-s8 EventBase::sub_80EAC78(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+s8 EventBase::sub_80EAC78(EventThread* script, s32* arguments, u32* engineRegisters) {
     s32 destination = *arguments++;
     struc_3000FF4* entry = &dword_3000FF4[*arguments++];
     u16 value;
@@ -937,7 +938,7 @@ s8 EventBase::sub_80EAC78(ScriptSlot* script, s32* arguments, u32* engineRegiste
 
 // Stores field_22 (arguments[1] = 0), field_23 (1), field_25 (2) or field_24 (3) of dword_3000D44
 // in the script value arguments[0].
-s8 EventBase::sub_80EACDC(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+s8 EventBase::sub_80EACDC(EventThread* script, s32* arguments, u32* engineRegisters) {
     switch (arguments[1]) {
         case 0:
             CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
@@ -963,14 +964,14 @@ s8 EventBase::sub_80EACDC(ScriptSlot* script, s32* arguments, u32* engineRegiste
 }
 
 // Sets field_26 and field_27 of dword_3000D44 to arguments[0] and arguments[1].
-s8 EventBase::sub_80EAD7C(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAD7C(EventThread* script, s32* arguments) {
     dword_3000D44->field_26 = *arguments++;
     dword_3000D44->field_27 = *arguments;
     return true;
 }
 
 // Sets field_29 of dword_3000D44 to 1 if arguments[0] is 0, otherwise to -1.
-s8 EventBase::sub_80EAD98(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAD98(EventThread* script, s32* arguments) {
     if (arguments[0] == 0) {
         dword_3000D44->field_29 = 1;
     } else {
@@ -980,7 +981,7 @@ s8 EventBase::sub_80EAD98(ScriptSlot* script, s32* arguments) {
 }
 
 // Calls sub_801BBE4 on dword_3000D44 with arguments[0-2].
-s8 EventBase::sub_80EADC4(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EADC4(EventThread* script, s32* arguments) {
     sub_801BBE4(dword_3000D44, arguments[0], arguments[1], arguments[2]);
     return true;
 }
@@ -992,7 +993,7 @@ s8 EventBase::sub_80EADE8() {
 
 // Waits (repeats the command, returning false) while an active entry has the id arguments[0]
 // (0x3F: any id).
-s8 EventBase::sub_80EADEC(struc_3000FC8* entries, ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EADEC(struc_3000FC8* entries, EventThread* script, s32* arguments) {
     s16 i;
     struc_3000FC8Entry* entry;
 
@@ -1011,7 +1012,7 @@ s8 EventBase::sub_80EAE2C() {
 }
 
 // Hides the first active entry with the id arguments[0] (sub_80E8EE0).
-s8 EventBase::sub_80EAE30(struc_3000FC8* entries, ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAE30(struc_3000FC8* entries, EventThread* script, s32* arguments) {
     s16 i;
     struc_3000FC8Entry* entry;
 
@@ -1025,14 +1026,14 @@ s8 EventBase::sub_80EAE30(struc_3000FC8* entries, ScriptSlot* script, s32* argum
 }
 
 // Stores dword_3000FB8->field_30 in the script value arguments[0].
-s8 EventBase::sub_80EAE70(ScriptSlot* script, s32* arguments, u32* engineRegisters) {
+s8 EventBase::sub_80EAE70(EventThread* script, s32* arguments, u32* engineRegisters) {
     CommonEvent::setVariable(engineRegisters, script->registers, 0, 0, arguments[0],
                              dword_3000FB8->field_30);
     return true;
 }
 
 // Jumps to arguments[1] if dword_3000FB8->field_30 is arguments[0].
-s8 EventBase::sub_80EAE9C(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAE9C(EventThread* script, s32* arguments) {
     if (dword_3000FB8->field_30 == arguments[0]) {
         script->position = (u8*)arguments[1];
     }
@@ -1040,7 +1041,7 @@ s8 EventBase::sub_80EAE9C(ScriptSlot* script, s32* arguments) {
 }
 
 // Jumps to arguments[1] if bit arguments[0] of windows->field_4->field_1B2 is set.
-s8 EventBase::sub_80EAEBC(struc_3000FCC* windows, ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAEBC(struc_3000FCC* windows, EventThread* script, s32* arguments) {
     if ((windows->field_4->field_1B2 >> *arguments++) & 1) {
         script->position = (u8*)*arguments;
     }
@@ -1048,7 +1049,7 @@ s8 EventBase::sub_80EAEBC(struc_3000FCC* windows, ScriptSlot* script, s32* argum
 }
 
 // Calls sub_8019508(arguments[2], arguments[1]) if arguments[0] is 0.
-s8 EventBase::sub_80EAEE0(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAEE0(EventThread* script, s32* arguments) {
     if (*arguments++ == 0) {
         sub_8019508(arguments[1], arguments[0]);
     }
@@ -1057,7 +1058,7 @@ s8 EventBase::sub_80EAEE0(ScriptSlot* script, s32* arguments) {
 
 // Sound effects: plays arguments[1] (arguments[0] = 0), stops it (1; all if arguments[1] is 0) or
 // waits while it plays (2).
-s8 EventBase::sub_80EAEF8(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAEF8(EventThread* script, s32* arguments) {
     switch (*arguments++) {
         case 0:
             play_sfx_80195B4(arguments[0], -1);
@@ -1084,7 +1085,7 @@ s8 EventBase::sub_80EAEF8(ScriptSlot* script, s32* arguments) {
 // Music: arguments[0] 0 calls sub_8019308(arguments[1], arguments[2], arguments[3]), 1
 // sub_8019650(arguments[1], arguments[3], arguments[2]) (arguments[3] 2 becomes -1 for both), 2 and 3
 // sub_80193B4 and sub_8019460 with (arguments[1], arguments[3], arguments[2]).
-s8 EventBase::sub_80EAF4C(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAF4C(EventThread* script, s32* arguments) {
     switch (*arguments++) {
         case 0:
             if (arguments[2] == 2) {
@@ -1114,7 +1115,7 @@ s8 EventBase::sub_80EAF4C(ScriptSlot* script, s32* arguments) {
 // Music: arguments[0] 0-1 call sub_8019308(arguments[1], arguments[2], -1 or 0xFF), 2-3
 // sub_80193B4(arguments[1], 0xFF or 0, arguments[2]), 4 calls sub_8019628(arguments[2])
 // (arguments[1] = 0 or 1) or waits while sub_80195F8(arguments[2]) (2).
-s8 EventBase::sub_80EAFB4(ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EAFB4(EventThread* script, s32* arguments) {
     switch (*arguments++) {
         case 0:
             sub_8019308(arguments[0], arguments[1], -1);
@@ -1159,7 +1160,7 @@ s8 EventBase::sub_80EB048(struc_3000FCC* windows, s32* arguments) {
 
 // Calls sub_80E9330(windows, arguments[1]) (arguments[0] = 0) or waits until field_42_2 of window
 // arguments[1] is set (1).
-s8 EventBase::sub_80EB05C(struc_3000FCC* windows, ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EB05C(struc_3000FCC* windows, EventThread* script, s32* arguments) {
     switch (*arguments++) {
         case 0:
             sub_80E9330(windows, arguments[0]);
@@ -1177,7 +1178,7 @@ s8 EventBase::sub_80EB05C(struc_3000FCC* windows, ScriptSlot* script, s32* argum
 
 // Selects window arguments[0] (0-4; sub_80E6FB8 and sub_80E7118 with its bit), or for higher values
 // calls sub_80E6E68 and sub_80E7118 with field_1B3. Clears dword_3000FB8->field_31.
-s8 EventBase::sub_80EB09C(struc_3000FCC* windows, ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EB09C(struc_3000FCC* windows, EventThread* script, s32* arguments) {
     if (arguments[0] <= 4) {
         sub_80E6FB8(windows, arguments[0]);
         sub_80E7118(windows, 1 << arguments[0]);
@@ -1190,8 +1191,7 @@ s8 EventBase::sub_80EB09C(struc_3000FCC* windows, ScriptSlot* script, s32* argum
 }
 
 // Waits (repeats the command, returning false) while bit arguments[0] of field_1B4 is set.
-s8 EventBase::script_cmd_wait_for_user_input(struc_3000FCC* windows, ScriptSlot* script,
-                                             s32* arguments) {
+s8 EventBase::commandWaitForUserInput(struc_3000FCC* windows, EventThread* script, s32* arguments) {
     if ((windows->field_4->field_1B4 >> arguments[0]) & 1) {
         script->position = script->commandPosition;
         return false;
@@ -1202,7 +1202,7 @@ s8 EventBase::script_cmd_wait_for_user_input(struc_3000FCC* windows, ScriptSlot*
 // Opens a window (sub_80E5BCC) like sub_80E9D50, at (arguments[1], arguments[2]). arguments[3] has
 // the height index (low byte, word_83BA4B4) and width (next byte); arguments[5] the flags, packed
 // into the bits sub_80E5BCC expects.
-s8 EventBase::sub_80EB11C(struc_3000FCC* windows, ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EB11C(struc_3000FCC* windows, EventThread* script, s32* arguments) {
     s32 size = arguments[3];
     s32 flags = arguments[5];
     u8 width = size >> 8;
@@ -1217,24 +1217,24 @@ s8 EventBase::sub_80EB11C(struc_3000FCC* windows, ScriptSlot* script, s32* argum
 
 // Uncalled. Opens a window (sub_80E5BCC) with the width and height in arguments[3] (high and low
 // byte) and the flags in arguments[5] as they are.
-s8 EventBase::sub_80EB1A4(struc_3000FCC* windows, ScriptSlot* script, s32* arguments) {
+s8 EventBase::sub_80EB1A4(struc_3000FCC* windows, EventThread* script, s32* arguments) {
     sub_80E5BCC(windows, arguments[0], arguments[1], arguments[2], arguments[3] >> 8, arguments[3],
                 arguments[4], arguments[5], arguments[6], arguments[7]);
     return true;
 }
 
 // Waits arguments[0] frames (field_9C, flag 0x10; counted down by sub_80EA778).
-s8 EventBase::script_cmd_wait_frames(ScriptSlot* script, s32* arguments) {
+s8 EventBase::commandWaitFrames(EventThread* script, s32* arguments) {
     script->field_9C = arguments[0];
     if (script->field_9C == 0) {
         return true;
     }
-    script->field_A0 |= 0x10;
+    script->flags |= 0x10;
     return false;
 }
 
 // Jumps to arguments[1], saving the current position to return to if arguments[0] is 1.
-s8 EventBase::script_cmd_call(ScriptSlot* script, s32* arguments) {
+s8 EventBase::commandCall(EventThread* script, s32* arguments) {
     if (arguments[0] == 1) {
         script->returnPosition = script->position;
     }
@@ -1245,11 +1245,11 @@ s8 EventBase::script_cmd_call(ScriptSlot* script, s32* arguments) {
 // Returns to the saved position, or ends the script if there is none.
 //! Possible fake match: the second test of position (found by the permuter) keeps it live past
 //! the if/else, which moves it from r0 to r2; jump optimization removes the test afterwards.
-s8 EventBase::script_cmd_return(ScriptSlot* script) {
+s8 EventBase::commandReturn(EventThread* script) {
     u8* position = script->returnPosition;
 
     if (position == NULL) {
-        script->field_4 = script->position;
+        script->endPosition = script->position;
     } else {
         script->position = position;
         script->returnPosition = NULL;
@@ -1262,9 +1262,9 @@ s8 EventBase::script_cmd_return(ScriptSlot* script) {
     return true;
 }
 
-// Ends the script (sets its end, field_4, to its position).
-s8 EventBase::script_cmd_end(ScriptSlot* script) {
-    script->field_4 = script->position;
+// Ends the script (sets its endPosition to its position).
+s8 EventBase::commandEnd(EventThread* script) {
+    script->endPosition = script->position;
     script->returnPosition = NULL;
     return true;
 }

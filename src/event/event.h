@@ -31,7 +31,7 @@
 // If the size has its most significant bit set, the argument is a 32-bit value (e.g. a pointer).
 #define ARGUMENT_ALIGNED_WORD 0x80
 
-struct ScriptSlot;
+struct EventThread;
 
 class CommonEvent {
   public:
@@ -49,7 +49,7 @@ class CommonEvent {
 
     static CommonEvent* instance;
 
-    static u8* readCommand(ScriptSlot* script, s32* arguments, void* unused, u32* engineRegisters,
+    static u8* readCommand(EventThread* script, s32* arguments, void* unused, u32* engineRegisters,
                            u32* engineFlags, u32* scriptFlags);
     static u8 getFlag(u32* engineFlags, u32* scriptFlags, u16 flag);
     static void setFlag(u32* engineFlags, u32* scriptFlags, u16 flag, u8 value);

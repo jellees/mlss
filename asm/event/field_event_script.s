@@ -2011,12 +2011,12 @@ _080EF3A8:
 	str r1, [sp, #0x004]
 	adds r0, r4, #0x0
 	add r1, sp, #0x008
-	bl readCommand__11CommonEventP10ScriptSlotPiPvPUiN24
+	bl readCommand__11CommonEventP11EventThreadPiPvPUiN24
 	adds r0, r6, #0x0
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	add r3, sp, #0x008
-	bl executeNextCommand__16FieldEventScriptP11FieldObjectP13ScriptContextPi
+	bl executeNextCommand__16FieldEventScriptP11FieldObjectP16FieldObjectEventPi
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _080EF3EC
@@ -2024,7 +2024,7 @@ _080EF3DA:
 	adds r0, r6, #0x0
 	movs r1, #0x00
 	adds r2, r4, #0x0
-	bl sub_80EB838__16FieldEventScriptP11FieldObjectP13ScriptContext
+	bl sub_80EB838__16FieldEventScriptP11FieldObjectP16FieldObjectEvent
 	lsls r0, r0, #0x18
 	lsrs r1, r0, #0x18
 	cmp r1, #0x00
@@ -2219,12 +2219,12 @@ _080EF56A:
 	str r1, [sp, #0x004]
 	adds r0, r4, #0x0
 	add r1, sp, #0x008
-	bl readCommand__11CommonEventP10ScriptSlotPiPvPUiN24
+	bl readCommand__11CommonEventP11EventThreadPiPvPUiN24
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	adds r2, r4, #0x0
 	add r3, sp, #0x008
-	bl executeNextCommand__16FieldEventScriptP11FieldObjectP13ScriptContextPi
+	bl executeNextCommand__16FieldEventScriptP11FieldObjectP16FieldObjectEventPi
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	beq _080EF5AE
@@ -2232,7 +2232,7 @@ _080EF59C:
 	adds r0, r5, #0x0
 	movs r1, #0x00
 	adds r2, r4, #0x0
-	bl sub_80EB838__16FieldEventScriptP11FieldObjectP13ScriptContext
+	bl sub_80EB838__16FieldEventScriptP11FieldObjectP16FieldObjectEvent
 	lsls r0, r0, #0x18
 	lsrs r1, r0, #0x18
 	cmp r1, #0x00
@@ -2540,7 +2540,7 @@ _080EF7FE:
 	movs r3, #0xFF
 	str r3, [sp, #0x004]
 	movs r3, #0x00
-	bl sub_80EA5C8__9EventBaseP10ScriptSlotPUcT2UsUc
+	bl sub_80EA5C8__9EventBaseP11EventThreadPUcT2UsUc
 	lsls r0, r4, #0x10
 	ldr r1, _080EF870 @ =0xFFFF0000
 	adds r0, r0, r1
@@ -2565,7 +2565,7 @@ _080EF82A:
 	str r2, [sp, #0x004]
 	adds r2, r7, #0x0
 	movs r3, #0x00
-	bl sub_80EA5C8__9EventBaseP10ScriptSlotPUcT2UsUc
+	bl sub_80EA5C8__9EventBaseP11EventThreadPUcT2UsUc
 	add sp, #0x008
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -2762,7 +2762,7 @@ _080EF9BA:
 	ldr r1, [r4, #0x00]
 	adds r1, #0xA8
 	add r2, sp, #0x008
-	bl sub_80ECB20__16FieldEventScriptP13ScriptContextPi
+	bl sub_80ECB20__16FieldEventScriptP16FieldObjectEventPi
 	ldr r0, [r4, #0x00]
 	ldr r3, _080EFA10 @ =0x0000054C
 	adds r0, r0, r3
@@ -3048,7 +3048,7 @@ _080EFC46:
 	ldr r0, [r2, #0x00]
 	adds r0, #0x1C
 	adds r1, r5, #0x0
-	bl sub_80EA778__9EventBaseP10ScriptSlot
+	bl sub_80EA778__9EventBaseP11EventThread
 _080EFC5C:
 	mov r1, r9
 	lsls r0, r1, #0x10
@@ -3123,7 +3123,7 @@ _080EFCDA:
 	ldr r0, [r1, #0x00]
 	ldr r1, [r6, #0x00]
 	adds r2, r7, #0x0
-	bl sub_80EB490__16FieldEventScriptP11FieldObjectP13ScriptContext
+	bl sub_80EB490__16FieldEventScriptP11FieldObjectP16FieldObjectEvent
 _080EFCF0:
 	ldrh r1, [r4, #0x00]
 	movs r5, #0x80
@@ -3153,7 +3153,7 @@ _080EFD16:
 	ldr r0, [r4, #0x00]
 	adds r0, #0x1C
 	adds r1, r7, #0x0
-	bl sub_80EA778__9EventBaseP10ScriptSlot
+	bl sub_80EA778__9EventBaseP11EventThread
 _080EFD2C:
 	mov r1, r9
 	lsls r0, r1, #0x10
@@ -3860,7 +3860,7 @@ _080F02D6:
 	ldr r1, [r4, #0x00]
 	adds r1, #0xA8
 	add r2, sp, #0x008
-	bl sub_80ECB20__16FieldEventScriptP13ScriptContextPi
+	bl sub_80ECB20__16FieldEventScriptP16FieldObjectEventPi
 	ldr r0, [r4, #0x00]
 	ldr r1, _080F0328 @ =0x0000054C
 	adds r0, r0, r1
@@ -3991,7 +3991,7 @@ _080F03FE:
 	ldr r0, [r6, #0x00]
 	adds r0, #0x1C
 	adds r1, r5, #0x0
-	bl sub_80EA778__9EventBaseP10ScriptSlot
+	bl sub_80EA778__9EventBaseP11EventThread
 _080F0416:
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -6180,7 +6180,7 @@ _080F1522:
 	ldrb r3, [r5, #0x0C]
 	ldrb r4, [r5, #0x08]
 	str r4, [sp, #0x000]
-	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP11EventThreadP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -6243,7 +6243,7 @@ _080F15A2:
 	ldrb r1, [r5, #0x04]
 	str r1, [sp, #0x000]
 	adds r1, r6, #0x0
-	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP11EventThreadP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -6356,7 +6356,7 @@ _080F1696:
 	ldrb r3, [r5, #0x0C]
 	ldrb r4, [r5, #0x08]
 	str r4, [sp, #0x000]
-	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP11EventThreadP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -6481,7 +6481,7 @@ _080F1792:
 	ldrb r3, [r5, #0x10]
 	ldrb r4, [r5, #0x0C]
 	str r4, [sp, #0x000]
-	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP11EventThreadP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -6667,7 +6667,7 @@ _080F190A:
 	ldrb r1, [r5, #0x04]
 	str r1, [sp, #0x000]
 	adds r1, r7, #0x0
-	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP11EventThreadP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004
@@ -6779,7 +6779,7 @@ _080F19EC:
 	ldrb r1, [r5, #0x08]
 	str r1, [sp, #0x000]
 	adds r1, r7, #0x0
-	bl sub_80EA60C__9EventBaseP10ScriptSlotP6SpriteUcUc
+	bl sub_80EA60C__9EventBaseP11EventThreadP6SpriteUcUc
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	add sp, #0x004

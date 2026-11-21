@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_80EDAB0__16FieldEventScriptP13ScriptContextPi
-sub_80EDAB0__16FieldEventScriptP13ScriptContextPi:
+	thumb_func_start sub_80EDAB0__16FieldEventScriptP16FieldObjectEventPi
+sub_80EDAB0__16FieldEventScriptP16FieldObjectEventPi:
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	adds r7, r1, #0

@@ -14,6 +14,7 @@ SECTIONS
     {
         . = 0x00000D48; src/sprite.o(.bss);
         . = 0x00000FC0; src/event/event.o(.bss);
+        . = 0x00000FC8; src/event/field_event_script.o(.bss);
         . = 0x00001A20; *libgcc.a:dp-bit.o(.bss);
         *libgcc.a:fp-bit.o(.bss);
         . = 0x00001A68; *libc.a:syscalls.o(.bss);
