@@ -648,15 +648,11 @@ int sub_8019610(int);
 void sub_803C788(struct FieldManager*, void*);
 void init_btl_process_80FC25C(void*, u8, char*, void*);
 void sub_803C720(struct FieldManager*, int);
-void sub_8030484(struct FieldManager*);
-void sub_8031234(struct FieldManager*);
 void sub_8032514(struct FieldManager*);
 void sub_8033E30(struct FieldManager*);
 void sub_8034A5C(struct FieldManager*);
 void sub_8035B98(struct FieldManager*);
 void sub_8035974(struct FieldManager*);
-void sub_80313C0(struct FieldManager*);
-void sub_8031518(struct FieldManager*);
 void sub_80339B8(struct FieldManager*);
 void sub_803495C(struct FieldManager*);
 void sub_8036E14(struct FieldManager*);
@@ -740,6 +736,7 @@ extern u32 dword_3000E00;
 extern u32 dword_3000E04;
 extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
 extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
+extern s8 byte_839F630[];  // FieldManager::sub_80306A0: height offset (x 256) per field_250
 extern u8 byte_839F620[];  // Direction (0-7) per ArcTan2 result / 0x1000 (FieldManager::sub_802C208)
 extern struct EVTS* dword_3000D78;
 // ARM code in ROM that is copied to IWRAM: the script bit reader sub_8000F9C ends where sub_8001010

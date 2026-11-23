@@ -185,7 +185,7 @@ class FieldObject {
     s32 field_230;
     s32 field_234;
     s8 field_238;
-    u8 field_239;
+    s8 field_239; // Sprite animation speed (sprite->speed, sub_804790C)
     s8 field_23A;
     s8 field_23B;
     u8 field_23C;

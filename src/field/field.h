@@ -234,7 +234,9 @@ class FieldManager : public Process {
     u8 pad_247;
     s16 field_248;
     s16 field_24A;
-    u8 pad_24C[0x15];
+    u8 pad_24C[0x4];
+    u8 field_250; // Frame counter (sub_80306A0)
+    u8 pad_251[0x10];
     s8 field_261;
     u8 pad_262[0x2];
     u32 field_264;
@@ -453,9 +455,15 @@ class FieldManager : public Process {
     void sub_802F938();
     void sub_802FAE4(int mode, int arg2);
     void sub_802FD70();
+    void sub_80303C4(FieldPlayerCharacter* player);
+    void sub_8030484();
     void sub_8031650(FieldPlayerCharacter* player);
     void sub_8034FE8();
     void sub_80306A0();
+    void sub_8031234();
+    void sub_80313C0();
+    void sub_8031518();
+    int sub_80316FC();
     void sub_8031768();
     void sub_8032A90();
     void sub_8033F5C();
