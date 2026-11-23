@@ -166,6 +166,12 @@ extern struct SpriteInfo* dSpriteInfo[11];
 
 extern OamNodesSortRoutine gOamNodesSort;
 extern OamNodesCopyRoutine gOamNodesCopy;
+// Declared in address order: agbcp lays out .bss by first declaration.
+extern OamNodesResetRoutine gOamNodesReset;
+extern u32 dword_3000D54;
+extern SpriteDrawRoutine gSpriteDrawRoutines[];
+extern u8 byte_3000D70;
+extern struct SpriteContext* dword_3000D74;
 
 void sprite_set_animation(struct Sprite* sprite, int animation, int frame = -1,
                           SpriteCallback onUpdateCallback = NULL, int callbackArgument = 0);

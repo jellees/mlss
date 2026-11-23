@@ -704,7 +704,7 @@ void FieldManager::update() {
                 sub_802DF80(0);
             }
 
-            sub_802F834(this);
+            sub_802F834();
 
             if (field_F9_4) {
                 if (field_12C_2 != -2) {
@@ -1139,13 +1139,13 @@ void FieldManager::update_field_8023DD4() {
             if (field_291_0) {
                 sub_803CF64(this);
             } else if (leader->field_358_3) {
-                sub_802F938(this);
+                sub_802F938();
             } else {
                 sub_802A740();
             }
         }
 
-        sub_802FD70(this);
+        sub_802FD70();
         leader->sub_8048174(brothersForm);
         follower->sub_8048174(brothersForm);
 
@@ -5608,3 +5608,400 @@ void FieldManager::sub_802EF18() {
     }
 }
 #endif
+
+void FieldManager::sub_802F498() {
+    if (!field_2B8_4) {
+        return;
+    }
+
+    leader->field_20C_11 = 0;
+    leader->sub_80461B4(objects);
+    leader->sub_80465D8();
+    if (!field_2B8_5 && brothersTogether) {
+        follower->field_20C_11 = 0;
+        follower->sub_80461B4(objects);
+        follower->sub_80465D8();
+    }
+
+    if (brothersTogether) {
+        field_2B8_4 = follower->sub_8047B78();
+        if (field_2B8_5 && --field_26E == 0) {
+            field_2B8_5 = 0;
+        }
+    } else {
+        field_2B8_4 = leader->sub_8047B78();
+    }
+
+    if (!field_2B8_4) {
+        if (!isUnderwater) {
+            leader->z += leader->height;
+            leader->height = 0;
+            leader->previousZ += leader->previousHeight;
+            leader->previousHeight = 0;
+        }
+        leader->field_353_1 = 0;
+        leader->field_20C_11 = 1;
+        leader->field_20C_14 = 1;
+        if (brothersTogether) {
+            if (!isUnderwater) {
+                follower->z += follower->height;
+                follower->height = 0;
+                follower->previousZ += follower->previousHeight;
+                follower->previousHeight = 0;
+            }
+            follower->field_353_1 = 0;
+            follower->field_20C_11 = 1;
+            follower->field_20C_14 = 1;
+            sub_802DF80(0);
+        }
+        follower->field_20C_26 = leader->field_20C_26 = 1;
+        field_20A_7 = 0;
+    } else {
+        sub_802F6EC();
+    }
+}
+
+void FieldManager::sub_802F6EC() {
+    int x = leader->x / 256;
+    int y = (leader->y - leader->z - leader->height) / 256;
+    if (x < 0 || y < 0 || x >= field_286 || y >= field_288) {
+        leader->field_353_1 = 1;
+    } else {
+        leader->field_20C_14 = isUnderwater ^ 1;
+        leader->field_353_1 = 0;
+    }
+
+    if (brothersTogether) {
+        x = follower->x / 256;
+        //! \bug Uses the leader's height instead of the follower's.
+        y = (follower->y - follower->z - leader->height) / 256;
+        if (x < 0 || y < 0 || x >= field_286 || y >= field_288) {
+            follower->field_353_1 = 1;
+        } else {
+            follower->field_20C_14 = isUnderwater ^ 1;
+            follower->field_353_1 = 0;
+        }
+    }
+}
+
+static inline int sub_802F834_level() {
+    return CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x205)   ? 3
+           : CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x204) ? 2
+           : CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x203) != 0;
+}
+
+void FieldManager::sub_802F834() {
+    int level = sub_802F834_level();
+    SpriteContext* context;
+
+    if (level > 0) {
+        level--;
+        context = dword_3000D74;
+        if ((context->field_C[0] & 0x1FF) == 1 && ((context->field_C[0] >> 9) & 0xF) == 0) {
+            *(u16*)0x02000282 = word_839FA3C[gGameState.field_888_1][level];
+            gGameState.field_0 |= 1;
+        }
+        if ((context->field_C[1] & 0x1FF) == 2 && ((context->field_C[1] >> 9) & 0xF) == 0) {
+            *(u16*)0x020002A2 = word_839FA3C[gGameState.field_888_1][level];
+            gGameState.field_0 |= 2;
+        }
+    }
+}
+
+void FieldManager::sub_802F938() {
+    int i;
+
+    if (field_12A == 0) {
+        return;
+    }
+
+    for (i = 2; i < objectCount; i++) {
+        objects[i]->sub_80418E8(objects);
+    }
+    sub_802563C();
+    sub_8025ACC();
+    for (i = 0; i < 2; i++) {
+        objects[i]->sub_80418E8(objects);
+    }
+
+    if (field_209_5) {
+        sub_802DA10();
+    } else {
+        switch (leader->field_368->field_0) {
+            case 3:
+                sub_80306A0();
+                break;
+            case 4:
+                sub_8032A90();
+                break;
+            case 5:
+                sub_8031768();
+                break;
+            case 6:
+            case 7:
+                sub_8033F5C();
+                break;
+            case 9:
+                sub_8034BF4();
+                break;
+            case 10:
+                sub_80350B4();
+                break;
+            case 11:
+                sub_8035DB0();
+                break;
+            case 12:
+                sub_8036F84();
+                break;
+            case 13:
+                sub_80382CC();
+                break;
+            case 14:
+            case 15:
+                sub_8039250();
+                break;
+            case 16:
+            case 17:
+                sub_8039C9C();
+                break;
+            case 18:
+            case 19:
+                sub_803AFCC();
+                break;
+        }
+    }
+
+    if (field_12A <= 2 && !field_F9_4 && !field_F9_5) {
+        sub_802B804(leader, false);
+        sub_802B804(follower, false);
+    } else {
+        leader->sub_804FC90();
+        follower->sub_804FC90();
+    }
+}
+
+void FieldManager::sub_802FAE4(int mode, int arg2) {
+    if (mode == 1) {
+        if (brothersForm != BROTHERS_FORM_MINI_MARIO) {
+            return;
+        }
+        field_20A_1 = 1;
+        leader->field_350_14 = 1;
+        follower->field_350_14 = 1;
+        if (follower->state > 100) {
+            return;
+        }
+        if (arg2 && sub_802DC0C(follower)) {
+            follower->x = leader->x;
+            follower->y = leader->y;
+            follower->z = leader->z;
+            follower->height = leader->height;
+            follower->previousX = leader->previousX;
+            follower->previousY = leader->previousY;
+            follower->previousZ = leader->previousZ;
+            follower->previousHeight = leader->previousHeight;
+        }
+        sub_8035974(this);
+        return;
+    }
+
+    if (brothersForm == BROTHERS_FORM_MINI_MARIO) {
+        return;
+    }
+    if (leader->field_368->field_0 <= 2) {
+        return;
+    }
+    field_20A_1 = 1;
+    leader->field_350_14 = 1;
+    follower->field_350_14 = 1;
+
+    switch (brothersForm) {
+        case BROTHERS_FORM_NORMAL:
+            break;
+        case BROTHERS_FORM_PUMP_MARIO:
+            if (!leader->field_358_3) {
+                sub_8031650(leader);
+            }
+            break;
+        case BROTHERS_FORM_MOLE_LUIGI: {
+            FieldPlayerCharacter* mario;
+
+            if (arg2 && sub_802DC0C(follower)) {
+                follower->x = leader->x;
+                follower->y = leader->y;
+                follower->z = leader->z;
+                follower->height = leader->height;
+                follower->previousX = leader->previousX;
+                follower->previousY = leader->previousY;
+                follower->previousZ = leader->previousZ;
+                follower->previousHeight = leader->previousHeight;
+            }
+            if (!(objects[1]->state >= 64 && objects[1]->state <= 69) &&
+                !(objects[1]->state >= 59 && objects[1]->state <= 61)) {
+                sub_8033B98(this, objects[1]);
+            }
+            mario = (FieldPlayerCharacter*)objects[0];
+            if (mario->field_20C_0) {
+                if (mario->state >= 5 && mario->state <= 9) {
+                    mario->sub_804FCD4();
+                } else if (mario->state >= 10 && mario->state <= 12) {
+                    mario->stopHandPower();
+                }
+            }
+            break;
+        }
+        case BROTHERS_FORM_BARREL_LUIGI:
+            if (leader->state >= 73 && leader->state <= 75) {
+                break;
+            }
+            if (leader->field_368->field_0 == 10) {
+                sub_8034FE8();
+            } else {
+                sub_8034870(this, objects[1]);
+            }
+            break;
+        case 5:
+        case 6:
+            stop_sfx_80195A8(0x157);
+            stop_sfx_80195A8(0x87);
+            stop_sfx_80195A8(0xDB);
+            stop_sfx_80195A8(0xDA);
+            stop_sfx_80195A8(0xDA);
+            break;
+    }
+}
+
+void FieldManager::sub_802FD70() {
+    u32 i;
+    int floor;
+    int ceiling;
+    int top;
+    u8 mask;
+
+    if (leader->field_358_3) {
+        return;
+    }
+
+    if (leader->sub_8047C18(follower) || leader->field_26_2 || follower->field_26_2) {
+        follower->field_368->field_16_0 |= 0x60;
+    }
+    if (leader->sub_8047C18(follower) &&
+        leader->z + leader->height != follower->z + follower->height) {
+        follower->field_368->field_16_0 |= 0x10;
+    }
+    if (leader->objectIndex == BROTHER_LUIGI && (s8)leader->field_1 != -1) {
+        follower->field_368->field_16_0 |= 0x20;
+    }
+    if (leader->sub_804D0EC()) {
+        follower->field_368->field_16_0 |= 0x20;
+    }
+
+    if (!leader->isMole) {
+        if (leader->direction != follower->direction) {
+            follower->field_368->field_16_0 |= 0x60;
+        } else {
+            switch (leader->direction) {
+                case 0:
+                    if ((leader->x & ~0xFF) != (follower->x & ~0xFF) ||
+                        (leader->y & ~0xFF) + 0x1000 > (follower->y & ~0xFF)) {
+                        follower->field_368->field_16_0 |= 0x60;
+                    }
+                    break;
+                case 1:
+                    if ((leader->x & ~0xFF) - 0xC00 < (follower->x & ~0xFF) ||
+                        (leader->y & ~0xFF) + 0xC00 > (follower->y & ~0xFF)) {
+                        follower->field_368->field_16_0 |= 0x60;
+                    }
+                    break;
+                case 2:
+                    if ((leader->y & ~0xFF) != (follower->y & ~0xFF) ||
+                        (leader->x & ~0xFF) - 0x1000 < (follower->x & ~0xFF)) {
+                        follower->field_368->field_16_0 |= 0x60;
+                    }
+                    break;
+                case 3:
+                    if ((leader->x & ~0xFF) - 0xC00 < (follower->x & ~0xFF) ||
+                        (leader->y & ~0xFF) - 0xC00 < (follower->y & ~0xFF)) {
+                        follower->field_368->field_16_0 |= 0x60;
+                    }
+                    break;
+                case 4:
+                    if ((leader->x & ~0xFF) != (follower->x & ~0xFF) ||
+                        (leader->y & ~0xFF) - 0x1000 < (follower->y & ~0xFF)) {
+                        follower->field_368->field_16_0 |= 0x60;
+                    }
+                    break;
+                case 5:
+                    if ((leader->x & ~0xFF) + 0xC00 > (follower->x & ~0xFF) ||
+                        (leader->y & ~0xFF) - 0xC00 < (follower->y & ~0xFF)) {
+                        follower->field_368->field_16_0 |= 0x60;
+                    }
+                    break;
+                case 6:
+                    if ((leader->y & ~0xFF) != (follower->y & ~0xFF) ||
+                        (leader->x & ~0xFF) + 0x1000 > (follower->x & ~0xFF)) {
+                        follower->field_368->field_16_0 |= 0x60;
+                    }
+                    break;
+                case 7:
+                    if ((leader->x & ~0xFF) + 0xC00 > (follower->x & ~0xFF) ||
+                        (leader->y & ~0xFF) + 0xC00 > (follower->y & ~0xFF)) {
+                        follower->field_368->field_16_0 |= 0x60;
+                    }
+                    break;
+            }
+        }
+    }
+
+    for (i = 0; i < 4; i++) {
+        Coldef* coldef =
+            sub_803FBA4(field_304, leader->x + word_839FA48[i * 2], leader->y + word_839FA48[i * 2 + 1],
+                        &floor, &ceiling, &top, 0, leader->field_20C_11);
+
+        if (leader->z == floor) {
+            if (coldef->primaryShape > 3) {
+                follower->field_368->field_16_0 |= 0x60;
+            }
+            if (brothersForm == BROTHERS_FORM_NORMAL && leader->objectIndex == BROTHER_LUIGI &&
+                coldef->primaryShape == 1 && coldef->floorType == 1) {
+                follower->field_368->field_16_0 |= 0x20;
+            }
+        } else if (leader->z == top) {
+            if (coldef->secondaryShape >= 4 && coldef->secondaryShape <= 6) {
+                follower->field_368->field_16_0 |= 0x60;
+            }
+            if (brothersForm == BROTHERS_FORM_NORMAL && leader->objectIndex == BROTHER_LUIGI &&
+                coldef->floorType == 1 && coldef->secondaryShape == 1) {
+                follower->field_368->field_16_0 |= 0x20;
+            }
+        } else if (brothersForm == BROTHERS_FORM_NORMAL && leader->objectIndex == BROTHER_LUIGI) {
+            follower->field_368->field_16_0 |= 0x20;
+        }
+    }
+
+    if (field_2B8_4) {
+        leader->field_368->field_16_7 = 0;
+        follower->field_368->field_16_7 = 0;
+        return;
+    }
+
+    mask = byte_839F930[leader->field_368->field_2 * 2];
+    leader->field_368->field_16_7 = 0;
+    if (mask & leader->field_368->field_16_0) {
+        if (!leader->field_368->field_17_7) {
+            sub_8018218(field_1C->field_0[4]->field_8 + 0x1100,
+                        (void*)(leader->objectIndex * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
+        }
+        leader->field_368->field_16_7 = 1;
+    }
+
+    mask = byte_839F930[follower->field_368->field_2 * 2 + brothersTogether];
+    follower->field_368->field_16_7 = 0;
+    if (mask & follower->field_368->field_16_0) {
+        if (!follower->field_368->field_17_7) {
+            sub_8018218(field_1C->field_0[4]->field_8 + 0x1100,
+                        (void*)(follower->objectIndex * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
+        }
+        follower->field_368->field_16_7 = 1;
+    }
+}

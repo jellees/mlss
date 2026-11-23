@@ -383,7 +383,7 @@ _0803ECCC:
 	mov r0, r8
 	movs r1, #0x00
 	movs r2, #0x00
-	bl sub_802FAE4
+	bl sub_802FAE4__12FieldManagerii
 	mov r7, r10
 	lsls r4, r7
 	movs r0, #0x03

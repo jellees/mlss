@@ -608,7 +608,6 @@ s8 sub_80F1C34(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
 s8 sub_80F1CF8(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
 s8 sub_80F1C7C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*, u8, u8);
 void sub_80E71D0(void*, u8, s16, s16, s16);
-void sub_802FAE4(struct FieldManager*, int, int);
 void sub_803C538(struct FieldManager*, int);
 void sub_819A138(void*, u32);
 void sub_805A0EC(struct Process*, int, u16*, u16*);
@@ -647,7 +646,6 @@ void sub_8019628(int);
 u8 sub_80195F8(int);
 int sub_8019610(int);
 void sub_803C788(struct FieldManager*, void*);
-void sub_802F834(struct FieldManager*);
 void init_btl_process_80FC25C(void*, u8, char*, void*);
 void sub_803C720(struct FieldManager*, int);
 void sub_8030484(struct FieldManager*);
@@ -680,8 +678,6 @@ u8 sub_803E9F0(struct FieldManager*);
 void sub_8051208(struct FieldObject*, u32);
 void sub_803C5A4(struct FieldManager*);
 void sub_803CF64(struct FieldManager*);
-void sub_802F938(struct FieldManager*);
-void sub_802FD70(struct FieldManager*);
 void sub_80EF618(struct EVTS*, int, void*, int);
 void sub_80EF874(struct EVTS*, u8, u32, int, int, int, u16);
 void sub_805C9DC(void*, u8);
@@ -734,6 +730,9 @@ extern u16
 extern u8
     byte_839F9FC[]; // FieldManager::sub_802DDB4: sound per [objectIndex][index][FieldStruct4::field_2]
 extern s8 byte_839FA34[]; // FieldManager::sub_802EF18: distance per BrothersForm
+extern s16 word_839FA48[]; // FieldManager::sub_802FD70: 4 (x, y) offsets of the probed collision cells
+extern u8 byte_839F930[]; // FieldManager::sub_802FD70: field_16_0 mask per [field_2 * 2 + follower]
+extern u16 word_839FA3C[][3]; // sub_802F834: color per [gGameState.field_888_1][level - 1]
 extern void (*dword_3000D80[2])(void);
 extern u16 word_839F5CC[];
 extern u16 word_839F5E2[];
