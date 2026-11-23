@@ -236,7 +236,14 @@ class FieldManager : public Process {
     s16 field_24A;
     u8 pad_24C[0x4];
     u8 field_250; // Frame counter (sub_80306A0)
-    u8 pad_251[0x10];
+    u8 field_251;
+    u8 field_252;
+    u8 pad_253;
+    s32 field_254;
+    u16 field_258;
+    s16 field_25A;
+    u8 field_25C; // Index of the object the leader climbs onto (sub_80328B4)
+    u8 pad_25D[0x4];
     s8 field_261;
     u8 pad_262[0x2];
     u32 field_264;
@@ -247,7 +254,8 @@ class FieldManager : public Process {
     u8 field_26C;
     u8 pad_26D;
     s16 field_26E;
-    u8 pad_270[0x4];
+    u8 pad_270[0x2];
+    u16 field_272;
     u16 field_274;
     s16 field_276;
     s16 field_278;
@@ -465,6 +473,9 @@ class FieldManager : public Process {
     void sub_8031518();
     int sub_80316FC();
     void sub_8031768();
+    void sub_8032514();
+    void sub_80326F4();
+    void sub_80328B4();
     void sub_8032A90();
     void sub_8033F5C();
     void sub_8034BF4();

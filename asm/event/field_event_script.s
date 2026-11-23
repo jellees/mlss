@@ -4513,7 +4513,7 @@ _080F082C:
 	b _080F0872
 _080F083A:
 	ldr r0, [r3, #0x14]
-	bl sub_80326F4
+	bl sub_80326F4__12FieldManager
 	b _080F0872
 _080F0842:
 	ldr r0, [r3, #0x14]
@@ -4528,7 +4528,7 @@ _080F084A:
 	b _080F0872
 _080F0856:
 	ldr r0, [r3, #0x14]
-	bl sub_80328B4
+	bl sub_80328B4__12FieldManager
 	b _080F0872
 _080F085E:
 	ldr r0, [r3, #0x14]

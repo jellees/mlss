@@ -4854,7 +4854,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                         if (brothersForm == BROTHERS_FORM_MOLE_LUIGI) {
                             sub_8033E30(this);
                         } else {
-                            sub_8032514(this);
+                            sub_8032514();
                         }
                         break;
                     case 7:
@@ -6410,4 +6410,710 @@ int FieldManager::sub_80316FC() {
         }
     }
     return brothersForm == BROTHERS_FORM_PUMP_MARIO;
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8031768__12FieldManager.s\"");
+#else
+// Squashes the leader and lifts the follower on top of him by step field_250 (sub_8031768).
+static inline void sub_8031768_squash(FieldManager* field) {
+    s32 offset = word_839FA78[(8 - (s8)field->field_250) * 2] << 8;
+
+    field->follower->height = offset - 0x400;
+    field->leader->sprite->yScale = offset >> 5;
+    field->leader->sprite->xScale = word_839FA78[(8 - (s8)field->field_250) * 2 + 1];
+}
+
+static inline void setBrothersSpeed(FieldPlayerCharacter* leader, FieldPlayerCharacter* follower,
+                                    const u16& speed) {
+    leader->field_23E = speed;
+    follower->field_23E = speed;
+    leader->field_260 = speed;
+    follower->field_260 = speed;
+}
+
+static inline void setBrothersSpeeds(FieldPlayerCharacter* leader, FieldPlayerCharacter* follower,
+                                     const u16& speed) {
+    leader->field_240 = speed;
+    follower->field_240 = speed;
+    setBrothersSpeed(leader, follower, speed);
+}
+
+void FieldManager::sub_8031768() {
+    bool callSub_802DF80;
+
+    if (follower->state == 58) {
+        if (--field_26E != 0) {
+            return;
+        }
+        follower->field_368->field_0 = leader->field_368->field_0 = 0;
+        follower->state = leader->state = 0;
+        setBrothersSpeed(leader, follower, walkSpeed);
+        follower->field_358_3 = leader->field_358_3 = 0;
+        follower->field_350_14 = leader->field_350_14 = 0;
+        leader->isPump = 0;
+        brothersForm = BROTHERS_FORM_NORMAL;
+        field_208_0 = 1;
+        field_20B_7 = 0;
+        follower->field_214_0 = 3;
+        follower->sub_8049000(SPRITE_ID(0, 2));
+        leader->field_214_0 = 3;
+        leader->sub_8049000(SPRITE_ID(0, 1));
+        leader->field_368->field_10[0] = leader->field_368->field_12;
+        leader->field_368->field_12 = -1;
+        sub_802DDB4(leader, 0, 0);
+        shotBullets[0]->sub_804FAF8();
+        sub_802DF80(0);
+        return;
+    }
+
+    if (follower->state >= 55 && follower->state <= 57) {
+        leader->sub_80465D8();
+        switch (follower->state) {
+            case 55:
+                follower->updateAirborne();
+                if (field_20A_1) {
+                    follower->updateAirborne();
+                }
+                if (!field_209_6 && follower->z + follower->height < leader->z + leader->height) {
+                    follower->height = leader->z + leader->height - follower->z;
+                }
+                if (follower->sprite->frameTicksLeft <= field_FA_11) {
+                    leader->sprite->yScale = word_839FA58[follower->sprite->frame];
+                    if (follower->sprite->frame == 4) {
+                        shotBulletIndex--;
+                        shotBullets[shotBulletIndex]->sub_804E0D8(3, leader, 0);
+                        play_sfx_80195B4(0x57, -1);
+                    }
+                }
+                if (!follower->sprite->animationComplete) {
+                    break;
+                }
+                field_26E = 20;
+                sprite_set_animation(follower->sprite, follower->sprite->field_21 + 5, 0, NULL, 0);
+                follower->state = leader->state = 56;
+                break;
+            case 56:
+                field_26E -= 1 << field_20A_1;
+                if (field_26E > 0) {
+                    break;
+                }
+                field_26E = 0;
+                leader->sprite->yScale = 0x100;
+                follower->field_214_0 = 3;
+                follower->sub_8049000(SPRITE_ID(0, 2));
+                if (!field_209_6) {
+                    follower->sub_8045A94(1, 0, leader->x / 256, leader->y / 256, leader->z / 256,
+                                          walkSpeed);
+                }
+                follower->state = leader->state = 57;
+                follower->field_212_6 = 0;
+                if (shotBulletIndex != 0) {
+                    break;
+                }
+                leader->sub_8049000(SPRITE_ID(0, 1));
+                leader->sprite->yScale = 0x100;
+                break;
+            case 57:
+                if ((!sub_802DC0C(follower) && follower->height == 0) || !follower->sub_8047B78()) {
+                    if (follower->sub_8047B78() == true) {
+                        follower->x &= ~0xFF;
+                        follower->y &= ~0xFF;
+                    }
+                    follower->sub_8046980();
+                    follower->state = leader->state = 0;
+                    follower->field_358_3 = leader->field_358_3 = 0;
+                    follower->field_350_14 = leader->field_350_14 = 0;
+                    follower->field_20C_13 = 0;
+                    follower->field_20C_14 = 1;
+                    follower->field_35A_1 = 0;
+                    sub_802DF80(0);
+                    field_20B_7 = 0;
+                    if (shotBulletIndex == 0) {
+                        follower->field_368->field_0 = leader->field_368->field_0 = 0;
+                        setBrothersSpeeds(leader, follower, walkSpeed);
+                        leader->isPump = 0;
+                        leader->field_368->field_10[0] = leader->field_368->field_12;
+                        leader->field_368->field_12 = -1;
+                        sub_802DDB4(leader, 0, 0);
+                        field_208_0 = 1;
+                        brothersForm = BROTHERS_FORM_NORMAL;
+                    } else if (field_20A_1) {
+                        sub_8031650(leader);
+                    }
+                } else {
+                    follower->sub_80461B4(objects);
+                    follower->sub_80465D8();
+                    follower->sub_804FB64(objects, 0, 0);
+                }
+                break;
+        }
+        return;
+    }
+
+    switch (follower->state) {
+        case 46:
+        case 47:
+        case 48:
+        case 49:
+        case 53:
+        case 54:
+            follower->updateAirborne();
+            follower->sub_80461B4(objects);
+            if (field_20A_1) {
+                follower->updateAirborne();
+                follower->sub_80461B4(objects);
+            }
+            break;
+        case 50:
+            field_250--;
+            field_26E--;
+            if ((s8)field_250 >= 0) {
+                sub_8031768_squash(this);
+            }
+            break;
+        case 51:
+            field_26E--;
+            break;
+        case 52:
+            field_250++;
+            sub_8031768_squash(this);
+            break;
+    }
+
+    sub_80303C4(leader);
+    leader->sub_80465D8();
+    leader->method13();
+    leader->sub_804FB64(objects, 0, 0);
+    sub_80303C4(follower);
+    follower->sub_80465D8();
+    follower->method13();
+    follower->sub_804FB64(objects, 0, 0);
+
+    switch (follower->state) {
+        case 46:
+            if (follower->velocityZ < 0) {
+                if ((follower->field_24_7 & 1) || (follower->field_24_15 & 1)) {
+                    u16 speed;
+
+                    follower->state = leader->state = 49;
+                    speed = follower->field_2DE;
+                    follower->sub_8046980();
+                    follower->sub_8045A94(2, 0, field_248, field_24A, 0, speed);
+                    follower->field_214_0 = 2;
+                } else {
+                    follower->state = leader->state = 47;
+                }
+            }
+            if (follower->state == 49) {
+                break;
+            }
+            if (!follower->field_24_3 && !follower->field_24_11) {
+                break;
+            }
+            follower->state = leader->state = 48;
+            follower->sub_8046980();
+            break;
+        case 47:
+            if (follower->sub_8047B78()) {
+                break;
+            }
+            follower->state = leader->state = 50;
+            field_250 = 8;
+            follower->angle = leader->angle;
+            follower->direction = leader->direction;
+            field_272 = 4;
+            break;
+        case 50:
+            if (--field_272 == 0) {
+                play_sfx_80195B4(0x56, -1);
+            }
+            if ((s8)field_250 >= 0) {
+                break;
+            }
+            follower->state = leader->state = 51;
+            shotBulletIndex = 0;
+            field_26E = 60;
+            break;
+        case 51:
+            if (field_26E < 0) {
+                field_208_0 = 1;
+                leader->sub_8049000(SPRITE_ID(0, 1));
+                leader->field_218 = SPRITE_ID(0, 1);
+                leader->field_214_7 = 0;
+                leader->field_214_6 = 0;
+                follower->state = leader->state = 52;
+            } else {
+                shotBullets[shotBulletIndex]->sub_804E0D8(2, leader, field_26E / 4);
+                shotBulletIndex++;
+            }
+            break;
+        case 52:
+            if ((s8)field_250 != 8) {
+                break;
+            }
+            follower->jumpToHeight(4, 0xEE >> isUnderwater, (s16)walkSpeed);
+            follower->sub_8045A94(2, 0, field_248, field_24A, 0, isUnderwater ? 16 : 10);
+            follower->field_214_0 = 2;
+            follower->state = leader->state = 53;
+            break;
+        case 48:
+            if (follower->velocityZ < 0) {
+                follower->sub_8046980();
+                follower->sub_8045A94(2, 0, field_248, field_24A, 0, isUnderwater ? 14 : 8);
+                follower->field_214_0 = 2;
+            }
+            // fallthrough
+        case 53:
+            if (follower->velocityZ < 0) {
+                follower->state++;
+                leader->state++;
+            }
+            // fallthrough
+        case 49:
+        case 54:
+            if (!field_246_1 && follower->sub_8047C18(leader)) {
+                follower->x = follower->previousX;
+                follower->y = follower->previousY;
+                follower->z = follower->previousZ;
+                follower->height = follower->previousHeight;
+                follower->sub_8046980();
+                field_246_1 = 1;
+            }
+            if (follower->airFrames != -1) {
+                break;
+            }
+            if (follower->state == 54) {
+                follower->field_368->field_0 = leader->field_368->field_0 = 0;
+                setBrothersSpeed(leader, follower, walkSpeed);
+                leader->isPump = 0;
+                leader->field_368->field_10[0] = leader->field_368->field_12;
+                leader->field_368->field_12 = -1;
+                sub_802DDB4(leader, 0, 0);
+                shotBulletIndex = 0;
+                brothersForm = BROTHERS_FORM_NORMAL;
+                callSub_802DF80 = true;
+            } else {
+                callSub_802DF80 = false;
+            }
+            follower->state = leader->state = 0;
+            follower->field_358_3 = leader->field_358_3 = 0;
+            follower->field_350_14 = leader->field_350_14 = 0;
+            follower->field_214_0 = 3;
+            follower->sub_8046980();
+            follower->angle = follower->direction << 5;
+            field_20B_7 = 0;
+            if (callSub_802DF80) {
+                sub_802DF80(0);
+            }
+            if (field_20A_1) {
+                sub_8031650(leader);
+            }
+            break;
+    }
+}
+#endif
+
+void FieldManager::sub_8032514() {
+    int height;
+    int jumpHeight;
+
+    sub_8030484_start(this);
+    field_246_1 = 0;
+    field_248 = follower->x / 256;
+    field_24A = follower->y / 256;
+    follower->field_368->field_0 = leader->field_368->field_0 = 4;
+    follower->state = leader->state = 29;
+    follower->field_350_14 = leader->field_350_14 = 1;
+    follower->field_358_3 = leader->field_358_3 = 1;
+    field_258 = 0;
+    field_246_5 = leader->direction;
+
+    height = 0x24;
+    if (leader->z + leader->height > follower->z + follower->height
+        && (leader->field_26_4 & follower->field_26_4)) {
+        height = leader->z - follower->z + 0x24;
+    }
+    jumpHeight = (leader->z + leader->height - (follower->z + follower->height)) / 256 + 0x24;
+    if (jumpHeight > height) {
+        jumpHeight = height;
+    }
+    follower->jumpToHeight(jumpHeight, 0xEE >> isUnderwater, (s16)walkSpeed);
+    follower->sub_8045A94(2, 0, leader->x / 256, leader->y / 256, 0, isUnderwater ? 14 : 8);
+    field_20B_7 = 1;
+    play_sfx_80195B4(0x2B, -1);
+}
+
+void FieldManager::sub_80326F4() {
+    int height;
+    int otherHeight;
+    FieldObject* other;
+    FieldObject* target;
+
+    if (leader->state != 35 && leader->state != 41) {
+        return;
+    }
+    height = (leader->z + leader->height) / 256;
+    other = objects[(s8)(leader->field_33C_0 << 1) >> 1];
+    otherHeight = (other->z + other->height) / 256;
+    if (height + 8 < otherHeight || height - 8 > otherHeight) {
+        return;
+    }
+    follower->state = leader->state = 39;
+    follower->field_350_14 = leader->field_350_14 = 1;
+    target = objects[(s8)(leader->field_33C_0 << 1) >> 1];
+    leader->sub_8045A94(1, 0, target->x / 256, target->y / 256, (leader->z + leader->height) / 256, 0);
+    field_20A_7 = 1;
+    leader->collidesWithObjects = 1;
+    leader->field_20C_12 = 0;
+    leader->sprite->field_1F_0 = leader->sprite->field_1F_2 =
+        objects[(s8)(leader->field_33C_0 << 1) >> 1]->sprite->field_1F_2;
+    follower->field_20C_12 = 0;
+    follower->sprite->field_1F_0 = follower->sprite->field_1F_2 =
+        objects[(s8)(leader->field_33C_0 << 1) >> 1]->sprite->field_1F_0;
+    stop_sfx_80195A8(0x5D);
+    play_sfx_80195B4(0x8E, -1);
+}
+
+void FieldManager::sub_80328B4() {
+    int index;
+    FieldObject* other;
+
+    if (!(leader->state >= 33 && leader->state <= 36) && leader->state != 44) {
+        return;
+    }
+    index = (s8)(leader->field_33C_0 << 1) >> 1;
+    other = objects[index];
+    field_25C = index;
+    field_254 = other->z + other->height + 0x6000;
+    follower->state = leader->state = 42;
+    follower->field_350_14 = leader->field_350_14 = 1;
+    leader->sub_8045A94(1, 0, other->x / 256, other->y / 256, (leader->z + leader->height) / 256, 0);
+    field_20A_7 = 1;
+    field_252 = 2;
+    leader->collidesWithObjects = 1;
+    leader->field_20C_12 = 0;
+    leader->sprite->field_1F_0 = leader->sprite->field_1F_2 = other->sprite->field_1F_2;
+    follower->field_20C_12 = 0;
+    follower->sprite->field_1F_0 = follower->sprite->field_1F_2 = other->sprite->field_1F_2;
+    other->sprite->field_1F_0 = other->sprite->field_1F_2 - 1;
+    other->field_20C_12 = 0;
+    leader->field_20C_14 = 0;
+    follower->field_214_0 = leader->field_214_0 = 2;
+}
+
+void FieldManager::sub_8032A90() {
+    u8 angle;
+    int direction;
+    int x;
+    int y;
+    int dy;
+    bool callSub_802DF80;
+
+    switch (follower->state) {
+        case 29:
+        case 30:
+        case 31:
+        case 32:
+        case 37:
+        case 38:
+            follower->updateAirborne();
+            follower->sub_80461B4(objects);
+            if (field_20A_1) {
+                follower->updateAirborne();
+                follower->sub_80461B4(objects);
+            }
+            break;
+        case 33:
+            direction = (field_D0->field_0 & 0xF0) >> 4;
+            angle = byte_839F910[direction];
+            if (angle != 0xFF) {
+                leader->angle = angle;
+                field_246_5 = angle >> 5;
+            }
+            break;
+        case 34:
+            leader->height += 0x200;
+            break;
+        case 35:
+            field_251--;
+            sub_802C068(field_D0);
+            sub_804FE68(leader, objects);
+            if (leader->velocityX != 0 || leader->velocityY != 0) {
+                field_246_5 = leader->angle >> 5;
+            }
+            break;
+        case 36:
+            leader->updateAirborne();
+            break;
+        case 39:
+            leader->sub_80461B4(objects);
+            break;
+        case 41:
+            field_251--;
+            // fallthrough
+        case 40:
+            direction = (field_D0->field_0 & 0xF0) >> 4;
+            if (word_839F524[direction * 2] != 0 || word_839F524[direction * 2 + 1] != 0) {
+                field_258 = direction;
+                follower->field_350_14 = leader->field_350_14 = 0;
+            }
+            if (follower->state == 41) {
+                leader->velocityX = (s16)leader->field_23E * word_839F524[field_258 * 2] / 256;
+                leader->velocityY = (s16)leader->field_23E * word_839F524[field_258 * 2 + 1] / 256;
+                sub_804FE68(leader, objects);
+            }
+            break;
+        case 42:
+            leader->sub_80461B4(objects);
+            break;
+        case 44:
+            sub_802C068(field_D0);
+            sub_804FE68(leader, objects);
+            if (leader->velocityX != 0 || leader->velocityY != 0) {
+                field_246_5 = leader->angle >> 5;
+            }
+            break;
+    }
+
+    sub_80303C4(leader);
+    leader->sub_80465D8();
+    leader->method13();
+    if (leader->state != 34) {
+        leader->sub_804FB64(objects, 0, 0);
+    }
+
+    if ((follower->state >= 33 && follower->state <= 36)
+        || (follower->state >= 39 && follower->state <= 41)
+        || (follower->state >= 42 && follower->state <= 44)) {
+        if (follower->state > 33 && --field_252 == 0) {
+            leader->direction++;
+            if (follower->state > 41) {
+                field_252 = 2;
+            } else {
+                field_252 = leader->state > 39 ? 1 : 2;
+                field_252 <<= isUnderwater;
+            }
+        }
+        follower->field_26_1 = leader->field_26_1;
+        follower->angle = leader->angle;
+        follower->direction = leader->direction;
+        follower->x = leader->x;
+        follower->y = leader->y;
+        follower->z = leader->z;
+        follower->height = leader->height + 0x2000;
+        follower->field_230 = leader->field_230;
+        follower->field_234 = leader->field_234;
+    } else {
+        sub_80303C4(follower);
+        follower->sub_80465D8();
+        follower->method13();
+        follower->sub_804FB64(objects, 0, 0);
+    }
+
+    switch (follower->state) {
+        case 29:
+            if (follower->velocityZ < 0) {
+                if ((follower->field_24_7 & 1) || (follower->field_24_15 & 1)) {
+                    u16 speed;
+
+                    follower->state = leader->state = 32;
+                    speed = follower->field_2DE;
+                    follower->sub_8046980();
+                    follower->sub_8045A94(2, 0, field_248, field_24A, 0, speed);
+                    follower->field_214_0 = 2;
+                } else {
+                    follower->state = leader->state = 30;
+                }
+            }
+            if (follower->state == 32) {
+                break;
+            }
+            if (!follower->field_24_3 && !follower->field_24_11) {
+                break;
+            }
+            follower->state = leader->state = 31;
+            follower->sub_8046980();
+            break;
+        case 30:
+            if (follower->sub_8047B78()) {
+                break;
+            }
+            follower->field_20C_15 = 0;
+            follower->state = leader->state = 33;
+            break;
+        case 33:
+            if (field_20A_1 || sub_8025D24(0)) {
+                follower->jumpToHeight(4, 0xEE >> isUnderwater, (s16)walkSpeed);
+                follower->sub_8045A94(2, 0, field_248, field_24A, 0, isUnderwater ? 14 : 8);
+                follower->field_20C_15 = 1;
+                follower->field_214_0 = 2;
+                leader->angle = leader->direction << 5;
+                leader->field_214_0 = 3;
+                follower->field_238 = leader->field_238;
+                follower->state = leader->state = 37;
+                play_sfx_80195B4(0x2B, -1);
+            } else if (sub_8025D24(1)) {
+                field_252 = 2 << isUnderwater;
+                field_254 = leader->z + leader->height + 0xC00;
+                leader->field_20C_14 = 0;
+                follower->field_353_3 = leader->field_353_3 = 0;
+                follower->field_353_4 = leader->field_353_4 = 0;
+                follower->field_214_0 = leader->field_214_0 = 2;
+                follower->state = leader->state = 34;
+                play_sfx_80195B4(0x5D, -1);
+            }
+            break;
+        case 34:
+            if (leader->z + leader->height < field_254) {
+                break;
+            }
+            leader->height = field_254 - leader->z;
+            field_251 = 0x30 << isUnderwater;
+            follower->field_350_14 = leader->field_350_14 = 0;
+            leader->airStartZ = leader->z;
+            leader->airStartHeight = leader->height;
+            leader->field_23E = 0x200 >> isUnderwater;
+            leader->field_274 = leader->field_274 + follower->field_274 - 0x800;
+            leader->field_27A = leader->field_27A + follower->field_27A - 0x800;
+            follower->state = leader->state = 35;
+            break;
+        case 41:
+            if (leader->field_33C_0 == 0x7F) {
+                follower->field_20C_12 = 1;
+                leader->field_20C_12 = 1;
+            }
+            // fallthrough
+        case 35:
+            if (!field_20A_1 && (s8)field_251 != 0) {
+                break;
+            }
+            leader->field_20C_14 = 1;
+            leader->field_23E = walkSpeed;
+            follower->field_350_14 = leader->field_350_14 = 1;
+            follower->state = leader->state = 36;
+            break;
+        case 36:
+        case 44:
+            if (leader->airFrames != -1) {
+                break;
+            }
+            if ((s8)leader->field_1 != -1 && objects[(s8)leader->field_1]->type == 3) {
+                break;
+            }
+            follower->direction = leader->direction = field_246_5;
+            follower->angle = leader->angle = field_246_5 << 5;
+            leader->sub_804FC30();
+            x = follower->x / 256 + word_839F584[follower->direction ^ 4][0] / 16;
+            dy = word_839F584[0][(follower->direction ^ 4) * 2 + 1];
+            y = follower->y / 256 + (leader->field_353_4 ? dy / 32 : dy / 16);
+            follower->jumpToHeight(4, 0xEE >> isUnderwater, (s16)walkSpeed);
+            follower->sub_8045A94(2, 0, x, y, 0, isUnderwater ? 14 : 8);
+            follower->field_20C_15 = 1;
+            follower->field_353_3 = leader->field_353_3 = 1;
+            follower->velocityX = follower->velocityY = 0;
+            leader->velocityX = leader->velocityY = 0;
+            leader->field_274 = leader->field_274 - follower->field_274 + 0x800;
+            leader->field_27A = leader->field_27A - follower->field_27A + 0x800;
+            leader->angle = leader->direction << 5;
+            leader->field_214_0 = 3;
+            follower->field_238 = leader->field_238;
+            follower->state = leader->state = 37;
+            play_sfx_80195B4(0x2B, -1);
+            break;
+        case 31:
+            if (follower->velocityZ < 0) {
+                follower->sub_8046980();
+                follower->sub_8045A94(2, 0, field_248, field_24A, 0, isUnderwater ? 14 : 8);
+                follower->field_214_0 = 2;
+            }
+            // fallthrough
+        case 37:
+            if (follower->velocityZ < 0) {
+                follower->state++;
+                leader->state++;
+            }
+            // fallthrough
+        case 32:
+        case 38:
+            if (!field_246_1 && follower->sub_8047C18(leader)) {
+                follower->x = follower->previousX & ~0xFF;
+                follower->y = follower->previousY & ~0xFF;
+                follower->height += follower->z;
+                follower->z = follower->previousZ;
+                follower->height -= follower->z;
+                follower->sub_8046980();
+                follower->field_238 = follower->field_354;
+                field_246_1 = 1;
+            }
+            if (follower->airFrames != -1) {
+                break;
+            }
+            callSub_802DF80 = false;
+            if (follower->state == 38) {
+                callSub_802DF80 = true;
+            }
+            follower->field_368->field_0 = leader->field_368->field_0 = 0;
+            follower->state = leader->state = 0;
+            follower->field_358_3 = leader->field_358_3 = 0;
+            follower->field_350_14 = leader->field_350_14 = 0;
+            follower->field_214_0 = 3;
+            follower->sub_8046980();
+            follower->angle = follower->direction << 5;
+            field_20B_7 = 0;
+            if (callSub_802DF80) {
+                sub_802DF80(0);
+            }
+            break;
+        case 39:
+            if (leader->sub_8047B78()) {
+                break;
+            }
+            follower->state = leader->state = 40;
+            field_251 = 20;
+            field_252 = 1;
+            break;
+        case 40:
+            if (!(gGameState.field_2A & 0xF0)) {
+                break;
+            }
+            follower->state = leader->state = 41;
+            leader->field_23E = 0x300 >> isUnderwater;
+            field_251 = 64;
+            stop_sfx_80195A8(0x8E);
+            play_sfx_80195B4(0x5D, -1);
+            break;
+        case 42:
+            if (leader->sub_8047B78()) {
+                break;
+            }
+            follower->state = leader->state = 43;
+            field_26E = 8;
+            field_25A = 0x80;
+            break;
+        case 43:
+            leader->height += field_25A;
+            if (leader->z + leader->height >= field_254) {
+                follower->state = leader->state = 44;
+                leader->field_20C_14 = 1;
+                objects[field_25C]->field_20C_12 = 1;
+                objects[field_25C]->field_214_24 = 1;
+                follower->field_20C_12 = 1;
+                leader->field_20C_12 = 1;
+                leader->startAirborne(0x11A, 10, -1);
+                follower->field_350_14 = leader->field_350_14 = 0;
+            } else if (field_25A <= 0x1FF && --field_26E == 0) {
+                switch (field_25A) {
+                    case 0x80:
+                        field_25A = 0x100;
+                        break;
+                    case 0x100:
+                        field_25A = 0x200;
+                        break;
+                }
+                field_26E = 8;
+            }
+            break;
+    }
 }
