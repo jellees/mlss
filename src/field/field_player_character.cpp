@@ -414,9 +414,9 @@ void FieldPlayerCharacter::method7(u8 force) {
     }
 }
 
-void FieldPlayerCharacter::sub_8049000(u16 animation) {
-    if (field_218 != animation) {
-        field_218 = animation;
+void FieldPlayerCharacter::sub_8049000(u16 spriteId) {
+    if (field_218 != spriteId) {
+        field_218 = spriteId;
         if (field_26E != 0xFF) {
             sub_8115048(field_334, field_26E, 0);
             field_26C = 0xFFFF;
@@ -435,7 +435,9 @@ void FieldPlayerCharacter::sub_80490CC(bool arg) {
         if (airFrames >= 0) {
             if (arg != 0 && !field_2B5_0 && !field_2B5_3) {
                 state = 4;
-                sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x103C : 0x103B) : 0x1052);
+                sub_8049000(objectIndex == BROTHER_MARIO
+                                ? (isMini ? SPRITE_ID(0, 60) : SPRITE_ID(0, 59))
+                                : SPRITE_ID(0, 82));
                 if (field_214_0 != 4) {
                     field_214_0 = 5;
                 }
@@ -450,7 +452,8 @@ void FieldPlayerCharacter::sub_80490CC(bool arg) {
             state = 0;
         }
         if (arg != 0 && !field_2B5_0 && !field_2B5_3 && previousState == 4 && state != 4) {
-            sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1028 : 0x1001) : 0x1002);
+            sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? SPRITE_ID(0, 40) : SPRITE_ID(0, 1))
+                                                     : SPRITE_ID(0, 2));
             field_214_0 = 3;
         }
     }
@@ -459,7 +462,8 @@ void FieldPlayerCharacter::sub_80490CC(bool arg) {
 void FieldPlayerCharacter::sub_8049224() {
     field_214_0 = 4;
     if (state != 4) {
-        sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x103C : 0x103B) : 0x1052);
+        sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? SPRITE_ID(0, 60) : SPRITE_ID(0, 59))
+                                                 : SPRITE_ID(0, 82));
     } else if (sprite->paused) {
         sub_8040804(true, -1, -1);
     }
@@ -473,14 +477,16 @@ void FieldPlayerCharacter::sub_80492DC() {
     if ((objectIndex == BROTHER_MARIO && field_218 == SPRITE_ID(0, 62))
         || (objectIndex == BROTHER_LUIGI && field_218 == SPRITE_ID(0, 83))) {
         field_214_0 = 3;
-        sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1028 : 0x1001) : 0x1002);
+        sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? SPRITE_ID(0, 40) : SPRITE_ID(0, 1))
+                                                 : SPRITE_ID(0, 2));
     }
     field_35A_2 = 0;
 }
 
 void FieldPlayerCharacter::startHammer(bool arg) {
     field_214_0 = 4;
-    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1029 : 0x1025) : 0x103F);
+    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? SPRITE_ID(0, 41) : SPRITE_ID(0, 37))
+                                             : SPRITE_ID(0, 63));
     sprite->animationEndAction = ANIMATION_END_STOP;
 
     if (arg == 0) {
@@ -497,7 +503,8 @@ void FieldPlayerCharacter::startHammer(bool arg) {
 
 void FieldPlayerCharacter::startHandPower() {
     field_214_0 = 4;
-    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x102A : 0x1026) : 0x1040);
+    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? SPRITE_ID(0, 42) : SPRITE_ID(0, 38))
+                                             : SPRITE_ID(0, 64));
     showHandPowerSprite(field_368->field_0 == 11 ? 1 : 0);
     play_sfx_80195B4(objectIndex == BROTHER_MARIO ? 0x157 : 0x87, -1);
     state = 10;
@@ -508,7 +515,8 @@ void FieldPlayerCharacter::startHandPower() {
 void FieldPlayerCharacter::stopHandPower() {
     field_214_0 = 3;
     sprite_remove(field_36C);
-    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1028 : 0x1001) : 0x1002);
+    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? SPRITE_ID(0, 40) : SPRITE_ID(0, 1))
+                                             : SPRITE_ID(0, 2));
     stop_sfx_80195A8(objectIndex == BROTHER_MARIO ? 0x157 : 0x87);
     stop_sfx_80195A8(objectIndex == BROTHER_MARIO ? 0x158 : 0x156);
     state = 0;
@@ -624,7 +632,8 @@ void FieldPlayerCharacter::sub_8049AB4(int mode, int animation) {
             FieldObject::method3();
             field_356 = field_218;
             field_358_0 = direction;
-            sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x103D : 0x1032) : 0x104B);
+            sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? SPRITE_ID(0, 61) : SPRITE_ID(0, 50))
+                                                     : SPRITE_ID(0, 75));
             break;
     }
 }
@@ -2708,13 +2717,14 @@ bool FieldPlayerCharacter::sub_804DBD0(int mode) {
 // the file in reverse definition order (0x0804FC90, 0x0804FCD4, 0x0804FD3C).
 inline void FieldPlayerCharacter::sub_804FD3C() {
     field_214_0 = 4;
-    sub_8049000(objectIndex == BROTHER_MARIO ? 0x103E : 0x1053);
+    sub_8049000(objectIndex == BROTHER_MARIO ? SPRITE_ID(0, 62) : SPRITE_ID(0, 83));
     field_35A_2 = 1;
 }
 
 inline void FieldPlayerCharacter::sub_804FCD4() {
     field_214_0 = 3;
-    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? 0x1028 : 0x1001) : 0x1002);
+    sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? SPRITE_ID(0, 40) : SPRITE_ID(0, 1))
+                                             : SPRITE_ID(0, 2));
     state = 0;
     field_212_6 = 0;
 }

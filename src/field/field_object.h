@@ -166,7 +166,7 @@ class FieldObject {
     u32 field_214_20 : 1;
     u32 field_214_21 : 1;
     u32 field_214_22 : 1;
-    u32 field_214_23 : 1;
+    u32 field_214_23 : 1; // Is true when walking, jumping or special jump sprite (confirm in game?)
     u32 field_214_24 : 1;
     u32 field_214_25 : 7;
     u16 field_218;

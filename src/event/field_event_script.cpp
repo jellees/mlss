@@ -1151,7 +1151,7 @@ s8 FieldEventScript::sub_80ED750(FieldObjectEvent* script, s32* arguments) {
     sprite_set_animation(object->sprite, object->sprite->field_21, arguments[1]);
     object->field_214_7 = 0;
     object->field_214_9 = 0;
-    object->sprite->animationEndAction = 0;
+    object->sprite->animationEndAction = ANIMATION_END_LOOP;
     object->sprite->hFlip ^= arguments[2];
     return true;
 }

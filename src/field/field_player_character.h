@@ -139,7 +139,7 @@ class FieldPlayerCharacter : public FieldObject {
 
     FieldPlayerCharacter(int roomId, int index);                  // 0x08048064
     void sub_8048174(int form);                                   // 0x08048174
-    void sub_8049000(u16 animation);                              // 0x08049000
+    void sub_8049000(u16 spriteId);                               // 0x08049000
     void sub_80490CC(bool arg);                                   // 0x080490CC
     void sub_8049224();                                           // 0x08049224
     void sub_80492DC();                                           // 0x080492DC
