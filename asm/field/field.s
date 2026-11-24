@@ -22,7 +22,7 @@ sub_8039078:
 	adds r0, r7, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	movs r1, #0x80
 	lsls r1, r1, #0x02
 	adds r5, r7, r1
@@ -494,7 +494,7 @@ sub_8039A00:
 	adds r0, r5, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	movs r1, #0x81
 	lsls r1, r1, #0x02
 	adds r6, r5, r1
@@ -655,7 +655,7 @@ sub_8039B5C:
 	adds r0, r5, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	movs r1, #0x81
 	lsls r1, r1, #0x02
 	adds r6, r5, r1
@@ -1109,7 +1109,7 @@ sub_803A438:
 	adds r0, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	movs r1, #0x80
 	lsls r1, r1, #0x02
 	adds r0, r6, r1
@@ -1597,7 +1597,7 @@ sub_803AC8C:
 	adds r0, r7, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	movs r0, #0x81
 	lsls r0, r0, #0x02
 	adds r4, r7, r0
@@ -1612,7 +1612,7 @@ sub_803AC8C:
 	lsrs r2, r2, #0x1F
 	adds r0, r7, #0x0
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	movs r0, #0x81
 	lsls r0, r0, #0x02
 	adds r0, r0, r7
@@ -2801,7 +2801,7 @@ sub_803C720:
 	adds r0, r4, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 _0803C74E:
 	movs r0, #0x02
 	ands r0, r5
@@ -2826,7 +2826,7 @@ _0803C74E:
 	lsrs r2, r2, #0x1F
 	adds r0, r4, #0x0
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 _0803C780:
 	pop {r4, r5}
 	pop {r0}

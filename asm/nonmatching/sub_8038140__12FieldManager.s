@@ -24,7 +24,7 @@ sub_8038140__12FieldManager:
 	adds r0, r6, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	movs r2, #0x81
 	lsls r2, r2, #0x02
 	adds r5, r6, r2

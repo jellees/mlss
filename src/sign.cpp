@@ -118,12 +118,12 @@ void Sign::update() {
             break;
 
         case 4:
-            if (gGameState.field_2A & B_BUTTON) {
+            if (gGameState.rawInput.pressed & B_BUTTON) {
                 sub_81151E4(panm, 4, 0, 16, 0xFFFF, 0xFFFF, 0, 0);
                 play_sfx_80195B4(0x61, -1);
                 state = 5;
             } else {
-                int direction = (gGameState.inputPressed & DPAD_ANY) >> 4;
+                int direction = (gGameState.rawInput.held & DPAD_ANY) >> 4;
                 scrollX += byte_83A0E74[direction * 2];
                 scrollY += byte_83A0E74[direction * 2 + 1];
             }

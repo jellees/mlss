@@ -23,7 +23,7 @@ sub_802E854__12FieldManageri:
 	mov r0, r9
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	movs r5, #0x80
 	lsls r5, r5, #0x02
 	add r5, r9

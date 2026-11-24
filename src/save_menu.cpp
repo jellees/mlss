@@ -19,13 +19,13 @@ inline u16* SaveMenu::sub_812A930(u16* oam) {
 }
 
 SaveMenu::SaveMenu(u8 priority, char* label, int arg3) : Process(priority, label) {
-    this->field_8C = &gGameState.field_3C;
-    this->field_A6 = gGameState.field_3C.field_3C_0;
-    gGameState.field_3C.field_3C_0 = 0x3FF;
-    this->field_A8 = this->field_8C->field_8;
-    this->field_A9 = this->field_8C->field_9;
-    this->field_8C->field_8 = 10;
-    this->field_8C->field_9 = 8;
+    this->input = &gGameState.input;
+    this->field_A6 = gGameState.enabledKeys;
+    gGameState.enabledKeys = KEYS_MASK;
+    this->field_A8 = this->input->repeatDelay;
+    this->field_A9 = this->input->repeatInterval;
+    this->input->repeatDelay = 10;
+    this->input->repeatInterval = 8;
 
     BUFFER_REG_DISPCNT = 0;
     BUFFER_REG_BLDCNT = 0;
@@ -420,7 +420,7 @@ void SaveMenu::update() {
             } else if (this->field_A4 == 10) {
                 sub_8125220(this->field_62, &this->field_63, 0x7F);
             }
-            if (++this->field_A4 > 180 && (this->field_8C->field_2 & 3)) {
+            if (++this->field_A4 > 180 && (this->input->pressed & (A_BUTTON | B_BUTTON))) {
                 this->field_AD = 0;
                 this->state = 18;
             }
@@ -442,9 +442,9 @@ void SaveMenu::update() {
             option = this->field_AD & 0x7F;
             *(u16*)0x2000080 = 0;
             gGameState.field_2 = 1;
-            gGameState.field_3C.field_3C_0 = this->field_A6;
-            this->field_8C->field_8 = this->field_A8;
-            this->field_8C->field_9 = this->field_A9;
+            gGameState.enabledKeys = this->field_A6;
+            this->input->repeatDelay = this->field_A8;
+            this->input->repeatInterval = this->field_A9;
             dword_3000C78 = sub_800063C;
             delete this;
             if (option == 1) {
@@ -462,7 +462,7 @@ u8 SaveMenu::sub_8128D74() {
     struct FieldManager* fieldManager = (FieldManager*)this->parentProcess;
 
     if (this->field_AD & 0x80) {
-        if (this->field_8C->field_2 & 1) {
+        if (this->input->pressed & A_BUTTON) {
             u32** font;
             u8* name;
 
@@ -625,14 +625,14 @@ u8 SaveMenu::sub_8128D74() {
             }
             play_sfx_80195B4(0x60, -1);
             return 2;
-        } else if (this->field_8C->field_2 & 2) {
+        } else if (this->input->pressed & B_BUTTON) {
             play_sfx_80195B4(0x61, -1);
             this->field_AD &= 0x7F;
             this->cursor->yPosition = this->field_AA[this->field_AD];
             this->field_67 = 1;
             this->field_68 = 0;
             this->field_BC = 0;
-        } else if (this->field_8C->field_2 & 0x40) {
+        } else if (this->input->pressed & DPAD_UP) {
             if (this->field_AE == 0) {
                 this->field_AE = 1;
             } else {
@@ -640,7 +640,7 @@ u8 SaveMenu::sub_8128D74() {
             }
             this->cursor->yPosition = this->field_AE * 13 + 0x56;
             play_sfx_80195B4(0x5F, -1);
-        } else if (this->field_8C->field_2 & 0x80) {
+        } else if (this->input->pressed & DPAD_DOWN) {
             if (this->field_AE == 1) {
                 this->field_AE = 0;
             } else {
@@ -650,12 +650,12 @@ u8 SaveMenu::sub_8128D74() {
             play_sfx_80195B4(0x5F, -1);
         }
     } else {
-        if (this->field_8C->field_2 & 2) {
+        if (this->input->pressed & B_BUTTON) {
             play_sfx_80195B4(0x61, -1);
             this->field_AD = 2;
             return 1;
         }
-        if (this->field_8C->field_2 & 1) {
+        if (this->input->pressed & A_BUTTON) {
             if (this->field_AD == 2) {
                 play_sfx_80195B4(0x61, -1);
                 return 1;
@@ -671,7 +671,7 @@ u8 SaveMenu::sub_8128D74() {
             this->field_68 = 0;
             this->field_BC = 0;
             play_sfx_80195B4(0x60, -1);
-        } else if (this->field_8C->field_2 & 0x40) {
+        } else if (this->input->pressed & DPAD_UP) {
             if (this->field_AD == 0) {
                 this->field_AD = 2;
             } else {
@@ -679,7 +679,7 @@ u8 SaveMenu::sub_8128D74() {
             }
             this->cursor->yPosition = this->field_AA[this->field_AD];
             play_sfx_80195B4(0x5F, -1);
-        } else if (this->field_8C->field_2 & 0x80) {
+        } else if (this->input->pressed & DPAD_DOWN) {
             if (this->field_AD == 2) {
                 this->field_AD = 0;
             } else {

@@ -13,13 +13,13 @@ inline void GameMode::sub_801B0AC(u16 mask) {
 }
 
 inline void GameMode::sub_801B084() {
-    if (gGameState.field_2A & word_3000D3C) {
+    if (gGameState.rawInput.pressed & word_3000D3C) {
         play_sfx_80195B4(0x50, -1);
     }
 }
 
 inline void GameMode::sub_801B034() {
-    if (gGameState.inputPressed == (L_BUTTON | R_BUTTON | SELECT_BUTTON | B_BUTTON | A_BUTTON)) {
+    if (gGameState.rawInput.held == (L_BUTTON | R_BUTTON | SELECT_BUTTON | B_BUTTON | A_BUTTON)) {
         new (0, "BCLR", 0) SaveClearScreen(8, "BCLR");
     } else {
         new (0, "COMP", 0) CompanyIntro(8, "COMP");

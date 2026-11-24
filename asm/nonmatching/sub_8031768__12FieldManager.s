@@ -183,7 +183,7 @@ _080317A4:
 	adds r0, r7, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	adds r0, r7, #0x0
 	adds r0, #0xA8
 	ldr r0, [r0, #0x00]
@@ -728,7 +728,7 @@ _08031BCC:
 	adds r0, r7, #0x0
 	movs r2, #0x00
 	movs r3, #0x00
-	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP13struc_3000388
+	bl sub_802DDB4__12FieldManagerP20FieldPlayerCharacteriP8KeyInput
 	movs r0, #0x82
 	lsls r0, r0, #0x02
 	adds r2, r7, r0

@@ -74,7 +74,7 @@ inline OptionsMenu::~OptionsMenu() {
     operator delete((void*)this->bbwi);
 
     sub_801A6B0();
-    gGameState.field_31 = 2;
+    gGameState.rawInput.repeatInterval = 2;
     BUFFER_REG_DISPCNT = 0;
     BUFFER_REG_BLDCNT = BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_NONE;
 }
@@ -256,7 +256,7 @@ OptionsMenu::OptionsMenu(u8 priority, char* label, int a4) : Process(priority, l
 
     sub_8017E34();
 
-    gGameState.field_31 = 8;
+    gGameState.rawInput.repeatInterval = 8;
     this->options_0 = a4;
 
     sub_801A548();
@@ -406,10 +406,10 @@ void OptionsMenu::update() {
                 popup_animate(&this->popup);
                 break;
             }
-            if (this->field_1D != 0 || gGameState.field_2A & A_BUTTON) {
+            if (this->field_1D != 0 || gGameState.rawInput.pressed & A_BUTTON) {
                 break;
             }
-            if (gGameState.field_2A & B_BUTTON) {
+            if (gGameState.rawInput.pressed & B_BUTTON) {
                 if ((bool8)save()) {
                     this->brightness = 16;
                     sub_80193B4(0, 0, 16);
@@ -419,13 +419,13 @@ void OptionsMenu::update() {
                 }
                 break;
             }
-            if (gGameState.field_2E & DPAD_UP) {
+            if (gGameState.rawInput.repeated & DPAD_UP) {
                 this->selection--;
                 if (this->selection < 0) {
                     this->selection = 2;
                 }
                 play_sfx_80195B4(95, -1);
-            } else if (gGameState.field_2E & DPAD_DOWN) {
+            } else if (gGameState.rawInput.repeated & DPAD_DOWN) {
                 this->selection++;
                 if (this->selection > 2) {
                     this->selection = 0;
@@ -436,14 +436,14 @@ void OptionsMenu::update() {
             switch (this->selection) {
                 case 0:
                     if ((this->options_4 ^ OPTION_FLAGS_EASY_SLEEP) & OPTION_FLAGS_EASY_SLEEP) {
-                        if (gGameState.field_2A & DPAD_LEFT) {
+                        if (gGameState.rawInput.pressed & DPAD_LEFT) {
                             this->options_4 |= OPTION_FLAGS_EASY_SLEEP;
                             showInfoPopup(word_83A2900[0], word_83A2900[1]);
                             play_sfx_80195B4(95, -1);
                             this->state = OPTS_STATE_EASY_SLEEP_CONFIRMATION;
                         }
                     } else {
-                        if (gGameState.field_2A & DPAD_RIGHT) {
+                        if (gGameState.rawInput.pressed & DPAD_RIGHT) {
                             this->options_4 &= ~OPTION_FLAGS_EASY_SLEEP;
                             play_sfx_80195B4(95, -1);
                         }
@@ -453,14 +453,14 @@ void OptionsMenu::update() {
                 case 1:
                     if (gGameState.field_888_1 == 1) {
                         if (!(this->options_4 & OPTION_FLAGS_RUMBLE_FEATURE)) {
-                            if (gGameState.field_2A & DPAD_LEFT) {
+                            if (gGameState.rawInput.pressed & DPAD_LEFT) {
                                 this->options_4 |= OPTION_FLAGS_RUMBLE_FEATURE;
                                 showInfoPopup(word_83A2900[2], word_83A2900[3]);
                                 play_sfx_80195B4(95, -1);
                                 this->state = OPTS_STATE_RUMBLE_FEATURE_CONFIRMATION;
                             }
                         } else {
-                            if (gGameState.field_2A & DPAD_RIGHT) {
+                            if (gGameState.rawInput.pressed & DPAD_RIGHT) {
                                 this->options_4 &= ~OPTION_FLAGS_RUMBLE_FEATURE;
                                 gGameState.field_88B_0 = 0;
                                 play_sfx_80195B4(95, -1);
@@ -471,14 +471,14 @@ void OptionsMenu::update() {
 
                 case 2:
                     if (!(this->options_4 & OPTION_FLAGS_AUTO_FEATURE)) {
-                        if (gGameState.field_2A & DPAD_LEFT) {
+                        if (gGameState.rawInput.pressed & DPAD_LEFT) {
                             this->options_4 |= OPTION_FLAGS_AUTO_FEATURE;
                             showInfoPopup(word_83A2900[4], word_83A2900[5]);
                             play_sfx_80195B4(95, -1);
                             this->state = OPTS_STATE_AUTO_SLEEP_CONFIRMATION;
                         }
                     } else {
-                        if (gGameState.field_2A & DPAD_RIGHT) {
+                        if (gGameState.rawInput.pressed & DPAD_RIGHT) {
                             this->options_4 &= ~OPTION_FLAGS_AUTO_FEATURE;
                             play_sfx_80195B4(95, -1);
                         }
@@ -489,7 +489,7 @@ void OptionsMenu::update() {
 
         case OPTS_STATE_EASY_SLEEP_CONFIRMATION:
             if (this->popup.zoomFrame == 0) {
-                if (gGameState.field_2A & A_BUTTON) {
+                if (gGameState.rawInput.pressed & A_BUTTON) {
                     this->sprite->xPosition = 40;
                     this->sprite->yPosition = 24 * this->selection + 55;
                     off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
@@ -516,7 +516,7 @@ void OptionsMenu::update() {
 
         case OPTS_STATE_RUMBLE_FEATURE_CONFIRMATION:
             if (this->popup.zoomFrame == 0) {
-                if (gGameState.field_2A & A_BUTTON) {
+                if (gGameState.rawInput.pressed & A_BUTTON) {
                     this->sprite->xPosition = 40;
                     this->sprite->yPosition = 24 * this->selection + 55;
                     off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
@@ -545,7 +545,7 @@ void OptionsMenu::update() {
 
         case OPTS_STATE_AUTO_SLEEP_CONFIRMATION:
             if (this->popup.zoomFrame == 0) {
-                if (gGameState.field_2A & A_BUTTON) {
+                if (gGameState.rawInput.pressed & A_BUTTON) {
                     this->sprite->xPosition = 40;
                     this->sprite->yPosition = 24 * this->selection + 55;
                     off_839EC80[REG_OFFSET_DISPCNT + 1] |= DISPCNT_HBLANK_INTERVAL;
@@ -580,7 +580,7 @@ void OptionsMenu::update() {
             if (this->popup.zoomFrame == 0) {
                 this->brightness--;
                 if (this->brightness == 0
-                    || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
+                    || gGameState.rawInput.pressed & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                     this->brightness = 16;
                     sub_80193B4(0, 0, 16);
                     this->state = OPTS_STATE_LEAVE;
@@ -861,7 +861,7 @@ SaveClearScreen::SaveClearScreen(u8 priority, char* label) : Process(priority, l
     BUFFER_REG_DISPCNT = 0;
     sub_8017E34();
 
-    gGameState.field_31 = 2;
+    gGameState.rawInput.repeatInterval = 2;
     gGameState.field_888_5 = 1;
     gGameState.field_888_6 = 1;
 
@@ -997,7 +997,7 @@ SaveClearScreen::~SaveClearScreen() {
     gGameState.field_888_5 = 0;
     gGameState.field_888_6 = 0;
     gGameState.field_888_3 = 0;
-    gGameState.field_31 = 2;
+    gGameState.rawInput.repeatInterval = 2;
     BUFFER_REG_DISPCNT = 0;
     BUFFER_REG_BLDCNT = 0;
 }
@@ -1019,7 +1019,7 @@ void SaveClearScreen::update() {
                         this->state = 1;
                     }
                 }
-            } else if (gGameState.field_2A & A_BUTTON) {
+            } else if (gGameState.rawInput.pressed & A_BUTTON) {
                 off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
                 this->popup.isClosing = 1;
                 this->popup.zoomFrame = 7;
@@ -1027,7 +1027,7 @@ void SaveClearScreen::update() {
                 if (this->field_1C_0) {
                     this->state = 5;
                 }
-            } else if (gGameState.field_2A & (DPAD_RIGHT | DPAD_LEFT)) {
+            } else if (gGameState.rawInput.pressed & (DPAD_RIGHT | DPAD_LEFT)) {
                 this->field_1C_0 ^= 1;
                 play_sfx_80195B4(95, -1);
             }
@@ -1051,7 +1051,7 @@ void SaveClearScreen::update() {
                         this->state = 2;
                     }
                 }
-            } else if (gGameState.field_2A & A_BUTTON) {
+            } else if (gGameState.rawInput.pressed & A_BUTTON) {
                 off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
                 this->popup.isClosing = 1;
                 this->popup.zoomFrame = 7;
@@ -1059,7 +1059,7 @@ void SaveClearScreen::update() {
                 if (this->field_1C_0) {
                     this->state = 5;
                 }
-            } else if (gGameState.field_2A & (DPAD_RIGHT | DPAD_LEFT)) {
+            } else if (gGameState.rawInput.pressed & (DPAD_RIGHT | DPAD_LEFT)) {
                 this->field_1C_0 ^= 1;
                 play_sfx_80195B4(95, -1);
             }
@@ -1133,7 +1133,8 @@ void SaveClearScreen::update() {
 
         case 3:
         case 4:
-            if (--this->brightness == 0 || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
+            if (--this->brightness == 0
+                || gGameState.rawInput.pressed & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
                 ((s8*)off_839EC80)[0x4A] &= ~1;
                 ((s8*)off_839EC80)[0x4A] &= ~2;
@@ -1243,7 +1244,7 @@ void MarioBrosSaveError::update() {
             if (this->popup.zoomFrame > 0) {
                 popup_animate(&this->popup);
             } else if (--this->brightness == 0
-                       || gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
+                       || gGameState.rawInput.pressed & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 off_839EC80[REG_OFFSET_DISPCNT + 1] |= 0x20;
                 this->popup.isClosing = 1;
                 this->popup.zoomFrame = 7;

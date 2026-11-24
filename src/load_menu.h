@@ -21,7 +21,7 @@ class LoadMenu : public Process {
     struct Sprite* arrows[4];
     struct EeprStruct1* save;
     u8 field_4C[4];
-    struct struc_3000388* field_50;
+    struct KeyInput* input;
     void* field_54;
     void* field_58;
     void* field_5C;

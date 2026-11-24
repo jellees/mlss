@@ -33,7 +33,7 @@ FieldManager::FieldManager(u8 priority, char* label, int roomId, bool arg4, bool
     dword_3000D7C = this;
     dword_3000D78 = evts;
     BUFFER_REG_DISPCNT = 0;
-    field_D0 = &gGameState.field_3C;
+    input = &gGameState.input;
     field_1C = new (1, "FMEX", 1) FieldStruct2;
     field_20 = new (1, "FMBK", 1) FieldBackup;
     field_23C = new (1, "PLST", 1) u8[0x1000];
@@ -342,10 +342,10 @@ void FieldManager::update() {
             gGameState.field_884 = 0;
             field_FA_0 = 0;
             field_F0 = 0;
-            gGameState.field_3C.field_3C_0 = field_120_0;
-            gGameState.field_3C.field_3C_10 = field_120_10;
-            gGameState.field_3C.field_3C_12 = field_120_12;
-            gGameState.field_3C.field_3C_13 = field_120_13;
+            gGameState.enabledKeys = field_120_0;
+            gGameState.field_78_10 = field_120_10;
+            gGameState.field_78_12 = field_120_12;
+            gGameState.field_78_13 = field_120_13;
             field_120_0 = 0;
             field_120_10 = 0;
             field_120_12 = 0;
@@ -852,8 +852,8 @@ void FieldManager::update_field_8023DD4() {
                 sub_803C720(this, 3);
             }
             if (!field_209_0 && !field_20B_4) {
-                sub_802D544(field_D0);
-                sub_802D46C(field_D0);
+                sub_802D544(input);
+                sub_802D46C(input);
             }
             break;
 
@@ -1302,7 +1302,7 @@ void FieldManager::update_field_8023DD4() {
         sprites_update();
 
         if (leader->field_350_0 || leader->field_350_4) {
-            field_11E = field_D0->field_0;
+            field_11E = input->held;
         }
     }
 
@@ -1525,49 +1525,47 @@ bool FieldManager::sub_8025D24(int type) {
     if (field_12A > 1) {
         switch (type) {
             case 0:
-                if ((field_D0->field_0 & 0x300) == 0
-                    && (field_D0->field_2 & leader->field_368->actionButton)) {
+                if ((input->held & (R_BUTTON | L_BUTTON)) == 0
+                    && (input->pressed & leader->field_368->actionButton)) {
                     return 1;
                 }
                 break;
             case 1:
-                if ((field_D0->field_0 & 0x300) == 0
-                    && (field_D0->field_2 & follower->field_368->actionButton)) {
+                if ((input->held & (R_BUTTON | L_BUTTON)) == 0
+                    && (input->pressed & follower->field_368->actionButton)) {
                     return 1;
                 }
                 break;
             case 2:
-                if ((field_D0->field_0 & follower->field_368->switchButton) == 0
-                    && (field_D0->field_2 & leader->field_368->switchButton)) {
+                if ((input->held & follower->field_368->switchButton) == 0
+                    && (input->pressed & leader->field_368->switchButton)) {
                     return 1;
                 }
                 break;
             case 3:
-                if ((field_D0->field_0 & leader->field_368->switchButton) == 0
-                    && (field_D0->field_2 & follower->field_368->switchButton)) {
+                if ((input->held & leader->field_368->switchButton) == 0
+                    && (input->pressed & follower->field_368->switchButton)) {
                     return 1;
                 }
                 break;
             case 4:
-                if (field_D0->field_2 & 8) {
+                if (input->pressed & START_BUTTON) {
                     return 1;
                 }
                 break;
-            // field_0 (held) and field_2 (pressed) are read together as one word.
             case 5:
-                if ((*(u32*)field_D0 & 0xFFFF0300) == 0x40000) {
+                if (!(input->held & (R_BUTTON | L_BUTTON)) && input->pressed == SELECT_BUTTON) {
                     return 1;
                 }
                 break;
-            case 6: {
-                u32 keys = *(u32*)field_D0;
-                if ((keys & 0x01000200) == 0x01000200 || (keys & 0x02000100) == 0x02000100) {
+            case 6:
+                if (((input->held & L_BUTTON) && (input->pressed & R_BUTTON))
+                    || ((input->held & R_BUTTON) && (input->pressed & L_BUTTON))) {
                     return 1;
                 }
                 break;
-            }
             case 7:
-                if ((gGameState.inputPressed & 0x300) == 0x300) {
+                if ((gGameState.rawInput.held & (R_BUTTON | L_BUTTON)) == (R_BUTTON | L_BUTTON)) {
                     return 1;
                 }
                 break;
@@ -1577,10 +1575,10 @@ bool FieldManager::sub_8025D24(int type) {
 }
 
 bool FieldManager::sub_8025E94() {
-    u16 input = gGameState.field_2A;
+    u16 keys = gGameState.rawInput.pressed;
 
-    if (input != 0) {
-        if (input == word_839F5A4[(s8)field_1F8]) {
+    if (keys != 0) {
+        if (keys == word_839F5A4[(s8)field_1F8]) {
             if (++field_1F8 == 10) {
                 field_1F8 = 0;
                 field_1F6 = -1;
@@ -1997,7 +1995,7 @@ void FieldManager::sub_8026E94() {
     ((s8*)off_839EC80)[0x01] &= ~0x20;
     if (field_2B8_0) {
         if (field_2B8_4) {
-            if ((gGameState.field_3C.field_3C_0 & 0xF0) == 0xF0) {
+            if ((gGameState.enabledKeys & DPAD_ANY) == DPAD_ANY) {
                 sub_802EF18();
             } else if (brothersForm == BROTHERS_FORM_5) {
                 brothersForm = BROTHERS_FORM_NORMAL;
@@ -2006,7 +2004,9 @@ void FieldManager::sub_8026E94() {
         }
         field_2B8_0 = 0;
     }
-    if (field_20A_7 == 2 || (field_20A_7 == 0 && !(gGameState.field_3C.field_3C_0 & 0x33))) {
+    if (field_20A_7 == 2
+        || (field_20A_7 == 0
+            && !(gGameState.enabledKeys & (A_BUTTON | B_BUTTON | DPAD_RIGHT | DPAD_LEFT)))) {
         field_244 = 0xFFC8;
     }
     if (field_12A == 0) {
@@ -2141,10 +2141,10 @@ void FieldManager::sub_80273E4() {
     sub_803C610(this);
     sub_802563C();
     sub_8025ACC();
-    field_120_0 = gGameState.field_3C.field_3C_0;
-    field_120_10 = gGameState.field_3C.field_3C_10;
-    field_120_12 = gGameState.field_3C.field_3C_12;
-    field_120_13 = gGameState.field_3C.field_3C_13;
+    field_120_0 = gGameState.enabledKeys;
+    field_120_10 = gGameState.field_78_10;
+    field_120_12 = gGameState.field_78_12;
+    field_120_13 = gGameState.field_78_13;
     if (field_1FC) {
         sub_805CCC0(field_1FC, 3);
         field_1FC = NULL;
@@ -2861,20 +2861,20 @@ static inline u16 identity(u16 value) {
 
 void FieldManager::sub_8028D6C(u16 mask) {
     u16 enabled = ~mask & 0x3FF;
-    u16 previous = gGameState.field_3C.field_3C_0 & enabled;
+    u16 previous = gGameState.enabledKeys & enabled;
 
-    gGameState.field_3C.field_3C_0 = identity(enabled);
+    gGameState.enabledKeys = identity(enabled);
     if (!field_F8_5) {
-        gGameState.field_3C.field_0 |= mask;
+        gGameState.input.held |= mask;
         sub_8018818();
-        gGameState.field_3C.field_2 &= previous;
-        gGameState.field_3C.field_4 &= previous;
-        gGameState.field_3C.field_6 &= previous;
+        gGameState.input.pressed &= previous;
+        gGameState.input.released &= previous;
+        gGameState.input.repeated &= previous;
     } else {
-        gGameState.field_3C.field_0 = gGameState.inputPressed & enabled;
-        gGameState.field_3C.field_2 = gGameState.field_2A & enabled;
-        gGameState.field_3C.field_4 = gGameState.field_2C & enabled;
-        gGameState.field_3C.field_6 = gGameState.field_2E & enabled;
+        gGameState.input.held = gGameState.rawInput.held & enabled;
+        gGameState.input.pressed = gGameState.rawInput.pressed & enabled;
+        gGameState.input.released = gGameState.rawInput.released & enabled;
+        gGameState.input.repeated = gGameState.rawInput.repeated & enabled;
     }
     field_F8_5 = 1;
 }
@@ -3631,7 +3631,9 @@ static inline u16 get_3000FF4_Field_E(FieldPlayerCharacter* player) {
 }
 
 void FieldManager::sub_802A608() {
-    if (leader->field_358_3 || (gGameState.field_3C.field_3C_0 & 0xF3) != 0xF3) {
+    if (leader->field_358_3
+        || (gGameState.enabledKeys & (A_BUTTON | B_BUTTON | DPAD_ANY))
+               != (A_BUTTON | B_BUTTON | DPAD_ANY)) {
         if (leader->field_35A_2) {
             leader->sub_80492DC();
         }
@@ -3741,7 +3743,7 @@ void FieldManager::sub_802A740() {
                 sub_802C774(leader);
                 break;
             default:
-                sub_802C068(field_D0);
+                sub_802C068(input);
                 if (leader->state == 3 || leader->state == 4) {
                     int velocityZ = isUnderwater ? -0x200 : 0;
                     if (velocityZ != 0 && leader->velocityZ < velocityZ) {
@@ -4240,7 +4242,7 @@ void FieldManager::sub_802BFB0(u8 angle) {
     leader->velocityY = velocityY;
 }
 
-void FieldManager::sub_802C068(struct struc_3000388* arg1) {
+void FieldManager::sub_802C068(struct KeyInput* arg1) {
     int index;
     u8 angle;
 
@@ -4249,7 +4251,7 @@ void FieldManager::sub_802C068(struct struc_3000388* arg1) {
     }
 
     if (field_12A == 2 && !leader->field_350_14 && arg1 != NULL) {
-        index = (arg1->field_0 & 0xF0) >> 4;
+        index = (arg1->held & DPAD_ANY) >> 4;
         angle = byte_839F910[index];
         if (angle != 0xFF) {
             sub_802BFB0(angle);
@@ -4334,11 +4336,15 @@ void FieldManager::sub_802C208() {
 }
 
 void FieldManager::sub_802C390() {
-    if (field_20A_7 == 2 || (field_20A_7 == 0 && !(gGameState.field_3C.field_3C_0 & 0x33))) {
+    if (field_20A_7 == 2
+        || (field_20A_7 == 0
+            && !(gGameState.enabledKeys & (A_BUTTON | B_BUTTON | DPAD_RIGHT | DPAD_LEFT)))) {
         if ((s16)field_244 > -0x38) {
             field_244 -= 8;
         }
-    } else if (field_20A_7 == 1 || (field_20A_7 == 0 && (gGameState.field_3C.field_3C_0 & 0x33))) {
+    } else if (field_20A_7 == 1
+               || (field_20A_7 == 0
+                   && (gGameState.enabledKeys & (A_BUTTON | B_BUTTON | DPAD_RIGHT | DPAD_LEFT)))) {
         if ((s16)field_244 < 0) {
             field_244 += 8;
         }
@@ -4581,7 +4587,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             }
             player->updateAirborne();
             player->sub_804FB64(objects, 0, 0);
-            if (!(field_D0->field_0 & player->field_368->actionButton) || player->airFrames != -1) {
+            if (!(input->held & player->field_368->actionButton) || player->airFrames != -1) {
                 if (player->airFrames != -1 || player->field_355 < 60) {
                     player->stopHandPower();
                     player->otherBrother->field_350_14 = 0;
@@ -4780,7 +4786,7 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
     }
 }
 
-void FieldManager::sub_802D46C(struct struc_3000388* arg) {
+void FieldManager::sub_802D46C(struct KeyInput* arg) {
     if (!field_2B8_4 && !field_291_0 && !leader->field_2B5_3 && arg != NULL && follower->state <= 4) {
         if ((isUnderwater && leader->field_368->selectedAction == 0 && leader->state <= 4)
             || leader->state <= 1) {
@@ -4796,13 +4802,13 @@ void FieldManager::sub_802D46C(struct struc_3000388* arg) {
     sub_802DDB4(leader, 0, arg);
 }
 
-void FieldManager::sub_802D544(struct struc_3000388* arg) {
+void FieldManager::sub_802D544(struct KeyInput* arg) {
     if (!field_2B8_4 && !field_291_0 && !follower->field_2B5_3 && arg != NULL
         && ((isUnderwater && follower->field_368->selectedAction == 0 && follower->state <= 4)
             || follower->state <= 1)
         && sub_8025D24(1)) {
         if (!brothersTogether) {
-            if ((gGameState.field_3C.field_3C_0 & 8) && follower->field_20C_0
+            if ((gGameState.enabledKeys & START_BUTTON) && follower->field_20C_0
                 && !follower->field_368->field_16_7) {
                 sub_802C588(follower);
             } else {
@@ -5018,7 +5024,7 @@ bool FieldManager::sub_802DC0C(FieldPlayerCharacter* player) {
     return false;
 }
 
-void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct struc_3000388* arg) {
+void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct KeyInput* arg) {
     PlayerAction* data = player->field_368;
     s8* list = data->field_8[index][data->actionMode];
     s8 previous;
@@ -6133,7 +6139,7 @@ void FieldManager::sub_80306A0() {
             break;
         case 25:
         case 26:
-            sub_802C068(field_D0);
+            sub_802C068(input);
             sub_804FE68(leader, objects);
             break;
     }
@@ -6857,7 +6863,7 @@ void FieldManager::sub_8032A90() {
             }
             break;
         case 33:
-            direction = (field_D0->field_0 & 0xF0) >> 4;
+            direction = (input->held & DPAD_ANY) >> 4;
             angle = byte_839F910[direction];
             if (angle != 0xFF) {
                 leader->angle = angle;
@@ -6869,7 +6875,7 @@ void FieldManager::sub_8032A90() {
             break;
         case 35:
             field_251--;
-            sub_802C068(field_D0);
+            sub_802C068(input);
             sub_804FE68(leader, objects);
             if (leader->velocityX != 0 || leader->velocityY != 0) {
                 field_246_5 = leader->angle >> 5;
@@ -6885,7 +6891,7 @@ void FieldManager::sub_8032A90() {
             field_251--;
             // fallthrough
         case 40:
-            direction = (field_D0->field_0 & 0xF0) >> 4;
+            direction = (input->held & DPAD_ANY) >> 4;
             if (word_839F524[direction * 2] != 0 || word_839F524[direction * 2 + 1] != 0) {
                 field_258 = direction;
                 follower->field_350_14 = leader->field_350_14 = 0;
@@ -6900,7 +6906,7 @@ void FieldManager::sub_8032A90() {
             leader->sub_80461B4(objects);
             break;
         case 44:
-            sub_802C068(field_D0);
+            sub_802C068(input);
             sub_804FE68(leader, objects);
             if (leader->velocityX != 0 || leader->velocityY != 0) {
                 field_246_5 = leader->angle >> 5;
@@ -7107,7 +7113,7 @@ void FieldManager::sub_8032A90() {
             field_252 = 1;
             break;
         case 40:
-            if (!(gGameState.field_2A & 0xF0)) {
+            if (!(gGameState.rawInput.pressed & DPAD_ANY)) {
                 break;
             }
             follower->state = leader->state = 41;
@@ -7632,7 +7638,7 @@ void FieldManager::sub_80350B4() {
             follower->sub_80461B4(objects);
             break;
         case 85: {
-            int index = (field_D0->field_0 & 0xF0) >> 4;
+            int index = (input->held & DPAD_ANY) >> 4;
             u8 angle = byte_839F910[index];
 
             if (angle != 0xFF) {
@@ -7699,7 +7705,7 @@ void FieldManager::sub_80350B4() {
                     }
                 }
             }
-            if (!(field_D0->field_0 & follower->field_368->actionButton)) {
+            if (!(input->held & follower->field_368->actionButton)) {
                 if (follower->field_355 < 60) {
                     follower->stopHandPower();
                     follower->state = 85;
@@ -8433,7 +8439,7 @@ void FieldManager::sub_8036F84() {
                 action = 3;
                 break;
             }
-            if (field_D0->field_0 & follower->field_368->actionButton) {
+            if (input->held & follower->field_368->actionButton) {
                 break;
             }
             if (field_26E < 60) {
@@ -8609,7 +8615,7 @@ void FieldManager::sub_8036F84() {
                     action = 3;
                 }
             } else if (follower->state == 112) {
-                u16 keys = field_D0->field_0 & 0xF0;
+                u16 keys = input->held & DPAD_ANY;
 
                 if (keys) {
                     u16* entry = word_839FB24[leader->direction];
@@ -8624,7 +8630,7 @@ void FieldManager::sub_8036F84() {
                         action = 1;
                     }
                 }
-                if (field_D0->field_0 & leader->field_368->actionButton) {
+                if (input->held & leader->field_368->actionButton) {
                     action = 1;
                 }
             }
@@ -8800,8 +8806,8 @@ void FieldManager::sub_80382CC() {
             s16 velocityY = 0;
             u8 angle;
 
-            if (!leader->field_350_14 && field_D0 != NULL) {
-                int index = (field_D0->field_0 & 0xF0) >> 4;
+            if (!leader->field_350_14 && input != NULL) {
+                int index = (input->held & DPAD_ANY) >> 4;
 
                 angle = byte_839F910[index];
                 if (angle != 0xFF) {
@@ -8928,7 +8934,7 @@ void FieldManager::sub_80382CC() {
                     action = 2;
                     break;
                 }
-                if (field_D0->field_0 & follower->field_368->actionButton) {
+                if (input->held & follower->field_368->actionButton) {
                     break;
                 }
                 if (field_26E < 60) {

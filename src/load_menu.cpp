@@ -12,11 +12,11 @@
 LoadMenu::LoadMenu(u8 priority, char* label, u16 arg3) : Process(priority, label) {
     this->field_E4 = arg3;
 
-    this->field_50 = &gGameState.field_3C;
-    this->field_F7 = this->field_50->field_8;
-    this->field_F8 = this->field_50->field_9;
-    this->field_50->field_8 = 10;
-    this->field_50->field_9 = 8;
+    this->input = &gGameState.input;
+    this->field_F7 = this->input->repeatDelay;
+    this->field_F8 = this->input->repeatInterval;
+    this->input->repeatDelay = 10;
+    this->input->repeatInterval = 8;
 
     //! Possible fake match. These could be remnants of debug lines.
     //! E.g. if (this->tld) DEBUG_PRINT("");
@@ -404,7 +404,7 @@ void LoadMenu::update() {
             } else if (this->field_EC == 20) {
                 sub_8125220(this->field_F4, &this->field_F5, 0xFF);
             }
-            if (++this->field_EC > 180 && (this->field_50->field_2 & 3)) {
+            if (++this->field_EC > 180 && (this->input->pressed & (A_BUTTON | B_BUTTON))) {
                 this->field_E8 = 0;
                 this->field_EC = 0;
                 this->field_F0 = 0;
@@ -435,8 +435,8 @@ void LoadMenu::update() {
             dword_3001034(0, this->field_54, 0x800);
             *(u16*)0x2000080 = 0;
             gGameState.field_2 = 1;
-            this->field_50->field_8 = this->field_F7;
-            this->field_50->field_9 = this->field_F8;
+            this->input->repeatDelay = this->field_F7;
+            this->input->repeatInterval = this->field_F8;
             sub_80E8DC0();
             dword_3000C78 = sub_800063C;
             if (this->field_F0) {
@@ -471,7 +471,7 @@ u8 LoadMenu::sub_8126520() {
 
     if (this->field_EA != 0) {
         if (++this->field_EA > 180) {
-            if (this->field_50->field_2 & 3) {
+            if (this->input->pressed & (A_BUTTON | B_BUTTON)) {
                 this->field_EA = 0;
                 this->field_EE = 1;
                 sprite_show(this->cursor);
@@ -501,7 +501,7 @@ u8 LoadMenu::sub_8126520() {
         return 0;
     }
 
-    if (this->field_50->field_2 & 1) {
+    if (this->input->pressed & A_BUTTON) {
         if (this->field_F9 != 0) {
             if (this->field_FB != 0) {
                 if (this->field_FB & 0x10) {
@@ -591,7 +591,7 @@ u8 LoadMenu::sub_8126520() {
             this->cursor->xPosition = 0x22;
             this->cursor->yPosition = (this->field_F9 - 1) * 12 + 0x28;
         }
-    } else if (this->field_50->field_2 & 2) {
+    } else if (this->input->pressed & B_BUTTON) {
         if (this->field_F9 != 0) {
             play_sfx_80195B4(0x61, -1);
             if (this->field_FB != 0) {
@@ -610,7 +610,7 @@ u8 LoadMenu::sub_8126520() {
             return 2;
         }
     } else if (this->field_FB & 0x30) {
-        if (this->field_50->field_2 & 0x80) {
+        if (this->input->pressed & DPAD_DOWN) {
             if (this->field_FB & 0xF) {
                 this->field_FB &= ~0xF;
             } else {
@@ -619,7 +619,7 @@ u8 LoadMenu::sub_8126520() {
             play_sfx_80195B4(0x5F, -1);
             this->cursor->xPosition = 0x2E;
             this->cursor->yPosition = 0x60 - (this->field_FB & 0xF) * 13;
-        } else if (this->field_50->field_2 & 0x40) {
+        } else if (this->input->pressed & DPAD_UP) {
             if (this->field_FB & 0xF) {
                 this->field_FB &= ~0xF;
             } else {
@@ -630,7 +630,7 @@ u8 LoadMenu::sub_8126520() {
             this->cursor->yPosition = 0x60 - (this->field_FB & 0xF) * 13;
         }
     } else {
-        if (this->field_50->field_6 & 0x20) {
+        if (this->input->repeated & DPAD_LEFT) {
             if (this->field_F9 == 0) {
                 play_sfx_80195B4(0x5F, -1);
                 if ((this->field_F1 >> this->field_FA) & 1) {
@@ -657,7 +657,7 @@ u8 LoadMenu::sub_8126520() {
                 this->cursor->xPosition = this->field_154[this->field_FB - 1] * 32 + 32;
                 this->cursor->yPosition = 22;
             }
-        } else if (this->field_50->field_6 & 0x10) {
+        } else if (this->input->repeated & DPAD_RIGHT) {
             if (this->field_F9 == 0) {
                 play_sfx_80195B4(0x5F, -1);
                 if ((this->field_F1 >> this->field_FA) & 1) {
@@ -686,7 +686,7 @@ u8 LoadMenu::sub_8126520() {
                 this->cursor->xPosition = this->field_154[this->field_FB - 1] * 32 + 32;
                 this->cursor->yPosition = 22;
             }
-        } else if (this->field_50->field_6 & 0x40) {
+        } else if (this->input->repeated & DPAD_UP) {
             if (this->field_F9 != 0 && this->field_FB == 0) {
                 play_sfx_80195B4(0x5F, -1);
                 if ((this->field_F1 >> this->field_FA) & 1) {
@@ -701,7 +701,7 @@ u8 LoadMenu::sub_8126520() {
                 this->cursor->xPosition = 0x22;
                 this->cursor->yPosition = (this->field_F9 - 1) * 12 + 0x28;
             }
-        } else if (this->field_50->field_6 & 0x80) {
+        } else if (this->input->repeated & DPAD_DOWN) {
             if (this->field_F9 != 0 && this->field_FB == 0) {
                 play_sfx_80195B4(0x5F, -1);
                 if ((this->field_F1 >> this->field_FA) & 1) {

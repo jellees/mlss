@@ -731,12 +731,12 @@ s8 EventBase::sub_80EA9A8(EventThread* thread, s32* arguments) {
     return true;
 }
 
-// Jumps to arguments[3] depending on the keys in gGameState.field_2E masked with arguments[2]:
+// Jumps to arguments[3] depending on the keys in gGameState.rawInput.repeated masked with arguments[2]:
 // arguments[1] 0 checks for none of them, 1 for all of them (switched on as operation 11 or 12 of
 // testCondition, !left and ~left). With bit 0 of arguments[0] set the jump
 // is taken when the check fails, otherwise when it holds.
 s8 EventBase::sub_80EA9B8(EventThread* thread, s32* arguments) {
-    u16 keys = gGameState.field_2E;
+    u16 keys = gGameState.rawInput.repeated;
     u32 expected = arguments[2];
     u32 mask = expected;
 
@@ -762,14 +762,14 @@ s8 EventBase::sub_80EA9B8(EventThread* thread, s32* arguments) {
     return true;
 }
 
-// Like sub_80EA9B8, but with gGameState.inputPressed, or field_2A if arguments[0] >> 1 is 0.
+// Like sub_80EA9B8, but with gGameState.rawInput.held, or rawInput.pressed if arguments[0] >> 1 is 0.
 s8 EventBase::sub_80EAA04(EventThread* thread, s32* arguments) {
-    u16 keys = gGameState.inputPressed;
+    u16 keys = gGameState.rawInput.held;
     u32 expected;
     u32 mask;
 
     if ((arguments[0] >> 1) == 0) {
-        keys = gGameState.field_2A;
+        keys = gGameState.rawInput.pressed;
     }
     expected = arguments[2];
     mask = expected;
@@ -795,22 +795,22 @@ s8 EventBase::sub_80EAA04(EventThread* thread, s32* arguments) {
     return true;
 }
 
-// Stores gGameState.field_2E in the script value arguments[0].
+// Stores gGameState.rawInput.repeated in the script value arguments[0].
 s8 EventBase::sub_80EAA5C(EventThread* thread, s32* arguments, u32* engineRegisters) {
     CommonEvent::setVariable(engineRegisters, thread->registers, 0, 0, arguments[0],
-                             gGameState.field_2E);
+                             gGameState.rawInput.repeated);
     return true;
 }
 
-// Stores gGameState.field_2A (arguments[1] = 0), inputPressed (1) or 0 in the script value
+// Stores gGameState.rawInput.pressed (arguments[1] = 0), rawInput.held (1) or 0 in the script value
 // arguments[0].
 s8 EventBase::sub_80EAA84(EventThread* thread, s32* arguments, u32* engineRegisters) {
     u16 keys = arguments[1];
 
     if (keys == 0) {
-        keys = gGameState.field_2A;
+        keys = gGameState.rawInput.pressed;
     } else if (keys == 1) {
-        keys = gGameState.inputPressed;
+        keys = gGameState.rawInput.held;
     } else {
         keys = 0;
     }
@@ -818,22 +818,22 @@ s8 EventBase::sub_80EAA84(EventThread* thread, s32* arguments, u32* engineRegist
     return true;
 }
 
-// Sets the key mask (gGameState.field_3C.field_3C_0) to the keys not in arguments[0] and applies it
+// Sets the key mask (gGameState.enabledKeys) to the keys not in arguments[0] and applies it
 // (sub_8018818).
 s8 EventBase::sub_80EAACC(EventThread* thread, s32* arguments) {
-    gGameState.field_3C.field_3C_0 = ~arguments[0] & 0x3FF;
+    gGameState.enabledKeys = ~arguments[0] & KEYS_MASK;
     sub_8018818();
     return true;
 }
 
-// Sets gGameState.field_3C.field_3C_10 to arguments[0].
+// Sets gGameState.field_78_10 to arguments[0].
 s8 EventBase::sub_80EAB00(EventThread* thread, s32* arguments) {
-    gGameState.field_3C.field_3C_10 = arguments[0];
+    gGameState.field_78_10 = arguments[0];
     return true;
 }
 
 // Sets the flags arguments[1] in gGameState.field_7C (arguments[0] = 0), or sets (1) or clears (2)
-// them in gGameState.field_3C.field_3E.
+// them in gGameState.field_7A.
 s8 EventBase::sub_80EAB20(EventThread* thread, s32* arguments) {
     switch (*arguments++) {
         case 0:
@@ -841,11 +841,11 @@ s8 EventBase::sub_80EAB20(EventThread* thread, s32* arguments) {
             break;
 
         case 1:
-            gGameState.field_3C.field_3E |= arguments[0];
+            gGameState.field_7A |= arguments[0];
             break;
 
         case 2:
-            gGameState.field_3C.field_3E &= ~arguments[0];
+            gGameState.field_7A &= ~arguments[0];
             break;
     }
     return true;

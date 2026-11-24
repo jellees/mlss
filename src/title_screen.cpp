@@ -163,7 +163,7 @@ void CompanyIntro::update() {
         case 4:
             brightness--;
             BUFFER_REG_BLDY = brightness;
-            if (gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) {
+            if (gGameState.rawInput.pressed & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 brightness = 16 - brightness;
                 state = 6;
             } else if (brightness == 0) {
@@ -175,7 +175,7 @@ void CompanyIntro::update() {
             break;
 
         case 5:
-            if ((gGameState.field_2A & (A_BUTTON | B_BUTTON | START_BUTTON)) == 0) {
+            if ((gGameState.rawInput.pressed & (A_BUTTON | B_BUTTON | START_BUTTON)) == 0) {
                 brightness--;
                 if (brightness != 0) {
                     break;
@@ -252,7 +252,7 @@ TitleScreen::TitleScreen(u8 priority, char* label, int selection) : Process(prio
     gGameState.field_2 = 1;
     BUFFER_REG_DISPCNT = 0;
     sub_8017E34();
-    gGameState.field_31 = 8;
+    gGameState.rawInput.repeatInterval = 8;
 
     v5 = sub_81251DC();
     stru_203FFF8.field_0 = v5->field_0;
@@ -355,7 +355,7 @@ inline TitleScreen::~TitleScreen() {
     BUFFER_REG_SOUNDCNT_L = 0x7FFF;
     gGameState.field_2 |= 1;
     BUFFER_REG_DISPCNT = 0;
-    gGameState.field_31 = 2;
+    gGameState.rawInput.repeatInterval = 2;
 
     sub_8017E34();
 }
@@ -780,7 +780,8 @@ void TitleScreen::update() {
 
             if (!isSkippingSuitcaseAnim) {
                 if (skipSuitcaseAnim
-                    && gGameState.field_2A & (A_BUTTON | B_BUTTON | SELECT_BUTTON | START_BUTTON)) {
+                    && gGameState.rawInput.pressed
+                           & (A_BUTTON | B_BUTTON | SELECT_BUTTON | START_BUTTON)) {
                     isSkippingSuitcaseAnim = true;
                     brightness = 16;
                 }
@@ -814,7 +815,7 @@ void TitleScreen::update() {
             break;
 
         case TS_STATE_PRESS_START_WAIT:
-            if (gGameState.field_2A & (A_BUTTON | START_BUTTON)) {
+            if (gGameState.rawInput.pressed & (A_BUTTON | START_BUTTON)) {
                 psTextVelocity = 0;
                 states[TS_ITEM_PRESS_START_TEXT] = 2;
                 xVelocitySuitcase = 0;
@@ -960,7 +961,7 @@ void TitleScreen::update() {
             break;
 
         case TS_STATE_GAME_SELECT:
-            if (gGameState.field_2A & (A_BUTTON | START_BUTTON)) {
+            if (gGameState.rawInput.pressed & (A_BUTTON | START_BUTTON)) {
                 BUFFER_REG_BLDCNT = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
                 BUFFER_REG_BLDY = 0;
                 brightness = 16;
@@ -969,13 +970,13 @@ void TitleScreen::update() {
                 state = TS_STATE_FADE_OUT;
             } else {
                 s8 selection = this->selection;
-                if (gGameState.field_2E & DPAD_UP) {
+                if (gGameState.rawInput.repeated & DPAD_UP) {
                     this->selection--;
                     if (this->selection < 0) {
                         this->selection = 2;
                     }
                     play_sfx_80195B4(95, -1);
-                } else if (gGameState.field_2E & DPAD_DOWN) {
+                } else if (gGameState.rawInput.repeated & DPAD_DOWN) {
                     this->selection++;
                     if (this->selection > 2) {
                         this->selection = 0;

@@ -40,7 +40,7 @@ class SaveMenu : public Process {
     u8 pad6A[2];
     void* field_6C;
     struct LoadMenuEntry entry;
-    struct struc_3000388* field_8C;
+    struct KeyInput* input;
     int field_90;
     void* field_94;
     void* field_98;

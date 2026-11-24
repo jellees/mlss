@@ -98,7 +98,7 @@ class FieldManager : public Process {
     FieldPlayerShotBullet* shotBullets[8]; // "FPSB": Pump Mario's water
     u16* field_C8;
     u16* field_CC;
-    struct struc_3000388* field_D0;
+    struct KeyInput* input;
     struct RoomHeader* field_D4; // Header of the current room
     u8* field_D8;
     u8* field_DC;             // Count, first index and offset of the 8-byte entries read by sub_8026C78
@@ -437,7 +437,7 @@ class FieldManager : public Process {
     void sub_802B804(FieldPlayerCharacter* player, bool arg2);
     u8 sub_802BD2C();
     void sub_802BFB0(u8 angle);
-    void sub_802C068(struct struc_3000388* arg1);
+    void sub_802C068(struct KeyInput* arg1);
     void sub_802C208();
     void sub_802C390();
     void sub_802C428(int index, int value);
@@ -445,12 +445,12 @@ class FieldManager : public Process {
     void sub_802C588(FieldPlayerCharacter* player);
     void sub_802C774(FieldPlayerCharacter* player);
     void sub_802D2F4(FieldPlayerCharacter* player);
-    void sub_802D46C(struct struc_3000388* arg);
-    void sub_802D544(struct struc_3000388* arg);
+    void sub_802D46C(struct KeyInput* arg);
+    void sub_802D544(struct KeyInput* arg);
     void sub_802D92C();
     void sub_802DA10();
     bool sub_802DC0C(FieldPlayerCharacter* player);
-    void sub_802DDB4(FieldPlayerCharacter* player, int index, struct struc_3000388* arg);
+    void sub_802DDB4(FieldPlayerCharacter* player, int index, struct KeyInput* arg);
     void sub_802DF80(int arg);
     void sub_802E4C8(int arg);
     void sub_802E2F4();

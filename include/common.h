@@ -17,20 +17,17 @@ struct SignMapEntry;
 struct struc_3000FC8;
 struct struc_3000FCC;
 
-struct struc_3000388 {
-    u16 field_0;
-    u16 field_2;
-    u16 field_4;
-    u16 field_6;
-    u8 field_8;
-    u8 field_9;
-    u8 pad2[0x32];
-    u16 field_3C_0 : 10;
-    u16 field_3C_10 : 2;
-    u16 field_3C_12 : 1;
-    u16 field_3C_13 : 1;
-    u16 field_3C_14 : 2;
-    u16 field_3E; // Flags set and cleared by sub_80EAB20
+// Button input state, updated each frame by sub_8018920. GameState has the raw keys (rawInput) and the
+// keys the game sees (input: rawInput with disabled keys masked out and script-forced keys added,
+// sub_8018818).
+struct KeyInput {
+    u16 held;            // Keys held down
+    u16 pressed;         // Keys pressed this frame
+    u16 released;        // Keys released this frame
+    u16 repeated;        // Keys pressed this frame or auto-repeating
+    u8 repeatDelay;      // Frames a key is held before it starts repeating
+    u8 repeatInterval;   // Frames between repeats
+    u8 repeatTimers[10]; // Per key countdown to the next repeat
 };
 
 struct GameState {
@@ -45,16 +42,15 @@ struct GameState {
     u32 field_1C;
     u32 gap20;
     u32 playTime;
-    u16 inputPressed;
-    u16 field_2A;
-    u16 field_2C;
-    u16 field_2E;
-    u8 field_30;
-    u8 field_31;
-
-    // ...
-    u8 pad1[0xA];
-    struct struc_3000388 field_3C;
+    struct KeyInput rawInput;
+    struct KeyInput input;
+    u8 pad50[0x28];
+    u16 enabledKeys : 10; // Keys passed from rawInput to input
+    u16 field_78_10 : 2;
+    u16 field_78_12 : 1;
+    u16 field_78_13 : 1;
+    u16 field_78_14 : 2;
+    u16 field_7A; // Flags set and cleared by sub_80EAB20
     u16 field_7C; // Flags set by sub_80EAB20
     u8 pad7E[0x2];
     struct OamData oamBuffers[2][128]; // Shadow OAM, double-buffered (field_888_3 selects)
