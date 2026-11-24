@@ -875,7 +875,7 @@ void FieldManager::update_field_8023DD4() {
                     case BROTHERS_FORM_MOLE_LUIGI:
                         if (follower->objectIndex == BROTHER_LUIGI) {
                             field_20B_4 = 1;
-                            sub_8033B98(follower);
+                            digOutOfGround(follower);
                         }
                         break;
 
@@ -1640,20 +1640,20 @@ void FieldManager::sub_8025F28() {
     }
 }
 
-int FieldManager::sub_80261C0(FieldObject* object) {
-    if (field_1F4 != 0) {
-        FieldStruct3* entry = field_134;
+int FieldManager::findDigSpot(FieldObject* object) {
+    if (digSpotCount != 0) {
+        DigSpot* spot = digSpots;
         s16 x = object->x / 256;
         s16 y = object->y / 256;
         s16 z = object->z / 2048;
         int i;
 
-        for (i = 0; i < field_1F4; entry++, i++) {
-            if (entry->field_0_1 == 0 && object->height == 0 && z == entry->field_3
-                && (object->objectIndex == BROTHER_LUIGI || entry->field_0_0)) {
-                int left = entry->field_1 * 16;
+        for (i = 0; i < digSpotCount; spot++, i++) {
+            if (!spot->dug && object->height == 0 && z == spot->layer
+                && (object->objectIndex == BROTHER_LUIGI || spot->hidden)) {
+                int left = spot->tileX * 16;
                 int right = left + 15;
-                int top = entry->field_2 * 16;
+                int top = spot->tileY * 16;
                 int bottom = top + 15;
 
                 left += 4;
@@ -1930,7 +1930,7 @@ void FieldManager::make_field_objects_80267C0(int roomId) {
     }
 }
 
-// Creates the "SBLK" objects and fills field_134 from the entries at field_DC.
+// Creates the "SBLK" objects and fills digSpots from the entries at field_DC.
 void FieldManager::sub_8026C78() {
     u8* header = field_DC;
     u16 index = (header[2] << 8) | header[1];
@@ -1939,7 +1939,7 @@ void FieldManager::sub_8026C78() {
     u8* entry = header - ((header[4] << 8) | header[3]);
     u8 offset;
 
-    field_1F4 = 0;
+    digSpotCount = 0;
     for (i = 0; i < count; i++, index++, entry += 8) {
         u8 flags = entry[0];
 
@@ -1963,18 +1963,18 @@ void FieldManager::sub_8026C78() {
             }
             case 0xA0:
             case 0xC0:
-                field_134[field_1F4].field_0_0 = flags != 0xA0;
-                field_134[field_1F4].field_0_1 = CommonEvent::getFlag(
+                digSpots[digSpotCount].hidden = flags != 0xA0;
+                digSpots[digSpotCount].dug = CommonEvent::getFlag(
                     CommonEvent::instance->fieldEngineFlags, 0, (u16)(index + 0x1360));
-                field_134[field_1F4].field_1 = entry[1];
-                field_134[field_1F4].field_2 = entry[2];
-                field_134[field_1F4].field_3 =
+                digSpots[digSpotCount].tileX = entry[1];
+                digSpots[digSpotCount].tileY = entry[2];
+                digSpots[digSpotCount].layer =
                     (offset = entry[5] >> 1,
                      (entry[3] & 0x7F)
                          + ((entry[5] & 0x20) ? (u32)(offset | ~0x1F) >> 3 : offset >> 3));
-                field_134[field_1F4].field_4 = index;
-                field_134[field_1F4].field_8 = entry;
-                field_1F4++;
+                digSpots[digSpotCount].index = index;
+                digSpots[digSpotCount].entry = entry;
+                digSpotCount++;
                 break;
         }
     }
@@ -3752,7 +3752,7 @@ void FieldManager::sub_802A740() {
         }
 
         if (leader->isMini && leader->state <= 4) {
-            int result = sub_80261C0(leader);
+            int result = findDigSpot(leader);
             if (result != -1) {
                 if (leader->field_36C->hidden || leader->field_36C->id != 0x54) {
                     leader->sub_80497A8();
@@ -4413,7 +4413,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
             if (player->field_33E != -1 && objects[player->field_33E]->type == FIELD_OBJECT_TYPE_FBRL) {
                 enterBarrel(player);
             } else {
-                sub_8033B98(player);
+                digOutOfGround(player);
             }
             break;
 
@@ -4914,7 +4914,7 @@ void FieldManager::sub_802DA10() {
             if (brothersForm == BROTHERS_FORM_NORMAL || brothersForm == BROTHERS_FORM_MINI_MARIO) {
                 if (follower->objectIndex == BROTHER_MARIO) {
                     if (CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x206)) {
-                        sub_80339B8();
+                        hammerIntoGround();
                     } else {
                         sub_8039078(this);
                     }
@@ -5842,7 +5842,7 @@ void FieldManager::sub_802FAE4(int mode, int arg2) {
             }
             if (!(objects[1]->state >= 64 && objects[1]->state <= 69)
                 && !(objects[1]->state >= 59 && objects[1]->state <= 61)) {
-                sub_8033B98((FieldPlayerCharacter*)objects[1]);
+                digOutOfGround((FieldPlayerCharacter*)objects[1]);
             }
             mario = (FieldPlayerCharacter*)objects[0];
             if (mario->field_20C_0) {
@@ -7120,7 +7120,7 @@ void FieldManager::sub_8032A90() {
     }
 }
 
-void FieldManager::sub_80339B8() {
+void FieldManager::hammerIntoGround() {
     sub_8030484_start(this);
     follower->field_368->field_0 = leader->field_368->field_0 = 6;
     follower->state = leader->state = 59;
@@ -7146,14 +7146,18 @@ void FieldManager::sub_80339B8() {
     field_272 = !isUnderwater ? 10 : 20;
 }
 
-static inline void sub_8033B98_stopFollower(FieldManager* field) {
+// Inlined in digOutOfGround (first copy at 0x08033C00) and breakOutOfBarrel.
+static inline void sub_8033C00(FieldManager* field) {
     field->follower->sub_804FC90();
     field->sub_802DDB4(field->follower, field->brothersTogether, 0);
 }
 
-void FieldManager::sub_8033B98(FieldPlayerCharacter* player) {
+/**
+ * Performs Luigi digging himself out of the ground. Also handles digging up whatever lies at that spot.
+ */
+void FieldManager::digOutOfGround(FieldPlayerCharacter* player) {
     int index;
-    FieldStruct3* entry;
+    DigSpot* spot;
     u16 result;
     int type;
     int flag;
@@ -7169,7 +7173,7 @@ void FieldManager::sub_8033B98(FieldPlayerCharacter* player) {
     player->field_350_14 = 1;
     if (brothersTogether) {
         if (player->field_352_7) {
-            sub_8033B98_stopFollower(this);
+            sub_8033C00(this);
         }
         player->otherBrother->field_350_14 = 1;
     }
@@ -7184,24 +7188,23 @@ void FieldManager::sub_8033B98(FieldPlayerCharacter* player) {
         return;
     }
 
-    index = sub_80261C0(player);
+    index = findDigSpot(player);
     if (index != -1 && !(index & 0x80)) {
-        entry = &field_134[index];
-        entry->field_0_1 = 1;
-        result = sub_8116A2C((entry->field_8[7] << 8) | entry->field_8[6], entry->field_8[0],
-                             player->objectIndex);
+        spot = &digSpots[index];
+        spot->dug = 1;
+        result =
+            sub_8116A2C((spot->entry[7] << 8) | spot->entry[6], spot->entry[0], player->objectIndex);
         type = result & 0xF;
         flag = (result >> 4) & 1;
         arg3 = (result >> 5) & 0x7F;
         //! Possible fake match: flag's value recomputed for the call instead of passing flag (permuter)
-        sub_80262CC(entry->field_1 * 0x1000 + 0x800, entry->field_2 * 0x1000 - 0x800,
-                    entry->field_3 << 11, 0xC00, type, (result >> 4) & 1, 1);
+        sub_80262CC(spot->tileX * 0x1000 + 0x800, spot->tileY * 0x1000 - 0x800, spot->layer << 11,
+                    0xC00, type, (result >> 4) & 1, 1);
         sub_802641C(1, type, arg3, player->sprite->yPosition < 64);
         if (flag) {
-            CommonEvent::setFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x1360 + entry->field_4,
-                                 1);
-            if (!entry->field_0_0) {
-                coldef = get_coldef_ptr_by_xz(field_304, entry->field_1, entry->field_2);
+            CommonEvent::setFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x1360 + spot->index, 1);
+            if (!spot->hidden) {
+                coldef = get_coldef_ptr_by_xz(field_304, spot->tileX, spot->tileY);
                 sub_805C8A4(field_304, coldef->tileFlags);
             }
         }
@@ -7296,7 +7299,7 @@ void FieldManager::sub_8033F5C() {
                 setBrothersSpeed(leader, follower, 0x100 >> isUnderwater);
                 sub_802DF80(0);
                 if (field_20A_1) {
-                    sub_8033B98(leader);
+                    digOutOfGround(leader);
                 }
             } else {
                 follower->sub_80461B4(objects);
@@ -7372,7 +7375,7 @@ void FieldManager::sub_8033F5C() {
                     field_20B_7 = 0;
                     sub_802DF80(0);
                     if (field_20A_1) {
-                        sub_8033B98(leader);
+                        digOutOfGround(leader);
                     }
                     break;
             }
@@ -7422,7 +7425,7 @@ void FieldManager::breakOutOfBarrel(FieldPlayerCharacter* player) {
     player->field_350_14 = 1;
     if (brothersTogether) {
         if (player->field_352_7) {
-            sub_8033B98_stopFollower(this);
+            sub_8033C00(this);
         }
         player->otherBrother->field_350_14 = 1;
     }

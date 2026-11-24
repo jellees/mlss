@@ -60,17 +60,19 @@ struct FieldStruct2 {
     u8 field_27C[0x44];
 };
 
-// Entries of FieldManager::field_134.
-struct FieldStruct3 {
-    u8 field_0_0 : 1;
-    u8 field_0_1 : 1;
+// Bean spots from the room's object list (FieldManager::sub_8026C78): entry type 0xA0 is a visible
+// bean spot, 0xC0 a hidden treasure. findDigSpot finds the one an object stands on or near.
+struct DigSpot {
+    u8 hidden
+        : 1;    // Hidden treasure (0xC0): Mini Mario finds it (the "!"); visible spots are Luigi only
+    u8 dug : 1; // Already dug up (event flag 0x1360 + index)
     u8 field_0_2 : 6;
-    u8 field_1;
-    u8 field_2;
-    u8 field_3;
-    u16 field_4;
+    u8 tileX; // 16-pixel tiles
+    u8 tileY;
+    u8 layer;  // z / 2048
+    u16 index; // In the room's object list
     u8 pad_6[0x2];
-    u8* field_8;
+    u8* entry; // The room object entry; bytes 6-7 and 0 go to sub_8116A2C (probably the treasure)
 };
 
 // "FMBK" buffer (FieldManager::field_20): a copy of the field state.
@@ -184,8 +186,8 @@ class FieldManager : public Process {
     u16 field_12E;
     u16 field_130;
     u8 pad_132[0x2];
-    FieldStruct3 field_134[16];
-    u8 field_1F4;
+    DigSpot digSpots[16];
+    u8 digSpotCount;
     u8 pad_1F5;
     s16 field_1F6;
     u8 field_1F8;
@@ -359,7 +361,7 @@ class FieldManager : public Process {
     bool sub_8025D24(int type);
     bool sub_8025E94();
     void sub_8025F28();
-    int sub_80261C0(FieldObject* object);
+    int findDigSpot(FieldObject* object);
     void sub_80262CC(int x, int y, int z, int height, int type, bool arg6, bool playSound);
     void sub_802641C(int arg1, int arg2, int arg3, int arg4);
     void sub_80264F4(u16 arg1);
@@ -478,8 +480,8 @@ class FieldManager : public Process {
     void sub_80326F4();
     void sub_80328B4();
     void sub_8032A90();
-    void sub_80339B8();
-    void sub_8033B98(FieldPlayerCharacter* player);
+    void hammerIntoGround();
+    void digOutOfGround(FieldPlayerCharacter* player);
     void sub_8033E30();
     void sub_8033F5C();
     void enterBarrel(FieldPlayerCharacter* player);
