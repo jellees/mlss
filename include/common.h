@@ -281,7 +281,7 @@ struct struc_3000FF4 {
     u16 field_8_6 : 6; // Bits 6-8
     u8 padA[0x4];
     u16 field_E; // HP? (sub_80E9EE0 keeps it at 1 or more when lowering it)
-    u8 pad10[0x2];
+    u16 field_10;
     u16 field_12; // Maximum of field_E
     u16 field_14; // BP? (kept at 0 or more)
     u8 pad16[0x2];
@@ -430,6 +430,7 @@ void sub_8116654(void*, u8);
 struct Coldef* get_coldef_ptr_by_xz(void* map, s16 x, s16 z);
 u16 sub_8116A2C(u16, u8, u8);
 void sub_805C8A4(void*, int);
+void sub_805C908(void*, u16);
 struct Coldef* sub_803FBA4(void* map, int x, int y, int* floor, int* ceiling, int* top, bool arg6,
                            bool arg7);
 void sub_8116680(void*, u8);
@@ -650,9 +651,6 @@ int sub_8019610(int);
 void sub_803C788(struct FieldManager*, void*);
 void init_btl_process_80FC25C(void*, u8, char*, void*);
 void sub_803C720(struct FieldManager*, int);
-void sub_8035B98(struct FieldManager*);
-void sub_8035974(struct FieldManager*);
-void sub_8036E14(struct FieldManager*);
 void sub_8038140(struct FieldManager*);
 void sub_8039078(struct FieldManager*);
 void sub_8039A00(struct FieldManager*);
@@ -732,6 +730,13 @@ extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
 extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
 extern s16 word_839F524[]; // FieldManager::sub_8032A90: (x, y) velocity per D-pad state
 extern u16 word_839FA9C[]; // FieldManager::sub_8033F5C: yScale per sprite frame
+extern u16 word_839FABC[]; // FieldManager::sub_80350B4: 4 pairs of (frame, animation)
+extern u16 word_839FACC[]; // FieldManager::sub_8035DB0: yScale per sprite frame
+extern u16 word_839FAEC[]; // FieldManager::sub_8035DB0: yScale per sprite frame
+extern s8 byte_839F649[];  // FieldManager::sub_8035DB0: xScale / 16 per step
+extern s8 byte_839F65A[];  // FieldManager::sub_8035DB0: yScale / 16 per step
+extern u16 word_839FB0C[];   // FieldManager::sub_8036F84: 4 entries of (frame, animation, speed)
+extern u16 word_839FB24[][3]; // FieldManager::sub_8036F84: D-pad states per direction
 extern u16 word_839FA58[]; // FieldManager::sub_8031768: yScale per sprite frame
 extern u16 word_839FA78[]; // FieldManager::sub_8031768: (height, xScale) pairs per step
 extern s8 byte_839F630[];  // FieldManager::sub_80306A0: height offset (x 256) per field_250

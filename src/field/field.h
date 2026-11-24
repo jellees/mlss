@@ -257,7 +257,7 @@ class FieldManager : public Process {
     u8 field_26C;
     u8 pad_26D;
     s16 field_26E;
-    u8 pad_270[0x2];
+    s16 field_270;
     u16 field_272;
     u16 field_274;
     s16 field_276;
@@ -489,8 +489,12 @@ class FieldManager : public Process {
     void hammerBarrel();
     void jumpOntoBarrel();
     void sub_8034BF4();
+    void sub_803A584();
     void sub_80350B4();
+    void sub_8035974();
+    void sub_8035B98();
     void sub_8035DB0();
+    void sub_8036E14();
     void sub_8036F84();
     void sub_80382CC();
     void sub_8039250();
