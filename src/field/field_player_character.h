@@ -96,7 +96,7 @@ class FieldPlayerCharacter : public FieldObject {
     u16 field_358_12 : 1;
     u16 field_358_13 : 3;
     u16 field_35A_0 : 1;
-    u16 field_35A_1 : 1;
+    u32 field_35A_1 : 1;
     u16 field_35A_2 : 1;
     u16 field_35A_3 : 8;
     u16 isMini : 1;

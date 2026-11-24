@@ -6450,7 +6450,13 @@ void FieldManager::sub_8031768() {
         }
         follower->field_368->field_0 = leader->field_368->field_0 = 0;
         follower->state = leader->state = 0;
-        setBrothersSpeed(leader, follower, walkSpeed);
+        {
+            FieldPlayerCharacter* f = follower;
+            FieldPlayerCharacter* l = leader;
+
+            f->field_23E = l->field_23E = walkSpeed;
+            f->field_260 = l->field_260 = walkSpeed;
+        }
         follower->field_358_3 = leader->field_358_3 = 0;
         follower->field_350_14 = leader->field_350_14 = 0;
         leader->isPump = 0;
@@ -6687,7 +6693,13 @@ void FieldManager::sub_8031768() {
             }
             if (follower->state == 54) {
                 follower->field_368->field_0 = leader->field_368->field_0 = 0;
-                setBrothersSpeed(leader, follower, walkSpeed);
+                {
+                    FieldPlayerCharacter* f = follower;
+                    FieldPlayerCharacter* l = leader;
+
+                    f->field_23E = l->field_23E = walkSpeed;
+                    f->field_260 = l->field_260 = walkSpeed;
+                }
                 leader->isPump = 0;
                 leader->field_368->field_10[0] = leader->field_368->field_12;
                 leader->field_368->field_12 = -1;
@@ -7235,10 +7247,6 @@ void FieldManager::sub_8033E30() {
     play_sfx_80195B4(0x2B, -1);
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8033F5C__12FieldManager.s\"");
-#else
 void FieldManager::sub_8033F5C() {
     switch (leader->state) {
         case 59:
@@ -7271,7 +7279,16 @@ void FieldManager::sub_8033F5C() {
             }
             follower->field_214_0 = 3;
             follower->sub_8049000(SPRITE_ID(0, 1));
-            setBrothersSpeed(leader, follower, (s16)walkSpeed >> isUnderwater);
+            {
+                FieldPlayerCharacter* f = follower;
+                FieldPlayerCharacter* l = leader;
+                s32 speed = (s16)walkSpeed >> isUnderwater;
+
+                l->field_23E = speed;
+                f->field_23E = speed;
+                l->field_260 = speed;
+                f->field_260 = speed;
+            }
             follower->field_212_6 = 0;
             leader->sprite->yScale = 0x100;
             follower->field_20C_14 = 0;
@@ -7296,7 +7313,16 @@ void FieldManager::sub_8033F5C() {
                 follower->field_35A_1 = 0;
                 field_20A_3 = 0;
                 field_20B_7 = 0;
-                setBrothersSpeed(leader, follower, 0x100 >> isUnderwater);
+                {
+                    FieldPlayerCharacter* f = follower;
+                    FieldPlayerCharacter* l = leader;
+                    s32 speed = 0x100 >> isUnderwater;
+
+                    l->field_23E = speed;
+                    f->field_23E = speed;
+                    l->field_260 = speed;
+                    f->field_260 = speed;
+                }
                 sub_802DF80(0);
                 if (field_20A_1) {
                     digOutOfGround(leader);
@@ -7312,13 +7338,16 @@ void FieldManager::sub_8033F5C() {
         case 66:
         case 67:
         case 68:
-        case 69:
-            if (leader->isMole) {
-                leader->sub_804DDF4(&objects[2], objectCount - 2);
-                if (leader->sub_80458B0() && leader->field_368->field_0 != 7) {
-                    leader->field_368->field_16_0 |= 1;
+        case 69: {
+            FieldPlayerCharacter* l = leader;
+
+            if (l->isMole) {
+                l->sub_804DDF4(&objects[2], objectCount - 2);
+                if (l->sub_80458B0() && l->field_368->field_0 != 7) {
+                    l->field_368->field_16_0 |= 1;
                 }
             }
+        }
             follower->updateAirborne();
             follower->sub_80461B4(objects);
             if (field_20A_1) {
@@ -7336,12 +7365,11 @@ void FieldManager::sub_8033F5C() {
                     }
                     if ((follower->field_24_7 & 1) || (follower->field_24_15 & 1)) {
                         follower->state = leader->state = 67;
+                        follower->sub_8046980();
                     } else if (follower->field_24_3 || follower->field_24_11) {
                         follower->state = leader->state = 66;
-                    } else {
-                        break;
+                        follower->sub_8046980();
                     }
-                    follower->sub_8046980();
                     break;
                 case 65:
                     if (follower->sub_8047B78()) {
@@ -7371,7 +7399,16 @@ void FieldManager::sub_8033F5C() {
                     follower->field_350_14 = leader->field_350_14 = 0;
                     follower->field_214_0 = 3;
                     follower->sub_8046980();
-                    setBrothersSpeed(leader, follower, 0x100 >> isUnderwater);
+                    {
+                        FieldPlayerCharacter* f = follower;
+                        FieldPlayerCharacter* l = leader;
+                        s32 speed = 0x100 >> isUnderwater;
+
+                        l->field_23E = speed;
+                        f->field_23E = speed;
+                        l->field_260 = speed;
+                        f->field_260 = speed;
+                    }
                     field_20B_7 = 0;
                     sub_802DF80(0);
                     if (field_20A_1) {
@@ -7388,7 +7425,6 @@ void FieldManager::sub_8033F5C() {
         }
     }
 }
-#endif
 
 void FieldManager::enterBarrel(FieldPlayerCharacter* player) {
     objects[player->field_33E]->sub_804776C(0);
@@ -7471,10 +7507,6 @@ void FieldManager::jumpOntoBarrel() {
     play_sfx_80195B4(0x2B, -1);
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8034BF4__12FieldManager.s\"");
-#else
 void FieldManager::sub_8034BF4() {
     switch (leader->state) {
         case 73:
@@ -7509,7 +7541,13 @@ void FieldManager::sub_8034BF4() {
             sprite_remove(leader->field_36C);
             leader->field_350_15 = 0;
             follower->field_20C_14 = 0;
-            setBrothersSpeed(leader, follower, walkSpeed);
+            {
+                FieldPlayerCharacter* f = follower;
+                FieldPlayerCharacter* l = leader;
+
+                f->field_23E = l->field_23E = walkSpeed;
+                f->field_260 = l->field_260 = walkSpeed;
+            }
             if (!field_209_6) {
                 follower->sub_8045A94(1, 0, leader->x / 256, leader->y / 256, leader->z / 256,
                                       walkSpeed);
@@ -7552,7 +7590,6 @@ void FieldManager::sub_8034BF4() {
             break;
     }
 }
-#endif
 
 void FieldManager::sub_8034FE8() {
     follower->jumpToHeight(4, 0xEE >> isUnderwater, (s16)walkSpeed);
@@ -7865,10 +7902,6 @@ void FieldManager::sub_8035B98() {
     play_sfx_80195B4(0x2B, -1);
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8035DB0__12FieldManager.s\"");
-#else
 void FieldManager::sub_8035DB0() {
     if (follower->state > 100) {
         switch (follower->state) {
@@ -8044,7 +8077,16 @@ void FieldManager::sub_8035DB0() {
                 follower->field_214_0 = 3;
                 follower->sub_8049000(SPRITE_ID(0, 2));
                 leader->sub_8049000(SPRITE_ID(0, 40));
-                setBrothersSpeed(leader, follower, 0x200 >> isUnderwater);
+                {
+                    FieldPlayerCharacter* f = follower;
+                    FieldPlayerCharacter* l = leader;
+                    s32 speed = 0x200 >> isUnderwater;
+
+                    l->field_23E = speed;
+                    f->field_23E = speed;
+                    l->field_260 = speed;
+                    f->field_260 = speed;
+                }
                 leader->sprite->yScale = 0x100;
                 leader->field_23B = 0;
                 follower->field_212_6 = 0;
@@ -8159,7 +8201,13 @@ void FieldManager::sub_8035DB0() {
                     break;
                 }
                 luigi->field_214_0 = 3;
-                setBrothersSpeed(leader, follower, walkSpeed);
+                {
+                    FieldPlayerCharacter* f = follower;
+                    FieldPlayerCharacter* l = leader;
+
+                    f->field_23E = l->field_23E = walkSpeed;
+                    f->field_260 = l->field_260 = walkSpeed;
+                }
                 mario->sprite->yScale = 0x100;
                 mario->field_23B = 0;
                 if (leader->objectIndex == BROTHER_MARIO && !field_209_6) {
@@ -8220,7 +8268,6 @@ void FieldManager::sub_8035DB0() {
         }
     }
 }
-#endif
 
 void FieldManager::sub_8036E14() {
     sub_802C4D4(1, 1);
@@ -8243,10 +8290,11 @@ void FieldManager::sub_8036E14() {
     play_sfx_80195B4(0x157, -1);
 }
 
-// https://decomp.me/scratch/TODO
-#ifndef NONMATCHING
-asm_unified(".include \"asm/nonmatching/sub_8036F84__12FieldManager.s\"");
-#else
+// Inlined in sub_8036F84 (first copy at 0x0803711E).
+static inline void sub_803711E(int id) {
+    play_sfx_80195B4(id, -1);
+}
+
 void FieldManager::sub_8036F84() {
     u8 moved = false;
     u8 action;
@@ -8292,7 +8340,7 @@ void FieldManager::sub_8036F84() {
             if (index >= 0 && !(field_FA_0 & (1 << index))) {
                 sub_805C908(field_304, index);
                 field_FA_0 |= 1 << index;
-                play_sfx_80195B4(0x53, -1);
+                sub_803711E(0x53);
             }
             sub_802E2F4();
             if (leader->field_353_3) {
@@ -8308,7 +8356,7 @@ void FieldManager::sub_8036F84() {
         leader->field_214_0 = 3;
         leader->state = 116;
         leader->sub_8049000(SPRITE_ID(0, 2));
-        follower->field_350_14 = 1;
+        follower->field_20C_14 = 1;
         sprite_remove(follower->field_36C);
     }
     if (leader->state == 116 && leader->airFrames == -1) {
@@ -8397,10 +8445,16 @@ void FieldManager::sub_8036F84() {
             if (follower->field_36C->field_21 != 5 || !follower->field_36C->animationComplete) {
                 break;
             }
-            setBrothersSpeed(leader, follower, 0x100);
+            {
+                FieldPlayerCharacter* f = follower;
+                FieldPlayerCharacter* l = leader;
+
+                f->field_23E = l->field_23E = 0x100;
+                f->field_260 = l->field_260 = 0x100;
+            }
             follower->field_350_14 = leader->field_350_14 = 0;
             field_26E = 4;
-            follower->state = leader->state = 111;
+            leader->state = follower->state = 111;
             sub_802DF80(0);
             follower->field_214_0 = 4;
             sprite_set_animation(follower->field_36C, 7, 0);
@@ -8415,16 +8469,33 @@ void FieldManager::sub_8036F84() {
         case 113:
             if (leader->state <= 115) {
                 if (field_20A_1) {
-                    setBrothersSpeed(leader, follower, 0);
+                    {
+                        FieldPlayerCharacter* f = follower;
+                        FieldPlayerCharacter* l = leader;
+
+                        f->field_23E = l->field_23E = 0;
+                        f->field_260 = l->field_260 = 0;
+                    }
                     action = 3;
                 } else if (--field_26E == 0) {
                     leader->field_23E = (s16)leader->field_23E
                                         + ((follower->state == 111 ? 0x100 : -0x100) >> isUnderwater);
-                    follower->field_23E = leader->field_23E;
-                    leader->field_260 = leader->field_23E;
-                    follower->field_260 = leader->field_23E;
+                    {
+                        FieldPlayerCharacter* f = follower;
+                        FieldPlayerCharacter* l = leader;
+
+                        f->field_23E = l->field_23E;
+                        l->field_260 = l->field_23E;
+                        f->field_260 = l->field_23E;
+                    }
                     if ((s16)leader->field_23E <= 0) {
-                        setBrothersSpeed(leader, follower, 0);
+                        {
+                            FieldPlayerCharacter* f = follower;
+                            FieldPlayerCharacter* l = leader;
+
+                            f->field_23E = l->field_23E = 0;
+                            f->field_260 = l->field_260 = 0;
+                        }
                         action = 3;
                     } else if ((s16)leader->field_23E == (0x400 >> isUnderwater)) {
                         leader->state = follower->state = 112;
@@ -8564,7 +8635,13 @@ void FieldManager::sub_8036F84() {
             if (--field_26E != 0) {
                 break;
             }
-            setBrothersSpeed(leader, follower, walkSpeed);
+            {
+                FieldPlayerCharacter* f = follower;
+                FieldPlayerCharacter* l = leader;
+
+                f->field_23E = l->field_23E = walkSpeed;
+                f->field_260 = l->field_260 = walkSpeed;
+            }
             action = 3;
             break;
 
@@ -8604,13 +8681,24 @@ void FieldManager::sub_8036F84() {
     if ((field_12A <= 2 || field_12A == 11) && action != 0) {
         if (action == 1) {
             leader->field_23E -= 0x100;
-            follower->field_23E = leader->field_23E;
-            leader->field_260 = leader->field_23E;
-            follower->field_260 = leader->field_23E;
+            {
+                FieldPlayerCharacter* f = follower;
+                FieldPlayerCharacter* l = leader;
+
+                f->field_23E = l->field_23E;
+                l->field_260 = l->field_23E;
+                f->field_260 = l->field_23E;
+            }
             field_26E = 4;
             leader->state = follower->state = 113;
         } else {
-            setBrothersSpeed(leader, follower, walkSpeed);
+            {
+                FieldPlayerCharacter* f = follower;
+                FieldPlayerCharacter* l = leader;
+
+                f->field_23E = l->field_23E = walkSpeed;
+                f->field_260 = l->field_260 = walkSpeed;
+            }
             follower->angle = follower->direction << 5;
             leader->angle = leader->direction << 5;
             follower->field_214_0 = 3;
@@ -8655,4 +8743,3 @@ void FieldManager::sub_8036F84() {
         follower->sprite->speed = field_FA_11;
     }
 }
-#endif
