@@ -882,7 +882,7 @@ void FieldManager::update_field_8023DD4() {
                     case BROTHERS_FORM_BARREL_LUIGI:
                         if (follower->objectIndex == BROTHER_LUIGI) {
                             field_20B_4 = 1;
-                            sub_8034870(follower);
+                            breakOutOfBarrel(follower);
                             leader->field_350_14 = 1;
                         }
                         break;
@@ -4411,7 +4411,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
         case 8: // Luigi comes up from underground.
             player->field_239 = player->sprite->speed = field_FA_11;
             if (player->field_33E != -1 && objects[player->field_33E]->type == FIELD_OBJECT_TYPE_FBRL) {
-                sub_80346FC(player);
+                enterBarrel(player);
             } else {
                 sub_8033B98(player);
             }
@@ -4419,7 +4419,7 @@ void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
 
         case 10: // Luigi breaks the barrel.
             player->field_239 = player->sprite->speed = field_FA_11;
-            sub_8034870(player);
+            breakOutOfBarrel(player);
             break;
 
         case 13: // Plays buzzer sound.
@@ -4674,15 +4674,15 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             break;
         }
 
-        case 70:
+        case 70: // Wait 4 frames before jumping into barrel.
             if (--player->field_355 == 0) {
-                player->sub_8049000(SPRITE_ID(0, 70));
+                player->sub_8049000(SPRITE_ID(0, 70)); // Luigi as a barrel.
                 player->jumpToHeight(16, 100, (s16)walkSpeed);
                 player->state = 71;
             }
             break;
 
-        case 71:
+        case 71: // Update entering barrel jump.
             player->updateAirborne();
             player->sub_804FB64(objects, 0, 0);
             if (player->airFrames == -1) {
@@ -4859,7 +4859,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                         break;
                     case 7:
                         follower->field_239 = follower->sprite->speed = field_FA_11;
-                        sub_8034A5C();
+                        jumpOntoBarrel();
                         break;
                 }
             }
@@ -4928,7 +4928,7 @@ void FieldManager::sub_802DA10() {
             } else if (brothersForm == BROTHERS_FORM_PUMP_MARIO) {
                 sub_80313C0();
             } else if (brothersForm == BROTHERS_FORM_BARREL_LUIGI) {
-                sub_803495C();
+                hammerBarrel();
             } else {
                 follower->startHammer(isUnderwater);
             }
@@ -5861,7 +5861,7 @@ void FieldManager::sub_802FAE4(int mode, int arg2) {
             if (leader->field_368->field_0 == 10) {
                 sub_8034FE8();
             } else {
-                sub_8034870((FieldPlayerCharacter*)objects[1]);
+                breakOutOfBarrel((FieldPlayerCharacter*)objects[1]);
             }
             break;
         case 5:
@@ -7387,10 +7387,10 @@ void FieldManager::sub_8033F5C() {
 }
 #endif
 
-void FieldManager::sub_80346FC(FieldPlayerCharacter* player) {
+void FieldManager::enterBarrel(FieldPlayerCharacter* player) {
     objects[player->field_33E]->sub_804776C(0);
     objects[player->field_33E]->setSpriteActive(0);
-    field_26A_7 = player->field_33E;
+    barrelObjectIndex = player->field_33E;
     sub_802C4D4(1, 1);
     player->field_368->field_0 = 9;
     player->state = 70;
@@ -7416,7 +7416,7 @@ void FieldManager::sub_80346FC(FieldPlayerCharacter* player) {
     play_sfx_80195B4(0x38, -1);
 }
 
-void FieldManager::sub_8034870(FieldPlayerCharacter* player) {
+void FieldManager::breakOutOfBarrel(FieldPlayerCharacter* player) {
     sub_802C4D4(1, 1);
     player->state = 72;
     player->field_350_14 = 1;
@@ -7434,7 +7434,7 @@ void FieldManager::sub_8034870(FieldPlayerCharacter* player) {
     play_sfx_80195B4(0x46, -1);
 }
 
-void FieldManager::sub_803495C() {
+void FieldManager::hammerBarrel() {
     sub_802C4D4(1, 1);
     follower->state = leader->state = 73;
     follower->field_350_14 = leader->field_350_14 = 1;
@@ -7449,7 +7449,7 @@ void FieldManager::sub_803495C() {
     play_sfx_80195B4(0x3C, -1);
 }
 
-void FieldManager::sub_8034A5C() {
+void FieldManager::jumpOntoBarrel() {
     sub_802C4D4(1, 1);
     leader->sub_8049000(SPRITE_ID(0, 69));
     field_246_1 = 0;
