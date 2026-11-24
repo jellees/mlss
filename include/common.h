@@ -651,7 +651,6 @@ int sub_8019610(int);
 void sub_803C788(struct FieldManager*, void*);
 void init_btl_process_80FC25C(void*, u8, char*, void*);
 void sub_803C720(struct FieldManager*, int);
-void sub_8038140(struct FieldManager*);
 void sub_8039078(struct FieldManager*);
 void sub_8039A00(struct FieldManager*);
 void sub_8039B5C(struct FieldManager*);
@@ -737,6 +736,7 @@ extern s8 byte_839F649[];  // FieldManager::sub_8035DB0: xScale / 16 per step
 extern s8 byte_839F65A[];  // FieldManager::sub_8035DB0: yScale / 16 per step
 extern u16 word_839FB0C[];   // FieldManager::sub_8036F84: 4 entries of (frame, animation, speed)
 extern u16 word_839FB24[][3]; // FieldManager::sub_8036F84: D-pad states per direction
+extern u16 word_839FB54[];    // FieldManager::sub_80382CC: 4 pairs of (frame, animation)
 extern u16 word_839FA58[]; // FieldManager::sub_8031768: yScale per sprite frame
 extern u16 word_839FA78[]; // FieldManager::sub_8031768: (height, xScale) pairs per step
 extern s8 byte_839F630[];  // FieldManager::sub_80306A0: height offset (x 256) per field_250

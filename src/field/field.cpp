@@ -4943,7 +4943,7 @@ void FieldManager::sub_802DA10() {
                     }
                 } else {
                     if (CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, 0x20B)) {
-                        sub_8038140(this);
+                        sub_8038140();
                     } else {
                         sub_8039B5C(this);
                     }
@@ -8290,9 +8290,15 @@ void FieldManager::sub_8036E14() {
     play_sfx_80195B4(0x157, -1);
 }
 
-// Inlined in sub_8036F84 (first copy at 0x0803711E).
-static inline void sub_803711E(int id) {
-    play_sfx_80195B4(id, -1);
+// Inlined in sub_8036F84 (first copy at 0x080370D8) and twice in sub_80382CC.
+static inline void sub_80370D8(FieldManager* field, FieldPlayerCharacter* player) {
+    int index = player->sub_804FB3C();
+
+    if (index >= 0 && !(field->field_FA_0 & (1 << index))) {
+        sub_805C908(field->field_304, index);
+        field->field_FA_0 |= 1 << index;
+        play_sfx_80195B4(0x53, -1);
+    }
 }
 
 void FieldManager::sub_8036F84() {
@@ -8332,16 +8338,9 @@ void FieldManager::sub_8036F84() {
         leader->sub_80465D8();
         leader->method13();
         if (moved) {
-            int index;
-
             leader->sub_804D2CC();
             leader->sub_804FB64(objects, 0, 0);
-            index = leader->sub_804FB3C();
-            if (index >= 0 && !(field_FA_0 & (1 << index))) {
-                sub_805C908(field_304, index);
-                field_FA_0 |= 1 << index;
-                sub_803711E(0x53);
-            }
+            sub_80370D8(this, leader);
             sub_802E2F4();
             if (leader->field_353_3) {
                 leader->sub_804FC30();
@@ -8741,5 +8740,362 @@ void FieldManager::sub_8036F84() {
         follower->sprite->speed = (s16)follower->field_23E / 16;
     } else {
         follower->sprite->speed = field_FA_11;
+    }
+}
+
+// https://decomp.me/scratch/TODO
+#ifndef NONMATCHING
+asm_unified(".include \"asm/nonmatching/sub_8038140__12FieldManager.s\"");
+#else
+void FieldManager::sub_8038140() {
+    sub_802C4D4(1, 1);
+    resetLeader(this);
+    follower->field_368->field_0 = leader->field_368->field_0 = 13;
+    follower->state = leader->state = 119;
+    follower->field_350_14 = leader->field_350_14 = 1;
+    follower->field_358_3 = leader->field_358_3 = 1;
+    follower->field_20C_13 = 1;
+    follower->field_20C_14 = 0;
+    follower->field_35A_0 = 1;
+    follower->field_35A_1 = 1;
+    follower->showHandPowerSprite(2);
+    field_26A_6 = 0;
+    field_26E = 0;
+    field_208_0 = 0;
+    field_20B_7 = 1;
+    leader->field_214_0 = 4;
+    leader->sub_8049000(SPRITE_ID(0, 52));
+    follower->field_214_0 = 4;
+    follower->sub_8049000(SPRITE_ID(0, 64));
+    brothersForm = 6;
+    play_sfx_80195B4(0x87, -1);
+}
+#endif
+
+void FieldManager::sub_80382CC() {
+    int action;
+
+    if (field_12A > 1) {
+        if (leader->state >= 122 && leader->state <= 123 && follower->state >= 122
+            && follower->state <= 123) {
+            s16 velocityX = 0;
+            s16 velocityY = 0;
+            u8 angle;
+
+            if (!leader->field_350_14 && field_D0 != NULL) {
+                int index = (field_D0->field_0 & 0xF0) >> 4;
+
+                angle = byte_839F910[index];
+                if (angle != 0xFF) {
+                    velocityX = word_839F524[index * 2];
+                    velocityY = word_839F524[index * 2 + 1];
+                }
+            }
+            leader->velocityX = follower->velocityX = velocityX;
+            leader->velocityY = follower->velocityY = velocityY;
+            if (velocityX != 0 || velocityY != 0) {
+                leader->state = follower->state = 123;
+                leader->angle = follower->angle = angle;
+            } else {
+                leader->state = follower->state = 122;
+            }
+        } else if (leader->state == 125 || follower->state == 125) {
+            sub_802C208();
+        }
+
+        sub_804FE68(leader, objects);
+        sub_804FE68(follower, objects);
+        if (leader->field_353_7 || follower->field_353_7) {
+            leader->field_353_7 = follower->field_353_7 = 1;
+        }
+        if (!checkWarps(leader, leader->state == 123, true, false)) {
+            checkWarps(follower, leader->state == 123, true, false);
+        }
+
+        {
+            FieldPlayerCharacter* first;
+            FieldPlayerCharacter* second;
+            s32 x;
+            s32 y;
+
+            if (follower->state == 124 || follower->state > 125) {
+                first = follower;
+                second = leader;
+            } else {
+                first = leader;
+                second = follower;
+            }
+            x = first->x;
+            y = first->y;
+            sub_80303C4(first);
+            first->sub_80465D8();
+            second->sub_80465D8();
+            first->method13();
+            second->x -= x - first->x;
+            second->y -= y - first->y;
+            x = second->x;
+            y = second->y;
+            sub_80303C4(second);
+            second->method13();
+            if (second->state == 125 && second->field_24_11) {
+                second->x = first->x;
+                second->y = first->y;
+            } else {
+                first->x -= x - second->x;
+                first->y -= y - second->y;
+            }
+        }
+        leader->sub_804FB64(objects, 0, 0);
+        follower->sub_804FB64(objects, 0, 0);
+        sub_80370D8(this, leader);
+        sub_80370D8(this, follower);
+    }
+
+    action = 0;
+    switch (leader->state) {
+        case 124:
+            if (leader->airFrames == -1) {
+                leader->state = 126;
+            } else if (follower->state == 125) {
+                sub_802E2F4();
+            }
+            break;
+        case 125:
+            if (leader->airFrames >= 0) {
+                leader->state = 124;
+                leader->velocityX = leader->velocityY = 0;
+            }
+            break;
+    }
+    switch (follower->state) {
+        case 124:
+            if (follower->airFrames == -1) {
+                follower->state = 126;
+            } else if (leader->state == 125) {
+                sub_802E2F4();
+            }
+            break;
+        case 125:
+            if (follower->airFrames >= 0) {
+                follower->state = 124;
+                follower->velocityX = follower->velocityY = 0;
+            }
+            break;
+    }
+
+    if (leader->state == 126 && follower->state == 126) {
+        action = 2;
+    } else if (leader->field_26_2 || follower->field_26_2) {
+        action = 2;
+    } else if (field_12A <= 2) {
+        switch (follower->state) {
+            case 119:
+                if (field_26E < 60) {
+                    u16* entry;
+                    u32 i;
+
+                    field_26E++;
+                    entry = word_839FB54;
+                    for (i = 0; i < 4; i++, entry += 2) {
+                        if (entry[0] == field_26E) {
+                            sprite_set_animation(follower->field_36C, entry[1], 0);
+                            if (field_26E == 59) {
+                                stop_sfx_80195A8(0x87);
+                                play_sfx_80195B4(0x156, -1);
+                            }
+                        }
+                    }
+                }
+                if (field_20A_1) {
+                    action = 2;
+                    break;
+                }
+                if (field_D0->field_0 & follower->field_368->field_4) {
+                    break;
+                }
+                if (field_26E < 60) {
+                    stop_sfx_80195A8(0x87);
+                    action = 2;
+                } else {
+                    stop_sfx_80195A8(0x156);
+                    follower->state = leader->state = 120;
+                    follower->method7(1);
+                    follower->sprite->animationEndAction = ANIMATION_END_STOP;
+                    play_sfx_80195B4(0xDA, -1);
+                }
+                break;
+
+            case 120:
+                if (!follower->sprite->animationComplete) {
+                    break;
+                }
+                follower->field_214_0 = 0;
+                follower->state = leader->state = 121;
+                sprite_set_animation(follower->field_36C, 5, 0);
+                follower->field_36C->animationEndAction = ANIMATION_END_STOP;
+                break;
+
+            case 121: {
+                FieldObject** object;
+                int i;
+
+                if (follower->field_36C->field_21 != 5 || !follower->field_36C->animationComplete) {
+                    break;
+                }
+                follower->field_350_14 = leader->field_350_14 = 0;
+                leader->state = follower->state = 122;
+                sub_802DF80(0);
+                leader->field_214_0 = 1;
+                follower->field_214_0 = 2;
+                sprite_set_animation(follower->field_36C, 6, 0);
+                leader->sub_8049000(SPRITE_ID(0, 53));
+                follower->sub_8049000(SPRITE_ID(0, 76));
+                field_26E = 240;
+                follower->field_35A_1 = follower->sub_804D18C();
+                follower->field_20C_13 = follower->field_35A_1;
+                for (object = &objects[2], i = 0; i < objectCount - 2; i++, object++) {
+                    if (follower->sub_804B25C(*object)) {
+                        break;
+                    }
+                }
+                if (i == objectCount - 2) {
+                    follower->field_35A_0 = 0;
+                }
+                field_20A_3 = 0;
+                break;
+            }
+
+            case 122:
+            case 123:
+                if (field_12A <= 1) {
+                    break;
+                }
+                if (sub_8025D24(4) || sub_8025D24(0) || sub_8025D24(1) || sub_8025D24(2)
+                    || sub_8025D24(3)) {
+                    sub_8029878();
+                }
+                if (leader->airFrames >= 0) {
+                    leader->state = 124;
+                } else if (follower->airFrames >= 0) {
+                    sub_802DF80(1);
+                    leader->state = 125;
+                    field_208_5 = 1;
+                }
+                if (follower->airFrames >= 0) {
+                    follower->state = 124;
+                } else if (leader->airFrames >= 0) {
+                    if (follower->sub_804D18C()) {
+                        follower->x = leader->x;
+                        follower->y = leader->y;
+                        follower->z = leader->z;
+                        follower->height = leader->height;
+                    }
+                    sub_802DF80(0);
+                    follower->state = 125;
+                    field_208_5 = 1;
+                }
+                if (follower->height == 0) {
+                    follower->field_20C_14 = 1;
+                }
+                if (follower->field_35A_1) {
+                    follower->field_35A_1 = follower->sub_804D18C();
+                    follower->field_20C_13 = follower->field_35A_1;
+                }
+                if (follower->field_35A_0) {
+                    FieldObject** object;
+                    int i;
+
+                    for (object = &objects[2], i = 0; i < objectCount - 2; i++, object++) {
+                        if (follower->sub_804B25C(*object)) {
+                            break;
+                        }
+                    }
+                    if (i == objectCount - 2) {
+                        follower->field_35A_0 = 0;
+                    }
+                }
+                if (leader->state > 123 || follower->state > 123) {
+                    follower->sub_8049000(SPRITE_ID(0, 2));
+                    leader->sub_8049000(SPRITE_ID(0, 1));
+                    follower->field_214_0 = 2;
+                    leader->field_214_0 = 2;
+                    sprite_remove(follower->field_36C);
+                    follower->field_20C_14 = 1;
+                    {
+                        FieldPlayerCharacter* l = leader;
+                        FieldPlayerCharacter* f = follower;
+
+                        f->velocityX = f->velocityY = 0;
+                        l->velocityX = l->velocityY = 0;
+                    }
+                    stop_sfx_80195A8(0xDA);
+                } else {
+                    if (!field_26A_6) {
+                        field_26E--;
+                    }
+                    if (field_20A_1 || field_26E <= 0) {
+                        action = 2;
+                    }
+                }
+                break;
+
+            case 127:
+                if ((!sub_802DC0C(follower) && (follower->height == 0 || (s8)follower->field_1 != -1))
+                    || !follower->sub_8047B78()) {
+                    if (follower->sub_8047B78() == true) {
+                        follower->x &= ~0xFF;
+                        follower->y &= ~0xFF;
+                    }
+                    follower->sub_8046980();
+                    action = 2;
+                } else {
+                    follower->sub_80461B4(objects);
+                    follower->sub_80465D8();
+                    follower->sub_804FB64(objects, 0, 0);
+                }
+                break;
+        }
+    }
+
+    if (action == 0) {
+        return;
+    }
+    {
+        FieldPlayerCharacter* f = follower;
+        FieldPlayerCharacter* l = leader;
+
+        f->field_23E = l->field_23E = walkSpeed;
+        f->field_260 = l->field_260 = walkSpeed;
+    }
+    follower->angle = follower->direction << 5;
+    leader->angle = leader->direction << 5;
+    follower->field_214_0 = 3;
+    leader->field_214_0 = 3;
+    follower->sub_8049000(SPRITE_ID(0, 2));
+    leader->sub_8049000(SPRITE_ID(0, 1));
+    sprite_remove(follower->field_36C);
+    stop_sfx_80195A8(0x156);
+    stop_sfx_80195A8(0xDA);
+    if (action == 1) {
+        follower->field_20C_14 = 0;
+        leader->velocityX = follower->velocityX = 0;
+        leader->velocityY = follower->velocityY = 0;
+        follower->sub_8045A94(1, 0, leader->x / 256, leader->y / 256,
+                              (leader->z + leader->height) / 256, walkSpeed);
+        follower->state = leader->state = 127;
+    } else {
+        follower->field_368->field_0 = leader->field_368->field_0 = 0;
+        follower->state = leader->state = 0;
+        follower->field_350_14 = leader->field_350_14 = 0;
+        follower->field_358_3 = leader->field_358_3 = 0;
+        follower->field_20C_13 = 0;
+        follower->field_20C_14 = 1;
+        follower->field_35A_0 = 0;
+        follower->field_35A_1 = 0;
+        brothersForm = BROTHERS_FORM_NORMAL;
+        field_20B_7 = 0;
+        field_208_0 = 1;
+        field_20A_3 = 0;
+        sub_802DF80(0);
     }
 }

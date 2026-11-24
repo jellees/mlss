@@ -251,7 +251,8 @@ class FieldManager : public Process {
     u8 pad_262[0x2];
     u32 field_264;
     u16 field_268;
-    u16 field_26A_0 : 7;
+    u16 field_26A_0 : 6;
+    u16 field_26A_6 : 1;
     u16 barrelObjectIndex : 6; // Index of the object the player climbs into (enterBarrel)
     u16 shotBulletIndex : 3;   // Next shotBullets slot: counts up for jets, down from 3 for bubbles
     u8 field_26C;
@@ -496,6 +497,7 @@ class FieldManager : public Process {
     void sub_8035DB0();
     void sub_8036E14();
     void sub_8036F84();
+    void sub_8038140();
     void sub_80382CC();
     void sub_8039250();
     void sub_8039C9C();
