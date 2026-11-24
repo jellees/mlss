@@ -234,8 +234,9 @@ class FieldManager : public Process {
     u8 pad_247;
     s16 field_248;
     s16 field_24A;
-    u8 pad_24C[0x4];
-    u8 field_250; // Frame counter (sub_80306A0)
+    s16 field_24C; // Follower tile x minus leader tile x (sub_8034A5C)
+    s16 field_24E; // Follower tile y minus leader tile y
+    u8 field_250;  // Frame counter (sub_80306A0)
     u8 field_251;
     u8 field_252;
     u8 pad_253;
@@ -248,9 +249,9 @@ class FieldManager : public Process {
     u8 pad_262[0x2];
     u32 field_264;
     u16 field_268;
-    u8 pad_26A;
-    u8 field_26B_0 : 5;
-    u8 shotBulletIndex : 3; // Next shotBullets slot: counts up for jets, down from 3 for bubbles
+    u16 field_26A_0 : 7;
+    u16 field_26A_7 : 6;     // Index of the object the player climbs into (sub_80346FC)
+    u16 shotBulletIndex : 3; // Next shotBullets slot: counts up for jets, down from 3 for bubbles
     u8 field_26C;
     u8 pad_26D;
     s16 field_26E;
@@ -477,7 +478,14 @@ class FieldManager : public Process {
     void sub_80326F4();
     void sub_80328B4();
     void sub_8032A90();
+    void sub_80339B8();
+    void sub_8033B98(FieldPlayerCharacter* player);
+    void sub_8033E30();
     void sub_8033F5C();
+    void sub_80346FC(FieldPlayerCharacter* player);
+    void sub_8034870(FieldPlayerCharacter* player);
+    void sub_803495C();
+    void sub_8034A5C();
     void sub_8034BF4();
     void sub_80350B4();
     void sub_8035DB0();

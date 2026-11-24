@@ -2679,7 +2679,7 @@ struct Coldef* FieldObject::sub_80457E8(int cellX, int cellY, int* floor, int* c
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_80458B0__11FieldObject.s\"");
 #else
-int FieldObject::sub_80458B0() {
+bool FieldObject::sub_80458B0() {
     int floor;
     int ceiling;
     int top;

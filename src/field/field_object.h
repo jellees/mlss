@@ -308,7 +308,7 @@ class FieldObject {
     void sub_804173C(int set, u8 size1, u8 size2, u8 size3);
     void sub_80418E8(FieldObject** objects);
     struct Coldef* sub_80457E8(int cellX, int cellY, int* floor, int* ceiling, int* top);
-    int sub_80458B0();
+    bool sub_80458B0();
     int sub_8045A94(int mode, int relative, int targetX, int targetY, int targetZ, u16 speed);
     bool sub_8045F04(int mode, int relative, int centerX, int centerY, int centerZ, int arg6, int arg7,
                      int arg8, u16 arg9, u16 arg10, u16 arg11, u16 angle, u16 speed, int direction,

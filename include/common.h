@@ -428,6 +428,8 @@ void sub_801B5A0(void*, int, int, int, int, int, int, int, int, int);
 void sub_801B390(void*, u8, int*, int*, int*);
 void sub_8116654(void*, u8);
 struct Coldef* get_coldef_ptr_by_xz(void* map, s16 x, s16 z);
+u16 sub_8116A2C(u16, u8, u8);
+void sub_805C8A4(void*, int);
 struct Coldef* sub_803FBA4(void* map, int x, int y, int* floor, int* ceiling, int* top, bool arg6,
                            bool arg7);
 void sub_8116680(void*, u8);
@@ -648,21 +650,14 @@ int sub_8019610(int);
 void sub_803C788(struct FieldManager*, void*);
 void init_btl_process_80FC25C(void*, u8, char*, void*);
 void sub_803C720(struct FieldManager*, int);
-void sub_8033E30(struct FieldManager*);
-void sub_8034A5C(struct FieldManager*);
 void sub_8035B98(struct FieldManager*);
 void sub_8035974(struct FieldManager*);
-void sub_80339B8(struct FieldManager*);
-void sub_803495C(struct FieldManager*);
 void sub_8036E14(struct FieldManager*);
 void sub_8038140(struct FieldManager*);
 void sub_8039078(struct FieldManager*);
 void sub_8039A00(struct FieldManager*);
 void sub_8039B5C(struct FieldManager*);
 void sub_803A438(struct FieldManager*);
-void sub_8033B98(struct FieldManager*, struct FieldObject*);
-void sub_8034870(struct FieldManager*, struct FieldObject*);
-void sub_80346FC(struct FieldManager*, struct FieldObject*);
 int sub_803C544(struct FieldManager*);
 void sub_8029888(void (*)(void), int);
 void sub_8029910(void);
@@ -736,6 +731,7 @@ extern u32 dword_3000E04;
 extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
 extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
 extern s16 word_839F524[]; // FieldManager::sub_8032A90: (x, y) velocity per D-pad state
+extern u16 word_839FA9C[]; // FieldManager::sub_8033F5C: yScale per sprite frame
 extern u16 word_839FA58[]; // FieldManager::sub_8031768: yScale per sprite frame
 extern u16 word_839FA78[]; // FieldManager::sub_8031768: (height, xScale) pairs per step
 extern s8 byte_839F630[];  // FieldManager::sub_80306A0: height offset (x 256) per field_250
