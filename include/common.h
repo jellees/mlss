@@ -700,22 +700,22 @@ extern struct FieldManager* dword_3000D7C;
 extern struct struc_3000D44* dword_3000D44;
 extern u16 word_2000272;
 extern u8 byte_3000C24;
-extern s8** dword_839F900[][2]; // FieldStruct4::field_8 per player character
+extern s8** dword_839F900[][2]; // PlayerAction::field_8 per player character
 extern u8 byte_839F910[];       // Angle per D-pad state ((keys & 0xF0) >> 4), 0xFF: none
                                 // (FieldManager::sub_802C068)
 extern u8
     byte_839F94C[]; // Indexed by direction (angle / 32), masked with FieldPlayerCharacter::field_350_0
 extern u8
-    byte_839F954[]; // FieldManager::sub_802C428: tile offset (x 32 bytes) per FieldStruct4::field_2
+    byte_839F954[]; // FieldManager::sub_802C428: tile offset (x 32 bytes) per PlayerAction::selectedAction
 extern u8
-    byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per FieldStruct4::field_2
+    byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per PlayerAction::selectedAction
 extern u16 word_839F974[]; // FieldManager::sub_802C774: 4 pairs of (frame, animation)
 extern u16 word_839F984[]; // FieldManager::sub_802DDB4: [objectIndex][index]
 extern u16 word_83BA4B4[]; // sub_80E9D50: height per index
 extern u16
-    word_839F98C[]; // FieldManager::sub_802DDB4: flag per [objectIndex][index][FieldStruct4::field_2]
+    word_839F98C[]; // FieldManager::sub_802DDB4: flag per [objectIndex][index][PlayerAction::selectedAction]
 extern u8
-    byte_839F9FC[]; // FieldManager::sub_802DDB4: sound per [objectIndex][index][FieldStruct4::field_2]
+    byte_839F9FC[]; // FieldManager::sub_802DDB4: sound per [objectIndex][index][PlayerAction::selectedAction]
 extern s8 byte_839FA34[]; // FieldManager::sub_802EF18: distance per BrothersForm
 extern s16 word_839FA48[]; // FieldManager::sub_802FD70: 4 (x, y) offsets of the probed collision cells
 extern u8 byte_839F930[]; // FieldManager::sub_802FD70: field_16_0 mask per [field_2 * 2 + follower]

@@ -426,8 +426,8 @@ void FieldManager::update() {
 
         case 13: {
             int i;
-            struct FieldStruct4 leaderStruct;
-            struct FieldStruct4 followerStruct;
+            struct PlayerAction leaderStruct;
+            struct PlayerAction followerStruct;
             int none;
 
             if (roomId == 0x1C1) {
@@ -490,10 +490,13 @@ void FieldManager::update() {
             follower->otherBrother = leader;
 
             if (field_2B8_0) {
-                if (leader->field_368->field_0 == 3 || leader->field_368->field_0 == 4
-                    || leader->field_368->field_0 == 0xE || leader->field_368->field_0 == 0xF
-                    || leader->field_368->field_0 == 0x10 || leader->field_368->field_0 == 0x11
-                    || brothersForm == 5 || brothersForm == 6) {
+                if (leader->field_368->actionMode == ACTION_MODE_HIGH_JUMP
+                    || leader->field_368->actionMode == ACTION_MODE_SPIN_JUMP
+                    || leader->field_368->actionMode == ACTION_MODE_14
+                    || leader->field_368->actionMode == ACTION_MODE_15
+                    || leader->field_368->actionMode == ACTION_MODE_16
+                    || leader->field_368->actionMode == ACTION_MODE_17
+                    || brothersForm == BROTHERS_FORM_5 || brothersForm == BROTHERS_FORM_6) {
                     brothersForm = BROTHERS_FORM_NORMAL;
                     changeBrotherForm(BROTHERS_FORM_NORMAL, false);
                 }
@@ -542,7 +545,7 @@ void FieldManager::update() {
                     case BROTHERS_FORM_MOLE_LUIGI:
                     case BROTHERS_FORM_BARREL_LUIGI:
                         changeBrotherForm(brothersForm, false);
-                        if (leaderStruct.field_0 == 10) {
+                        if (leaderStruct.actionMode == ACTION_MODE_MARIO_ON_BARREL) {
                             leader->sub_8049000(SPRITE_ID(0, 69));
                             field_209_7 = 2;
                             field_246_1 = 0;
@@ -558,7 +561,8 @@ void FieldManager::update() {
                         break;
 
                     case BROTHERS_FORM_SURFBOARD_LUIGI:
-                        follower->field_368->field_0 = leader->field_368->field_0 = 0x13;
+                        follower->field_368->actionMode = leader->field_368->actionMode =
+                            ACTION_MODE_SURFBOARD_LUIGI;
                         follower->state = leader->state = 0xA4;
                         follower->field_358_3 = leader->field_358_3 = 1;
                         follower->field_20C_13 = leader->field_20C_13 = 1;
@@ -679,16 +683,16 @@ void FieldManager::update() {
             field_F9_3 = 0;
             field_F9_6 = 0;
 
-            field_20C[0].field_4 = luigiLeads == 0 ? 1 : 2;
-            field_20C[0].field_6 = luigiLeads == 0 ? 0x100 : 0x200;
+            field_20C[0].actionButton = luigiLeads == 0 ? A_BUTTON : B_BUTTON;
+            field_20C[0].switchButton = luigiLeads == 0 ? R_BUTTON : L_BUTTON;
             sub_803C788(this, leader);
             if (leader->field_368->field_17_7) {
                 sub_8018218(field_1C->field_0[4]->field_8 + 0x1100,
                             (void*)(leader->objectIndex * 0x400 + 0x6010FC0), 0x80, 0x20, 0);
             }
 
-            field_20C[1].field_4 = luigiLeads == 0 ? 2 : 1;
-            field_20C[1].field_6 = luigiLeads == 0 ? 0x200 : 0x100;
+            field_20C[1].actionButton = luigiLeads == 0 ? B_BUTTON : A_BUTTON;
+            field_20C[1].switchButton = luigiLeads == 0 ? L_BUTTON : R_BUTTON;
             sub_803C788(this, follower);
             if (follower->field_368->field_17_7) {
                 sub_8018218(field_1C->field_0[4]->field_8 + 0x1100,
@@ -915,10 +919,10 @@ void FieldManager::update_field_8023DD4() {
                 follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
                 leader->field_352_7 = 1;
                 follower->field_352_7 = 0;
-                leader->field_368->field_4 = 1;
-                leader->field_368->field_6 = 0x100;
-                follower->field_368->field_4 = 2;
-                follower->field_368->field_6 = 0x200;
+                leader->field_368->actionButton = A_BUTTON;
+                leader->field_368->switchButton = R_BUTTON;
+                follower->field_368->actionButton = B_BUTTON;
+                follower->field_368->switchButton = L_BUTTON;
                 leader->field_350_14 = 0;
                 follower->field_350_14 = 0;
                 sub_802DDB4(leader, 0, 0);
@@ -1522,25 +1526,25 @@ bool FieldManager::sub_8025D24(int type) {
         switch (type) {
             case 0:
                 if ((field_D0->field_0 & 0x300) == 0
-                    && (field_D0->field_2 & leader->field_368->field_4)) {
+                    && (field_D0->field_2 & leader->field_368->actionButton)) {
                     return 1;
                 }
                 break;
             case 1:
                 if ((field_D0->field_0 & 0x300) == 0
-                    && (field_D0->field_2 & follower->field_368->field_4)) {
+                    && (field_D0->field_2 & follower->field_368->actionButton)) {
                     return 1;
                 }
                 break;
             case 2:
-                if ((field_D0->field_0 & follower->field_368->field_6) == 0
-                    && (field_D0->field_2 & leader->field_368->field_6)) {
+                if ((field_D0->field_0 & follower->field_368->switchButton) == 0
+                    && (field_D0->field_2 & leader->field_368->switchButton)) {
                     return 1;
                 }
                 break;
             case 3:
-                if ((field_D0->field_0 & leader->field_368->field_6) == 0
-                    && (field_D0->field_2 & follower->field_368->field_6)) {
+                if ((field_D0->field_0 & leader->field_368->switchButton) == 0
+                    && (field_D0->field_2 & follower->field_368->switchButton)) {
                     return 1;
                 }
                 break;
@@ -1995,7 +1999,7 @@ void FieldManager::sub_8026E94() {
         if (field_2B8_4) {
             if ((gGameState.field_3C.field_3C_0 & 0xF0) == 0xF0) {
                 sub_802EF18();
-            } else if (brothersForm == 5) {
+            } else if (brothersForm == BROTHERS_FORM_5) {
                 brothersForm = BROTHERS_FORM_NORMAL;
                 changeBrotherForm(BROTHERS_FORM_NORMAL, false);
             }
@@ -3246,7 +3250,7 @@ void FieldManager::sub_8029934() {
 
     dword_3001034(0, field_20C, 0x30);
     for (i = 0; i < 2; i++) {
-        field_20C[i].field_0 = 0;
+        field_20C[i].actionMode = ACTION_MODE_NORMAL;
         field_20C[i].field_8[0] = dword_839F900[i][0];
         field_20C[i].field_8[1] = dword_839F900[i][1];
         field_20C[i].field_10[0] = 0;
@@ -3255,7 +3259,7 @@ void FieldManager::sub_8029934() {
         field_20C[i].field_13 = -1;
         field_20C[i].field_14 = -1;
         field_20C[i].field_15 = -1;
-        field_20C[i].field_2 = 0;
+        field_20C[i].selectedAction = 0;
         field_20C[i].field_16_0 = 0;
     }
 }
@@ -3301,10 +3305,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
                 follower->previousHeight = leader->previousHeight;
             }
 
-            if (leader->field_368->field_0 == 1 || leader->field_368->field_0 == 2) {
-                leader->field_368->field_1 = 0;
+            if (leader->field_368->actionMode == ACTION_MODE_1
+                || leader->field_368->actionMode == ACTION_MODE_2) {
+                leader->field_368->field_1 = ACTION_MODE_NORMAL;
             } else {
-                leader->field_368->field_0 = 0;
+                leader->field_368->actionMode = ACTION_MODE_NORMAL;
             }
 
             setSpeed(leader, walkSpeed);
@@ -3336,10 +3341,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
             field_208_0 = 1;
             field_20B_4 = 0;
 
-            if (follower->field_368->field_0 == 1 || follower->field_368->field_0 == 2) {
-                follower->field_368->field_1 = 0;
+            if (follower->field_368->actionMode == ACTION_MODE_1
+                || follower->field_368->actionMode == ACTION_MODE_2) {
+                follower->field_368->field_1 = ACTION_MODE_NORMAL;
             } else {
-                follower->field_368->field_0 = 0;
+                follower->field_368->actionMode = ACTION_MODE_NORMAL;
             }
 
             follower->field_358_3 = 0;
@@ -3381,10 +3387,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
 
             sub_8021574(0, PALETTE_ID(0, 4), 0, 0, 0, buffer, 12);
 
-            if (mario->field_368->field_0 == 1 || mario->field_368->field_0 == 2) {
-                mario->field_368->field_1 = 5;
+            if (mario->field_368->actionMode == ACTION_MODE_1
+                || mario->field_368->actionMode == ACTION_MODE_2) {
+                mario->field_368->field_1 = ACTION_MODE_PUMP_MARIO;
             } else {
-                mario->field_368->field_0 = 5;
+                mario->field_368->actionMode = ACTION_MODE_PUMP_MARIO;
             }
 
             setSpeed(mario, 0x100 >> isUnderwater);
@@ -3407,10 +3414,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
 
             mario->field_368->field_10[0] = 0;
 
-            if (luigi->field_368->field_0 == 1 || luigi->field_368->field_0 == 2) {
-                luigi->field_368->field_1 = 5;
+            if (luigi->field_368->actionMode == ACTION_MODE_1
+                || luigi->field_368->actionMode == ACTION_MODE_2) {
+                luigi->field_368->field_1 = ACTION_MODE_PUMP_MARIO;
             } else {
-                luigi->field_368->field_0 = 5;
+                luigi->field_368->actionMode = ACTION_MODE_PUMP_MARIO;
             }
 
             luigi->isMole = false;
@@ -3427,10 +3435,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
                 mario->sub_80492DC();
             }
 
-            if (mario->field_368->field_0 == 1 || mario->field_368->field_0 == 2) {
-                mario->field_368->field_1 = 11;
+            if (mario->field_368->actionMode == ACTION_MODE_1
+                || mario->field_368->actionMode == ACTION_MODE_2) {
+                mario->field_368->field_1 = ACTION_MODE_MINI_MARIO;
             } else {
-                mario->field_368->field_0 = 11;
+                mario->field_368->actionMode = ACTION_MODE_MINI_MARIO;
             }
 
             setSpeed(mario, 0x200 >> isUnderwater);
@@ -3439,10 +3448,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
             mario->isPump = false;
             mario->sub_8049000(SPRITE_ID(0, 40));
 
-            if (luigi->field_368->field_0 == 1 || luigi->field_368->field_0 == 2) {
-                luigi->field_368->field_1 = 11;
+            if (luigi->field_368->actionMode == ACTION_MODE_1
+                || luigi->field_368->actionMode == ACTION_MODE_2) {
+                luigi->field_368->field_1 = ACTION_MODE_MINI_MARIO;
             } else {
-                luigi->field_368->field_0 = 11;
+                luigi->field_368->actionMode = ACTION_MODE_MINI_MARIO;
             }
 
             luigi->isMole = false;
@@ -3459,10 +3469,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
                 luigi->sub_80492DC();
             }
 
-            if (luigi->field_368->field_0 == 1 || luigi->field_368->field_0 == 2) {
-                luigi->field_368->field_1 = 6;
+            if (luigi->field_368->actionMode == ACTION_MODE_1
+                || luigi->field_368->actionMode == ACTION_MODE_2) {
+                luigi->field_368->field_1 = ACTION_MODE_MOLE_LUIGI;
             } else {
-                luigi->field_368->field_0 = 6;
+                luigi->field_368->actionMode = ACTION_MODE_MOLE_LUIGI;
             }
 
             setSpeed(luigi, 0x100 >> isUnderwater);
@@ -3490,10 +3501,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
 
             luigi->field_368->field_10[0] = 0;
 
-            if (mario->field_368->field_0 == 1 || mario->field_368->field_0 == 2) {
-                mario->field_368->field_1 = 6;
+            if (mario->field_368->actionMode == ACTION_MODE_1
+                || mario->field_368->actionMode == ACTION_MODE_2) {
+                mario->field_368->field_1 = ACTION_MODE_MOLE_LUIGI;
             } else {
-                mario->field_368->field_0 = 6;
+                mario->field_368->actionMode = ACTION_MODE_MOLE_LUIGI;
             }
 
             mario->isMini = false;
@@ -3509,10 +3521,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
                 luigi->sub_80492DC();
             }
 
-            if (luigi->field_368->field_0 == 1 || luigi->field_368->field_0 == 2) {
-                luigi->field_368->field_1 = 9;
+            if (luigi->field_368->actionMode == ACTION_MODE_1
+                || luigi->field_368->actionMode == ACTION_MODE_2) {
+                luigi->field_368->field_1 = ACTION_MODE_BARREL_LUIGI;
             } else {
-                luigi->field_368->field_0 = 9;
+                luigi->field_368->actionMode = ACTION_MODE_BARREL_LUIGI;
             }
 
             setSpeed(luigi, 0x100 >> isUnderwater);
@@ -3535,10 +3548,11 @@ void FieldManager::changeBrotherForm(int form, bool32 moveStuckFollower) {
 
             luigi->field_368->field_10[0] = 0;
 
-            if (mario->field_368->field_0 == 1 || mario->field_368->field_0 == 2) {
-                mario->field_368->field_1 = 9;
+            if (mario->field_368->actionMode == ACTION_MODE_1
+                || mario->field_368->actionMode == ACTION_MODE_2) {
+                mario->field_368->field_1 = ACTION_MODE_BARREL_LUIGI;
             } else {
-                mario->field_368->field_0 = 9;
+                mario->field_368->actionMode = ACTION_MODE_BARREL_LUIGI;
             }
 
             mario->isMini = false;
@@ -3904,7 +3918,7 @@ void FieldManager::sub_802A740() {
             if (value == (luigiLeads ^ 1) && (s8)(leader->field_33D_0 << 1) >> 1 == value
                 && (s8)leader->field_342 == -1) {
                 leader->sub_804FC90();
-                follower->field_368->field_0 = leader->field_368->field_0;
+                follower->field_368->actionMode = leader->field_368->actionMode;
                 if (leader->field_368->field_14 != -1) {
                     leader->field_368->field_10[0] = leader->field_368->field_14;
                     leader->field_368->field_14 = -1;
@@ -4016,7 +4030,7 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, bool arg2) {
 
             if (!arg2 && player->field_33C_0 == 0x7F) {
                 if ((!brothersTogether || player->field_352_7
-                     || brothersForm == BROTHERS_FORM_MOLE_LUIGI || brothersForm == 6)
+                     || brothersForm == BROTHERS_FORM_MOLE_LUIGI || brothersForm == BROTHERS_FORM_6)
                     && field_10E != 0) {
                     start = field_10E;
                 } else if (field_110 != 0) {
@@ -4099,10 +4113,10 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, bool arg2) {
 
     if (!field_209_0 && field_12A != 0 && field_12A <= 2 && (brothersTogether || player->field_352_7)) {
         if (player->field_340 == 2) {
-            player->sub_8049BD8(1);
+            player->sub_8049BD8(ACTION_MODE_1);
             sub_802DDB4(player, player->field_352_7 ? 0 : brothersTogether, 0);
         } else if (player->field_352_7 && player->field_340 == 3) {
-            player->sub_8049BD8(2);
+            player->sub_8049BD8(ACTION_MODE_2);
             sub_802DDB4(player, player->field_352_7 ? 0 : brothersTogether, 0);
         } else if (player->field_341 != player->field_340) {
             player->sub_804FC90();
@@ -4333,19 +4347,19 @@ void FieldManager::sub_802C390() {
 
 void FieldManager::sub_802C428(int index, int value) {
     FieldPlayerCharacter* player = (FieldPlayerCharacter*)objects[index];
-    FieldStruct4* data = player->field_368;
+    PlayerAction* data = player->field_368;
 
     if (player->field_352_7) {
         if (value > 0) {
             value--;
         }
-    } else if ((!brothersTogether && value > 0) || data->field_0 == 10) {
+    } else if ((!brothersTogether && value > 0) || data->actionMode == ACTION_MODE_MARIO_ON_BARREL) {
         value--;
     }
     data->field_10[!player->field_352_7] = value;
-    sub_8018218(field_1C->field_0[4]->field_8 + byte_839F954[player->field_368->field_2] * 32,
+    sub_8018218(field_1C->field_0[4]->field_8 + byte_839F954[player->field_368->selectedAction] * 32,
                 (void*)(0x6010DC0 + player->objectIndex * 0x400),
-                byte_839F962[player->field_368->field_2] * 32, 0x20, 0);
+                byte_839F962[player->field_368->selectedAction] * 32, 0x20, 0);
 }
 
 void FieldManager::sub_802C4D4(u8 arg1, u8 arg2) {
@@ -4377,7 +4391,7 @@ void FieldManager::sub_802C4D4(u8 arg1, u8 arg2) {
 }
 
 void FieldManager::sub_802C588(FieldPlayerCharacter* player) {
-    switch (player->field_368->field_2) {
+    switch (player->field_368->selectedAction) {
         case 0:
             if ((brothersForm == BROTHERS_FORM_NORMAL || brothersForm == BROTHERS_FORM_MINI_MARIO)
                 && isUnderwater) {
@@ -4432,7 +4446,8 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
     switch (player->state) {
         case 58:
             if (--player->field_355 == 0) {
-                player->field_368->field_0 = player->otherBrother->field_368->field_0 = 0;
+                player->field_368->actionMode = player->otherBrother->field_368->actionMode =
+                    ACTION_MODE_NORMAL;
                 player->state = player->otherBrother->state = 0;
                 {
                     FieldPlayerCharacter* other = player->otherBrother;
@@ -4566,7 +4581,7 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             }
             player->updateAirborne();
             player->sub_804FB64(objects, 0, 0);
-            if (!(field_D0->field_0 & player->field_368->field_4) || player->airFrames != -1) {
+            if (!(field_D0->field_0 & player->field_368->actionButton) || player->airFrames != -1) {
                 if (player->airFrames != -1 || player->field_355 < 60) {
                     player->stopHandPower();
                     player->otherBrother->field_350_14 = 0;
@@ -4635,15 +4650,15 @@ void FieldManager::sub_802C774(FieldPlayerCharacter* player) {
             field_20B_7 = 0;
             field_208_0 = 1;
             brothersForm = BROTHERS_FORM_NORMAL;
-            player->field_368->field_0 = 0;
+            player->field_368->actionMode = ACTION_MODE_NORMAL;
             player->state = 0;
             player->field_350_14 = 0;
             player->field_260 = player->field_23E = walkSpeed;
-            if (player->otherBrother->field_368->field_0 == 1
-                || player->otherBrother->field_368->field_0 == 2) {
-                player->otherBrother->field_368->field_1 = 0;
+            if (player->otherBrother->field_368->actionMode == ACTION_MODE_1
+                || player->otherBrother->field_368->actionMode == ACTION_MODE_2) {
+                player->otherBrother->field_368->field_1 = ACTION_MODE_NORMAL;
             } else {
-                player->otherBrother->field_368->field_0 = 0;
+                player->otherBrother->field_368->actionMode = ACTION_MODE_NORMAL;
             }
             player->otherBrother->field_350_14 = 0;
             if (brothersTogether) {
@@ -4732,15 +4747,15 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
     field_208_0 = 1;
     brothersForm = BROTHERS_FORM_NORMAL;
     player->field_350_15 = 0;
-    player->field_368->field_0 = 0;
+    player->field_368->actionMode = ACTION_MODE_NORMAL;
     player->state = 0;
     player->field_350_14 = 0;
 
-    if (player->otherBrother->field_368->field_0 == 1
-        || player->otherBrother->field_368->field_0 == 2) {
-        player->otherBrother->field_368->field_1 = 0;
+    if (player->otherBrother->field_368->actionMode == ACTION_MODE_1
+        || player->otherBrother->field_368->actionMode == ACTION_MODE_2) {
+        player->otherBrother->field_368->field_1 = ACTION_MODE_NORMAL;
     } else {
-        player->otherBrother->field_368->field_0 = 0;
+        player->otherBrother->field_368->actionMode = ACTION_MODE_NORMAL;
     }
 
     player->isBarrel = false;
@@ -4767,7 +4782,7 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
 
 void FieldManager::sub_802D46C(struct struc_3000388* arg) {
     if (!field_2B8_4 && !field_291_0 && !leader->field_2B5_3 && arg != NULL && follower->state <= 4) {
-        if ((isUnderwater && leader->field_368->field_2 == 0 && leader->state <= 4)
+        if ((isUnderwater && leader->field_368->selectedAction == 0 && leader->state <= 4)
             || leader->state <= 1) {
             if (sub_8025D24(0)) {
                 if (!leader->field_368->field_16_7) {
@@ -4783,7 +4798,7 @@ void FieldManager::sub_802D46C(struct struc_3000388* arg) {
 
 void FieldManager::sub_802D544(struct struc_3000388* arg) {
     if (!field_2B8_4 && !field_291_0 && !follower->field_2B5_3 && arg != NULL
-        && ((isUnderwater && follower->field_368->field_2 == 0 && follower->state <= 4)
+        && ((isUnderwater && follower->field_368->selectedAction == 0 && follower->state <= 4)
             || follower->state <= 1)
         && sub_8025D24(1)) {
         if (!brothersTogether) {
@@ -4794,9 +4809,9 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                 sub_8029878();
             }
         } else {
-            struct FieldStruct4* data = follower->field_368;
+            struct PlayerAction* data = follower->field_368;
 
-            if (data->field_16_7 || data->field_2 == 0) {
+            if (data->field_16_7 || data->selectedAction == 0) {
                 if ((brothersForm == BROTHERS_FORM_NORMAL || brothersForm == BROTHERS_FORM_MINI_MARIO
                      || brothersForm == BROTHERS_FORM_MOLE_LUIGI
                      || brothersForm == BROTHERS_FORM_BARREL_LUIGI)
@@ -4818,7 +4833,7 @@ void FieldManager::sub_802D544(struct struc_3000388* arg) {
                     play_sfx_80195B4(sound, -1);
                 }
             } else if ((u16)leader->state <= 1) {
-                switch (data->field_2) {
+                switch (data->selectedAction) {
                     case 0:
                         break;
                     case 1:
@@ -4876,7 +4891,7 @@ void FieldManager::sub_802D92C() {
     int offsetX;
     int offsetY;
 
-    if (!field_209_6 && follower->field_368->field_2 == 1) {
+    if (!field_209_6 && follower->field_368->selectedAction == 1) {
         angle = (leader->direction ^ 4) << 5;
         field_248 = follower->x / 256;
         field_24A = follower->y / 256;
@@ -4909,7 +4924,7 @@ void FieldManager::sub_802DA10() {
     if (field_209_5) {
         return;
     }
-    switch (follower->field_368->field_2) {
+    switch (follower->field_368->selectedAction) {
         case 1:
             if (brothersForm == BROTHERS_FORM_NORMAL || brothersForm == BROTHERS_FORM_MINI_MARIO) {
                 if (follower->objectIndex == BROTHER_MARIO) {
@@ -5004,8 +5019,8 @@ bool FieldManager::sub_802DC0C(FieldPlayerCharacter* player) {
 }
 
 void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct struc_3000388* arg) {
-    FieldStruct4* data = player->field_368;
-    s8* list = data->field_8[index][data->field_0];
+    PlayerAction* data = player->field_368;
+    s8* list = data->field_8[index][data->actionMode];
     s8 previous;
     int changed;
     s8 value;
@@ -5014,7 +5029,7 @@ void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct s
     if (list[0] == -1) {
         return;
     }
-    previous = data->field_2;
+    previous = data->selectedAction;
     changed = 0;
     if (!player->field_2B5_0 && !player->field_2B5_3 && arg != NULL
         && sub_8025D24((player->field_352_7 ^ 1) + 2)
@@ -5031,13 +5046,14 @@ void FieldManager::sub_802DDB4(FieldPlayerCharacter* player, int index, struct s
         } while (flag != 0 && !CommonEvent::getFlag(CommonEvent::instance->fieldEngineFlags, 0, flag));
         changed = 1;
     }
-    data->field_2 = list[(s8)data->field_10[index]];
-    if (data->field_2 != previous) {
-        sub_8018218(field_1C->field_0[4]->field_8 + byte_839F954[player->field_368->field_2] * 32,
+    data->selectedAction = list[(s8)data->field_10[index]];
+    if (data->selectedAction != previous) {
+        sub_8018218(field_1C->field_0[4]->field_8
+                        + byte_839F954[player->field_368->selectedAction] * 32,
                     (void*)(0x6010DC0 + player->objectIndex * 0x400),
-                    byte_839F962[player->field_368->field_2] * 32, 0x20, 0);
+                    byte_839F962[player->field_368->selectedAction] * 32, 0x20, 0);
         if (changed) {
-            int sound = byte_839F9FC[player->objectIndex * 28 + index * 14 + data->field_2];
+            int sound = byte_839F9FC[player->objectIndex * 28 + index * 14 + data->selectedAction];
 
             if (sound != 0) {
                 play_sfx_80195B4(sound, -1);
@@ -5281,7 +5297,8 @@ u8 FieldManager::sub_802E688(bool32 isMole) {
 
 void FieldManager::sub_802E754(u8 arg1, u8 arg2, u8 arg3) {
     if (brothersTogether) {
-        if (brothersForm == 5 || brothersForm == 6 || brothersForm == BROTHERS_FORM_SURFBOARD_LUIGI) {
+        if (brothersForm == BROTHERS_FORM_5 || brothersForm == BROTHERS_FORM_6
+            || brothersForm == BROTHERS_FORM_SURFBOARD_LUIGI) {
             changeBrotherForm(BROTHERS_FORM_NORMAL, false);
         }
 
@@ -5357,10 +5374,10 @@ void FieldManager::sub_802EA70() {
     MapEventInfo::instance->field_530 = field_FA_5;
     leader = (FieldPlayerCharacter*)objects[luigiLeads];
     follower = (FieldPlayerCharacter*)objects[luigiLeads ^ 1];
-    leader->field_368->field_4 = 1;
-    leader->field_368->field_6 = 0x100;
-    follower->field_368->field_4 = 2;
-    follower->field_368->field_6 = 0x200;
+    leader->field_368->actionButton = A_BUTTON;
+    leader->field_368->switchButton = R_BUTTON;
+    follower->field_368->actionButton = B_BUTTON;
+    follower->field_368->switchButton = L_BUTTON;
     trailIndex = leader->field_358_4;
     leader->field_358_4 = follower->field_358_4;
     follower->field_358_4 = trailIndex;
@@ -5460,7 +5477,7 @@ void FieldManager::sub_802EF18() {
 
     dz = 0;
     follower->field_20C_26 = leader->field_20C_26 = 0;
-    if (brothersForm == 5) {
+    if (brothersForm == BROTHERS_FORM_5) {
         int step = 0x400 >> isUnderwater;
         int count;
         int i;
@@ -5554,7 +5571,7 @@ void FieldManager::sub_802EF18() {
     leader->previousZ = leader->z;
     leader->previousHeight = leader->height;
     leader->field_26_2 = leader->field_26_4 = leader->field_4E_2 = leader->field_4E_4 = 0;
-    if (brothersForm == 5) {
+    if (brothersForm == BROTHERS_FORM_5) {
         field_26E = 4;
         follower->state = leader->state = 0x71;
     } else {
@@ -5731,45 +5748,45 @@ void FieldManager::sub_802F938() {
     if (field_209_5) {
         sub_802DA10();
     } else {
-        switch (leader->field_368->field_0) {
-            case 3:
+        switch (leader->field_368->actionMode) {
+            case ACTION_MODE_HIGH_JUMP:
                 sub_80306A0();
                 break;
-            case 4:
+            case ACTION_MODE_SPIN_JUMP:
                 sub_8032A90();
                 break;
-            case 5:
+            case ACTION_MODE_PUMP_MARIO:
                 sub_8031768();
                 break;
-            case 6:
-            case 7:
+            case ACTION_MODE_MOLE_LUIGI:
+            case ACTION_MODE_7:
                 sub_8033F5C();
                 break;
-            case 9:
+            case ACTION_MODE_BARREL_LUIGI:
                 sub_8034BF4();
                 break;
-            case 10:
+            case ACTION_MODE_MARIO_ON_BARREL:
                 sub_80350B4();
                 break;
-            case 11:
+            case ACTION_MODE_MINI_MARIO:
                 sub_8035DB0();
                 break;
-            case 12:
+            case ACTION_MODE_12:
                 sub_8036F84();
                 break;
-            case 13:
+            case ACTION_MODE_13:
                 sub_80382CC();
                 break;
-            case 14:
-            case 15:
+            case ACTION_MODE_14:
+            case ACTION_MODE_15:
                 sub_8039250();
                 break;
-            case 16:
-            case 17:
+            case ACTION_MODE_16:
+            case ACTION_MODE_17:
                 sub_8039C9C();
                 break;
-            case 18:
-            case 19:
+            case ACTION_MODE_18:
+            case ACTION_MODE_SURFBOARD_LUIGI:
                 sub_803AFCC();
                 break;
         }
@@ -5812,7 +5829,7 @@ void FieldManager::sub_802FAE4(int mode, int arg2) {
     if (brothersForm == BROTHERS_FORM_MINI_MARIO) {
         return;
     }
-    if (leader->field_368->field_0 <= 2) {
+    if (leader->field_368->actionMode <= ACTION_MODE_2) {
         return;
     }
     field_20A_1 = 1;
@@ -5858,7 +5875,7 @@ void FieldManager::sub_802FAE4(int mode, int arg2) {
             if (leader->state >= 73 && leader->state <= 75) {
                 break;
             }
-            if (leader->field_368->field_0 == 10) {
+            if (leader->field_368->actionMode == ACTION_MODE_MARIO_ON_BARREL) {
                 sub_8034FE8();
             } else {
                 breakOutOfBarrel((FieldPlayerCharacter*)objects[1]);
@@ -5988,7 +6005,7 @@ void FieldManager::sub_802FD70() {
         return;
     }
 
-    mask = byte_839F930[leader->field_368->field_2 * 2];
+    mask = byte_839F930[leader->field_368->selectedAction * 2];
     leader->field_368->field_16_7 = 0;
     if (mask & leader->field_368->field_16_0) {
         if (!leader->field_368->field_17_7) {
@@ -5998,7 +6015,7 @@ void FieldManager::sub_802FD70() {
         leader->field_368->field_16_7 = 1;
     }
 
-    mask = byte_839F930[follower->field_368->field_2 * 2 + brothersTogether];
+    mask = byte_839F930[follower->field_368->selectedAction * 2 + brothersTogether];
     follower->field_368->field_16_7 = 0;
     if (mask & follower->field_368->field_16_0) {
         if (!follower->field_368->field_17_7) {
@@ -6063,7 +6080,7 @@ void FieldManager::sub_8030484() {
         follower->y = leader->y;
     }
 
-    follower->field_368->field_0 = leader->field_368->field_0 = 3;
+    follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_HIGH_JUMP;
     follower->state = leader->state = 16;
     follower->field_350_14 = leader->field_350_14 = 1;
     follower->field_358_3 = leader->field_358_3 = 1;
@@ -6317,7 +6334,7 @@ void FieldManager::sub_80306A0() {
             if (follower->state == 28) {
                 callSub_802DF80 = true;
             }
-            follower->field_368->field_0 = leader->field_368->field_0 = 0;
+            follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_NORMAL;
             follower->state = leader->state = 0;
             follower->field_358_3 = leader->field_358_3 = 0;
             follower->field_350_14 = leader->field_350_14 = 0;
@@ -6448,7 +6465,7 @@ void FieldManager::sub_8031768() {
         if (--field_26E != 0) {
             return;
         }
-        follower->field_368->field_0 = leader->field_368->field_0 = 0;
+        follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_NORMAL;
         follower->state = leader->state = 0;
         {
             FieldPlayerCharacter* f = follower;
@@ -6538,7 +6555,8 @@ void FieldManager::sub_8031768() {
                     sub_802DF80(0);
                     field_20B_7 = 0;
                     if (shotBulletIndex == 0) {
-                        follower->field_368->field_0 = leader->field_368->field_0 = 0;
+                        follower->field_368->actionMode = leader->field_368->actionMode =
+                            ACTION_MODE_NORMAL;
                         setBrothersSpeeds(leader, follower, walkSpeed);
                         leader->isPump = 0;
                         leader->field_368->field_10[0] = leader->field_368->field_12;
@@ -6692,7 +6710,7 @@ void FieldManager::sub_8031768() {
                 break;
             }
             if (follower->state == 54) {
-                follower->field_368->field_0 = leader->field_368->field_0 = 0;
+                follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_NORMAL;
                 {
                     FieldPlayerCharacter* f = follower;
                     FieldPlayerCharacter* l = leader;
@@ -6736,7 +6754,7 @@ void FieldManager::sub_8032514() {
     field_246_1 = 0;
     field_248 = follower->x / 256;
     field_24A = follower->y / 256;
-    follower->field_368->field_0 = leader->field_368->field_0 = 4;
+    follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_SPIN_JUMP;
     follower->state = leader->state = 29;
     follower->field_350_14 = leader->field_350_14 = 1;
     follower->field_358_3 = leader->field_358_3 = 1;
@@ -7068,7 +7086,7 @@ void FieldManager::sub_8032A90() {
             if (follower->state == 38) {
                 callSub_802DF80 = true;
             }
-            follower->field_368->field_0 = leader->field_368->field_0 = 0;
+            follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_NORMAL;
             follower->state = leader->state = 0;
             follower->field_358_3 = leader->field_358_3 = 0;
             follower->field_350_14 = leader->field_350_14 = 0;
@@ -7134,7 +7152,7 @@ void FieldManager::sub_8032A90() {
 
 void FieldManager::hammerIntoGround() {
     sub_8030484_start(this);
-    follower->field_368->field_0 = leader->field_368->field_0 = 6;
+    follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_MOLE_LUIGI;
     follower->state = leader->state = 59;
     follower->field_350_14 = leader->field_350_14 = 1;
     follower->field_358_3 = leader->field_358_3 = 1;
@@ -7343,7 +7361,7 @@ void FieldManager::sub_8033F5C() {
 
             if (l->isMole) {
                 l->sub_804DDF4(&objects[2], objectCount - 2);
-                if (l->sub_80458B0() && l->field_368->field_0 != 7) {
+                if (l->sub_80458B0() && l->field_368->actionMode != ACTION_MODE_7) {
                     l->field_368->field_16_0 |= 1;
                 }
             }
@@ -7431,11 +7449,11 @@ void FieldManager::enterBarrel(FieldPlayerCharacter* player) {
     objects[player->field_33E]->setSpriteActive(0);
     barrelObjectIndex = player->field_33E;
     sub_802C4D4(1, 1);
-    player->field_368->field_0 = 9;
+    player->field_368->actionMode = ACTION_MODE_BARREL_LUIGI;
     player->state = 70;
     player->field_350_14 = 1;
     if (brothersTogether) {
-        player->otherBrother->field_368->field_0 = 9;
+        player->otherBrother->field_368->actionMode = ACTION_MODE_BARREL_LUIGI;
         player->otherBrother->field_350_14 = 1;
     }
     player->isMole = 0;
@@ -7496,7 +7514,7 @@ void FieldManager::jumpOntoBarrel() {
     field_24A = follower->y / 256;
     field_24C = field_248 - leader->x / 256;
     field_24E = field_24A - leader->y / 256;
-    follower->field_368->field_0 = leader->field_368->field_0 = 10;
+    follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_MARIO_ON_BARREL;
     follower->state = leader->state = 81;
     follower->field_350_14 = leader->field_350_14 = 1;
     follower->field_358_3 = leader->field_358_3 = 1;
@@ -7568,7 +7586,7 @@ void FieldManager::sub_8034BF4() {
                 follower->field_35A_1 = 0;
                 field_20B_7 = 0;
                 sub_802DF80(0);
-                follower->field_368->field_0 = leader->field_368->field_0 = 0;
+                follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_NORMAL;
                 follower->state = leader->state = 0;
                 follower->field_358_3 = leader->field_358_3 = 0;
                 follower->field_350_14 = leader->field_350_14 = 0;
@@ -7681,7 +7699,7 @@ void FieldManager::sub_80350B4() {
                     }
                 }
             }
-            if (!(field_D0->field_0 & follower->field_368->field_4)) {
+            if (!(field_D0->field_0 & follower->field_368->actionButton)) {
                 if (follower->field_355 < 60) {
                     follower->stopHandPower();
                     follower->state = 85;
@@ -7768,7 +7786,7 @@ void FieldManager::sub_80350B4() {
             if (!sub_8025D24(1)) {
                 break;
             }
-            switch (follower->field_368->field_2) {
+            switch (follower->field_368->selectedAction) {
                 case 1:
                     follower->startHammer(isUnderwater);
                     leader->field_350_14 = 1;
@@ -7804,7 +7822,7 @@ void FieldManager::sub_80350B4() {
             }
             follower->sub_8046980();
             follower->land();
-            follower->field_368->field_0 = leader->field_368->field_0 = 9;
+            follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_BARREL_LUIGI;
             follower->state = leader->state = 0;
             follower->field_358_3 = leader->field_358_3 = 0;
             follower->field_350_14 = leader->field_350_14 = 0;
@@ -7844,7 +7862,7 @@ void FieldManager::sub_8035974() {
         luigi->state = mario->state = 89;
         field_272 = !isUnderwater ? 10 : 20;
     }
-    luigi->field_368->field_0 = mario->field_368->field_0 = 11;
+    luigi->field_368->actionMode = mario->field_368->actionMode = ACTION_MODE_MINI_MARIO;
     mario->field_350_14 = 1;
     luigi->field_350_14 = 1;
     mario->field_358_3 = 1;
@@ -8225,7 +8243,7 @@ void FieldManager::sub_8035DB0() {
                         luigi->y &= ~0xFF;
                     }
                     luigi->sub_8046980();
-                    luigi->field_368->field_0 = mario->field_368->field_0 = 0;
+                    luigi->field_368->actionMode = mario->field_368->actionMode = ACTION_MODE_NORMAL;
                     luigi->state = mario->state = 0;
                     luigi->field_358_3 = mario->field_358_3 = 0;
                     luigi->field_350_14 = mario->field_350_14 = 0;
@@ -8272,7 +8290,7 @@ void FieldManager::sub_8035DB0() {
 void FieldManager::sub_8036E14() {
     sub_802C4D4(1, 1);
     resetLeader(this);
-    follower->field_368->field_0 = leader->field_368->field_0 = 12;
+    follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_12;
     follower->state = leader->state = 108;
     follower->field_350_14 = leader->field_350_14 = 1;
     follower->field_358_3 = leader->field_358_3 = 1;
@@ -8286,7 +8304,7 @@ void FieldManager::sub_8036E14() {
     follower->field_214_0 = 4;
     follower->sub_8049000(SPRITE_ID(0, 38));
     leader->field_239 = leader->sprite->speed = 8;
-    brothersForm = 5;
+    brothersForm = BROTHERS_FORM_5;
     play_sfx_80195B4(0x157, -1);
 }
 
@@ -8415,7 +8433,7 @@ void FieldManager::sub_8036F84() {
                 action = 3;
                 break;
             }
-            if (field_D0->field_0 & follower->field_368->field_4) {
+            if (field_D0->field_0 & follower->field_368->actionButton) {
                 break;
             }
             if (field_26E < 60) {
@@ -8606,7 +8624,7 @@ void FieldManager::sub_8036F84() {
                         action = 1;
                     }
                 }
-                if (field_D0->field_0 & leader->field_368->field_4) {
+                if (field_D0->field_0 & leader->field_368->actionButton) {
                     action = 1;
                 }
             }
@@ -8714,7 +8732,7 @@ void FieldManager::sub_8036F84() {
                                       walkSpeed);
                 follower->state = leader->state = 118;
             } else {
-                follower->field_368->field_0 = leader->field_368->field_0 = 0;
+                follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_NORMAL;
                 follower->state = leader->state = 0;
                 follower->field_350_14 = leader->field_350_14 = 0;
                 follower->field_358_3 = leader->field_358_3 = 0;
@@ -8750,7 +8768,7 @@ asm_unified(".include \"asm/nonmatching/sub_8038140__12FieldManager.s\"");
 void FieldManager::sub_8038140() {
     sub_802C4D4(1, 1);
     resetLeader(this);
-    follower->field_368->field_0 = leader->field_368->field_0 = 13;
+    follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_13;
     follower->state = leader->state = 119;
     follower->field_350_14 = leader->field_350_14 = 1;
     follower->field_358_3 = leader->field_358_3 = 1;
@@ -8767,7 +8785,7 @@ void FieldManager::sub_8038140() {
     leader->sub_8049000(SPRITE_ID(0, 52));
     follower->field_214_0 = 4;
     follower->sub_8049000(SPRITE_ID(0, 64));
-    brothersForm = 6;
+    brothersForm = BROTHERS_FORM_6;
     play_sfx_80195B4(0x87, -1);
 }
 #endif
@@ -8910,7 +8928,7 @@ void FieldManager::sub_80382CC() {
                     action = 2;
                     break;
                 }
-                if (field_D0->field_0 & follower->field_368->field_4) {
+                if (field_D0->field_0 & follower->field_368->actionButton) {
                     break;
                 }
                 if (field_26E < 60) {
@@ -9084,7 +9102,7 @@ void FieldManager::sub_80382CC() {
                               (leader->z + leader->height) / 256, walkSpeed);
         follower->state = leader->state = 127;
     } else {
-        follower->field_368->field_0 = leader->field_368->field_0 = 0;
+        follower->field_368->actionMode = leader->field_368->actionMode = ACTION_MODE_NORMAL;
         follower->state = leader->state = 0;
         follower->field_350_14 = leader->field_350_14 = 0;
         follower->field_358_3 = leader->field_358_3 = 0;

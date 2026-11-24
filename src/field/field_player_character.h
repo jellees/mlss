@@ -23,19 +23,47 @@ enum BrothersForm {
     BROTHERS_FORM_MINI_MARIO = 2,
     BROTHERS_FORM_MOLE_LUIGI = 3,
     BROTHERS_FORM_BARREL_LUIGI = 4,
+    BROTHERS_FORM_5 = 5, // sub_8036E14 (ACTION_MODE_12)
+    BROTHERS_FORM_6 = 6, // sub_8038140 (ACTION_MODE_13)
     BROTHERS_FORM_SURFBOARD_LUIGI = 7,
 };
 
-// FieldManager::field_20C[2], one per player character (FieldPlayerCharacter::field_368).
-struct FieldStruct4 {
-    u8 field_0;
-    u8 field_1; // Previous field_0 (FieldPlayerCharacter::sub_8049BD8)
-    u8 field_2;
+// PlayerAction::actionMode. Picks the per-frame handler in FieldManager::sub_802F938 (no entry: the
+// normal field update).
+enum PlayerActionMode {
+    ACTION_MODE_NORMAL = 0,
+    ACTION_MODE_1 = 1,            // Temporary (sub_8049BD8 when field_340 == 2); restored from field_1
+    ACTION_MODE_2 = 2,            // Temporary (sub_8049BD8 when field_340 == 3 and field_352_7)
+    ACTION_MODE_HIGH_JUMP = 3,    // sub_8030484 (selectedAction 4), handler sub_80306A0
+    ACTION_MODE_SPIN_JUMP = 4,    // sub_8032514 (selectedAction 3), handler sub_8032A90
+    ACTION_MODE_PUMP_MARIO = 5,   // changeBrotherForm, handler sub_8031768
+    ACTION_MODE_MOLE_LUIGI = 6,   // hammerIntoGround, changeBrotherForm, handler sub_8033F5C
+    ACTION_MODE_7 = 7,            // Also handled by sub_8033F5C
+    ACTION_MODE_BARREL_LUIGI = 9, // enterBarrel, changeBrotherForm, handler sub_8034BF4
+    ACTION_MODE_MARIO_ON_BARREL = 10, // jumpOntoBarrel, handler sub_80350B4
+    ACTION_MODE_MINI_MARIO = 11,      // sub_8035974, changeBrotherForm, handler sub_8035DB0
+    ACTION_MODE_12 = 12,              // sub_8036E14, handler sub_8036F84
+    ACTION_MODE_13 = 13,              // sub_8038140, handler sub_80382CC
+    ACTION_MODE_14 = 14,              // Handler sub_8039250
+    ACTION_MODE_15 = 15,              // Handler sub_8039250
+    ACTION_MODE_16 = 16,              // Handler sub_8039C9C, firehand luigi angry
+    ACTION_MODE_17 = 17,              // Handler sub_8039C9C, thunderhand mario angry
+    ACTION_MODE_18 = 18,              // Handler sub_803AFCC
+    ACTION_MODE_SURFBOARD_LUIGI =
+        19, // Room load with BROTHERS_FORM_SURFBOARD_LUIGI, handler sub_803AFCC
+};
+
+// A brother's action state and controls: FieldManager::field_20C[2], one per player character
+// (FieldPlayerCharacter::field_368).
+struct PlayerAction {
+    u8 actionMode;     // Selects the per-frame handler (FieldManager::sub_802F938), e.g. 9: barrel
+    u8 field_1;        // Previous actionMode (FieldPlayerCharacter::sub_8049BD8)
+    u8 selectedAction; // Run by the action button (1: hammer, 2: hand power, ...)
     u8 pad_3;
-    u16 field_4;
-    u16 field_6;
-    s8** field_8[2]; // Lists of field_2 values, ended by -1, per field_0 (dword_839F900)
-    u8 field_10[2];  // Indexed by !FieldPlayerCharacter::field_352_7
+    u16 actionButton; // Key mask: 1 (A) for the brother in front, 2 (B) for the one behind
+    u16 switchButton; // Key mask: 0x100 (R) for the leader, 0x200 (L) for the follower
+    s8** field_8[2];  // Lists of selectedAction values, ended by -1, per actionMode (dword_839F900)
+    u8 field_10[2];   // Indexed by !FieldPlayerCharacter::field_352_7
     s8 field_12 : 8;
     s8 field_13 : 8;
     s8 field_14 : 8;
@@ -109,7 +137,7 @@ class FieldPlayerCharacter : public FieldObject {
     s16 field_362; // method5's copy of velocityX
     s16 field_364; // method5's copy of velocityY
     u8 pad_366[0x2];
-    struct FieldStruct4* field_368;
+    struct PlayerAction* field_368;
     // A second sprite that follows the main one (method8), saved and restored through the fields below
     // (method2).
     struct Sprite* field_36C;

@@ -2,7 +2,7 @@
 #define FIELD_H
 
 #include "process.h"
-#include "field/field_player_character.h" // FieldStruct4 (FieldManager::field_20C)
+#include "field/field_player_character.h" // PlayerAction (FieldManager::field_20C)
 
 class S_FX;
 class FieldProcess803EA00;
@@ -224,7 +224,7 @@ class FieldManager : public Process {
     u32 field_20B_5 : 1;
     u32 field_20B_6 : 1;
     u32 field_20B_7 : 1;
-    FieldStruct4 field_20C[2];
+    PlayerAction field_20C[2];
     void* field_23C;
     u16 field_240;
     u16 field_242;

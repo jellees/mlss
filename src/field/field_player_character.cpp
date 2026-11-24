@@ -505,7 +505,7 @@ void FieldPlayerCharacter::startHandPower() {
     field_214_0 = 4;
     sub_8049000(objectIndex == BROTHER_MARIO ? (isMini ? SPRITE_ID(0, 42) : SPRITE_ID(0, 38))
                                              : SPRITE_ID(0, 64));
-    showHandPowerSprite(field_368->field_0 == 11 ? 1 : 0);
+    showHandPowerSprite(field_368->actionMode == ACTION_MODE_MINI_MARIO ? 1 : 0);
     play_sfx_80195B4(objectIndex == BROTHER_MARIO ? 0x157 : 0x87, -1);
     state = 10;
     field_355 = 0;
@@ -639,12 +639,12 @@ void FieldPlayerCharacter::sub_8049AB4(int mode, int animation) {
 }
 
 void FieldPlayerCharacter::sub_8049BD8(int value) {
-    if (field_368->field_0 != value) {
+    if (field_368->actionMode != value) {
         if (field_368->field_13 == -1) {
-            field_368->field_1 = field_368->field_0;
+            field_368->field_1 = field_368->actionMode;
             field_368->field_13 = field_368->field_10[!field_352_7];
         }
-        field_368->field_0 = value;
+        field_368->actionMode = value;
         field_368->field_10[!field_352_7] = 0;
     }
 }
@@ -2731,7 +2731,7 @@ inline void FieldPlayerCharacter::sub_804FCD4() {
 
 inline void FieldPlayerCharacter::sub_804FC90() {
     if (field_368->field_13 != -1) {
-        field_368->field_0 = field_368->field_1;
+        field_368->actionMode = field_368->field_1;
         field_368->field_10[!field_352_7] = field_368->field_13;
         field_368->field_13 = -1;
     }
