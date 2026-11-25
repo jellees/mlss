@@ -23,8 +23,8 @@ enum BrothersForm {
     BROTHERS_FORM_MINI_MARIO = 2,
     BROTHERS_FORM_MOLE_LUIGI = 3,
     BROTHERS_FORM_BARREL_LUIGI = 4,
-    BROTHERS_FORM_5 = 5, // sub_8036E14 (ACTION_MODE_12)
-    BROTHERS_FORM_6 = 6, // sub_8038140 (ACTION_MODE_13)
+    BROTHERS_FORM_FIRE_DASH = 5,
+    BROTHERS_FORM_THUNDER_TICKLE = 6,
     BROTHERS_FORM_SURFBOARD_LUIGI = 7,
 };
 
@@ -32,25 +32,43 @@ enum BrothersForm {
 // normal field update).
 enum PlayerActionMode {
     ACTION_MODE_NORMAL = 0,
-    ACTION_MODE_1 = 1,            // Temporary (sub_8049BD8 when field_340 == 2); restored from field_1
-    ACTION_MODE_2 = 2,            // Temporary (sub_8049BD8 when field_340 == 3 and field_352_7)
-    ACTION_MODE_HIGH_JUMP = 3,    // sub_8030484 (selectedAction 4), handler sub_80306A0
-    ACTION_MODE_SPIN_JUMP = 4,    // sub_8032514 (selectedAction 3), handler sub_8032A90
+    ACTION_MODE_TALK = 1,         // Temporary (sub_8049BD8 when field_340 == 2); restored from field_1
+    ACTION_MODE_INTERACT = 2,     // Temporary (sub_8049BD8 when field_340 == 3 and field_352_7)
+    ACTION_MODE_HIGH_JUMP = 3,    // sub_8030484 (ACTION_HIGH_JUMP), handler sub_80306A0
+    ACTION_MODE_SPIN_JUMP = 4,    // sub_8032514 (ACTION_SPIN_JUMP), handler sub_8032A90
     ACTION_MODE_PUMP_MARIO = 5,   // changeBrotherForm, handler sub_8031768
     ACTION_MODE_MOLE_LUIGI = 6,   // hammerIntoGround, changeBrotherForm, handler sub_8033F5C
     ACTION_MODE_7 = 7,            // Also handled by sub_8033F5C
     ACTION_MODE_BARREL_LUIGI = 9, // enterBarrel, changeBrotherForm, handler sub_8034BF4
-    ACTION_MODE_MARIO_ON_BARREL = 10, // jumpOntoBarrel, handler sub_80350B4
-    ACTION_MODE_MINI_MARIO = 11,      // sub_8035974, changeBrotherForm, handler sub_8035DB0
-    ACTION_MODE_12 = 12,              // sub_8036E14, handler sub_8036F84
-    ACTION_MODE_13 = 13,              // sub_8038140, handler sub_80382CC
-    ACTION_MODE_14 = 14,              // Handler sub_8039250
-    ACTION_MODE_15 = 15,              // Handler sub_8039250
-    ACTION_MODE_16 = 16,              // Handler sub_8039C9C, firehand luigi angry
-    ACTION_MODE_17 = 17,              // Handler sub_8039C9C, thunderhand mario angry
-    ACTION_MODE_18 = 18,              // Handler sub_803AFCC
+    ACTION_MODE_MARIO_ON_BARREL = 10,            // jumpOntoBarrel, handler sub_80350B4
+    ACTION_MODE_MINI_MARIO = 11,                 // sub_8035974, changeBrotherForm, handler sub_8035DB0
+    ACTION_MODE_FIRE_DASH = 12,                  // sub_8036E14, handler sub_8036F84
+    ACTION_MODE_THUNDER_TICKLE = 13,             // sub_8038140, handler sub_80382CC
+    ACTION_MODE_14 = 14,                         // Handler sub_8039250
+    ACTION_MODE_15 = 15,                         // Handler sub_8039250
+    ACTION_MODE_FIRE_DASH_LUIGI_ANGRY = 16,      // When fire dash is not yet unlocked.
+    ACTION_MODE_THUNDER_TICKLE_MARIO_ANGRY = 17, // When thunder tickle is not yet unlocked
+    ACTION_MODE_18 = 18,                         // Handler sub_803AFCC
     ACTION_MODE_SURFBOARD_LUIGI =
         19, // Room load with BROTHERS_FORM_SURFBOARD_LUIGI, handler sub_803AFCC
+};
+
+// PlayerAction::selectedAction: what the action button does (the HUD action icon).
+enum PlayerActionType {
+    ACTION_JUMP = 0,
+    ACTION_HAMMER = 1,
+    ACTION_HAND = 2,
+    ACTION_SPIN_JUMP = 3,
+    ACTION_HIGH_JUMP = 4,
+    ACTION_TALK = 5,
+    ACTION_INTERACT = 6,
+    ACTION_JUMP_ON_BARREL = 7,
+    ACTION_DIG_OUT = 8,
+    ACTION_JUMP_OFF_BARREL = 9,
+    ACTION_BREAK_BARREL = 10,
+    ACTION_SURFBOARD_11 = 11,
+    ACTION_SURFBOARD_JUMP = 12,
+    ACTION_DISABLED = 13,
 };
 
 // A brother's action state and controls: FieldManager::field_20C[2], one per player character
