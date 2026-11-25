@@ -78,7 +78,8 @@ struct GameState {
     u16 field_89C;
     u8 pad2_2[0x22];
     u8 field_8C0;
-    u8 pad3[0xF];
+    u8 field_8C1; // Frame step (sub_803E070)
+    u8 pad3[0xE];
     void* field_8D0;
 };
 
@@ -457,7 +458,6 @@ void sub_805A1A8(struct Process*);
 void sub_8122BA0(int, int);
 void sub_812F5A4(int, int);
 void stop_all_sfx_801959C(void);
-void sub_803C8A4(struct FieldManager*, int, int);
 void sub_80FAFD8(void*, int);
 void sub_81166AC(struct Process*, int);
 void popup_animate(struct Popup*);
@@ -647,10 +647,7 @@ void sub_8029888(void (*)(void), int);
 void sub_8029910(void);
 void sub_805BFF0(struct Process*);
 void sub_805BED8(struct Process*);
-void sub_803CB5C(struct FieldManager*);
-u8 sub_803E9F0(struct FieldManager*);
 void sub_8051208(struct FieldObject*, u32);
-void sub_803CF64(struct FieldManager*);
 void sub_80EF618(struct EVTS*, int, void*, int);
 void sub_80EF874(struct EVTS*, u8, u32, int, int, int, u16);
 void sub_805C9DC(void*, u8);
@@ -732,6 +729,33 @@ extern struct SurfboardExit stru_839FBC4[]; // FieldManager::sub_803AFCC: surfbo
 extern u16 word_839FBE4[8][4];  // FieldManager::sub_803AFCC: D-pad states that turn the surfboard, per direction
 extern s8 byte_839FC24[4];      // FieldManager::sub_803AFCC: angle change per word_839FBE4 column
 extern u16 word_839FC28[8][3];  // FieldManager::sub_803AFCC: D-pad states that brake the surfboard, per direction
+extern u16 word_839FC58[];       // FieldManager::sub_803D05C: 4 pairs of (frame, animation), hand power
+extern u8 byte_839FC68[];        // FieldManager::sub_803D05C: word_839FC74 index per 4 frames, 0x80: last
+extern u16 word_839FC74[];       // FieldManager::sub_803D05C: (sprite, yScale) pairs
+extern u8 byte_839FCB0[];        // FieldManager::sub_803D6D8: word_839FCBC index per 4 frames, 0x80: last
+extern u16 word_839FCBC[];       // FieldManager::sub_803D6D8: (sprite, yScale) pairs
+extern u8 byte_839FCF8[];        // FieldManager::sub_803DB0C: word_839FD04 index per 4 frames, 0x80: last
+extern u16 word_839FD04[];       // FieldManager::sub_803DB0C: (sprite, yScale) pairs
+extern u16 word_839FD40[5];      // FieldManager::sub_803DC88: sprites selecting FieldPlayerCharacter::field_358_13
+extern s16 word_839FD4A[60];      // FieldManager::sub_803E070: battle-start star, 20 vertices (x, y, z)
+extern u8 byte_839FDC2[26][5];    // FieldManager::sub_803E070: star faces (0: triangle, 1: quad; vertex indices)
+extern u16 word_839FE44[16];      // FieldManager::sub_803E070: palette copied to 0x02000260
+extern u16 word_839FE64[];        // FieldManager::sub_803E070: battle start sound, 6 per row, row by brother
+extern struct BGBM* dword_3000D88; // FieldManager::sub_803E070: "BGBM"
+extern s16* dword_3000D8C;        // FieldManager::sub_803E070: "PBUF", transformed vertices
+extern u8* dword_3000D90;         // FieldManager::sub_803E070: "SBUF", face draw order
+extern s16* dword_3000D94;        // FieldManager::sub_803E070: "SZBF", face depths
+extern u8 byte_3000D98;           // FieldManager::sub_803E070: rotation angles
+extern u8 byte_3000D99;
+extern u8 byte_3000D9A;
+extern s16 word_3000D9C;          // FieldManager::sub_803E070: scale
+extern u8 byte_3000D9E;
+void sub_801DB58(void*);
+void sub_801DC00(void*, int);
+void sub_801DC38(void*);
+void sub_801DC4C(void*, int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, int color, bool arg10);
+void sub_801DD80(void*, int x0, int y0, int x1, int y1, int x2, int y2, int color, bool arg8);
+void sub_801DE8C(void*);
 extern u16 word_839FA58[]; // FieldManager::sub_8031768: yScale per sprite frame
 extern u16 word_839FA78[]; // FieldManager::sub_8031768: (height, xScale) pairs per step
 extern s8 byte_839F630[];  // FieldManager::sub_80306A0: height offset (x 256) per field_250

@@ -273,7 +273,7 @@ _08027984:
 	adds r0, r6, #0x0
 	movs r1, #0x00
 	movs r2, #0x01
-	bl sub_803C8A4
+	bl sub_803C8A4__12FieldManageriUc
 	add sp, #0x008
 	pop {r3, r4, r5}
 	mov r8, r3

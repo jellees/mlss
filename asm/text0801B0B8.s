@@ -1267,8 +1267,8 @@ _0801BD7A:
 	bx r0
 _0801BD80: .4byte 0x03000D44
 _0801BD84: .4byte 0x081E23C8
-	thumb_func_start sub_801BD88
-sub_801BD88:
+	thumb_func_start __4BGBMUsUsUc
+__4BGBMUsUsUc:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9
@@ -3199,8 +3199,8 @@ _0801DEA0:
 _0801DF08: .4byte 0x0000027F
 _0801DF0C: .4byte 0x00007FFF
 _0801DF10: .4byte 0xFFFFF000
-	thumb_func_start sub_801DF14
-sub_801DF14:
+	thumb_func_start _._4BGBM
+_._4BGBM:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}

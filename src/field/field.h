@@ -294,8 +294,9 @@ class FieldManager : public Process {
     u8 field_291_0 : 1;
     u8 field_291_1 : 1;
     u8 field_291_2 : 1;
-    u8 field_291_3 : 5;
-    u8 pad_292[0x2];
+    u8 field_291_3 : 3;
+    u8 field_291_6 : 2;
+    s16 field_292;
     u16 field_294;
     u8 pad_296[0x12];
     u8 field_2A8_0 : 5; // Battle: index of the monster
@@ -319,7 +320,7 @@ class FieldManager : public Process {
     u8 field_2B1_5 : 3;
     s16 field_2B2;
     s16 field_2B4;
-    u8 pad_2B6[0x2];
+    u16 field_2B6;
     u8 field_2B8_0 : 1;
     u8 field_2B8_1 : 3;
     u8 field_2B8_4 : 1;
@@ -542,6 +543,20 @@ class FieldManager : public Process {
     void sub_803C7D8(FieldPlayerCharacter* player);
     void sub_803C834(FieldPlayerCharacter* player);
     void sub_803C898(int form);
+    void sub_803C8A4(int arg1, u8 arg2);
+    void sub_803CB5C();
+    void sub_803CF64();
+    void sub_803D05C(FieldPlayerCharacter* player);
+    void sub_803D6D8();
+    void sub_803DB0C(FieldPlayerCharacter* player);
+    void sub_803DBE4(FieldPlayerCharacter* player);
+    void sub_803DC88(FieldPlayerCharacter* player);
+    void sub_803DD68(FieldPlayerCharacter* player);
+    void sub_803DE2C();
+    void sub_803DF00(FieldPlayerCharacter* player);
+    void sub_803DF9C(FieldPlayerCharacter* player);
+    void sub_803E070();
+    bool sub_803E9F0();
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
     void sub_8027A04(int arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,
