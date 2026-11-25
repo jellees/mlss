@@ -38,6 +38,14 @@ struct Warp {
     u8 field_B;
 };
 
+// Where the surfboard ride leaves the room (FieldManager::sub_803AFCC, table at 0x0839FBC4). The
+// list has no end marker: the current room must be in it.
+struct SurfboardExit {
+    u16 roomId;
+    u16 pad_2;
+    struct Warp warp;
+};
+
 struct FieldStruct1 {
     struct Sprite* sprite;
     s16 field_4;
@@ -246,12 +254,17 @@ class FieldManager : public Process {
     u16 field_258;
     s16 field_25A;
     u8 field_25C; // Index of the object the leader climbs onto (sub_80328B4)
-    u8 pad_25D[0x4];
+    u8 pad_25D[0x3];
+    u8 field_260;
     s8 field_261;
     u8 pad_262[0x2];
-    u32 field_264;
-    u16 field_268;
-    u16 field_26A_0 : 6;
+    s32 field_264;
+    s16 field_268;
+    u16 field_26A_0 : 1;
+    u16 field_26A_1 : 1;
+    u16 field_26A_2 : 1;
+    u16 field_26A_3 : 1;
+    u16 field_26A_4 : 2;
     u16 field_26A_6 : 1;
     u16 barrelObjectIndex : 6; // Index of the object the player climbs into (enterBarrel)
     u16 shotBulletIndex : 3;   // Next shotBullets slot: counts up for jets, down from 3 for bubbles
@@ -491,6 +504,26 @@ class FieldManager : public Process {
     void jumpOntoBarrel();
     void sub_8034BF4();
     void sub_803A584();
+    void sub_803AAE4();
+    void sub_803AC8C();
+    void sub_803ADA8(bool arg);
+    void sub_803AE38();
+    void sub_803C424();
+    bool sub_803C440();
+    bool sub_803C468();
+    bool sub_803C4A0();
+    bool sub_803C4D8();
+    bool sub_803C508();
+    void sub_803C538(int mode);
+    int sub_803C544();
+    void sub_803C5A4();
+    void sub_803C5F4(int arg);
+    void sub_803C610();
+    void sub_803C638();
+    u8 sub_803C66C(int index);
+    void sub_803C6C8(int mask);
+    void sub_803C720(int mask);
+    void sub_803C788(FieldPlayerCharacter* player);
     void sub_80350B4();
     void sub_8035974();
     void sub_8035B98();
@@ -499,11 +532,16 @@ class FieldManager : public Process {
     void sub_8036F84();
     void sub_8038140();
     void sub_80382CC();
+    void sub_8039078();
     void sub_8039250();
+    void sub_8039A00();
+    void sub_8039B5C();
     void sub_8039C9C();
+    void sub_803A438();
     void sub_803AFCC();
     void sub_803C7D8(FieldPlayerCharacter* player);
     void sub_803C834(FieldPlayerCharacter* player);
+    void sub_803C898(int form);
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
     void sub_8027A04(int arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,

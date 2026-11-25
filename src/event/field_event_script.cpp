@@ -643,7 +643,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
             ((FieldManager*)parentProcess)->sub_802FAE4(arguments[0], 0);
             break;
         case 172:
-            sub_803C538((FieldManager*)parentProcess, arguments[0]);
+            ((FieldManager*)parentProcess)->sub_803C538(arguments[0]);
             break;
         case 173:
             return sub_80F0704(this, script);

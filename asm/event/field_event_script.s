@@ -4382,7 +4382,7 @@ sub_80F0704:
 	push {r4, lr}
 	adds r4, r1, #0x0
 	ldr r0, [r0, #0x14]
-	bl sub_803C508
+	bl sub_803C508__12FieldManager
 	lsls r0, r0, #0x18
 	cmp r0, #0x00
 	bne _080F0718
@@ -4456,7 +4456,7 @@ sub_80F0780:
 	cmp r1, #0x05
 	beq _080F078E
 	ldr r0, [r0, #0x14]
-	bl sub_803C898
+	bl sub_803C898__12FieldManageri
 _080F078E:
 	movs r0, #0x01
 	pop {r1}
@@ -4517,7 +4517,7 @@ _080F083A:
 	b _080F0872
 _080F0842:
 	ldr r0, [r3, #0x14]
-	bl sub_803C4A0
+	bl sub_803C4A0__12FieldManager
 	b _080F0864
 _080F084A:
 	ands r2, r1
@@ -4532,7 +4532,7 @@ _080F0856:
 	b _080F0872
 _080F085E:
 	ldr r0, [r3, #0x14]
-	bl sub_803C468
+	bl sub_803C468__12FieldManager
 _080F0864:
 	lsls r0, r0, #0x18
 	cmp r0, #0x00

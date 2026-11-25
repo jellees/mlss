@@ -104,7 +104,7 @@ class FieldPlayerCharacter : public FieldObject {
     u8 field_341; // method5's copy of field_340
     u8 field_342;
     s8 field_343; // method5's copy of field_342
-    u8 field_344;
+    s8 field_344;
     s8 field_345; // method5's copy of field_344
     u8 field_346;
     u8 field_347;

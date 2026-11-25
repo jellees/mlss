@@ -453,7 +453,6 @@ void sub_812F5D8(void*, u8, char*);
 void sub_8018818(void);
 void sub_812418C(void);
 u16 sub_8124270(u16, int);
-void sub_803C610(struct FieldManager*);
 void sub_805A1A8(struct Process*);
 void sub_8122BA0(int, int);
 void sub_812F5A4(int, int);
@@ -607,7 +606,6 @@ s8 sub_80F1C34(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
 s8 sub_80F1CF8(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
 s8 sub_80F1C7C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*, u8, u8);
 void sub_80E71D0(void*, u8, s16, s16, s16);
-void sub_803C538(struct FieldManager*, int);
 void sub_819A138(void*, u32);
 void sub_805A0EC(struct Process*, int, u16*, u16*);
 void sub_805C73C(struct Process*, u32);
@@ -644,14 +642,7 @@ void sub_8019650(int, int, u8);
 void sub_8019628(int);
 u8 sub_80195F8(int);
 int sub_8019610(int);
-void sub_803C788(struct FieldManager*, void*);
 void init_btl_process_80FC25C(void*, u8, char*, void*);
-void sub_803C720(struct FieldManager*, int);
-void sub_8039078(struct FieldManager*);
-void sub_8039A00(struct FieldManager*);
-void sub_8039B5C(struct FieldManager*);
-void sub_803A438(struct FieldManager*);
-int sub_803C544(struct FieldManager*);
 void sub_8029888(void (*)(void), int);
 void sub_8029910(void);
 void sub_805BFF0(struct Process*);
@@ -659,7 +650,6 @@ void sub_805BED8(struct Process*);
 void sub_803CB5C(struct FieldManager*);
 u8 sub_803E9F0(struct FieldManager*);
 void sub_8051208(struct FieldObject*, u32);
-void sub_803C5A4(struct FieldManager*);
 void sub_803CF64(struct FieldManager*);
 void sub_80EF618(struct EVTS*, int, void*, int);
 void sub_80EF874(struct EVTS*, u8, u32, int, int, int, u16);
@@ -705,6 +695,7 @@ extern u8
     byte_839F954[]; // FieldManager::sub_802C428: tile offset (x 32 bytes) per PlayerAction::selectedAction
 extern u8
     byte_839F962[]; // FieldManager::sub_802C428: tile count (x 32 bytes) per PlayerAction::selectedAction
+extern u8 byte_839F970[]; // FieldManager::sub_803C66C: per PlayerAction::field_10 value
 extern u16 word_839F974[]; // FieldManager::sub_802C774: 4 pairs of (frame, animation)
 extern u16 word_839F984[]; // FieldManager::sub_802DDB4: [objectIndex][index]
 extern u16 word_83BA4B4[]; // sub_80E9D50: height per index
@@ -733,9 +724,19 @@ extern s8 byte_839F65A[];  // FieldManager::sub_8035DB0: yScale / 16 per step
 extern u16 word_839FB0C[];   // FieldManager::sub_8036F84: 4 entries of (frame, animation, speed)
 extern u16 word_839FB24[][3]; // FieldManager::sub_8036F84: D-pad states per direction
 extern u16 word_839FB54[];    // FieldManager::sub_80382CC: 4 pairs of (frame, animation)
+extern u16 word_839FB64[];    // FieldManager::sub_8039C9C: 4 triples of (frame, animation, speed), state 144
+extern u16 word_839FB7C[];    // FieldManager::sub_8039C9C: 4 triples of (frame, animation, speed), state 152
+extern u16 word_839FB94[];    // FieldManager::sub_803A584: 4 triples of (frame, animation, speed), unused
+extern u16 word_839FBAC[];    // FieldManager::sub_803A584: 4 triples of (frame, animation, speed)
+extern struct SurfboardExit stru_839FBC4[]; // FieldManager::sub_803AFCC: surfboard exit per room
+extern u16 word_839FBE4[8][4];  // FieldManager::sub_803AFCC: D-pad states that turn the surfboard, per direction
+extern s8 byte_839FC24[4];      // FieldManager::sub_803AFCC: angle change per word_839FBE4 column
+extern u16 word_839FC28[8][3];  // FieldManager::sub_803AFCC: D-pad states that brake the surfboard, per direction
 extern u16 word_839FA58[]; // FieldManager::sub_8031768: yScale per sprite frame
 extern u16 word_839FA78[]; // FieldManager::sub_8031768: (height, xScale) pairs per step
 extern s8 byte_839F630[];  // FieldManager::sub_80306A0: height offset (x 256) per field_250
+extern s8 byte_839F6CE[];  // FieldManager::sub_8039250: (xScale / 16, yScale x 36 / 256) per field_26E, Luigi
+extern s8 byte_839F730[];  // FieldManager::sub_8039250: (xScale / 16, yScale x 32 / 256) per field_26E, Mario
 extern u8 byte_839F620[];  // Direction (0-7) per ArcTan2 result / 0x1000 (FieldManager::sub_802C208)
 extern struct EVTS* dword_3000D78;
 // ARM code in ROM that is copied to IWRAM: the script bit reader sub_8000F9C ends where sub_8001010
