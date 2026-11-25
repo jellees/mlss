@@ -171,10 +171,6 @@ FieldManager::~FieldManager() {
     gGameState.field_88A_5 = 0;
 }
 
-static inline u8 isUnderwaterRoom(FieldManager* manager) {
-    return (manager->field_D4->flags & ROOM_FLAG_UNDERWATER) != 0;
-}
-
 static inline int getDistance(FieldObject* a, FieldObject* b) {
     int dx = a->x - b->x;
     int dy = a->y - b->y;
@@ -246,7 +242,7 @@ void FieldManager::update() {
 
             MapEventInfo::instance->field_530 = MapEventInfo::instance->field_528;
             field_D4 = &stru_83A78D4[roomId];
-            isUnderwater = isUnderwaterRoom(this);
+            isUnderwater = (field_D4->flags & ROOM_FLAG_UNDERWATER) != 0;
             field_126 = field_D4->objectsIndex;
             field_D8 = sub_80FB7E0(field_D4->mapScriptsIndex);
             field_DC = sub_80FB7F0(field_D4->itemBlocksIndex);
@@ -2417,9 +2413,8 @@ void FieldManager::sub_8027D64() {
     currentWarp = NULL;
 }
 
-// A helper to match sub_8027E90. We need to see if this is emitted at the end of the file or whether
-// this is really just a static inline like this. It cannot be part of the class definition because then
-// it would be emitted.
+// A helper to match sub_8027E90. Not an inline member: the inline members of this file all have
+// out-of-line copies at its end (sub_803C468-sub_803C898), and none of them is this getter.
 static inline u8 getObjectCount(FieldManager* manager) {
     return manager->objectCount;
 }
@@ -6181,8 +6176,6 @@ void FieldManager::sub_80303C4(FieldPlayerCharacter* player) {
     }
 }
 
-// Shared start of the brothers' form actions (sub_8030484, sub_80313C0, ...). A static function rather
-// than an inline member: #pragma implementation would also emit an inline member out of line.
 void FieldManager::sub_8030484() {
     int height;
     int jumpHeight;
@@ -7303,7 +7296,6 @@ void FieldManager::hammerIntoGround() {
     field_272 = !isUnderwater ? 10 : 20;
 }
 
-// Inlined in digOutOfGround (first copy at 0x08033C00) and breakOutOfBarrel.
 /**
  * Performs Luigi digging himself out of the ground. Also handles digging up whatever lies at that spot.
  */
@@ -8422,7 +8414,6 @@ void FieldManager::sub_8036E14() {
     play_sfx_80195B4(0x157, -1);
 }
 
-// Inlined in sub_8036F84 (first copy at 0x080370D8) and twice in sub_80382CC.
 void FieldManager::sub_8036F84() {
     u8 moved = false;
     u8 action;
