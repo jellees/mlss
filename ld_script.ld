@@ -39,6 +39,7 @@ SECTIONS
         src/sprite.o(.text);
         src/field/field.o(.text);
         asm/field/field.o(.text);
+        src/field/text0803C8A4.o(.text);
         asm/text0803EA00.o(.text);
         src/field/field_object.o(.text);
         src/field/field_player_character.o(.text);
@@ -114,6 +115,7 @@ SECTIONS
         src/sprite.o(.rodata);
         src/field/field.o(.rodata);
         asm/field/field.o(.rodata);
+        src/field/text0803C8A4.o(.rodata);
         src/field/field_monster.o(.rodata);
         src/sign.o(.rodata);
         src/system_screens.o(.rodata);
