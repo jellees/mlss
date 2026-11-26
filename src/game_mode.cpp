@@ -8,12 +8,12 @@
 #include "system_screens.h"
 #include "title_screen.h"
 
-inline void GameMode::sub_801B0AC(u16 mask) {
-    word_3000D3C = mask;
+inline void GameMode::setBuzzerKeys(u16 mask) {
+    gBuzzerKeys = mask;
 }
 
-inline void GameMode::sub_801B084() {
-    if (gGameState.rawInput.pressed & word_3000D3C) {
+inline void GameMode::playBuzzerForKeys() {
+    if (gGameState.rawInput.pressed & gBuzzerKeys) {
         play_sfx_80195B4(0x50, -1);
     }
 }

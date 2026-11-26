@@ -231,7 +231,7 @@ void FieldManager::update() {
                 field_FA_5 = data->field_0_13;
                 field_208_6 = data->field_0_18;
                 field_208_7 = data->field_0_19;
-                GameMode::sub_801B0AC(data->field_0_20);
+                GameMode::setBuzzerKeys(data->field_0_20);
                 MapEventInfo::instance->field_528 = luigiLeads;
                 MapEventInfo::instance->field_530 = field_FA_5;
                 {
@@ -845,7 +845,7 @@ void FieldManager::update_field_8023DD4() {
                 field_FC_11 = 0;
                 gGameState.field_2 |= 0x8000;
             }
-            GameMode::sub_801B084();
+            GameMode::playBuzzerForKeys();
             sub_8025E94();
             if (!leader->field_358_3 && sub_8025D24(6)) {
                 sub_803C720(3);
@@ -1615,7 +1615,7 @@ void FieldManager::sub_8025F28() {
     data->field_0_13 = field_FA_5;
     data->field_0_18 = field_208_6;
     data->field_0_19 = field_208_7;
-    data->field_0_20 = word_3000D3C;
+    data->field_0_20 = gBuzzerKeys;
 
     leaderData = &data->field_4[luigiLeads];
     leaderData->roomId = roomId;

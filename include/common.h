@@ -768,7 +768,7 @@ extern struct EVTS* dword_3000D78;
 extern u8 sub_8000F9C[];
 extern u8 sub_8001010[];
 extern u8* dword_83D6C58[]; // Object list header per list index (see init_fobj_with_data_80FB128)
-extern u16 word_3000D3C;
+extern u16 gBuzzerKeys; // Keys that play the buzzer (sfx 0x50) when pressed in FIELD_MODE_NORMAL; saved
 extern struct struc_3000FB8* dword_3000FB8;
 extern struct GameState gGameState;
 extern void (*dword_3000C78)();

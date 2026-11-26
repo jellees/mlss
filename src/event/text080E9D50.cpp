@@ -725,9 +725,9 @@ s8 EventBase::sub_80EA968(EventThread* thread, s32* arguments, u32* engineRegist
     return true;
 }
 
-// Calls GameMode::sub_801B0AC(arguments[0]).
+// Sets the keys that play the buzzer when pressed in FIELD_MODE_NORMAL (GameMode::setBuzzerKeys).
 s8 EventBase::sub_80EA9A8(EventThread* thread, s32* arguments) {
-    GameMode::sub_801B0AC(arguments[0]);
+    GameMode::setBuzzerKeys(arguments[0]);
     return true;
 }
 
