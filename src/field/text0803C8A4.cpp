@@ -11,15 +11,15 @@
 #include "field/field_monster.h"
 #include "event/field_event_script.h"
 
-void FieldManager::sub_803C8A4(int arg1, u8 arg2) {
-    field_291_0 = 1;
+void FieldManager::startBattleTransition(int unused, bool fromEncounter) {
+    battleTransitionActive = true;
     field_292 = 0;
     field_290 = -2;
     field_291_3 = 2;
-    field_291_2 = arg2;
+    battleTransitionFromEncounter = fromEncounter;
     leader->field_350_14 = follower->field_350_14 = 1;
     sub_80193B4(0, 0, 16);
-    if (arg2) {
+    if (fromEncounter) {
         evts->disable();
         if (field_2A9_2) {
             FieldPlayerCharacter* player = (FieldPlayerCharacter*)objects[field_2A9_5];
@@ -78,13 +78,13 @@ void FieldManager::sub_803C8A4(int arg1, u8 arg2) {
     } else {
         field_2A9_2 = 0;
     }
-    field_12A = 10;
+    fieldMode = FIELD_MODE_BATTLE_TRANSITION;
 }
 
 void FieldManager::sub_803CB5C() {
     FieldPlayerCharacter* player;
 
-    if (!field_291_0) {
+    if (!battleTransitionActive) {
         return;
     }
     if (field_2A9_6) {
@@ -203,11 +203,11 @@ void FieldManager::sub_803CB5C() {
         }
     } else if (field_290 != -1 && !field_2A9_6) {
         sub_803E070();
-        if (field_291_0) {
+        if (battleTransitionActive) {
             field_292++;
         } else {
             sprite_remove(player->field_36C);
-            field_12A = 0;
+            fieldMode = FIELD_MODE_NONE;
             leader->field_350_14 = follower->field_350_14 = 0;
         }
     }
@@ -712,7 +712,7 @@ void FieldManager::sub_803E070() {
             ((struct struc_839EC80*)off_839EC80)->field_1_0 = 1;
             if (brothersTogether || field_208_6) {
                 play_sfx_80195B4(word_839FE64[field_2A9_2], -1);
-            } else if (field_291_2) {
+            } else if (battleTransitionFromEncounter) {
                 play_sfx_80195B4(word_839FE64[(field_2A9_5 + 1) * 6 + field_2A9_2], -1);
             } else {
                 play_sfx_80195B4(word_839FE64[(luigiLeads + 1) * 6 + field_2A9_2], -1);
@@ -845,10 +845,10 @@ void FieldManager::sub_803E070() {
             operator delete(dword_3000D90);
             operator delete(dword_3000D8C);
             delete dword_3000D88;
-            field_291_0 = 0;
+            battleTransitionActive = false;
             gGameState.field_888_4 = 0;
             field_2B6 = 0x3DE;
-            if (!field_291_2) {
+            if (!battleTransitionFromEncounter) {
                 evts->enable();
             }
             break;
@@ -856,6 +856,6 @@ void FieldManager::sub_803E070() {
 }
 #endif
 
-bool FieldManager::sub_803E9F0() {
-    return field_291_0;
+bool FieldManager::isBattleTransitionActive() {
+    return battleTransitionActive;
 }

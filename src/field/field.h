@@ -14,6 +14,30 @@ class BEVS;
 
 #pragma interface
 
+// FieldManager::fieldMode: what the field is doing while state is 15. update_field_8023DD4 runs it
+// every frame. Modes 6-17 first wait until the screen transition has finished, then run their action
+// once. Unnamed modes have no known meaning yet.
+enum FieldMode {
+    FIELD_MODE_NONE = 0,           // No control (after a room load or the battle transition)
+    FIELD_MODE_FADE_IN = 1,        // Room entered, waiting for the fade-in
+    FIELD_MODE_NORMAL = 2,         // Normal play
+    FIELD_MODE_REGROUP = 3,        // The follower walks back to the leader
+    FIELD_MODE_4 = 4,              // Camera pan, then leader and follower swap (sub_802EC64)
+    FIELD_MODE_PUMP_FORM = 5,      // Countdown, then Pump Mario form
+    FIELD_MODE_6 = 6,              // No action
+    FIELD_MODE_WARP = 7,           // Take a door/exit warp
+    FIELD_MODE_SURFBOARD_WARP = 8, // Take a surfboard exit
+    FIELD_MODE_9 = 9,              // sub_8029024(0) + sub_8028FBC
+    FIELD_MODE_BATTLE_TRANSITION = 10,
+    FIELD_MODE_MENU = 11, // Select pressed: opens a menu (sub_8122BA0)
+    FIELD_MODE_12 = 12,   // sub_8029070 + sub_80275F4
+    FIELD_MODE_SIGN = 13,
+    FIELD_MODE_SHOP = 14,
+    FIELD_MODE_15 = 15,     // sub_8028F40 + sub_802814C
+    FIELD_MODE_ENDING = 16, // Starts the "ENDD" process
+    FIELD_MODE_17 = 17,     // Leader swap into the other brother's room (sub_802EC64)
+};
+
 // A room's warp (exit) list entry, 12 bytes (FieldManager::warps, from the table at 0x083AF418 via
 // sub_8059EF0). The list ends with the entry that has last set.
 struct Warp {
@@ -180,7 +204,7 @@ class FieldManager : public Process {
     u16 roomId;
     u16 field_126;
     u16 field_128;
-    u8 field_12A;
+    u8 fieldMode; // enum FieldMode
     s8 field_12B;
     u8 field_12C_0 : 1;
     u8 viewingSignRequested : 1;
@@ -291,9 +315,9 @@ class FieldManager : public Process {
     u8 field_28E;
     u8 field_28F;
     s8 field_290;
-    u8 field_291_0 : 1;
+    u8 battleTransitionActive : 1;
     u8 field_291_1 : 1;
-    u8 field_291_2 : 1;
+    u8 battleTransitionFromEncounter : 1;
     u8 field_291_3 : 3;
     u8 field_291_6 : 2;
     s16 field_292;
@@ -305,7 +329,7 @@ class FieldManager : public Process {
     u8 field_2A8_7 : 1;
     u8 field_2A9_0 : 1;
     u8 field_2A9_1 : 1;
-    u8 field_2A9_2 : 3; // Battle: mode passed to sub_80277C4
+    u8 field_2A9_2 : 3; // Battle: first strike (0-5) passed to startEncounter/setBattleParameters
     u8 field_2A9_5 : 1;
     u16 field_2A9_6 : 1;
     u8 field_2A9_7 : 1;
@@ -392,7 +416,8 @@ class FieldManager : public Process {
     void sub_80275F4();
     void startViewingSign();
     void sub_802772C();
-    void sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMonster* monster, bool arg4);
+    void startEncounter(int firstStrike, FieldPlayerCharacter* player, FieldMonster* monster,
+                        bool arg4);
     void update_field_8023DD4();
     void start_battle_8027AC4();
     void sub_8027D64();
@@ -543,7 +568,7 @@ class FieldManager : public Process {
     void sub_803C7D8(FieldPlayerCharacter* player);
     void sub_803C834(FieldPlayerCharacter* player);
     void sub_803C898(int form);
-    void sub_803C8A4(int arg1, u8 arg2);
+    void startBattleTransition(int unused, bool fromEncounter);
     void sub_803CB5C();
     void sub_803CF64();
     void sub_803D05C(FieldPlayerCharacter* player);
@@ -556,11 +581,11 @@ class FieldManager : public Process {
     void sub_803DF00(FieldPlayerCharacter* player);
     void sub_803DF9C(FieldPlayerCharacter* player);
     void sub_803E070();
-    bool sub_803E9F0();
+    bool isBattleTransitionActive();
     void sub_8027E90(u16 roomId, u16 arg2, u8 direction, int x, int y, int z, int height, int arg8,
                      s8 arg9, bool arg10);
-    void sub_8027A04(int arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6, int arg7,
-                     int arg8, int arg9, int arg10);
+    void setBattleParameters(int arg1, u8 monsterIndex, u8 arg3, int firstStrike, int arg5, int arg6,
+                             int arg7, int arg8, int arg9, int arg10);
 };
 
 extern "C" {}

@@ -62,7 +62,7 @@ FieldManager::FieldManager(u8 priority, char* label, int roomId, bool arg4, bool
     field_FC_7 = 15;
     field_FC_11 = 0;
     field_246_0 = 0;
-    field_291_0 = 0;
+    battleTransitionActive = false;
     field_291_1 = 0;
     inBattle = 0;
     field_2B9 = 0xFF;
@@ -697,8 +697,8 @@ void FieldManager::update() {
             }
 
             state = 15;
-            if (field_12A != 3) {
-                field_12A = 0;
+            if (fieldMode != FIELD_MODE_REGROUP) {
+                fieldMode = FIELD_MODE_NONE;
             }
 
             if (inBattle && brothersTogether) {
@@ -814,30 +814,32 @@ void FieldManager::update_field_8023DD4() {
 
     if (field_10A > 0) {
         field_10A--;
-        if ((field_12A == 1 || field_12A == 2 || field_12A == 3 || field_12A == 4 || field_12A == 5)
+        if ((fieldMode == FIELD_MODE_FADE_IN || fieldMode == FIELD_MODE_NORMAL
+             || fieldMode == FIELD_MODE_REGROUP || fieldMode == FIELD_MODE_4
+             || fieldMode == FIELD_MODE_PUMP_FORM)
             && field_10A == 0) {
             field_FC_2 = 1;
         }
     }
     field_20A_4 = field_20A_3;
-    if (!field_291_0 && field_2A9_6) {
+    if (!battleTransitionActive && field_2A9_6) {
         sub_8028C40();
         field_2A9_6 = sub_8028E70();
     }
 
-    switch (field_12A) {
-        case 0:
+    switch (fieldMode) {
+        case FIELD_MODE_NONE:
             break;
 
-        case 1:
+        case FIELD_MODE_FADE_IN:
             if (!sub_8027378() && !field_2B8_4) {
-                field_12A = 2;
+                fieldMode = FIELD_MODE_NORMAL;
                 field_F9_4 = 0;
                 field_F9_5 = 0;
             }
             break;
 
-        case 2:
+        case FIELD_MODE_NORMAL:
             if (field_FC_11 && !sub_8027378()) {
                 word_2000272 = field_FE;
                 field_FC_11 = 0;
@@ -854,7 +856,7 @@ void FieldManager::update_field_8023DD4() {
             }
             break;
 
-        case 3:
+        case FIELD_MODE_REGROUP:
             follower->sub_80461B4(objects);
             if (!follower->sub_8047B78()) {
                 leader->velocityX = leader->velocityY = follower->velocityX = follower->velocityY = 0;
@@ -889,12 +891,12 @@ void FieldManager::update_field_8023DD4() {
                         break;
                 }
 
-                field_12A = 2;
+                fieldMode = FIELD_MODE_NORMAL;
                 field_F9_4 = 0;
             }
             break;
 
-        case 4:
+        case FIELD_MODE_4:
             sub_8028C40();
             if (!sub_8028E70()) {
                 if (follower->field_368->field_14 != -1) {
@@ -927,31 +929,31 @@ void FieldManager::update_field_8023DD4() {
                 u32 temp = field_E8;
                 field_E8 = field_EC;
                 field_EC = temp;
-                field_12A = 2;
+                fieldMode = FIELD_MODE_NORMAL;
                 field_F9_4 = 0;
             }
             break;
 
-        case 5:
+        case FIELD_MODE_PUMP_FORM:
             if (--field_26E <= 0) {
                 changeBrotherForm(BROTHERS_FORM_PUMP_MARIO, false);
                 leader->field_350_14 = 0;
                 follower->field_350_14 = 0;
-                field_12A = 2;
+                fieldMode = FIELD_MODE_NORMAL;
             }
             break;
 
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 11:
-        case 12:
-        case 13:
-        case 14:
-        case 15:
-        case 16:
-        case 17:
+        case FIELD_MODE_6:
+        case FIELD_MODE_WARP:
+        case FIELD_MODE_SURFBOARD_WARP:
+        case FIELD_MODE_9:
+        case FIELD_MODE_MENU:
+        case FIELD_MODE_12:
+        case FIELD_MODE_SIGN:
+        case FIELD_MODE_SHOP:
+        case FIELD_MODE_15:
+        case FIELD_MODE_ENDING:
+        case FIELD_MODE_17:
             if (!field_F9_6) {
                 if (!sub_8027378()) {
                     sub_8029888(0, 0);
@@ -961,59 +963,60 @@ void FieldManager::update_field_8023DD4() {
                 break;
             }
 
-            switch (field_12A) {
-                case 7:
-                case 8:
-                    if (brothersForm == BROTHERS_FORM_SURFBOARD_LUIGI && field_12A != 8) {
+            switch (fieldMode) {
+                case FIELD_MODE_WARP:
+                case FIELD_MODE_SURFBOARD_WARP:
+                    if (brothersForm == BROTHERS_FORM_SURFBOARD_LUIGI
+                        && fieldMode != FIELD_MODE_SURFBOARD_WARP) {
                         field_2BB = leader->direction;
                         field_2BA = leader->angle;
                     }
                     leader->field_350_14 = 0;
                     sub_8027D64();
-                    field_2B8_6 = field_12A == 8;
+                    field_2B8_6 = fieldMode == FIELD_MODE_SURFBOARD_WARP;
                     break;
 
-                case 9:
+                case FIELD_MODE_9:
                     sub_8029024(0);
                     sub_8028FBC();
                     field_F9_4 = 1;
                     break;
 
-                case 11:
+                case FIELD_MODE_MENU:
                     sub_80290CC(-1);
                     sub_8027558();
                     field_F9_4 = 1;
                     break;
 
-                case 12:
+                case FIELD_MODE_12:
                     sub_8029070();
                     sub_80275F4();
                     field_F9_4 = 1;
                     break;
 
-                case 13:
+                case FIELD_MODE_SIGN:
                     requestViewingSign();
                     startViewingSign();
                     field_F9_4 = 1;
                     break;
 
-                case 14:
+                case FIELD_MODE_SHOP:
                     sub_8029030(0, 0);
                     sub_802772C();
                     field_F9_4 = 1;
                     break;
 
-                case 15:
+                case FIELD_MODE_15:
                     sub_8028F40();
                     sub_802814C();
                     return;
 
-                case 16:
+                case FIELD_MODE_ENDING:
                     sub_8028F2C();
                     sub_8028EF4();
                     return;
 
-                case 17: {
+                case FIELD_MODE_17: {
                     sub_802DDB4(leader, 0, 0);
                     sub_802DDB4(follower, 0, 0);
                     luigiLeads ^= 1;
@@ -1043,19 +1046,19 @@ void FieldManager::update_field_8023DD4() {
                 }
             }
 
-            field_12A = 0;
+            fieldMode = FIELD_MODE_NONE;
             return;
 
-        case 10:
+        case FIELD_MODE_BATTLE_TRANSITION:
             if (!field_F9_6) {
                 sub_803CB5C();
-                if (!sub_803E9F0()) {
+                if (!isBattleTransitionActive()) {
                     field_F9_6 = 1;
-                    if (field_291_2) {
-                        sub_8027A04(field_2AA, field_2A8_0, field_2A8_5 != 0, field_2A9_2, -1, -1, 0, 0,
-                                    0, field_2A9_5);
+                    if (battleTransitionFromEncounter) {
+                        setBattleParameters(field_2AA, field_2A8_0, field_2A8_5 != 0, field_2A9_2, -1,
+                                            -1, 0, 0, 0, field_2A9_5);
                         start_battle_8027AC4();
-                        field_12A = 0;
+                        fieldMode = FIELD_MODE_NONE;
                         return;
                     }
                 }
@@ -1066,7 +1069,7 @@ void FieldManager::update_field_8023DD4() {
     sub_802A608();
     sub_802C390();
 
-    if (field_12A == 2) {
+    if (fieldMode == FIELD_MODE_NORMAL) {
         if (sub_8025D24(4) && !field_209_0 && leader->airFrames == -1 && follower->airFrames == -1
             && leader->state <= 1 && follower->state <= 1) {
             if (field_208_0) {
@@ -1097,14 +1100,14 @@ void FieldManager::update_field_8023DD4() {
             if (!field_20B_7) {
                 sub_8027030(2, 8, 0, 0xFFFF, 0xFFFF);
                 play_sfx_80195B4(0x54, -1);
-                field_12A = 11;
+                fieldMode = FIELD_MODE_MENU;
             } else {
                 sub_8029878();
             }
         }
     }
 
-    if (!field_291_0 || field_290 < 0) {
+    if (!battleTransitionActive || field_290 < 0) {
         object = objects;
         for (int count = objectCount; count != 0; count--, object++) {
             if (*object != NULL) {
@@ -1137,7 +1140,7 @@ void FieldManager::update_field_8023DD4() {
         }
 
         if (!field_2A9_6) {
-            if (field_291_0) {
+            if (battleTransitionActive) {
                 sub_803CF64();
             } else if (leader->field_358_3) {
                 sub_802F938();
@@ -1165,8 +1168,9 @@ void FieldManager::update_field_8023DD4() {
         }
     }
 
-    if (!field_291_0 || field_290 <= 0) {
-        if ((field_12A != 7 && field_12A != 8) && field_F8_6 && field_F9_0 == 0) {
+    if (!battleTransitionActive || field_290 <= 0) {
+        if ((fieldMode != FIELD_MODE_WARP && fieldMode != FIELD_MODE_SURFBOARD_WARP) && field_F8_6
+            && field_F9_0 == 0) {
             sub_80286AC(field_FA_5);
         }
 
@@ -1187,7 +1191,7 @@ void FieldManager::update_field_8023DD4() {
 
         object = objects;
 
-        if (!field_291_0) {
+        if (!battleTransitionActive) {
             for (int count = objectCount; count != 0; count--, object++) {
                 (*object)->method8(field_27E, field_280, objects);
                 (*object)->method6(0);
@@ -1208,7 +1212,7 @@ void FieldManager::update_field_8023DD4() {
         }
     }
 
-    if (!field_291_0 || field_290 < 0) {
+    if (!battleTransitionActive || field_290 < 0) {
         if (brothersTogether && leader->y == follower->y) {
             if (field_209_7 == 1) {
                 leader->sprite->field_E--;
@@ -1519,7 +1523,7 @@ u8 FieldManager::sub_8025C04(int index) {
 }
 
 bool FieldManager::sub_8025D24(int type) {
-    if (field_12A > 1) {
+    if (fieldMode > FIELD_MODE_FADE_IN) {
         switch (type) {
             case 0:
                 if ((input->held & (R_BUTTON | L_BUTTON)) == 0
@@ -2006,8 +2010,8 @@ void FieldManager::sub_8026E94() {
             && !(gGameState.enabledKeys & (A_BUTTON | B_BUTTON | DPAD_RIGHT | DPAD_LEFT)))) {
         field_244 = 0xFFC8;
     }
-    if (field_12A == 0) {
-        field_12A = 1;
+    if (fieldMode == FIELD_MODE_NONE) {
+        fieldMode = FIELD_MODE_FADE_IN;
         field_F8_1 = 0;
         field_F8_2 = 0;
     }
@@ -2059,8 +2063,8 @@ void FieldManager::sub_8027030(int mode, int arg2, u16 arg3, u16 arg4, u16 arg5)
 #ifndef NONMATCHING
 asm_unified(".include \"asm/nonmatching/sub_8027168__12FieldManageriiUsUs.s\"");
 #else
-// Not called anywhere. Like sub_8027030, for modes 6 and 7: starts a "WIPE" transition centered on (x,
-// y).
+// Called by script opcode 44 (sub_80F0A30). Like sub_8027030, for modes 6 and 7: starts a "WIPE"
+// transition centered on (x, y).
 void FieldManager::sub_8027168(int mode, int arg2, u16 x, u16 y) {
     s16 dx;
     s16 dy;
@@ -2262,11 +2266,12 @@ void FieldManager::sub_802772C() {
 #ifndef NONMATCHING
 asm_unified(
     ".include "
-    "\"asm/nonmatching/sub_80277C4__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb.s\"");
+    "\"asm/nonmatching/startEncounter__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb.s\"");
 #else
-// Not called anywhere. Prepares a battle between player and monster.
-void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMonster* monster,
-                               bool arg4) {
+// Called when a brother touches a FieldMonster (update__19FieldProcess803EA00). Prepares a battle
+// between player and monster.
+void FieldManager::startEncounter(int firstStrike, FieldPlayerCharacter* player, FieldMonster* monster,
+                                  bool arg4) {
     FieldStruct2* fmex;
     int i;
 
@@ -2280,7 +2285,7 @@ void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMons
     }
     field_10A = 0;
     field_FC_2 = 0;
-    field_2A9_2 = mode;
+    field_2A9_2 = firstStrike;
     field_2A8_0 = monster->objectIndex;
     field_2A8_5 = player->field_33C_7;
     field_2A9_5 = player->objectIndex;
@@ -2301,12 +2306,12 @@ void FieldManager::sub_80277C4(int mode, FieldPlayerCharacter* player, FieldMons
     play_sfx_80195B4(word_839F5F8[field_2A9_2 * 2 + player->objectIndex], -1);
     field_2A9_6 = arg4;
     field_2A9_7 = arg4;
-    sub_803C8A4(0, 1);
+    startBattleTransition(0, 1);
 }
 #endif
 
-void FieldManager::sub_8027A04(int arg1, u8 monsterIndex, u8 arg3, int mode, int arg5, int arg6,
-                               int arg7, int arg8, int arg9, int arg10) {
+void FieldManager::setBattleParameters(int arg1, u8 monsterIndex, u8 arg3, int firstStrike, int arg5,
+                                       int arg6, int arg7, int arg8, int arg9, int arg10) {
     int value = arg3;
 
     field_2AC = arg1;
@@ -2317,7 +2322,7 @@ void FieldManager::sub_8027A04(int arg1, u8 monsterIndex, u8 arg3, int mode, int
     field_2A9_0 = arg9;
     field_2A8_0 = monsterIndex;
     field_2A8_5 = value;
-    field_2A9_2 = mode;
+    field_2A9_2 = firstStrike;
     field_2A9_5 = arg10;
     inBattle = 1;
 }
@@ -3667,7 +3672,7 @@ void FieldManager::sub_802A740() {
     }
     field_2B8_4Copy = field_2B8_4 != 0;
 
-    if (field_12A != 0) {
+    if (fieldMode != FIELD_MODE_NONE) {
         if (field_2B8_4) {
             sub_802F498();
             if (!leader->field_353_1) {
@@ -3719,8 +3724,11 @@ void FieldManager::sub_802A740() {
         follower->field_23E = leader->field_23E;
     }
 
-    if ((field_12A >= 1 && field_12A <= 5) || field_12A == 10 || field_12A == 11 || field_12A == 12
-        || field_12A == 13 || field_12A == 14) {
+    if ((fieldMode == FIELD_MODE_FADE_IN || fieldMode == FIELD_MODE_NORMAL
+         || fieldMode == FIELD_MODE_REGROUP || fieldMode == FIELD_MODE_4
+         || fieldMode == FIELD_MODE_PUMP_FORM)
+        || fieldMode == FIELD_MODE_BATTLE_TRANSITION || fieldMode == FIELD_MODE_MENU
+        || fieldMode == FIELD_MODE_12 || fieldMode == FIELD_MODE_SIGN || fieldMode == FIELD_MODE_SHOP) {
         switch (leader->state) {
             case 5:
             case 6:
@@ -3905,7 +3913,7 @@ void FieldManager::sub_802A740() {
             sub_802B804(follower, field_209_0);
         }
 
-        if (field_12A == 2 && field_208_3 && !brothersTogether
+        if (fieldMode == FIELD_MODE_NORMAL && field_208_3 && !brothersTogether
             && brothersForm != BROTHERS_FORM_MOLE_LUIGI && !follower->sub_804D0EC()
             && (leader->height == 0 || (s8)leader->field_1 != -1)
             && (follower->height == 0 || (s8)follower->field_1 != -1)
@@ -4152,7 +4160,8 @@ void FieldManager::sub_802B804(FieldPlayerCharacter* player, bool arg2) {
         }
     }
 
-    if (!field_209_0 && field_12A != 0 && field_12A <= 2 && (brothersTogether || player->field_352_7)) {
+    if (!field_209_0 && fieldMode >= FIELD_MODE_FADE_IN && fieldMode <= FIELD_MODE_NORMAL
+        && (brothersTogether || player->field_352_7)) {
         if (player->field_340 == 2) {
             player->sub_8049BD8(ACTION_MODE_TALK);
             sub_802DDB4(player, player->field_352_7 ? 0 : brothersTogether, 0);
@@ -4289,7 +4298,7 @@ void FieldManager::sub_802C068(struct KeyInput* arg1) {
         return;
     }
 
-    if (field_12A == 2 && !leader->field_350_14 && arg1 != NULL) {
+    if (fieldMode == FIELD_MODE_NORMAL && !leader->field_350_14 && arg1 != NULL) {
         index = (arg1->held & DPAD_ANY) >> 4;
         angle = byte_839F910[index];
         if (angle != 0xFF) {
@@ -4824,7 +4833,8 @@ void FieldManager::sub_802D2F4(FieldPlayerCharacter* player) {
 }
 
 void FieldManager::sub_802D46C(struct KeyInput* arg) {
-    if (!field_2B8_4 && !field_291_0 && !leader->field_2B5_3 && arg != NULL && follower->state <= 4) {
+    if (!field_2B8_4 && !battleTransitionActive && !leader->field_2B5_3 && arg != NULL
+        && follower->state <= 4) {
         if ((isUnderwater && leader->field_368->selectedAction == ACTION_JUMP && leader->state <= 4)
             || leader->state <= 1) {
             if (sub_8025D24(0)) {
@@ -4840,7 +4850,7 @@ void FieldManager::sub_802D46C(struct KeyInput* arg) {
 }
 
 void FieldManager::sub_802D544(struct KeyInput* arg) {
-    if (!field_2B8_4 && !field_291_0 && !follower->field_2B5_3 && arg != NULL
+    if (!field_2B8_4 && !battleTransitionActive && !follower->field_2B5_3 && arg != NULL
         && ((isUnderwater && follower->field_368->selectedAction == ACTION_JUMP && follower->state <= 4)
             || follower->state <= 1)
         && sub_8025D24(1)) {
@@ -5278,7 +5288,7 @@ void FieldManager::sub_802E4C8(int arg) {
         player->field_2B6_7 = 1;
         player->field_2B6_6 = 1;
         other->field_350_14 = 1;
-        field_12A = 3;
+        fieldMode = FIELD_MODE_REGROUP;
     } else {
         player->x = player->previousX = x;
         player->y = player->previousY = y;
@@ -5468,23 +5478,24 @@ void FieldManager::sub_802EC64(int arg) {
 
             sub_80284B0(index ^ 1, 0);
         }
-        field_12A = 4;
+        fieldMode = FIELD_MODE_4;
     } else {
         sub_8027030(2, arg == 0 ? 16 : 1, 0, 0xFFFF, 0xFFFF);
         leader->field_20C_11 = 0;
         leader->field_20C_14 = 0;
         field_F9_5 = 1;
-        field_12A = 17;
+        fieldMode = FIELD_MODE_17;
     }
 }
 
 u8 FieldManager::checkWarps(FieldPlayerCharacter* player, bool arg2, bool arg3, bool arg4) {
-    if ((u8)(field_12A - 1) <= 1 && !field_F9_4 && !field_F9_5 && player->field_2B5_0 == 0) {
+    if ((fieldMode == FIELD_MODE_FADE_IN || fieldMode == FIELD_MODE_NORMAL) && !field_F9_4
+        && !field_F9_5 && player->field_2B5_0 == 0) {
         currentWarp = player->findWarp(warps, &field_2D0, &field_2D4, arg3, arg4);
 
         if (currentWarp != NULL) {
             player->field_353_6 = 1;
-            if (!player->field_353_7 && arg2 && field_12A == 2) {
+            if (!player->field_353_7 && arg2 && fieldMode == FIELD_MODE_NORMAL) {
                 leader->sub_804FC90();
                 follower->sub_804FC90();
 
@@ -5496,7 +5507,7 @@ u8 FieldManager::checkWarps(FieldPlayerCharacter* player, bool arg2, bool arg3, 
                 sub_8027030(2, 16, 0, 0xFFFF, 0xFFFF);
                 leader->field_350_14 = 1;
                 follower->field_350_14 = 1;
-                field_12A = 7;
+                fieldMode = FIELD_MODE_WARP;
 
                 return true;
             }
@@ -5854,7 +5865,7 @@ void FieldManager::sub_802F834() {
 void FieldManager::sub_802F938() {
     int i;
 
-    if (field_12A == 0) {
+    if (fieldMode == FIELD_MODE_NONE) {
         return;
     }
 
@@ -5914,7 +5925,9 @@ void FieldManager::sub_802F938() {
         }
     }
 
-    if (field_12A <= 2 && !field_F9_4 && !field_F9_5) {
+    if ((fieldMode == FIELD_MODE_NONE || fieldMode == FIELD_MODE_FADE_IN
+         || fieldMode == FIELD_MODE_NORMAL)
+        && !field_F9_4 && !field_F9_5) {
         sub_802B804(leader, false);
         sub_802B804(follower, false);
     } else {
@@ -7883,7 +7896,7 @@ void FieldManager::sub_80350B4() {
             follower->y += leader->y - leader->previousY;
             follower->z += leader->z - leader->previousZ;
             follower->height += leader->height - leader->previousHeight;
-            if (field_12A != 2) {
+            if (fieldMode != FIELD_MODE_NORMAL) {
                 break;
             }
             if (sub_8025D24(0)) {
@@ -8628,7 +8641,7 @@ void FieldManager::sub_8036F84() {
                 action = 3;
                 break;
             }
-            if (field_12A > 2) {
+            if (fieldMode > FIELD_MODE_NORMAL) {
                 break;
             }
             if (sub_8025D24(4) || sub_8025D24(1) || sub_8025D24(2) || sub_8025D24(3)) {
@@ -8790,7 +8803,9 @@ void FieldManager::sub_8036F84() {
     if (leader->state == 117 && follower->state == 117) {
         action = 3;
     }
-    if ((field_12A <= 2 || field_12A == 11) && action != 0) {
+    if ((fieldMode == FIELD_MODE_NONE || fieldMode == FIELD_MODE_FADE_IN
+         || fieldMode == FIELD_MODE_NORMAL || fieldMode == FIELD_MODE_MENU)
+        && action != 0) {
         if (action == 1) {
             leader->field_23E -= 0x100;
             {
@@ -8888,7 +8903,7 @@ void FieldManager::sub_8038140() {
 void FieldManager::sub_80382CC() {
     int action;
 
-    if (field_12A > 1) {
+    if (fieldMode > FIELD_MODE_FADE_IN) {
         if (leader->state >= 122 && leader->state <= 123 && follower->state >= 122
             && follower->state <= 123) {
             s16 velocityX = 0;
@@ -9000,7 +9015,8 @@ void FieldManager::sub_80382CC() {
         action = 2;
     } else if (leader->field_26_2 || follower->field_26_2) {
         action = 2;
-    } else if (field_12A <= 2) {
+    } else if (fieldMode == FIELD_MODE_NONE || fieldMode == FIELD_MODE_FADE_IN
+               || fieldMode == FIELD_MODE_NORMAL) {
         switch (follower->state) {
             case 119:
                 if (field_26E < 60) {
@@ -9080,7 +9096,7 @@ void FieldManager::sub_80382CC() {
 
             case 122:
             case 123:
-                if (field_12A <= 1) {
+                if (fieldMode == FIELD_MODE_NONE || fieldMode == FIELD_MODE_FADE_IN) {
                     break;
                 }
                 if (sub_8025D24(4) || sub_8025D24(0) || sub_8025D24(1) || sub_8025D24(2)
@@ -9857,7 +9873,7 @@ void FieldManager::sub_803AFCC() {
             follower->method7(1);
         }
     } else {
-        if (field_12A != 0 && field_2B8_4) {
+        if (fieldMode != FIELD_MODE_NONE && field_2B8_4) {
             leader->field_20C_11 = 0;
             leader->sub_80461B4(objects);
             leader->sub_80465D8();
@@ -9870,7 +9886,7 @@ void FieldManager::sub_803AFCC() {
             }
         }
 
-        if (field_12A > 1) {
+        if (fieldMode > FIELD_MODE_FADE_IN) {
             switch (follower->state) {
                 case 161:
                     sub_804FE68(leader, objects);
@@ -9910,7 +9926,7 @@ void FieldManager::sub_803AFCC() {
                     follower->state = leader->state = 164;
                     // fallthrough
                 case 164:
-                    if (field_12A == 2) {
+                    if (fieldMode == FIELD_MODE_NORMAL) {
                         if (leader->height == 0 && sub_8025D24(0)) {
                             if (field_26A_2) {
                                 leader->startAirborne(0x200, 0x3F, (s16)leader->field_23E);
@@ -9941,7 +9957,8 @@ void FieldManager::sub_803AFCC() {
                     if (field_26E > 0) {
                         field_26E--;
                     }
-                    if (field_12A == 2 && leader->field_2B5_0 == 0 && leader->field_2B5_3 == 0) {
+                    if (fieldMode == FIELD_MODE_NORMAL && leader->field_2B5_0 == 0
+                        && leader->field_2B5_3 == 0) {
                         if (field_26E == 0 && (s16)leader->field_23E > 24) {
                             if (leader->state == 164) {
                                 u16* keys = word_839FBE4[leader->direction];
@@ -10105,7 +10122,7 @@ void FieldManager::sub_803AFCC() {
                         leader->field_350_14 = 1;
                         follower->field_350_14 = 1;
                         field_20B_7 = 0;
-                        field_12A = 8;
+                        fieldMode = FIELD_MODE_SURFBOARD_WARP;
                     }
                     break;
 
@@ -10222,8 +10239,10 @@ void FieldManager::sub_803AFCC() {
             }
         }
 
-        if ((field_12A <= 2 || field_12A == 7 || field_12A == 11) && !field_2B8_4
-            && follower->state > 163 && follower->state <= 167) {
+        if ((fieldMode == FIELD_MODE_NONE || fieldMode == FIELD_MODE_FADE_IN
+             || fieldMode == FIELD_MODE_NORMAL || fieldMode == FIELD_MODE_WARP
+             || fieldMode == FIELD_MODE_MENU)
+            && !field_2B8_4 && follower->state > 163 && follower->state <= 167) {
             s32 height = leader->height;
             u8 walls;
 

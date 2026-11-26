@@ -592,10 +592,11 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
             return sub_80F0AE0(this, script, arguments);
         case 152:
             ((FieldManager*)parentProcess)
-                ->sub_8027A04(arguments[0],
-                              arguments[1] == 0x3F ? MapEventInfo::instance->field_52C : arguments[1],
-                              0, arguments[2], arguments[3], arguments[4], arguments[5] & 1,
-                              (arguments[5] >> 1) & 1, (arguments[5] >> 2) & 1, arguments[6]);
+                ->setBattleParameters(arguments[0],
+                                      arguments[1] == 0x3F ? MapEventInfo::instance->field_52C
+                                                           : arguments[1],
+                                      0, arguments[2], arguments[3], arguments[4], arguments[5] & 1,
+                                      (arguments[5] >> 1) & 1, (arguments[5] >> 2) & 1, arguments[6]);
             return 0;
         case 153:
             ((FieldManager*)parentProcess)->sub_8029024(arguments[0]);

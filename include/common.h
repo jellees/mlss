@@ -709,7 +709,7 @@ extern u16 word_839F5CC[];
 extern u16 word_839F5E2[];
 extern u32 dword_3000E00;
 extern u32 dword_3000E04;
-extern u16 word_839F5F8[]; // FieldManager::sub_80277C4 sounds
+extern u16 word_839F5F8[]; // FieldManager::startEncounter sounds
 extern u16 word_839F610[]; // FieldManager::sub_8027D64 follower states
 extern s16 word_839F524[]; // FieldManager::sub_8032A90: (x, y) velocity per D-pad state
 extern u16 word_839FA9C[]; // FieldManager::sub_8033F5C: yScale per sprite frame

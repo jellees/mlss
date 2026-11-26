@@ -4,8 +4,8 @@
 
 	.text
 
-	thumb_func_start sub_80277C4__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb
-sub_80277C4__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb:
+	thumb_func_start startEncounter__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb
+startEncounter__12FieldManageriP20FieldPlayerCharacterP12FieldMonsterb:
 	push {r4, r5, r6, r7, lr}
 	mov r7, r10
 	mov r6, r9
@@ -273,7 +273,7 @@ _08027984:
 	adds r0, r6, #0x0
 	movs r1, #0x00
 	movs r2, #0x01
-	bl sub_803C8A4__12FieldManageriUc
+	bl startBattleTransition__12FieldManagerib
 	add sp, #0x008
 	pop {r3, r4, r5}
 	mov r8, r3
