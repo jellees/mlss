@@ -43,6 +43,13 @@ class FieldEventScript : public Process, public EventBase {
     s8 sub_80EDBC4(FieldObject* object, FieldObjectEvent* script, s32* arguments);
     s8 sub_80EDD48(FieldObject* object, FieldObjectEvent* script, s32* arguments);
     s8 sub_80EDEB4(FieldObject* object, FieldObjectEvent* script, s32* arguments);
+    s8 sub_80EDF90(FieldObject* object, FieldObjectEvent* script, s32* arguments);
+    s8 sub_80EE028(FieldObject* object, FieldObjectEvent* script, s32* arguments);
+    s8 sub_80EE140(FieldObject* object, FieldObjectEvent* script, s32* arguments);
+    s8 sub_80EE1A4(FieldObject* object, FieldObjectEvent* script, s32* arguments);
+    s8 sub_80EE26C(FieldObject* object, FieldObjectEvent* script, s32* arguments);
+    s8 sub_80EE440(FieldObject* object, FieldObjectEvent* script, s32* arguments);
+    s8 sub_80EE4CC(FieldObject* object, FieldObjectEvent* script, s32* arguments);
     bool sub_80EB838(FieldObject* object, FieldObjectEvent* script);
     void sub_80EB524(FieldObject* object, u8 type, int arg);
     bool sub_80F1E44(FieldObject* object, FieldObjectEvent* script); // inline, in the .cpp

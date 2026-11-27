@@ -45,13 +45,69 @@ enum FieldObjectFlickerMode {
 
 struct FieldManager;
 
+// Part of FieldObjectEvent after its EventThread (FieldObjectEvent::field_A8). The script commands
+// use this memory in overlapping ways, each through its own layout (a pointer to one member and a
+// pointer to another in sub_80EE26C are two registers with the same value), so it's a union. The
+// members are named after the commands that set them; the field names are offsets from the start.
+union FieldObjectEventA8 {
+    struct Values80EE26C {
+        s16 field_0[4];
+        s16 field_8[4];
+        s16 field_10[4];
+        s16 field_18[4];
+        s16 field_20[4];
+        s16 field_28[4];
+    } values_80EE26C;
+    struct Values80EE26C_2 {
+        u8 pad_0[0x36];
+        s16 field_36[4];
+        s16 field_3E[4];
+    } values_80EE26C_2;
+    // x, y and z of the points set by sub_80EE028
+    struct Points {
+        u8 pad_0[0x32];
+        s16 x[16];
+        s16 y[16];
+        s16 z[16];
+    } points;
+    struct Values80EDF90 {
+        u8 pad_0[0x38];
+        s16 field_38;
+        s16 field_3A;
+        s16 field_3C;
+        s16 field_3E;
+    } values_80EDF90;
+    struct Values80EE140 {
+        u8 pad_0[0x46];
+        s16 field_46[8];
+    } values_80EE140;
+    struct Values80EE1A4 {
+        u8 pad_0[0x30];
+        u8 field_30_0 : 2;
+        u8 field_30_2 : 1;
+        u8 pad_30_3 : 5;
+        u8 field_31;
+        u8 pad_32[0x2];
+        s16 field_34;
+        u8 field_36;
+        u8 field_37_0 : 3;
+    } values_80EE1A4;
+};
+
 // Script state of an object (FieldObject::script). The field event script code
 // (src/field_event_script.cpp) runs a script per object (sub_80EB248) with readCommand /
 // FieldEventScript::executeNextCommand.
 struct FieldObjectEvent : EventThread {
-    u8 pad_A8[0x98];
+    union FieldObjectEventA8 field_A8; // Size 0x94
+    u8 pad_13C[0x4];
     void (*field_140)(FieldManager* fieldManager, class FieldObject* object);
-    u8 pad_144[0x50];
+    u8 pad_144[0x14];
+    s32 field_158; // Set by sub_80EE4CC
+    s32 field_15C;
+    u8 pad_160[0x1E];
+    u8 field_17E_0 : 1; // Cleared by sub_80EE440
+    u8 field_17E_1 : 1;
+    u8 pad_17F[0x15];
 };
 
 class FieldObject {

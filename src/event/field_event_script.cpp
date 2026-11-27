@@ -539,23 +539,23 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 104:
             return sub_80F0FA0(this, object, script, arguments);
         case 126:
-            return sub_80EDF90(this, object, script, arguments);
+            return sub_80EDF90(object, script, arguments);
         case 127:
-            return sub_80EE028(this, object, script, arguments);
+            return sub_80EE028(object, script, arguments);
         case 128:
             return sub_80F0F60(this, object, script, arguments);
         case 129:
-            return sub_80EE140(this, object, script, arguments);
+            return sub_80EE140(object, script, arguments);
         case 130:
-            return sub_80EE1A4(this, object, script, arguments);
+            return sub_80EE1A4(object, script, arguments);
         case 131:
-            return sub_80EE26C(this, object, script, arguments);
+            return sub_80EE26C(object, script, arguments);
         case 132:
             return sub_80F0EEC(this, object, script, arguments);
         case 133:
-            return sub_80EE440(this, object, script, arguments);
+            return sub_80EE440(object, script, arguments);
         case 134:
-            return sub_80EE4CC(this, object, script, arguments);
+            return sub_80EE4CC(object, script, arguments);
         case 135:
             return sub_80F0E80(this, script, arguments);
         case 136:
@@ -1452,4 +1452,298 @@ s8 FieldEventScript::sub_80EDEB4(FieldObject* object, FieldObjectEvent* script, 
     }
     object->sub_80478AC(direction);
     return true;
+}
+
+//! Possible fake match (permuter): identity helper. Passing x through an inline function keeps it out
+//! of a promoted local, so it's sign-extended at its uses instead of zero-extended where it's set.
+static inline s16 sub_80EDFDC(s32 value) {
+    return value;
+}
+
+// Sets two x and two y coordinates of the object's script (field_A8.values_80EDF90) to
+// arguments[1] and arguments[3] (x) and arguments[2] and arguments[4] (y). arguments[0] bit 0: the
+// arguments are in 16-pixel tiles (pointing at the tile centers), bit 1: they are relative to the
+// object.
+s8 FieldEventScript::sub_80EDF90(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
+    FieldObjectEventA8::Values80EDF90* p = &object->script.field_A8.values_80EDF90;
+    s16 scale = arguments[0] & 1 ? 16 : 1;
+    s16 offset = arguments[0] & 1 ? 8 : 0;
+    s16 y = (arguments[0] & 2 ? object->y / 256 : 0) + offset;
+    s16 x = sub_80EDFDC(offset + (*arguments++ & 2 ? object->x / 256 : 0));
+
+    p->field_3C = x + *arguments++ * scale;
+    p->field_38 = y + *arguments++ * scale;
+    p->field_3E = x + *arguments++ * scale;
+    p->field_3A = y + *arguments * scale;
+    return TRUE;
+}
+
+// Sets point arguments[1] of the object's script (field_A8.points) to x arguments[2],
+// y arguments[3] and z arguments[4] (0x8000: the object's height, z + height). arguments[0] bit 0: the
+// coordinates are in 16-pixel tiles; arguments[0] >> 1 == 1: they are relative to the previous point
+// (to the object for point 0).
+//! Possible fake match: the (s16) casts on the index (a plain s16 local is zero-extended where it's
+//! set; the original only sign-extends at the uses).
+s8 FieldEventScript::sub_80EE028(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
+    FieldObjectEventA8::Points* p = &object->script.field_A8.points;
+    s32 mode;
+    s32 index;
+
+    if (arguments[0] & 1) {
+        arguments[2] <<= 4;
+        arguments[3] <<= 4;
+        arguments[4] = arguments[4] != 0x8000 ? arguments[4] << 4 : arguments[4];
+    }
+    mode = arguments[0] >> 1;
+    index = arguments[1];
+    if (mode == 1) {
+        if (index) {
+            arguments[2] += p->x[(s16)(index - 1)];
+            arguments[3] += p->y[(s16)(index - 1)];
+            arguments[4] =
+                arguments[4] != 0x8000 ? arguments[4] + p->z[(s16)(index - 1)] : arguments[4];
+        } else {
+            arguments[2] += object->x / 256;
+            arguments[3] += object->y / 256;
+            arguments[4] = arguments[4] != 0x8000 ? arguments[4] + (object->z + object->height) / 256
+                                                  : arguments[4];
+        }
+    }
+    p->x[(s16)index] = arguments[2];
+    p->y[(s16)index] = arguments[3];
+    p->z[(s16)index] = arguments[4] != 0x8000 ? arguments[4] : (object->z + object->height) / 256;
+    return TRUE;
+}
+
+// Sets 8 values of the object's script (field_A8.values_80EE140) to arguments[1-8].
+// arguments[0] bit 1: sets them on the object's FMCH (FieldMonster::field_344) instead.
+s8 FieldEventScript::sub_80EE140(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
+    if (*arguments++ & 2) {
+        object = ((FieldMonster*)object)->field_344;
+    }
+    object->script.field_A8.values_80EE140.field_46[0] = *arguments++;
+    object->script.field_A8.values_80EE140.field_46[1] = *arguments++;
+    object->script.field_A8.values_80EE140.field_46[2] = *arguments++;
+    object->script.field_A8.values_80EE140.field_46[3] = *arguments++;
+    object->script.field_A8.values_80EE140.field_46[4] = *arguments++;
+    object->script.field_A8.values_80EE140.field_46[5] = *arguments++;
+    object->script.field_A8.values_80EE140.field_46[6] = *arguments++;
+    object->script.field_A8.values_80EE140.field_46[7] = *arguments;
+    return TRUE;
+}
+
+// Sets a field of the object chosen by arguments[1] (0-7) to arguments[2]. arguments[0] != 0: sets it
+// on the object's FMCH (FieldMonster::field_344) instead.
+s8 FieldEventScript::sub_80EE1A4(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
+    if (*arguments++) {
+        object = ((FieldMonster*)object)->field_344;
+    }
+    switch (*arguments++) {
+        case 0:
+            object->script.field_A8.values_80EE1A4.field_31 = *arguments;
+            break;
+        case 1:
+            object->field_2F4 = *arguments;
+            break;
+        case 2:
+            object->field_2F8 = *arguments;
+            break;
+        case 3:
+            object->script.field_A8.values_80EE1A4.field_36 = *arguments;
+            break;
+        case 4:
+            object->script.field_A8.values_80EE1A4.field_37_0 = *arguments;
+            break;
+        case 5:
+            object->script.field_A8.values_80EE1A4.field_30_0 = *arguments;
+            break;
+        case 6:
+            object->script.field_A8.values_80EE1A4.field_30_2 = *arguments;
+            break;
+        case 7:
+            object->script.field_A8.values_80EE1A4.field_34 = *arguments;
+            break;
+    }
+    return TRUE;
+}
+
+// Sets 4 values of the object's script (field_A8.values_80EE26C/values_80EE26C_2) chosen by
+// arguments[1] to arguments[2-5]. Cases 0 and 1 convert each value (bit 0x40 set: the low 4 bits
+// scaled by 1 or 16, else scaled by 16 or 256), case 3 multiplies them by 16. arguments[0] != 0: sets
+// them on the object's FMCH (FieldMonster::field_344) instead.
+s8 FieldEventScript::sub_80EE26C(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
+    FieldObjectEventA8::Values80EE26C* values;
+    FieldObjectEventA8::Values80EE26C_2* values2;
+
+    if (*arguments++) {
+        object = ((FieldMonster*)object)->field_344;
+    }
+    values = &object->script.field_A8.values_80EE26C;
+    values2 = &object->script.field_A8.values_80EE26C_2;
+    switch (*arguments++) {
+        case 0:
+            if (*arguments & 0x40) {
+                values->field_8[0] = *arguments & 0xF;
+            } else {
+                values->field_8[0] = *arguments << 4;
+            }
+            arguments++;
+            if (*arguments & 0x40) {
+                values->field_8[1] = *arguments & 0xF;
+            } else {
+                values->field_8[1] = *arguments << 4;
+            }
+            arguments++;
+            if (*arguments & 0x40) {
+                values->field_8[2] = *arguments & 0xF;
+            } else {
+                values->field_8[2] = *arguments << 4;
+            }
+            arguments++;
+            if (*arguments & 0x40) {
+                values->field_8[3] = *arguments & 0xF;
+            } else {
+                values->field_8[3] = *arguments << 4;
+            }
+            break;
+        case 1:
+            if (*arguments & 0x40) {
+                values->field_0[0] = (*arguments & 0xF) << 4;
+            } else {
+                values->field_0[0] = *arguments << 8;
+            }
+            arguments++;
+            if (*arguments & 0x40) {
+                values->field_0[1] = (*arguments & 0xF) << 4;
+            } else {
+                values->field_0[1] = *arguments << 8;
+            }
+            arguments++;
+            if (*arguments & 0x40) {
+                values->field_0[2] = (*arguments & 0xF) << 4;
+            } else {
+                values->field_0[2] = *arguments << 8;
+            }
+            arguments++;
+            if (*arguments & 0x40) {
+                values->field_0[3] = (*arguments & 0xF) << 4;
+            } else {
+                values->field_0[3] = *arguments << 8;
+            }
+            break;
+        case 2:
+            values->field_28[0] = *arguments++;
+            values->field_28[1] = *arguments++;
+            values->field_28[2] = *arguments++;
+            values->field_28[3] = *arguments;
+            break;
+        case 3:
+            arguments[0] <<= 4;
+            arguments[1] <<= 4;
+            arguments[2] <<= 4;
+            arguments[3] <<= 4;
+        case 4:
+            values->field_20[0] = *arguments++;
+            values->field_20[1] = *arguments++;
+            values->field_20[2] = *arguments++;
+            values->field_20[3] = *arguments;
+            break;
+        case 5:
+            values->field_10[0] = *arguments++;
+            values->field_10[1] = *arguments++;
+            values->field_10[2] = *arguments++;
+            values->field_10[3] = *arguments;
+            break;
+        case 6:
+            values->field_18[0] = *arguments++;
+            values->field_18[1] = *arguments++;
+            values->field_18[2] = *arguments++;
+            values->field_18[3] = *arguments;
+            break;
+        case 7:
+            values2->field_3E[0] = *arguments++;
+            values2->field_3E[1] = *arguments++;
+            values2->field_3E[2] = *arguments++;
+            values2->field_3E[3] = *arguments;
+            break;
+        case 8:
+            values2->field_36[0] = *arguments++;
+            values2->field_36[1] = *arguments++;
+            values2->field_36[2] = *arguments++;
+            values2->field_36[3] = *arguments;
+            break;
+        case 9:
+            values->field_8[0] = *arguments++;
+            values->field_8[1] = *arguments++;
+            values->field_8[2] = *arguments++;
+            values->field_8[3] = *arguments;
+            break;
+        case 10:
+            values->field_0[0] = *arguments++;
+            values->field_0[1] = *arguments++;
+            values->field_0[2] = *arguments++;
+            values->field_0[3] = *arguments;
+            break;
+    }
+    return TRUE;
+}
+
+// Installs callback arguments[0] (< 0x34) of off_83C9FC0 as the object's script callback (field_140,
+// enabled by flag 0x400); a larger value disables it. Also sets field_2B6_7, and field_2B6_6 to 1 for
+// callback 0 and to 0 for callback 1.
+s8 FieldEventScript::sub_80EE440(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
+    FieldObjectEvent* objectScript = &object->script;
+
+    object->field_2B6_7 = 1;
+    switch (arguments[0]) {
+        case 0:
+            object->field_2B6_6 = 1;
+            break;
+        case 1:
+            object->field_2B6_6 = 0;
+            break;
+    }
+    if (arguments[0] < 0x34) {
+        objectScript->field_140 = off_83C9FC0[arguments[0]];
+        objectScript->flags |= 0x400;
+        objectScript->field_17E_1 = 0;
+        objectScript->field_17E_0 = 0;
+    } else {
+        objectScript->flags &= ~0x400;
+    }
+    return TRUE;
+}
+
+// Same as sub_80EE440, then sets the script's field_158 and field_15C to arguments[1] and arguments[2]
+// (copied to the object's FMCH, FieldMonster::field_344, if it has one).
+s8 FieldEventScript::sub_80EE4CC(FieldObject* object, FieldObjectEvent* script, s32* arguments) {
+    FieldObjectEvent* objectScript = &object->script;
+    FieldObject* monster;
+
+    object->field_2B6_7 = 1;
+    switch (arguments[0]) {
+        case 0:
+            object->field_2B6_6 = 1;
+            break;
+        case 1:
+            object->field_2B6_6 = 0;
+            break;
+    }
+    if (arguments[0] < 0x34) {
+        objectScript->field_140 = off_83C9FC0[arguments[0]];
+        objectScript->flags |= 0x400;
+        objectScript->field_17E_1 = 0;
+        objectScript->field_17E_0 = 0;
+    } else {
+        objectScript->flags &= ~0x400;
+    }
+    arguments++;
+    objectScript->field_158 = *arguments++;
+    objectScript->field_15C = *arguments;
+    monster = ((FieldMonster*)object)->field_344;
+    if (monster) {
+        monster->script.field_158 = objectScript->field_158;
+        monster->script.field_15C = objectScript->field_15C;
+    }
+    return TRUE;
 }

@@ -507,13 +507,6 @@ u32 sub_8199F30(void);     // Random number
 u32 sub_81DD77C(s32, u32); // ARM veneer; random value below the first argument?
 s32 sub_8199480(s32, s32); // ArcTan2 >> 8; callers pass and get ints, though it truncates to s16/u8
 s8 script_enable_flag_2(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
-s8 sub_80EDF90(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
-s8 sub_80EE028(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
-s8 sub_80EE140(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
-s8 sub_80EE1A4(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
-s8 sub_80EE26C(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
-s8 sub_80EE440(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
-s8 sub_80EE4CC(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
 s8 sub_80EE594(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
 s8 sub_80EE624(struct FieldEventScript*, struct FieldObject*, struct FieldObjectEvent*, s32*);
 s8 sub_80EE73C(struct FieldEventScript*, struct FieldObjectEvent*, s32*);
@@ -768,6 +761,9 @@ extern struct EVTS* dword_3000D78;
 extern u8 sub_8000F9C[];
 extern u8 sub_8001010[];
 extern u8* dword_83D6C58[]; // Object list header per list index (see init_fobj_with_data_80FB128)
+// Callbacks a field object's script can install in FieldObjectEvent::field_140 (sub_80EE440, 0x34
+// entries).
+extern void (*off_83C9FC0[])(struct FieldManager* fieldManager, struct FieldObject* object);
 extern u16 gBuzzerKeys; // Keys that play the buzzer (sfx 0x50) when pressed in FIELD_MODE_NORMAL; saved
 extern struct struc_3000FB8* dword_3000FB8;
 extern struct GameState gGameState;
