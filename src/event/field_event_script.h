@@ -2,6 +2,7 @@
 #define FIELD_EVENT_SCRIPT_H
 
 #include "process.h"
+#include "event/event.h"
 #include "event/text080E9D50.h"
 
 class FieldObject;
@@ -78,12 +79,10 @@ class BEVS : virtual public FieldEventScript {
 // Allocated by the EVTS constructor (0x080EF3FC).
 struct MapEventInfo {
     struct EventThread scripts[4];
-    u8 pad_2A0[0x288];
-    u32 field_528;
-    u8 field_52C;
-    u8 pad_52D[0x3];
-    u32 field_530;
-    u8 pad_534[0x10];
+    u8 pad_2A0[0x210];
+    // Script registers 16-52 (see CommonEvent::getRegister). [30] = Luigi leads, [31] (read as u8)
+    // = battle parameter used when opcode 152's argument is 0x3F, [32] = FieldManager::field_FA_5
+    u32 engineRegisters[ENGINE_REGISTER_COUNT];
     u8 field_544[2]; // Object indices, one per entry of field_550
     u8 field_546[2]; // Angles
     u8 field_548;

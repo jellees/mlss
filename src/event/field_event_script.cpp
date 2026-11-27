@@ -23,7 +23,7 @@ inline bool FieldEventScript::sub_80F1E44(FieldObject* object, FieldObjectEvent*
     }
     while (sub_80EB838(object, script) == 0) {
         CommonEvent::readCommand(script, arguments, CommonEvent::instance,
-                                 (u32*)((u8*)MapEventInfo::instance + 0x4B0),
+                                 MapEventInfo::instance->engineRegisters,
                                  CommonEvent::instance->fieldEngineFlags, 0);
         if (!executeNextCommand(object, script, arguments)) {
             break;
@@ -51,7 +51,7 @@ void FieldEventScript::sub_80EB248() {
             script = &object->script;
 
             if (!(script->flags & 0x1B6)) {
-                CommonEvent::setVariable((u32*)((u8*)MapEventInfo::instance + 0x4B0), script->registers,
+                CommonEvent::setVariable(MapEventInfo::instance->engineRegisters, script->registers,
                                          CommonEvent::instance->fieldEngineFlags, 0, 0x33, i);
                 sub_80F1E44(*objects, script);
             }
@@ -309,7 +309,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 11:
             return sub_80F1BA4(this, script, arguments);
         case 12:
-            return sub_80F1B14(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
+            return sub_80F1B14(this, script, arguments, MapEventInfo::instance->engineRegisters);
         case 13:
             return sub_80F131C(this, object, script, arguments);
         case 14:
@@ -357,7 +357,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 29:
             return sub_80EAE9C(script, arguments);
         case 30:
-            return sub_80EAE70(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
+            return sub_80EAE70(script, arguments, MapEventInfo::instance->engineRegisters);
         case 32:
             return sub_80EAE30(struc_3000FC8::instance, script, arguments);
         case 33:
@@ -373,7 +373,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 42:
             return sub_80E9E10(script, arguments);
         case 43:
-            return sub_80EACDC(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
+            return sub_80EACDC(script, arguments, MapEventInfo::instance->engineRegisters);
         case 44:
             return sub_80F0A30(this, script, arguments);
         case 45:
@@ -389,20 +389,20 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 50:
             return sub_80EA064(script, arguments);
         case 51:
-            return sub_80EAC78(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
+            return sub_80EAC78(script, arguments, MapEventInfo::instance->engineRegisters);
         case 52:
-            return sub_80EA144(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
+            return sub_80EA144(script, arguments, MapEventInfo::instance->engineRegisters);
         case 53:
-            return sub_80EA358(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
+            return sub_80EA358(script, arguments, MapEventInfo::instance->engineRegisters);
         case 54:
-            return commandCalculate(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0),
+            return commandCalculate(script, arguments, MapEventInfo::instance->engineRegisters,
                                     CommonEvent::instance->fieldEngineFlags, NULL);
         case 55:
             return sub_80EAB20(script, arguments);
         case 57:
-            return sub_80EAA84(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
+            return sub_80EAA84(script, arguments, MapEventInfo::instance->engineRegisters);
         case 58:
-            return sub_80EAA5C(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
+            return sub_80EAA5C(script, arguments, MapEventInfo::instance->engineRegisters);
         case 59:
             return sub_80EAA04(script, arguments);
         case 60:
@@ -414,7 +414,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 63:
             return commandConditionalJump(script, arguments);
         case 65:
-            return sub_80EA968(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
+            return sub_80EA968(script, arguments, MapEventInfo::instance->engineRegisters);
         case 66:
             return sub_80EA940(script, arguments);
         case 67:
@@ -432,7 +432,7 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 73:
             return sub_80EA88C(script, arguments);
         case 74:
-            return sub_80EA854(script, arguments, (u32*)((u8*)MapEventInfo::instance + 0x4B0));
+            return sub_80EA854(script, arguments, MapEventInfo::instance->engineRegisters);
         case 75:
             return sub_80F1AEC(this, script, arguments);
         case 76:
@@ -593,8 +593,9 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
         case 152:
             ((FieldManager*)parentProcess)
                 ->setBattleParameters(arguments[0],
-                                      arguments[1] == 0x3F ? MapEventInfo::instance->field_52C
-                                                           : arguments[1],
+                                      arguments[1] == 0x3F
+                                          ? (u8)MapEventInfo::instance->engineRegisters[31]
+                                          : arguments[1],
                                       0, arguments[2], arguments[3], arguments[4], arguments[5] & 1,
                                       (arguments[5] >> 1) & 1, (arguments[5] >> 2) & 1, arguments[6]);
             return 0;
@@ -665,15 +666,15 @@ s8 FieldEventScript::executeNextCommand(FieldObject* object, FieldObjectEvent* s
             BUFFER_REG_BLDCNT = value;
         } break;
         case 178:
-            return sub_80EEF54(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
+            return sub_80EEF54(this, script, arguments, MapEventInfo::instance->engineRegisters);
         case 179:
-            return sub_80EF0B0(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
+            return sub_80EF0B0(this, script, arguments, MapEventInfo::instance->engineRegisters);
         case 180:
-            return sub_80F0678(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
+            return sub_80F0678(this, script, arguments, MapEventInfo::instance->engineRegisters);
         case 181:
-            return sub_80F0618(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
+            return sub_80F0618(this, script, arguments, MapEventInfo::instance->engineRegisters);
         case 182:
-            return sub_80F05DC(this, script, arguments, (u8*)MapEventInfo::instance + 0x4B0);
+            return sub_80F05DC(this, script, arguments, MapEventInfo::instance->engineRegisters);
         case 183:
             return sub_80F056C(this, script, arguments);
         case 184:
@@ -1141,7 +1142,7 @@ s8 FieldEventScript::sub_80ED6A8(FieldObjectEvent* script, s32* arguments) {
     if (((FieldManager*)parentProcess)->field_F8_6) {
         ((FieldManager*)parentProcess)->sub_80284B0(((FieldManager*)parentProcess)->field_FA_5, 0);
     }
-    MapEventInfo::instance->field_530 = ((FieldManager*)parentProcess)->field_FA_5;
+    MapEventInfo::instance->engineRegisters[32] = ((FieldManager*)parentProcess)->field_FA_5;
     return true;
 }
 
